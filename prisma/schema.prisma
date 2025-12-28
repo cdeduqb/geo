@@ -107,6 +107,9 @@ model Article {
   category            Category?                 @relation(fields: [categoryId], references: [id])
   seo                 SEOSetting?
   tags                Tag[]                     @relation("ArticleToTag")
+  AICitation          AICitation[]
+  AISearchRanking     AISearchRanking[]
+  ContentAIScore      ContentAIScore?
 
   @@unique([slug, lang])
   @@index([lang])
@@ -560,4 +563,80 @@ enum OrderStatus {
   COMPLETED
   CANCELLED
   REFUNDED
+}
+
+// ==================== GEO 优化相关模型 ====================
+
+// AI 引用追踪
+model AICitation {
+  id           String   @id @default(uuid())
+  articleId    String
+  articleTitle String
+  platform     String // ChatGPT, Perplexity, Gemini, Claude等
+  query        String   @db.Text // 用户查询问题
+  citedAt      DateTime @default(now())
+  position     Int      @default(0) // 在回答中的位置(1-10)
+  context      String?  @db.Text // 引用的上下文
+  sourceUrl    String? // 引用来源URL
+  citationType String   @default("mention") // mention, quote, reference
+
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@index([articleId])
+  @@index([platform])
+  @@index([citedAt])
+  @@index([citationType])
+}
+
+// AI 搜索排名追踪
+model AISearchRanking {
+  id          String   @id @default(uuid())
+  keyword     String
+  platform    String // ChatGPT, Perplexity, Gemini等
+  ranking     Int // 1-10, 在结果中的位置
+  mentionRate Float    @default(0) // 被提及的概率 0-100
+  articleId   String?
+  context     String?  @db.Text
+  checkedAt   DateTime @default(now())
+
+  article Article? @relation(fields: [articleId], references: [id], onDelete: SetNull)
+
+  @@index([keyword, platform])
+  @@index([checkedAt])
+  @@index([articleId])
+}
+
+// 内容 AI 质量评分
+model ContentAIScore {
+  id             String   @id @default(uuid())
+  articleId      String   @unique
+  overallScore   Float    @default(0) // 0-100
+  structureScore Float    @default(0) // 结构清晰度
+  factualScore   Float    @default(0) // 事实密度
+  citationScore  Float    @default(0) // 可引用性
+  entityScore    Float    @default(0) // 实体丰富度
+  semanticScore  Float    @default(0) // 语义深度
+  suggestions    String?  @db.Text // JSON格式的改进建议
+  analyzedAt     DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@index([overallScore])
+  @@index([analyzedAt])
+}
+
+// 爬虫行为分析
+model CrawlerBehavior {
+  id             String   @id @default(uuid())
+  crawler        String
+  avgVisitHour   Int      @default(0) // 平均访问时间(小时)
+  peakHours      String? // JSON数组: [9, 14, 18]
+  preferredPaths String?  @db.Text // JSON数组: 最喜欢访问的路径
+  avgDepth       Float    @default(0) // 平均爬取深度
+  visitFrequency Float    @default(0) // 访问频率(次/天)
+  lastAnalyzed   DateTime @default(now())
+
+  @@unique([crawler])
+  @@index([lastAnalyzed])
 }
