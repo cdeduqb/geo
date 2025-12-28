@@ -1,0 +1,1433 @@
+[2025-12-01T03:21:39.258Z] Outline API called
+[2025-12-01T03:21:40.292Z] Request parsed: topic=Log Test, strategyId=cmijvtkjd00003l9x7ncwfah1
+[2025-12-01T03:21:40.292Z] Getting AI Service...
+[2025-12-01T03:21:41.119Z] AI Service obtained
+[2025-12-01T03:21:41.119Z] Fetching strategy: cmijvtkjd00003l9x7ncwfah1
+[2025-12-01T03:21:41.956Z] Strategy fetch result: Found
+[2025-12-01T03:21:41.956Z] Fetching GEO settings...
+[2025-12-01T03:21:42.823Z] GEO settings fetched
+[2025-12-01T03:21:42.824Z] Calling AI service generateContent...
+[2025-12-01T03:22:15.653Z] AI response received, length: 1547
+[2025-12-01T03:22:15.653Z] Failed to parse AI response: <h1>大模型优化：从理论到实践的全方位指南</h1>
+<p>随着人工智能技术的快速发展，大语言模型已成为推动技术进步的核心力量。大模型优化作为提升模型性能、效率和实用性的关键技术，正受到学术界和工业...
+[2025-12-02T02:59:58.213Z] Outline API called
+[2025-12-02T02:59:58.945Z] Request parsed: topic=Provider Test, strategyId=cmijvtkjd00003l9x7ncwfah1
+[2025-12-02T02:59:58.945Z] Getting AI Service...
+[2025-12-02T02:59:59.705Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T02:59:59.705Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com/v1, Model=deepseek-chat
+[2025-12-02T02:59:59.705Z] AI Service obtained
+[2025-12-02T02:59:59.706Z] Fetching strategy: cmijvtkjd00003l9x7ncwfah1
+[2025-12-02T03:00:00.406Z] Strategy fetch result: Found
+[2025-12-02T03:00:00.407Z] Fetching GEO settings...
+[2025-12-02T03:00:01.108Z] GEO settings fetched
+[2025-12-02T03:00:01.109Z] Calling AI service generateContent...
+[2025-12-02T03:01:09.212Z] AI response received, length: 3449
+[2025-12-02T03:01:09.215Z] Failed to parse AI response: <h1>大模型推理优化：释放AI潜能的工程艺术</h1>
+<p>随着以<strong>GPT-4</strong>、<strong>Claude</strong>和<strong>文心一言</stro...
+[2025-12-02T03:02:43.659Z] Outline API called
+[2025-12-02T03:02:44.384Z] Request parsed: topic=Fix Test, strategyId=cmijvtkjd00003l9x7ncwfah1
+[2025-12-02T03:02:44.385Z] Getting AI Service...
+[2025-12-02T03:02:45.089Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:02:45.089Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com/v1, Model=deepseek-chat
+[2025-12-02T03:02:45.089Z] AI Service obtained
+[2025-12-02T03:02:45.089Z] Fetching strategy: cmijvtkjd00003l9x7ncwfah1
+[2025-12-02T03:02:45.939Z] Strategy fetch result: Found
+[2025-12-02T03:02:45.940Z] Fetching GEO settings...
+[2025-12-02T03:02:46.760Z] GEO settings fetched
+[2025-12-02T03:02:46.762Z] Calling AI service generateContent...
+[2025-12-02T03:03:50.675Z] AI response received, length: 3117
+[2025-12-02T03:03:50.677Z] Failed to parse AI response: <h1>大模型推理优化：释放AI潜能的工程艺术</h1>
+<p>随着以<strong>GPT-4</strong>、<strong>Llama</strong>系列为代表的<em>大型语言模型</em...
+[2025-12-02T03:05:49.619Z] Outline API called
+[2025-12-02T03:05:50.315Z] Request parsed: topic=2025年人工智能的趋势DB Fix Test, strategyId=cmijvtkjd00003l9x7ncwfah1
+[2025-12-02T03:05:50.315Z] Getting AI Service...
+[2025-12-02T03:05:50.994Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:05:50.994Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:05:50.994Z] AI Service obtained
+[2025-12-02T03:05:50.994Z] Fetching strategy: cmijvtkjd00003l9x7ncwfah1
+[2025-12-02T03:05:51.749Z] Strategy fetch result: Found
+[2025-12-02T03:05:51.749Z] Fetching GEO settings...
+[2025-12-02T03:05:52.516Z] GEO settings fetched
+[2025-12-02T03:05:52.517Z] Calling AI service generateContent...
+[2025-12-02T03:06:53.891Z] AI response received, length: 2884
+[2025-12-02T03:06:53.892Z] Failed to parse AI response: <h1>大模型推理优化：释放AI潜力的关键技术</h1>
+<p>随着以<strong>GPT-4</strong>、<strong>Llama</strong>系列为代表的<em>大型语言模型</em...
+[2025-12-02T03:07:30.654Z] Outline API called
+[2025-12-02T03:07:31.354Z] Request parsed: topic=2025年人工智能的趋势DB Fix Test, strategyId=cmijvtkjd00003l9x7ncwfah1
+[2025-12-02T03:07:31.355Z] Getting AI Service...
+[2025-12-02T03:07:31.694Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:07:31.694Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:07:31.694Z] AI Service obtained
+[2025-12-02T03:07:31.694Z] Fetching strategy: cmijvtkjd00003l9x7ncwfah1
+[2025-12-02T03:07:32.079Z] Strategy fetch result: Found
+[2025-12-02T03:07:32.080Z] Fetching GEO settings...
+[2025-12-02T03:07:32.418Z] GEO settings fetched
+[2025-12-02T03:07:32.420Z] Calling AI service generateContent...
+[2025-12-02T03:08:23.795Z] AI response received, length: 2497
+[2025-12-02T03:08:23.796Z] Failed to parse AI response: <h1>大模型推理优化：释放AI潜能的工程艺术</h1>
+<p>随着以<strong>GPT-4</strong>、<strong>Llama</strong>系列为代表的<em>大型语言模型</em...
+[2025-12-02T03:12:55.510Z] Outline API called
+[2025-12-02T03:12:56.275Z] Request parsed: topic=Final Fix Test, strategyId=cmijvtkjd00003l9x7ncwfah1
+[2025-12-02T03:12:56.275Z] Getting AI Service...
+[2025-12-02T03:12:56.999Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:12:57.000Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:12:57.000Z] AI Service obtained
+[2025-12-02T03:12:57.000Z] Fetching strategy: cmijvtkjd00003l9x7ncwfah1
+[2025-12-02T03:12:57.714Z] Strategy fetch result: Found
+[2025-12-02T03:12:57.715Z] Fetching GEO settings...
+[2025-12-02T03:12:58.426Z] GEO settings fetched
+[2025-12-02T03:12:58.427Z] Calling AI service generateContent...
+[2025-12-02T03:13:26.281Z] AI response received, length: 1832
+[2025-12-02T03:13:26.283Z] Successfully parsed outline JSON
+[2025-12-02T03:14:36.200Z] Outline API called
+[2025-12-02T03:14:36.952Z] Request parsed: topic=Draft Test, strategyId=cmijvtkjd00003l9x7ncwfah1
+[2025-12-02T03:14:36.952Z] Getting AI Service...
+[2025-12-02T03:14:37.763Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:14:37.763Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:14:37.764Z] AI Service obtained
+[2025-12-02T03:14:37.764Z] Fetching strategy: cmijvtkjd00003l9x7ncwfah1
+[2025-12-02T03:14:38.583Z] Strategy fetch result: Found
+[2025-12-02T03:14:38.584Z] Fetching GEO settings...
+[2025-12-02T03:14:39.405Z] GEO settings fetched
+[2025-12-02T03:14:39.406Z] Calling AI service generateContent...
+[2025-12-02T03:15:06.706Z] AI response received, length: 1945
+[2025-12-02T03:15:06.707Z] Successfully parsed outline JSON
+[2025-12-02T03:16:03.985Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:16:03.986Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:22:00.646Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:22:00.646Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:22:06.211Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:22:06.211Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:34:29.549Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:34:29.550Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:44:25.383Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:44:25.385Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:45:21.072Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:45:21.072Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:46:41.743Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:46:41.745Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:46:47.988Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:46:47.989Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:48:06.633Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:48:06.635Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:48:10.934Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:48:10.934Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:48:14.313Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:48:14.314Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:48:18.871Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:48:18.872Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:50:11.768Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:50:11.771Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:50:30.918Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:50:30.920Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:50:59.131Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:50:59.132Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:51:11.298Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:51:11.298Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:52:40.455Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:52:40.457Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:55:16.459Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:55:16.462Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T03:58:25.373Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T03:58:25.383Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T04:00:53.379Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T04:00:53.380Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T07:52:36.303Z] Outline API called
+[2025-12-02T07:52:37.180Z] Request parsed: topic=GEO是什么, strategyId=cmijvtlzv00013l9x1r4n526b
+[2025-12-02T07:52:37.180Z] Getting AI Service...
+[2025-12-02T07:52:37.994Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T07:52:37.994Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T07:52:37.995Z] AI Service obtained
+[2025-12-02T07:52:37.995Z] Fetching strategy: cmijvtlzv00013l9x1r4n526b
+[2025-12-02T07:52:38.812Z] Strategy fetch result: Found
+[2025-12-02T07:52:38.814Z] Fetching GEO settings...
+[2025-12-02T07:52:39.632Z] GEO settings fetched
+[2025-12-02T07:52:39.635Z] Calling AI service generateContent...
+[2025-12-02T07:53:16.093Z] AI response received, length: 2096
+[2025-12-02T07:53:16.095Z] Successfully parsed outline JSON
+[2025-12-02T07:54:06.976Z] Outline API called
+[2025-12-02T07:54:07.804Z] Request parsed: topic=GEO(生成式引擎优化),是什么?, strategyId=cmijvtkjd00003l9x7ncwfah1
+[2025-12-02T07:54:07.805Z] Getting AI Service...
+[2025-12-02T07:54:08.622Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T07:54:08.623Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T07:54:08.623Z] AI Service obtained
+[2025-12-02T07:54:08.624Z] Fetching strategy: cmijvtkjd00003l9x7ncwfah1
+[2025-12-02T07:54:09.442Z] Strategy fetch result: Found
+[2025-12-02T07:54:09.444Z] Fetching GEO settings...
+[2025-12-02T07:54:10.261Z] GEO settings fetched
+[2025-12-02T07:54:10.262Z] Calling AI service generateContent...
+[2025-12-02T07:54:41.323Z] AI response received, length: 1815
+[2025-12-02T07:54:41.324Z] Successfully parsed outline JSON
+[2025-12-02T07:55:02.486Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T07:55:02.487Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T07:56:58.102Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T07:56:58.102Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T07:59:30.480Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T07:59:30.482Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T07:59:50.859Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T07:59:50.859Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T07:59:53.829Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T07:59:53.830Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T16:41:09.424Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T16:41:09.425Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-02T16:59:24.100Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-02T16:59:24.102Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-03T06:22:16.120Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-03T06:22:16.122Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-03T06:37:03.097Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-03T06:37:03.099Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-03T06:58:31.657Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-03T06:58:31.659Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-03T07:14:49.438Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-03T07:14:49.440Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-03T07:28:48.147Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-03T07:28:48.147Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-03T18:31:46.439Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-03T18:31:46.442Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-03T18:36:47.993Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-03T18:36:47.994Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-03T18:38:22.581Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-03T18:38:22.582Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-03T18:41:55.484Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-03T18:41:55.485Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-03T18:44:12.912Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-03T18:44:12.913Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T04:15:49.791Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T04:15:49.792Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T04:18:11.602Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T04:18:11.603Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T04:20:41.017Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T04:20:41.018Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T04:22:18.639Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T04:22:18.640Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T04:25:25.630Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T04:25:25.632Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T04:28:26.249Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T04:28:26.251Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T05:16:46.147Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T05:16:46.149Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T05:22:55.311Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T05:22:55.312Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T05:28:23.827Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T05:28:23.828Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T05:29:48.306Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T05:29:48.306Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T05:51:23.002Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T05:51:23.003Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T06:24:08.509Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T06:24:08.511Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T06:30:25.154Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T06:30:25.154Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T08:30:49.399Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T08:30:49.402Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T08:36:15.500Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T08:36:15.502Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T08:36:27.783Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T08:36:27.784Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T09:07:34.760Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T09:07:34.762Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T09:07:37.946Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T09:07:37.947Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T09:08:01.911Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T09:08:01.912Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-04T09:08:04.647Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-04T09:08:04.647Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T04:50:42.828Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T04:50:42.829Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T04:50:47.023Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T04:50:47.024Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T04:50:51.480Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T04:50:51.480Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T04:50:55.420Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T04:50:55.420Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T04:56:16.450Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T04:56:16.451Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T04:56:20.431Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T04:56:20.431Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T04:56:25.060Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T04:56:25.060Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T04:56:28.634Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T04:56:28.635Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T04:57:04.105Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T04:57:04.106Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T04:57:07.206Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T04:57:07.206Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T04:57:35.261Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T04:57:35.262Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T04:57:38.065Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T04:57:38.065Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T05:04:04.676Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T05:04:04.677Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T05:04:17.014Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T05:04:17.015Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T05:04:21.723Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T05:04:21.723Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T06:17:47.172Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T06:17:47.174Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T06:31:56.490Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T06:31:56.492Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T06:32:49.388Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T06:32:49.390Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T06:38:38.921Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T06:38:38.922Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T06:47:11.910Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T06:47:11.912Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T06:49:04.248Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T06:49:04.250Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T06:51:50.443Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T06:51:50.445Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T08:25:30.714Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T08:25:30.716Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T08:28:11.077Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T08:28:11.079Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T08:28:22.338Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T08:28:22.339Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T08:28:33.915Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T08:28:33.916Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T08:28:59.922Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T08:28:59.925Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T08:36:03.817Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T08:36:03.819Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T08:39:20.888Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T08:39:20.890Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T08:39:47.387Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T08:39:47.388Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T08:41:12.192Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T08:41:12.194Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T08:43:29.313Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T08:43:29.315Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T08:49:30.068Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T08:49:30.071Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T08:49:57.715Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T08:49:57.716Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:04:09.081Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:04:09.083Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:07:17.979Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:07:17.982Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:10:34.592Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:10:34.594Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:11:07.290Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:11:07.292Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:11:37.703Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:11:37.705Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:13:10.989Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:13:10.991Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:13:24.610Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:13:24.612Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:13:50.722Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:13:50.722Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:14:03.931Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:14:03.932Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:14:29.020Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:14:29.023Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:15:07.932Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:15:07.934Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:31:54.131Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:31:54.133Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:35:08.288Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:35:08.290Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:38:36.470Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:38:36.473Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:38:44.353Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:38:44.354Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:39:06.678Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:39:06.679Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:39:20.398Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:39:20.399Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T09:39:32.993Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T09:39:32.995Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-05T14:47:10.213Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-05T14:47:10.214Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-06T09:59:08.886Z] Outline API called
+[2025-12-06T09:59:08.972Z] Request parsed: topic=成都AI搜索优化系统有哪些, strategyId=cmijvtkjd00003l9x7ncwfah1
+[2025-12-06T09:59:08.972Z] Getting AI Service...
+[2025-12-06T09:59:09.052Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-06T09:59:09.053Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-06T09:59:09.053Z] AI Service obtained
+[2025-12-06T09:59:09.053Z] Fetching strategy: cmijvtkjd00003l9x7ncwfah1
+[2025-12-06T09:59:09.140Z] Strategy fetch result: Found
+[2025-12-06T09:59:09.142Z] Fetching GEO settings...
+[2025-12-06T09:59:09.222Z] GEO settings fetched
+[2025-12-06T09:59:09.224Z] Calling AI service generateContent...
+[2025-12-06T09:59:32.427Z] AI response received, length: 1889
+[2025-12-06T09:59:32.428Z] Successfully parsed outline JSON
+[2025-12-06T09:59:51.060Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-06T09:59:51.061Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-06T10:01:15.389Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-06T10:01:15.391Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-06T10:01:26.877Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-06T10:01:26.878Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-06T10:01:28.954Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-06T10:01:28.954Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T03:56:03.881Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T03:56:03.882Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T03:56:34.335Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T03:56:34.335Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T03:56:38.552Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T03:56:38.552Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T04:02:11.761Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T04:02:11.763Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T04:02:19.843Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T04:02:19.843Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T04:02:20.598Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T04:02:20.598Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T04:56:32.975Z] Outline API called
+[2025-12-10T04:56:33.058Z] Request parsed: topic=生成式人工智能优化方向, strategyId=cmijvtm0n00023l9xykbm0epb
+[2025-12-10T04:56:33.059Z] Getting AI Service...
+[2025-12-10T04:56:33.152Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T04:56:33.152Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T04:56:33.152Z] AI Service obtained
+[2025-12-10T04:56:33.152Z] Fetching strategy: cmijvtm0n00023l9xykbm0epb
+[2025-12-10T04:56:33.231Z] Strategy fetch result: Found
+[2025-12-10T04:56:33.232Z] Fetching GEO settings...
+[2025-12-10T04:56:33.310Z] GEO settings fetched
+[2025-12-10T04:56:33.312Z] Calling AI service generateContent...
+[2025-12-10T04:57:07.171Z] AI response received, length: 2772
+[2025-12-10T04:57:07.172Z] Successfully parsed outline JSON
+[2025-12-10T04:57:37.155Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T04:57:37.156Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T05:14:39.598Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T05:14:39.601Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T05:20:34.630Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T05:20:34.633Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T05:26:39.190Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T05:26:39.191Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T05:37:01.990Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T05:37:01.992Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T05:38:55.679Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T05:38:55.680Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T05:39:20.922Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T05:39:20.922Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T05:39:22.488Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T05:39:22.488Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T05:39:25.083Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T05:39:25.083Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T05:45:53.827Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T05:45:53.829Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T05:47:15.267Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T05:47:15.269Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T05:48:00.721Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T05:48:00.723Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T05:48:02.016Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T05:48:02.016Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T06:20:39.516Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T06:20:39.517Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T06:20:39.876Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T06:20:39.877Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T06:20:40.747Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T06:20:40.747Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T06:20:41.443Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T06:20:41.443Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T06:20:42.311Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T06:20:42.312Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T07:11:21.587Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T07:11:21.589Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T07:11:35.621Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T07:11:35.623Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T07:11:37.606Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T07:11:37.606Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T07:11:50.823Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T07:11:50.823Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T07:11:53.607Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T07:11:53.608Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T07:26:32.315Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T07:26:32.317Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T07:26:46.722Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T07:26:46.724Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T07:26:48.332Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T07:26:48.332Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T07:26:52.136Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T07:26:52.136Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T07:28:19.202Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T07:28:19.204Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T07:29:21.359Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T07:29:21.361Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T07:29:23.275Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T07:29:23.275Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T07:33:02.713Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T07:33:02.715Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T07:33:23.153Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T07:33:23.154Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T07:33:23.954Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T07:33:23.954Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-10T07:33:31.609Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-10T07:33:31.610Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-12T16:40:49.357Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-12T16:40:49.358Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-12T16:41:00.526Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-12T16:41:00.527Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-12T16:48:48.587Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-12T16:48:48.588Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-12T16:49:38.642Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-12T16:49:38.644Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-12T17:10:44.204Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-12T17:10:44.205Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-12T17:11:01.866Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-12T17:11:01.868Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-12T17:25:55.269Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-12T17:25:55.271Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-12T17:33:39.733Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-12T17:33:39.736Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-12T17:40:12.990Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-12T17:40:12.993Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-13T15:20:25.594Z] Selected AI Provider: doubao, Model: ep-20250903083051-7j8d2
+[2025-12-13T15:20:47.222Z] Selected AI Provider: doubao, Model: ep-20250903083051-7j8d2
+[2025-12-13T15:24:29.707Z] Selected AI Provider: doubao, Model: ep-20250903083051-7j8d2
+[2025-12-13T15:30:47.529Z] Selected AI Provider: doubao, Model: ep-20250903083051-7j8d2
+[2025-12-13T15:31:01.358Z] Selected AI Provider: doubao, Model: ep-20250903083051-7j8d2
+[2025-12-13T16:25:35.814Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-13T16:25:35.817Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-13T16:27:56.257Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-13T16:27:56.260Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-13T16:28:05.643Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-13T16:28:05.643Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-13T16:28:24.690Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-13T16:28:24.692Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-13T16:29:22.259Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-13T16:29:22.260Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-13T16:31:31.062Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-13T16:31:31.064Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-13T16:35:01.842Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-13T16:35:01.844Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-13T16:35:03.857Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-13T16:35:03.857Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-13T16:36:23.729Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-13T16:36:23.732Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-13T16:36:25.092Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-13T16:36:25.092Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-13T17:06:47.092Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-13T17:06:47.095Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-13T17:07:16.551Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-13T17:07:16.553Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-13T17:08:39.995Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-13T17:08:39.997Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-13T17:09:05.065Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-13T17:09:05.066Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-13T17:09:09.450Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-13T17:09:09.451Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T01:24:59.583Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T01:24:59.586Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T01:25:36.413Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T01:25:36.416Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T01:27:19.333Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T01:27:19.338Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T01:27:41.979Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T01:27:41.981Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T01:27:49.587Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T01:27:49.588Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T01:28:05.757Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T01:28:05.760Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T01:41:48.220Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T01:41:48.223Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T01:42:09.939Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T01:42:09.941Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T01:44:48.563Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T01:44:48.567Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T01:46:56.505Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T01:46:56.508Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T01:47:07.481Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T01:47:07.483Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T01:47:12.004Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T01:47:12.004Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T01:47:48.663Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T01:47:48.666Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T05:59:42.056Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T05:59:42.059Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T06:00:05.469Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T06:00:05.470Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T06:26:32.000Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T06:26:32.003Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T06:39:29.873Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T06:39:29.876Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T06:40:51.471Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T06:40:51.476Z] Using OpenAI Compatible Service: BaseURL=https://api.deepseek.com, Model=deepseek-chat
+[2025-12-14T07:46:26.656Z] Outline API called
+[2025-12-14T07:46:26.707Z] Request parsed: topic=2025年人工智能发展趋势, strategyId=cmijvtlzv00013l9x1r4n526b
+[2025-12-14T07:46:26.707Z] Getting AI Service...
+[2025-12-14T07:46:26.787Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T07:46:26.787Z] AI Service obtained
+[2025-12-14T07:46:26.788Z] Fetching strategy: cmijvtlzv00013l9x1r4n526b
+[2025-12-14T07:46:26.868Z] Strategy fetch result: Found
+[2025-12-14T07:46:26.869Z] Calling AI service generateContent...
+[2025-12-14T07:46:47.148Z] AI response received, length: 1667
+[2025-12-14T07:46:47.149Z] Successfully parsed outline JSON
+[2025-12-14T07:47:11.790Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T07:48:30.004Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T07:49:00.344Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T07:51:17.572Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T08:11:11.536Z] Outline API called
+[2025-12-14T08:11:11.696Z] Request parsed: topic=人工智能的发展趋势, strategyId=cmijvtkjd00003l9x7ncwfah1
+[2025-12-14T08:11:11.696Z] Getting AI Service...
+[2025-12-14T08:11:11.781Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T08:11:11.781Z] AI Service obtained
+[2025-12-14T08:11:11.781Z] Fetching strategy: cmijvtkjd00003l9x7ncwfah1
+[2025-12-14T08:11:11.866Z] Strategy fetch result: Found
+[2025-12-14T08:11:11.866Z] Calling AI service generateContent...
+[2025-12-14T08:11:27.314Z] AI response received, length: 1312
+[2025-12-14T08:11:27.316Z] Successfully parsed outline JSON
+[2025-12-14T08:11:50.727Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T08:13:09.291Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T08:13:30.231Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T16:05:46.266Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T16:06:45.320Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T16:06:54.959Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T16:07:34.248Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T16:07:36.520Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T16:08:22.502Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T16:08:31.169Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T16:09:08.838Z] Selected AI Provider: deepseek, Model: deepseek-chat
+[2025-12-14T18:24:04.565Z] Selected AI Provider: volcengine, Model: ep-20251215012005-d2tb4
+[2025-12-14T18:24:09.347Z] Selected AI Provider: volcengine, Model: ep-20251215012005-d2tb4
+[2025-12-14T18:24:27.462Z] Selected AI Provider: volcengine, Model: ep-20251215012005-d2tb4
+[2025-12-14T18:24:45.802Z] Selected AI Provider: volcengine, Model: ep-20251215012005-d2tb4
+[2025-12-14T18:25:19.139Z] Selected AI Provider: volcengine, Model: ep-20251215012005-d2tb4
+[2025-12-15T00:20:17.052Z] Selected AI Provider: volcengine, Model: ep-20251215012005-d2tb4
+[2025-12-15T00:20:26.601Z] Selected AI Provider: volcengine, Model: ep-20251215012005-d2tb4
+[2025-12-15T00:26:44.719Z] Selected AI Provider: volcengine, Model: ep-20251215012005-d2tb4
+[2025-12-15T00:26:52.245Z] Selected AI Provider: volcengine, Model: ep-20251215012005-d2tb4
+[2025-12-20T01:01:11.176Z] Selected AI Provider: volcengine, Model: ep-20251215012005-d2tb4
+[2025-12-20T01:08:10.129Z] Selected AI Provider: volcengine, Model: ep-20251215012005-d2tb4
+[2025-12-20T01:08:19.684Z] Selected AI Provider: volcengine, Model: ep-20251215012005-d2tb4
+[2025-12-20T01:08:28.438Z] Selected AI Provider: volcengine, Model: ep-20251215012005-d2tb4
+[2025-12-20T01:08:36.362Z] Selected AI Provider: volcengine, Model: ep-20251215012005-d2tb4
+[2025-12-20T01:08:44.433Z] Selected AI Provider: volcengine, Model: ep-20251215012005-d2tb4
+[2025-12-20T03:01:37.415Z] INFO: [Automation] Processing Task 01e6a740-52cc-40f0-ae99-3c01609e9f47: Initial Writing
+[2025-12-20T03:03:03.449Z] INFO: [Automation] Task 01e6a740-52cc-40f0-ae99-3c01609e9f47: GEO Optimization starting...
+[2025-12-20T03:03:06.956Z] INFO: [Pipeline] GEO optimizing for: Task 2 for Verification
+[2025-12-20T03:04:22.111Z] INFO: [Pipeline] GEO optimization received length: 4526
+[2025-12-20T03:04:22.112Z] INFO: [Automation] Task 01e6a740-52cc-40f0-ae99-3c01609e9f47: GEO Optimization completed.
+[2025-12-20T03:04:22.112Z] INFO: [Automation] Task 01e6a740-52cc-40f0-ae99-3c01609e9f47: Smart Illustration starting...
+[2025-12-20T03:04:25.854Z] INFO: [Pipeline] Analyzing illustration points for: Task 2 for Verification
+[2025-12-20T03:06:08.339Z] INFO: [Pipeline] Analysis result: {
+  "illustrations": [
+    {
+      "afterText": "极端案例失效等）。",
+      "prompt": "A clean comparison cha...
+[2025-12-20T03:07:15.710Z] INFO: [Automation] Task 01e6a740-52cc-40f0-ae99-3c01609e9f47: Smart Illustration completed.
+[2025-12-20T03:07:51.742Z] INFO: [Automation] Task 01e6a740-52cc-40f0-ae99-3c01609e9f47: Finalizing Article
+[2025-12-20T03:07:57.594Z] INFO: [Pipeline] Auto-linking for: Task 2 for Verification with 34 candidates
+[2025-12-20T03:10:08.359Z] INFO: [Automation] Processing Task 71adcc22-5c93-4433-b144-3dceaeb17563: Initial Writing
+[2025-12-20T03:11:53.272Z] INFO: [Automation] Processing Task fd80752d-9aae-48e1-bbb3-e857031709c4: Initial Writing
+[2025-12-20T03:14:06.238Z] INFO: [Automation] Task fd80752d-9aae-48e1-bbb3-e857031709c4: GEO Optimization starting...
+[2025-12-20T03:14:09.405Z] INFO: [Pipeline] GEO optimizing for: GEO - 第 1 篇: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化
+[2025-12-20T03:15:35.934Z] INFO: [Pipeline] GEO optimization received length: 5862
+[2025-12-20T03:15:35.936Z] INFO: [Automation] Task fd80752d-9aae-48e1-bbb3-e857031709c4: GEO Optimization completed.
+[2025-12-20T03:15:35.936Z] INFO: [Automation] Task fd80752d-9aae-48e1-bbb3-e857031709c4: Smart Illustration starting...
+[2025-12-20T03:15:40.333Z] INFO: [Pipeline] Analyzing illustration points for: GEO - 第 1 篇: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化
+[2025-12-20T03:17:21.105Z] INFO: [Pipeline] Analysis result: {
+  "illustrations": [
+    {
+      "afterText": "以下为关键对比：",
+      "prompt": "Two side-by-side diagra...
+[2025-12-20T03:17:57.019Z] INFO: [Automation] Task fd80752d-9aae-48e1-bbb3-e857031709c4: Smart Illustration completed.
+[2025-12-20T03:18:30.875Z] INFO: [Automation] Task fd80752d-9aae-48e1-bbb3-e857031709c4: Finalizing Article
+[2025-12-20T03:18:39.343Z] INFO: [Pipeline] Auto-linking for: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化 with 36 candidates
+[2025-12-20T03:20:23.990Z] INFO: [Pipeline] Auto-linking completed, length: 6844
+[2025-12-20T03:38:05.587Z] INFO: [Automation] Processing Task 01e6a740-52cc-40f0-ae99-3c01609e9f47: Initial Writing
+[2025-12-20T03:38:05.589Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-20T03:39:39.906Z] INFO: [Automation] Task 01e6a740-52cc-40f0-ae99-3c01609e9f47: GEO Optimization starting...
+[2025-12-20T03:39:44.449Z] INFO: [Pipeline] GEO optimizing for: Task 2 for Verification
+[2025-12-20T03:39:44.450Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T03:41:15.386Z] INFO: [Pipeline] GEO optimization received length: 5117
+[2025-12-20T03:41:15.387Z] INFO: [Automation] Task 01e6a740-52cc-40f0-ae99-3c01609e9f47: GEO Optimization completed.
+[2025-12-20T03:41:15.387Z] INFO: [Automation] Task 01e6a740-52cc-40f0-ae99-3c01609e9f47: Smart Illustration starting...
+[2025-12-20T03:41:18.889Z] INFO: [Pipeline] Analyzing illustration points for: Task 2 for Verification
+[2025-12-20T03:41:18.890Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T03:43:08.004Z] INFO: [Pipeline] Analysis result: {
+  "illustrations": [
+    {
+      "afterText": "复杂真实环境中表现可控。",
+      "prompt": "A clean flowchart w...
+[2025-12-20T03:44:08.017Z] INFO: [Automation] Task 01e6a740-52cc-40f0-ae99-3c01609e9f47: Smart Illustration completed.
+[2025-12-20T03:44:39.207Z] INFO: [Automation] Task 01e6a740-52cc-40f0-ae99-3c01609e9f47: Generating Metadata (SEO, Entities, Citations)
+[2025-12-20T03:44:44.087Z] INFO: [Pipeline] Generating SEO for: Task 2 for Verification
+[2025-12-20T03:44:44.088Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T03:44:45.329Z] INFO: [Pipeline] Extracting entities
+[2025-12-20T03:44:45.330Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T03:44:48.315Z] INFO: [Pipeline] Generating citations
+[2025-12-20T03:44:48.315Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T03:45:51.007Z] INFO: [Automation] Task 01e6a740-52cc-40f0-ae99-3c01609e9f47: Finalizing Article
+[2025-12-20T03:46:00.617Z] INFO: [Pipeline] Auto-linking for: Task 2 for Verification with 37 candidates
+[2025-12-20T03:46:00.618Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T03:47:29.516Z] INFO: [Pipeline] Auto-linking completed, length: 6371
+[2025-12-20T03:47:41.803Z] INFO: [Automation] Processing Task 7ec8331c-8423-44e3-b1e5-9bebd9481e59: Initial Writing
+[2025-12-20T03:47:41.804Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-20T03:49:32.975Z] INFO: [Automation] Task 7ec8331c-8423-44e3-b1e5-9bebd9481e59: GEO Optimization starting...
+[2025-12-20T03:49:36.103Z] INFO: [Pipeline] GEO optimizing for: GEO - 第 4 篇: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化
+[2025-12-20T03:49:36.103Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T03:51:07.730Z] INFO: [Pipeline] GEO optimization received length: 4735
+[2025-12-20T03:51:07.732Z] INFO: [Automation] Task 7ec8331c-8423-44e3-b1e5-9bebd9481e59: GEO Optimization completed.
+[2025-12-20T03:51:07.733Z] INFO: [Automation] Task 7ec8331c-8423-44e3-b1e5-9bebd9481e59: Smart Illustration starting...
+[2025-12-20T03:51:11.067Z] INFO: [Pipeline] Analyzing illustration points for: GEO - 第 4 篇: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化
+[2025-12-20T03:51:11.068Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T03:52:43.215Z] ERROR: [Automation] Illustration failed for task 7ec8331c-8423-44e3-b1e5-9bebd9481e59 - fetch failed
+[2025-12-20T03:53:11.078Z] INFO: [Automation] Task 7ec8331c-8423-44e3-b1e5-9bebd9481e59: Generating Metadata (SEO, Entities, Citations)
+[2025-12-20T03:53:18.019Z] INFO: [Pipeline] Generating SEO for: GEO - 第 4 篇: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化
+[2025-12-20T03:53:18.020Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T03:53:18.729Z] INFO: [Pipeline] Extracting entities
+[2025-12-20T03:53:18.730Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T03:53:21.217Z] INFO: [Pipeline] Generating citations
+[2025-12-20T03:53:21.217Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T03:54:05.353Z] INFO: [Automation] Task 7ec8331c-8423-44e3-b1e5-9bebd9481e59: Finalizing Article
+[2025-12-20T03:54:13.614Z] INFO: [Pipeline] Auto-linking for: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化 with 38 candidates
+[2025-12-20T03:54:13.615Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T03:56:12.843Z] INFO: [Pipeline] Auto-linking completed, length: 5416
+[2025-12-20T05:18:52.485Z] INFO: [Automation] Processing Task 2a9fba48-0caf-4527-a0bb-d9bd54c3b99e: Initial Writing
+[2025-12-20T05:18:52.488Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-20T05:18:54.016Z] INFO: [Automation] Processing Task 0d3c383e-7492-4099-9e08-428bd4006055: Initial Writing
+[2025-12-20T05:18:54.028Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-20T05:19:16.310Z] INFO: [Automation] Processing Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: Initial Writing
+[2025-12-20T05:19:16.312Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-20T05:19:49.110Z] INFO: [Automation] Task 2a9fba48-0caf-4527-a0bb-d9bd54c3b99e: GEO Optimization starting...
+[2025-12-20T05:19:53.433Z] INFO: [Pipeline] GEO optimizing for: 建站资质办理 - 第 4 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:19:53.434Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:20:12.067Z] INFO: [Automation] Task 0d3c383e-7492-4099-9e08-428bd4006055: GEO Optimization starting...
+[2025-12-20T05:20:16.594Z] INFO: [Pipeline] GEO optimizing for: 建站资质办理 - 第 2 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:20:16.596Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:20:43.013Z] INFO: [Automation] Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: GEO Optimization starting...
+[2025-12-20T05:20:47.061Z] INFO: [Pipeline] GEO optimizing for: 建站资质办理 - 第 3 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:20:47.065Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:20:47.748Z] INFO: [Automation] Processing Task f24f4232-dad5-41ca-85c8-31178ce44e52: Initial Writing
+[2025-12-20T05:20:47.749Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-20T05:21:15.065Z] INFO: [Pipeline] GEO optimization received length: 4138
+[2025-12-20T05:21:15.067Z] INFO: [Automation] Task 2a9fba48-0caf-4527-a0bb-d9bd54c3b99e: GEO Optimization completed.
+[2025-12-20T05:21:15.067Z] INFO: [Automation] Task 2a9fba48-0caf-4527-a0bb-d9bd54c3b99e: Smart Illustration starting...
+[2025-12-20T05:21:18.321Z] INFO: [Pipeline] Analyzing illustration points for: 建站资质办理 - 第 4 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:21:18.322Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:21:20.025Z] INFO: [Pipeline] GEO optimization received length: 3372
+[2025-12-20T05:21:20.026Z] INFO: [Automation] Task 0d3c383e-7492-4099-9e08-428bd4006055: GEO Optimization completed.
+[2025-12-20T05:21:20.027Z] INFO: [Automation] Task 0d3c383e-7492-4099-9e08-428bd4006055: Smart Illustration starting...
+[2025-12-20T05:21:23.550Z] INFO: [Pipeline] Analyzing illustration points for: 建站资质办理 - 第 2 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:21:23.551Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:21:40.032Z] INFO: [Automation] Task f24f4232-dad5-41ca-85c8-31178ce44e52: GEO Optimization starting...
+[2025-12-20T05:21:43.343Z] INFO: [Pipeline] GEO optimizing for: 建站资质办理 - 第 1 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:21:43.344Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:22:08.686Z] INFO: [Pipeline] GEO optimization received length: 5316
+[2025-12-20T05:22:08.686Z] INFO: [Automation] Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: GEO Optimization completed.
+[2025-12-20T05:22:08.687Z] INFO: [Automation] Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: Smart Illustration starting...
+[2025-12-20T05:22:12.462Z] INFO: [Pipeline] Analyzing illustration points for: 建站资质办理 - 第 3 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:22:12.464Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:22:57.873Z] INFO: [Pipeline] GEO optimization received length: 4431
+[2025-12-20T05:22:57.875Z] INFO: [Automation] Task f24f4232-dad5-41ca-85c8-31178ce44e52: GEO Optimization completed.
+[2025-12-20T05:22:57.875Z] INFO: [Automation] Task f24f4232-dad5-41ca-85c8-31178ce44e52: Smart Illustration starting...
+[2025-12-20T05:23:01.166Z] INFO: [Pipeline] Analyzing illustration points for: 建站资质办理 - 第 1 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:23:01.167Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:23:17.175Z] INFO: [Pipeline] Analysis result: { "illustrations": [
+  {
+    "afterText": "等全周期支持。",
+    "prompt": "A clean signboard with its name ...
+[2025-12-20T05:23:18.688Z] ERROR: [Automation] Illustration failed for task 2a9fba48-0caf-4527-a0bb-d9bd54c3b99e - AI request timed out after 120s
+[2025-12-20T05:23:27.055Z] ERROR: [Automation] Illustration failed for task 0d3c383e-7492-4099-9e08-428bd4006055 - AI request timed out after 120s
+[2025-12-20T05:23:53.956Z] INFO: [Automation] Task 2a9fba48-0caf-4527-a0bb-d9bd54c3b99e: Generating Metadata (SEO, Entities, Citations)
+[2025-12-20T05:23:57.549Z] INFO: [Pipeline] Extracting entities
+[2025-12-20T05:23:57.550Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:23:57.981Z] INFO: [Pipeline] Generating SEO for: 建站资质办理 - 第 4 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:23:57.981Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:23:58.701Z] INFO: [Pipeline] Generating citations
+[2025-12-20T05:23:58.701Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:24:00.857Z] INFO: [Automation] Task 0d3c383e-7492-4099-9e08-428bd4006055: Generating Metadata (SEO, Entities, Citations)
+[2025-12-20T05:24:04.696Z] INFO: [Pipeline] Generating citations
+[2025-12-20T05:24:04.698Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:24:04.925Z] INFO: [Pipeline] Generating SEO for: 建站资质办理 - 第 2 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:24:04.926Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:24:05.946Z] INFO: [Pipeline] Extracting entities
+[2025-12-20T05:24:05.948Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:24:55.558Z] INFO: [Automation] Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: Smart Illustration completed.
+[2025-12-20T05:24:57.500Z] INFO: [Automation] Task 0d3c383e-7492-4099-9e08-428bd4006055: Finalizing Article
+[2025-12-20T05:25:01.372Z] ERROR: [Automation] Illustration failed for task f24f4232-dad5-41ca-85c8-31178ce44e52 - AI request timed out after 120s
+[2025-12-20T05:25:06.395Z] INFO: [Pipeline] Auto-linking for: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资 with 39 candidates
+[2025-12-20T05:25:06.398Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:25:23.759Z] INFO: [Automation] Task 2a9fba48-0caf-4527-a0bb-d9bd54c3b99e: Finalizing Article
+[2025-12-20T05:25:30.677Z] INFO: [Automation] Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: Generating Metadata (SEO, Entities, Citations)
+[2025-12-20T05:25:30.808Z] INFO: [Pipeline] Auto-linking for: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资 with 40 candidates
+[2025-12-20T05:25:30.811Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:25:34.172Z] INFO: [Pipeline] Generating citations
+[2025-12-20T05:25:34.173Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:25:34.984Z] INFO: [Pipeline] Extracting entities
+[2025-12-20T05:25:34.985Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:25:35.223Z] INFO: [Pipeline] Generating SEO for: 建站资质办理 - 第 3 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:25:35.224Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:25:39.490Z] INFO: [Automation] Task f24f4232-dad5-41ca-85c8-31178ce44e52: Generating Metadata (SEO, Entities, Citations)
+[2025-12-20T05:25:42.189Z] INFO: [Pipeline] Generating citations
+[2025-12-20T05:25:42.190Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:25:42.228Z] INFO: [Pipeline] Extracting entities
+[2025-12-20T05:25:42.228Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:25:42.635Z] INFO: [Pipeline] Generating SEO for: 建站资质办理 - 第 1 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:25:42.636Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:26:34.269Z] INFO: [Automation] Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: Finalizing Article
+[2025-12-20T05:26:37.656Z] INFO: [Automation] Task f24f4232-dad5-41ca-85c8-31178ce44e52: Finalizing Article
+[2025-12-20T05:26:39.519Z] INFO: [Pipeline] Auto-linking completed, length: 3543
+[2025-12-20T05:26:43.288Z] INFO: [Pipeline] Auto-linking completed, length: 4441
+[2025-12-20T05:26:44.958Z] INFO: [Pipeline] Auto-linking for: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资 with 41 candidates
+[2025-12-20T05:26:44.961Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:26:45.771Z] INFO: [Pipeline] Auto-linking for: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资 with 42 candidates
+[2025-12-20T05:26:45.772Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:26:50.496Z] INFO: [Automation] Processing Task 2a9fba48-0caf-4527-a0bb-d9bd54c3b99e: Initial Writing
+[2025-12-20T05:26:50.497Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-20T05:26:56.542Z] INFO: [Automation] Processing Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: Initial Writing
+[2025-12-20T05:26:56.543Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-20T05:27:49.217Z] INFO: [Pipeline] Auto-linking completed, length: 4530
+[2025-12-20T05:27:54.225Z] INFO: [Automation] Task 2a9fba48-0caf-4527-a0bb-d9bd54c3b99e: GEO Optimization starting...
+[2025-12-20T05:27:57.423Z] INFO: [Pipeline] GEO optimizing for: 建站资质办理 - 第 4 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:27:57.424Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:28:09.994Z] INFO: [Automation] Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: GEO Optimization starting...
+[2025-12-20T05:28:11.316Z] INFO: [Pipeline] Auto-linking completed, length: 6500
+[2025-12-20T05:28:12.919Z] INFO: [Pipeline] GEO optimizing for: 建站资质办理 - 第 3 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:28:12.920Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:28:23.205Z] INFO: [Automation] Processing Task f24f4232-dad5-41ca-85c8-31178ce44e52: Initial Writing
+[2025-12-20T05:28:23.205Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-20T05:29:01.847Z] INFO: [Pipeline] GEO optimization received length: 3789
+[2025-12-20T05:29:01.849Z] INFO: [Automation] Task 2a9fba48-0caf-4527-a0bb-d9bd54c3b99e: GEO Optimization completed.
+[2025-12-20T05:29:01.849Z] INFO: [Automation] Task 2a9fba48-0caf-4527-a0bb-d9bd54c3b99e: Smart Illustration starting...
+[2025-12-20T05:29:04.965Z] INFO: [Pipeline] Analyzing illustration points for: 建站资质办理 - 第 4 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:29:04.967Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:29:18.433Z] INFO: [Automation] Task f24f4232-dad5-41ca-85c8-31178ce44e52: GEO Optimization starting...
+[2025-12-20T05:29:22.164Z] INFO: [Pipeline] GEO optimizing for: 建站资质办理 - 第 1 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:29:22.167Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:29:32.245Z] INFO: [Pipeline] GEO optimization received length: 4876
+[2025-12-20T05:29:32.246Z] INFO: [Automation] Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: GEO Optimization completed.
+[2025-12-20T05:29:32.247Z] INFO: [Automation] Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: Smart Illustration starting...
+[2025-12-20T05:29:35.808Z] INFO: [Pipeline] Analyzing illustration points for: 建站资质办理 - 第 3 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:29:35.809Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:30:19.001Z] INFO: [Pipeline] GEO optimization received length: 3562
+[2025-12-20T05:30:19.001Z] INFO: [Automation] Task f24f4232-dad5-41ca-85c8-31178ce44e52: GEO Optimization completed.
+[2025-12-20T05:30:19.001Z] INFO: [Automation] Task f24f4232-dad5-41ca-85c8-31178ce44e52: Smart Illustration starting...
+[2025-12-20T05:30:23.566Z] INFO: [Pipeline] Analyzing illustration points for: 建站资质办理 - 第 1 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:30:23.568Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:30:36.656Z] INFO: [Pipeline] Analysis result: { "illustrations": [
+  {
+    "afterText": "避免因流程不熟悉导致的延误或失败。",
+    "prompt": "A clean certificate wi...
+[2025-12-20T05:31:08.869Z] INFO: [Pipeline] Analysis result: { "illustrations": [
+  {
+    "afterText": "超出范围的工程。",
+    "prompt": "A clean diagram with three cate...
+[2025-12-20T05:31:29.469Z] ERROR: [Automation] Illustration failed for task ee1a1862-1758-464c-a4e1-a8ff369d7dd3 - fetch failed
+[2025-12-20T05:31:59.996Z] INFO: [Automation] Task 2a9fba48-0caf-4527-a0bb-d9bd54c3b99e: Smart Illustration completed.
+[2025-12-20T05:32:15.447Z] INFO: [Automation] Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: Generating Metadata (SEO, Entities, Citations)
+[2025-12-20T05:32:18.648Z] INFO: [Pipeline] Generating citations
+[2025-12-20T05:32:18.649Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:32:18.912Z] INFO: [Pipeline] Generating SEO for: 建站资质办理 - 第 3 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:32:18.913Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:32:19.036Z] INFO: [Pipeline] Extracting entities
+[2025-12-20T05:32:19.039Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:32:43.083Z] INFO: [Automation] Task f24f4232-dad5-41ca-85c8-31178ce44e52: Smart Illustration completed.
+[2025-12-20T05:33:08.308Z] INFO: [Automation] Task 2a9fba48-0caf-4527-a0bb-d9bd54c3b99e: Generating Metadata (SEO, Entities, Citations)
+[2025-12-20T05:33:10.781Z] INFO: [Pipeline] Generating citations
+[2025-12-20T05:33:10.781Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:33:10.986Z] INFO: [Pipeline] Generating SEO for: 建站资质办理 - 第 4 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:33:10.987Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:33:11.767Z] INFO: [Pipeline] Extracting entities
+[2025-12-20T05:33:11.767Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:33:15.460Z] INFO: [Automation] Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: Finalizing Article
+[2025-12-20T05:33:17.381Z] INFO: [Automation] Task f24f4232-dad5-41ca-85c8-31178ce44e52: Generating Metadata (SEO, Entities, Citations)
+[2025-12-20T05:33:19.771Z] INFO: [Pipeline] Generating citations
+[2025-12-20T05:33:19.776Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:33:20.261Z] INFO: [Pipeline] Generating SEO for: 建站资质办理 - 第 1 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:33:20.262Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:33:21.084Z] INFO: [Pipeline] Extracting entities
+[2025-12-20T05:33:21.085Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:33:23.117Z] INFO: [Pipeline] Auto-linking for: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资 with 43 candidates
+[2025-12-20T05:33:23.117Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:34:06.367Z] INFO: [Automation] Task 2a9fba48-0caf-4527-a0bb-d9bd54c3b99e: Finalizing Article
+[2025-12-20T05:34:16.878Z] INFO: [Pipeline] Auto-linking for: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资 with 44 candidates
+[2025-12-20T05:34:16.879Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:34:33.094Z] INFO: [Automation] Task f24f4232-dad5-41ca-85c8-31178ce44e52: Finalizing Article
+[2025-12-20T05:34:34.643Z] INFO: [Pipeline] Auto-linking completed, length: 5025
+[2025-12-20T05:34:40.341Z] INFO: [Pipeline] Auto-linking for: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资 with 45 candidates
+[2025-12-20T05:34:40.342Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:35:41.915Z] INFO: [Pipeline] Auto-linking completed, length: 4968
+[2025-12-20T05:35:44.835Z] INFO: [Pipeline] Auto-linking completed, length: 4761
+[2025-12-20T05:35:53.111Z] INFO: [Automation] Processing Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: Initial Writing
+[2025-12-20T05:35:53.111Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-20T05:37:10.560Z] INFO: [Automation] Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: GEO Optimization starting...
+[2025-12-20T05:37:14.580Z] INFO: [Pipeline] GEO optimizing for: 建站资质办理 - 第 3 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:37:14.599Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:38:20.412Z] INFO: [Pipeline] GEO optimization received length: 3650
+[2025-12-20T05:38:20.414Z] INFO: [Automation] Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: GEO Optimization completed.
+[2025-12-20T05:38:20.414Z] INFO: [Automation] Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: Smart Illustration starting...
+[2025-12-20T05:38:23.094Z] INFO: [Pipeline] Analyzing illustration points for: 建站资质办理 - 第 3 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:38:23.095Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:40:08.408Z] INFO: [Pipeline] Analysis result: { "illustrations": [
+  {
+    "afterText": "为企业提供清晰指引。",
+    "prompt": "A clean comparison chart with...
+[2025-12-20T05:41:25.232Z] INFO: [Automation] Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: Smart Illustration completed.
+[2025-12-20T05:42:25.077Z] INFO: [Automation] Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: Generating Metadata (SEO, Entities, Citations)
+[2025-12-20T05:42:33.769Z] INFO: [Pipeline] Generating SEO for: 建站资质办理 - 第 3 篇: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资
+[2025-12-20T05:42:33.771Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:42:36.791Z] INFO: [Pipeline] Extracting entities
+[2025-12-20T05:42:36.791Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:42:45.976Z] INFO: [Pipeline] Generating citations
+[2025-12-20T05:42:45.978Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:43:41.746Z] INFO: [Automation] Task ee1a1862-1758-464c-a4e1-a8ff369d7dd3: Finalizing Article
+[2025-12-20T05:43:50.036Z] INFO: [Pipeline] Auto-linking for: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资 with 46 candidates
+[2025-12-20T05:43:50.037Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:45:05.206Z] INFO: [Pipeline] Auto-linking completed, length: 4802
+[2025-12-20T05:54:34.733Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:55:07.601Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-20T05:58:02.680Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:08:22.004Z] INFO: [Automation] Processing Task 0774d357-80ce-4962-8a1d-8d9199d3debd: Initial Writing
+[2025-12-22T11:08:22.007Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:08:38.864Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:08:47.712Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:08:52.491Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:09:01.045Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:09:50.216Z] INFO: [Automation] Task 0774d357-80ce-4962-8a1d-8d9199d3debd: GEO Optimization starting...
+[2025-12-22T11:09:50.673Z] INFO: [Pipeline] GEO optimizing for: 成都小程序开发公司 - 第 1 篇: 成都小程序开发公司有哪些
+[2025-12-22T11:09:50.674Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:10:02.947Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:10:08.947Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:10:20.838Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:11:30.772Z] INFO: [Pipeline] GEO optimization received length: 5360
+[2025-12-22T11:11:30.773Z] INFO: [Automation] Task 0774d357-80ce-4962-8a1d-8d9199d3debd: GEO Optimization completed.
+[2025-12-22T11:11:30.774Z] INFO: [Automation] Task 0774d357-80ce-4962-8a1d-8d9199d3debd: Smart Illustration starting...
+[2025-12-22T11:11:31.176Z] INFO: [Pipeline] Analyzing illustration points for: 成都小程序开发公司 - 第 1 篇: 成都小程序开发公司有哪些
+[2025-12-22T11:11:31.177Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:11:31.868Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:11:33.775Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:11:35.840Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:12:20.135Z] INFO: [Pipeline] Analysis result: { "illustrations": [
+  { 
+    "afterText": "日常维护与迭代支持。", 
+    "prompt": "A clean flow chart diagram ...
+[2025-12-22T11:12:52.763Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:12:57.294Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:13:00.673Z] INFO: [Automation] Task 0774d357-80ce-4962-8a1d-8d9199d3debd: Smart Illustration completed.
+[2025-12-22T11:13:00.916Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:13:20.518Z] INFO: [Automation] Task 0774d357-80ce-4962-8a1d-8d9199d3debd: Generating Metadata (SEO, Entities, Citations)
+[2025-12-22T11:13:20.805Z] INFO: [Pipeline] Generating SEO for: 成都小程序开发公司 - 第 1 篇: 成都小程序开发公司有哪些
+[2025-12-22T11:13:20.806Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:13:20.848Z] INFO: [Pipeline] Extracting entities
+[2025-12-22T11:13:20.848Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:13:20.898Z] INFO: [Pipeline] Generating citations
+[2025-12-22T11:13:20.898Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:14:12.062Z] INFO: [Automation] Task 0774d357-80ce-4962-8a1d-8d9199d3debd: Finalizing Article
+[2025-12-22T11:14:12.871Z] INFO: [Pipeline] Auto-linking for: 成都小程序开发公司有哪些 with 47 candidates
+[2025-12-22T11:14:12.872Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:14:12.918Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:14:15.923Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:14:29.655Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:15:43.187Z] INFO: [Pipeline] Auto-linking completed, length: 6655
+[2025-12-22T11:15:44.176Z] INFO: [Automation] Processing Task 0f3832dc-aee1-4f47-a534-67373a5826d2: Initial Writing
+[2025-12-22T11:15:44.177Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:17:21.907Z] INFO: [Automation] Task 0f3832dc-aee1-4f47-a534-67373a5826d2: GEO Optimization starting...
+[2025-12-22T11:17:22.224Z] INFO: [Pipeline] GEO optimizing for: GEO - 第 5 篇: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化
+[2025-12-22T11:17:22.225Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:18:50.277Z] INFO: [Pipeline] GEO optimization received length: 5211
+[2025-12-22T11:18:50.278Z] INFO: [Automation] Task 0f3832dc-aee1-4f47-a534-67373a5826d2: GEO Optimization completed.
+[2025-12-22T11:18:50.278Z] INFO: [Automation] Task 0f3832dc-aee1-4f47-a534-67373a5826d2: Smart Illustration starting...
+[2025-12-22T11:18:50.572Z] INFO: [Pipeline] Analyzing illustration points for: GEO - 第 5 篇: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化
+[2025-12-22T11:18:50.573Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:19:46.076Z] INFO: [Pipeline] Analysis result: {
+  "illustrations": [
+    {
+      "afterText": "知识图谱等）",
+      "prompt": "A clean comparison chart ...
+[2025-12-22T11:20:21.411Z] INFO: [Automation] Task 0f3832dc-aee1-4f47-a534-67373a5826d2: Smart Illustration completed.
+[2025-12-22T11:20:39.875Z] INFO: [Automation] Task 0f3832dc-aee1-4f47-a534-67373a5826d2: Generating Metadata (SEO, Entities, Citations)
+[2025-12-22T11:20:40.318Z] INFO: [Pipeline] Generating SEO for: GEO - 第 5 篇: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化
+[2025-12-22T11:20:40.319Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:20:40.355Z] INFO: [Pipeline] Extracting entities
+[2025-12-22T11:20:40.356Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:20:40.395Z] INFO: [Pipeline] Generating citations
+[2025-12-22T11:20:40.396Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:21:29.407Z] INFO: [Automation] Task 0f3832dc-aee1-4f47-a534-67373a5826d2: Finalizing Article
+[2025-12-22T11:21:30.349Z] INFO: [Pipeline] Auto-linking for: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化 with 48 candidates
+[2025-12-22T11:21:30.351Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:23:11.734Z] INFO: [Pipeline] Auto-linking completed, length: 6544
+[2025-12-22T11:23:13.033Z] INFO: [Automation] Processing Task 12e81e3e-6997-4621-9416-4547acb3533c: Initial Writing
+[2025-12-22T11:23:13.034Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:24:43.654Z] INFO: [Automation] Task 12e81e3e-6997-4621-9416-4547acb3533c: GEO Optimization starting...
+[2025-12-22T11:24:43.990Z] INFO: [Pipeline] GEO optimizing for: GEO - 第 6 篇: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化
+[2025-12-22T11:24:43.991Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:25:48.997Z] INFO: [Pipeline] GEO optimization received length: 4879
+[2025-12-22T11:25:49.000Z] INFO: [Automation] Task 12e81e3e-6997-4621-9416-4547acb3533c: GEO Optimization completed.
+[2025-12-22T11:25:49.001Z] INFO: [Automation] Task 12e81e3e-6997-4621-9416-4547acb3533c: Smart Illustration starting...
+[2025-12-22T11:25:49.325Z] INFO: [Pipeline] Analyzing illustration points for: GEO - 第 6 篇: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化
+[2025-12-22T11:25:49.326Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:27:30.457Z] INFO: [Pipeline] Analysis result: { "illustrations": [
+  {
+    "afterText": "可信知识源。",
+    "prompt": "A clean sign with its name \"GEO\...
+[2025-12-22T11:28:03.143Z] INFO: [Automation] Task 12e81e3e-6997-4621-9416-4547acb3533c: Smart Illustration completed.
+[2025-12-22T11:28:22.095Z] INFO: [Automation] Task 12e81e3e-6997-4621-9416-4547acb3533c: Generating Metadata (SEO, Entities, Citations)
+[2025-12-22T11:28:22.475Z] INFO: [Pipeline] Extracting entities
+[2025-12-22T11:28:22.476Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:28:22.534Z] INFO: [Pipeline] Generating SEO for: GEO - 第 6 篇: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化
+[2025-12-22T11:28:22.535Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:28:22.708Z] INFO: [Pipeline] Generating citations
+[2025-12-22T11:28:22.709Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:29:07.916Z] INFO: [Automation] Task 12e81e3e-6997-4621-9416-4547acb3533c: Finalizing Article
+[2025-12-22T11:29:08.848Z] INFO: [Pipeline] Auto-linking for: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化 with 49 candidates
+[2025-12-22T11:29:08.850Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:30:37.991Z] INFO: [Pipeline] Auto-linking completed, length: 6174
+[2025-12-22T11:30:39.324Z] INFO: [Automation] Processing Task 2480d818-3850-48f5-9f1f-f711ee5fd122: Initial Writing
+[2025-12-22T11:30:39.325Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:32:14.987Z] INFO: [Automation] Task 2480d818-3850-48f5-9f1f-f711ee5fd122: GEO Optimization starting...
+[2025-12-22T11:32:15.328Z] INFO: [Pipeline] GEO optimizing for: GEO - 第 9 篇: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化
+[2025-12-22T11:32:15.330Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:33:42.390Z] INFO: [Pipeline] GEO optimization received length: 4861
+[2025-12-22T11:33:42.391Z] INFO: [Automation] Task 2480d818-3850-48f5-9f1f-f711ee5fd122: GEO Optimization completed.
+[2025-12-22T11:33:42.391Z] INFO: [Automation] Task 2480d818-3850-48f5-9f1f-f711ee5fd122: Smart Illustration starting...
+[2025-12-22T11:33:42.727Z] INFO: [Pipeline] Analyzing illustration points for: GEO - 第 9 篇: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化
+[2025-12-22T11:33:42.728Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:34:34.126Z] INFO: [Pipeline] Analysis result: { "illustrations": [
+  {
+    "afterText": "员反馈等结构化数据。",
+    "prompt": "A clean knowledge graph diagr...
+[2025-12-22T11:34:57.779Z] INFO: [Automation] Task 2480d818-3850-48f5-9f1f-f711ee5fd122: Smart Illustration completed.
+[2025-12-22T11:35:18.396Z] INFO: [Automation] Task 2480d818-3850-48f5-9f1f-f711ee5fd122: Generating Metadata (SEO, Entities, Citations)
+[2025-12-22T11:35:18.885Z] INFO: [Pipeline] Generating SEO for: GEO - 第 9 篇: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化
+[2025-12-22T11:35:18.887Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:35:18.967Z] INFO: [Pipeline] Generating citations
+[2025-12-22T11:35:18.968Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:35:19.014Z] INFO: [Pipeline] Extracting entities
+[2025-12-22T11:35:19.015Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:36:39.660Z] INFO: [Automation] Task 2480d818-3850-48f5-9f1f-f711ee5fd122: Finalizing Article
+[2025-12-22T11:36:40.397Z] INFO: [Pipeline] Auto-linking for: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化 with 50 candidates
+[2025-12-22T11:36:40.398Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:38:23.300Z] INFO: [Pipeline] Auto-linking completed, length: 6597
+[2025-12-22T11:38:24.490Z] INFO: [Automation] Processing Task 32c6c587-cfbb-444f-b120-663956f14520: Initial Writing
+[2025-12-22T11:38:24.491Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T11:39:41.040Z] INFO: [Automation] Task 32c6c587-cfbb-444f-b120-663956f14520: GEO Optimization starting...
+[2025-12-22T11:39:41.531Z] INFO: [Pipeline] GEO optimizing for: GEO - 第 2 篇: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化
+[2025-12-22T11:39:41.532Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:40:46.652Z] INFO: [Pipeline] GEO optimization received length: 4306
+[2025-12-22T11:40:46.653Z] INFO: [Automation] Task 32c6c587-cfbb-444f-b120-663956f14520: GEO Optimization completed.
+[2025-12-22T11:40:46.653Z] INFO: [Automation] Task 32c6c587-cfbb-444f-b120-663956f14520: Smart Illustration starting...
+[2025-12-22T11:40:47.112Z] INFO: [Pipeline] Analyzing illustration points for: GEO - 第 2 篇: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化
+[2025-12-22T11:40:47.114Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:41:12.251Z] INFO: [Pipeline] Analysis result: { "illustrations": [
+  {
+    "afterText": "如下表所示：",
+    "prompt": "Comparison diagram between tradit...
+[2025-12-22T11:41:38.302Z] INFO: [Automation] Task 32c6c587-cfbb-444f-b120-663956f14520: Smart Illustration completed.
+[2025-12-22T11:42:03.639Z] INFO: [Automation] Task 32c6c587-cfbb-444f-b120-663956f14520: Generating Metadata (SEO, Entities, Citations)
+[2025-12-22T11:42:04.301Z] INFO: [Pipeline] Generating SEO for: GEO - 第 2 篇: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化
+[2025-12-22T11:42:04.302Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:42:04.644Z] INFO: [Pipeline] Extracting entities
+[2025-12-22T11:42:04.646Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:42:04.649Z] INFO: [Pipeline] Generating citations
+[2025-12-22T11:42:04.651Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:42:44.415Z] INFO: [Automation] Task 32c6c587-cfbb-444f-b120-663956f14520: Finalizing Article
+[2025-12-22T11:42:45.294Z] INFO: [Pipeline] Auto-linking for: 生成式引擎优化
+AI搜索排名优化
+AI搜索优化 with 50 candidates
+[2025-12-22T11:42:45.295Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T11:44:01.164Z] INFO: [Pipeline] Auto-linking completed, length: 5280
+[2025-12-22T12:28:33.443Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T12:32:57.182Z] INFO: [Pipeline] Auto-linking for: 成都建筑资质办理公司
+成都建筑资质办理公司有哪些
+成都建筑资 with 47 candidates
+[2025-12-22T12:32:57.182Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T12:34:13.288Z] INFO: [Pipeline] Auto-linking completed, length: 5033
+[2025-12-22T13:02:15.194Z] INFO: [Automation] Processing Task 4536aa3e-1de9-4e3e-9cd9-aa761869e6a6: Initial Writing
+[2025-12-22T13:02:15.196Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T13:03:13.742Z] INFO: [Automation] Task 4536aa3e-1de9-4e3e-9cd9-aa761869e6a6: GEO Optimization starting...
+[2025-12-22T13:03:14.184Z] INFO: [Pipeline] GEO optimizing for: 小程序开发 - 第 1 篇: 成都小程序开发公司有哪些
+成都小程序开发
+小程序开发公司
+小
+[2025-12-22T13:03:14.186Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:04:26.896Z] INFO: [Pipeline] GEO optimization received length: 3851
+[2025-12-22T13:04:26.897Z] INFO: [Automation] Task 4536aa3e-1de9-4e3e-9cd9-aa761869e6a6: GEO Optimization completed.
+[2025-12-22T13:04:26.897Z] INFO: [Automation] Task 4536aa3e-1de9-4e3e-9cd9-aa761869e6a6: Smart Illustration starting...
+[2025-12-22T13:04:27.234Z] INFO: [Pipeline] Analyzing illustration points for: 小程序开发 - 第 1 篇: 成都小程序开发公司有哪些
+成都小程序开发
+小程序开发公司
+小
+[2025-12-22T13:04:27.235Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:05:38.669Z] INFO: [Pipeline] Analysis result: {
+  "illustrations": [
+    {
+      "afterText": "各类别特点及适用场景如下：",
+      "prompt": "Three clean rectan...
+[2025-12-22T13:06:19.333Z] INFO: [Automation] Task 4536aa3e-1de9-4e3e-9cd9-aa761869e6a6: Smart Illustration completed.
+[2025-12-22T13:06:42.695Z] INFO: [Automation] Task 4536aa3e-1de9-4e3e-9cd9-aa761869e6a6: Generating Metadata (SEO, Entities, Citations)
+[2025-12-22T13:06:43.182Z] INFO: [Pipeline] Extracting entities
+[2025-12-22T13:06:43.183Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:06:43.196Z] INFO: [Pipeline] Generating SEO for: 小程序开发 - 第 1 篇: 成都小程序开发公司有哪些
+成都小程序开发
+小程序开发公司
+小
+[2025-12-22T13:06:43.197Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:06:43.380Z] INFO: [Pipeline] Generating citations
+[2025-12-22T13:06:43.381Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:07:15.093Z] INFO: [Automation] Task 4536aa3e-1de9-4e3e-9cd9-aa761869e6a6: Finalizing Article
+[2025-12-22T13:07:16.711Z] INFO: [Automation] Processing Task cb3f7d41-9ad0-4e21-ad70-5d3c57d8e07c: Initial Writing
+[2025-12-22T13:07:16.711Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T13:08:26.741Z] INFO: [Automation] Task cb3f7d41-9ad0-4e21-ad70-5d3c57d8e07c: GEO Optimization starting...
+[2025-12-22T13:08:27.162Z] INFO: [Pipeline] GEO optimizing for: 小程序开发 - 第 2 篇: 成都小程序开发公司有哪些
+成都小程序开发
+小程序开发公司
+小
+[2025-12-22T13:08:27.163Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:10:09.041Z] INFO: [Pipeline] GEO optimization received length: 4906
+[2025-12-22T13:10:09.044Z] INFO: [Automation] Task cb3f7d41-9ad0-4e21-ad70-5d3c57d8e07c: GEO Optimization completed.
+[2025-12-22T13:10:09.044Z] INFO: [Automation] Task cb3f7d41-9ad0-4e21-ad70-5d3c57d8e07c: Smart Illustration starting...
+[2025-12-22T13:10:09.427Z] INFO: [Pipeline] Analyzing illustration points for: 小程序开发 - 第 2 篇: 成都小程序开发公司有哪些
+成都小程序开发
+小程序开发公司
+小
+[2025-12-22T13:10:09.428Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:10:46.143Z] INFO: [Pipeline] Analysis result: {
+  "illustrations": [
+    {
+      "afterText": "综合型企业（提供全案服务）。",
+      "prompt": "Three clean recta...
+[2025-12-22T13:11:23.522Z] INFO: [Automation] Task cb3f7d41-9ad0-4e21-ad70-5d3c57d8e07c: Smart Illustration completed.
+[2025-12-22T13:11:46.657Z] INFO: [Automation] Task cb3f7d41-9ad0-4e21-ad70-5d3c57d8e07c: Generating Metadata (SEO, Entities, Citations)
+[2025-12-22T13:11:46.997Z] INFO: [Pipeline] Generating SEO for: 小程序开发 - 第 2 篇: 成都小程序开发公司有哪些
+成都小程序开发
+小程序开发公司
+小
+[2025-12-22T13:11:46.997Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:11:46.999Z] INFO: [Pipeline] Extracting entities
+[2025-12-22T13:11:47.000Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:11:47.129Z] INFO: [Pipeline] Generating citations
+[2025-12-22T13:11:47.129Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:12:26.711Z] INFO: [Automation] Task cb3f7d41-9ad0-4e21-ad70-5d3c57d8e07c: Finalizing Article
+[2025-12-22T13:12:27.545Z] INFO: [Pipeline] Auto-linking for: 成都小程序开发公司有哪些
+成都小程序开发
+小程序开发公司
+小 with 1 candidates
+[2025-12-22T13:12:27.546Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:14:02.628Z] INFO: [Pipeline] Auto-linking completed, length: 6155
+[2025-12-22T13:24:34.955Z] INFO: [Automation] Processing Task 49aac7f9-1fe4-4eb6-af4c-76bd2f9f5d00: Initial Writing
+[2025-12-22T13:24:34.956Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T13:25:47.181Z] INFO: [Automation] Task 49aac7f9-1fe4-4eb6-af4c-76bd2f9f5d00: GEO Optimization starting...
+[2025-12-22T13:25:47.596Z] INFO: [Pipeline] GEO optimizing for: 小程序开发公司 - 第 1 篇: 小程序开发公司
+[2025-12-22T13:25:47.597Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:26:45.739Z] INFO: [Pipeline] GEO optimization received length: 3174
+[2025-12-22T13:26:45.741Z] INFO: [Automation] Task 49aac7f9-1fe4-4eb6-af4c-76bd2f9f5d00: GEO Optimization completed.
+[2025-12-22T13:26:45.741Z] INFO: [Automation] Task 49aac7f9-1fe4-4eb6-af4c-76bd2f9f5d00: Smart Illustration starting...
+[2025-12-22T13:26:46.070Z] INFO: [Pipeline] Analyzing illustration points for: 小程序开发公司 - 第 1 篇: 小程序开发公司
+[2025-12-22T13:26:46.071Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:27:29.568Z] INFO: [Pipeline] Analysis result: {
+  "illustrations": [
+    {
+      "afterText": "高峰时段优惠活动运营建议。",
+      "prompt": "Cinematic lighting...
+[2025-12-22T13:28:10.016Z] INFO: [Automation] Task 49aac7f9-1fe4-4eb6-af4c-76bd2f9f5d00: Smart Illustration completed.
+[2025-12-22T13:28:31.624Z] INFO: [Automation] Task 49aac7f9-1fe4-4eb6-af4c-76bd2f9f5d00: Generating Metadata (SEO, Entities, Citations)
+[2025-12-22T13:28:32.127Z] INFO: [Pipeline] Extracting entities
+[2025-12-22T13:28:32.128Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:28:32.180Z] INFO: [Pipeline] Generating citations
+[2025-12-22T13:28:32.181Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:28:32.232Z] INFO: [Pipeline] Generating SEO for: 小程序开发公司 - 第 1 篇: 小程序开发公司
+[2025-12-22T13:28:32.233Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:29:14.899Z] INFO: [Automation] Task 49aac7f9-1fe4-4eb6-af4c-76bd2f9f5d00: Finalizing Article
+[2025-12-22T13:29:15.773Z] INFO: [Pipeline] Auto-linking for: 成都小程序开发公司-西仁科技8年定制化解决方案 with 2 candidates
+[2025-12-22T13:29:15.774Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:30:41.002Z] INFO: [Pipeline] Auto-linking completed, length: 4506
+[2025-12-22T13:53:55.940Z] INFO: [Automation] Processing Task 4aa9cb96-d62a-44c7-aa72-07c9a69a29e4: Initial Writing
+[2025-12-22T13:53:55.942Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-22T13:55:26.936Z] INFO: [Automation] Task 4aa9cb96-d62a-44c7-aa72-07c9a69a29e4: GEO Optimization starting...
+[2025-12-22T13:55:27.460Z] INFO: [Pipeline] GEO optimizing for: 全域魔力GEO - 第 1 篇: geo优化公司哪家好
+[2025-12-22T13:55:27.465Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:56:45.353Z] INFO: [Pipeline] GEO optimization received length: 4056
+[2025-12-22T13:56:45.355Z] INFO: [Automation] Task 4aa9cb96-d62a-44c7-aa72-07c9a69a29e4: GEO Optimization completed.
+[2025-12-22T13:56:45.355Z] INFO: [Automation] Task 4aa9cb96-d62a-44c7-aa72-07c9a69a29e4: Smart Illustration starting...
+[2025-12-22T13:56:45.809Z] INFO: [Pipeline] Analyzing illustration points for: 全域魔力GEO - 第 1 篇: geo优化公司哪家好
+[2025-12-22T13:56:45.810Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:57:27.542Z] INFO: [Pipeline] Analysis result: { "illustrations": [
+  {
+    "afterText": "精细化区域运营的企业。",
+    "prompt": "Visualization of multi-sourc...
+[2025-12-22T13:58:31.741Z] INFO: [Automation] Task 4aa9cb96-d62a-44c7-aa72-07c9a69a29e4: Smart Illustration completed.
+[2025-12-22T13:58:53.304Z] INFO: [Automation] Task 4aa9cb96-d62a-44c7-aa72-07c9a69a29e4: Generating Metadata (SEO, Entities, Citations)
+[2025-12-22T13:58:53.657Z] INFO: [Pipeline] Generating citations
+[2025-12-22T13:58:53.658Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:58:53.710Z] INFO: [Pipeline] Generating SEO for: 全域魔力GEO - 第 1 篇: geo优化公司哪家好
+[2025-12-22T13:58:53.710Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:58:53.713Z] INFO: [Pipeline] Extracting entities
+[2025-12-22T13:58:53.713Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T13:59:48.070Z] INFO: [Automation] Task 4aa9cb96-d62a-44c7-aa72-07c9a69a29e4: Finalizing Article
+[2025-12-22T13:59:48.981Z] INFO: [Pipeline] Auto-linking for: 全域魔力GEO优化公司哪家好？靠谱选择指南 with 3 candidates
+[2025-12-22T13:59:48.983Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T14:01:02.855Z] INFO: [Pipeline] Auto-linking completed, length: 5449
+[2025-12-22T17:30:15.975Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T18:29:52.390Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-22T18:33:30.353Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-23T04:23:53.744Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-23T04:26:06.337Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-23T04:31:03.529Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-23T04:38:56.255Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-23T04:50:14.640Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-25T12:46:23.822Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-25T12:47:35.580Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-27T17:51:30.432Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-27T17:52:53.288Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-27T17:53:57.300Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-27T17:55:34.288Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-27T17:56:52.936Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2025-12-28T05:23:39.508Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T08:14:23.294Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T09:48:05.014Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:09:29.653Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:12:11.872Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:26:12.749Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:26:50.516Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:26:56.704Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:27:03.790Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:27:53.613Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:27:59.705Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:28:06.891Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:28:13.571Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:28:24.768Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:28:31.690Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:28:41.343Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:28:48.030Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:28:54.729Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:29:00.466Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:29:05.644Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:33:48.564Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:37:36.840Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:41:17.495Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:41:40.054Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:41:44.138Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:41:51.060Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:41:57.406Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:42:02.763Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:42:25.354Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:44:10.921Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:44:55.246Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T10:50:57.415Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:03:01.031Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:03:10.224Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:03:18.991Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:03:28.228Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:03:37.995Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:03:50.551Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:04:00.340Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:04:09.714Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:04:18.067Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:04:26.856Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:04:34.430Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:04:41.975Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:04:49.745Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:04:58.338Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:05:07.080Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:05:14.942Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:05:22.632Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:05:28.631Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:05:36.705Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:05:45.684Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:05:53.751Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:06:01.150Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:06:08.805Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:06:18.072Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:06:27.292Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:06:34.826Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:06:45.256Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:06:54.484Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:07:02.467Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:07:12.823Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:07:20.903Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:07:27.535Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:07:35.038Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:07:42.505Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:07:50.393Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:07:59.499Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:08:23.631Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:08:31.519Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:08:38.832Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:08:49.362Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:08:57.272Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:09:06.635Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:09:16.577Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:09:26.274Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:09:33.275Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:09:42.751Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:09:51.385Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:09:59.356Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:10:07.549Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:10:18.242Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:10:25.958Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:10:34.271Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:10:42.032Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:10:52.132Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:11:00.226Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:11:08.033Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:11:17.250Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:11:26.339Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:11:33.895Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:11:41.217Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:11:48.401Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:11:57.573Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:12:07.252Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:12:15.373Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:12:24.254Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:12:32.693Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:12:40.943Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:12:48.153Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:12:56.921Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:13:03.193Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:13:12.518Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:13:21.122Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:13:26.700Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:13:32.733Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:13:38.225Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:13:43.897Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:13:52.314Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:13:59.635Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:14:07.728Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:14:15.937Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:14:22.199Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:14:30.390Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:14:37.736Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:14:45.154Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:14:54.000Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:15:03.943Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:15:10.646Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:15:19.715Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:15:27.765Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:15:35.326Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:15:44.901Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:15:52.049Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:15:58.798Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:16:08.393Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:16:15.181Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:16:23.669Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:16:29.610Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:16:38.915Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:16:48.440Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T11:16:57.344Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T12:34:30.403Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T12:40:59.872Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T12:44:08.167Z] INFO: [Pipeline] Analyzing illustration points for: Chengdu Mini-Program Development Company | Mini-Program Development Process and Cost Analysis
+[2025-12-28T12:44:08.170Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T12:45:52.652Z] INFO: [Pipeline] Analysis result: {
+  "illustrations": [
+    {
+      "afterText": "within a week.",
+      "prompt": "Cinematic lightin...
+[2025-12-28T12:51:31.552Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T12:52:00.362Z] INFO: [Pipeline] GEO optimizing for: Chengdu Mini-Program Development Company | Mini-Program Development Process and Cost Analysis (en)
+[2025-12-28T12:52:00.364Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T12:52:18.713Z] INFO: [Pipeline] Analyzing illustration points for: Chengdu Mini-Program Development Company | Mini-Program Development Process and Cost Analysis (en)
+[2025-12-28T12:52:18.715Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T12:52:19.553Z] INFO: [Pipeline] Auto-linking for: Chengdu Mini-Program Development Company | Mini-Program Development Process and Cost Analysis with 4 candidates
+[2025-12-28T12:52:19.553Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T12:53:24.570Z] INFO: [Pipeline] GEO optimization received length: 10708
+[2025-12-28T12:53:54.778Z] INFO: [Pipeline] Analysis result: {
+  "illustrations": [
+    {
+      "afterText": "traditional APPs?</strong></p>",
+      "prompt": "C...
+[2025-12-28T12:54:12.724Z] INFO: [Pipeline] Auto-linking completed, length: 15209
+[2025-12-28T12:57:11.343Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T12:57:24.264Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T12:57:27.341Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T13:00:07.608Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T13:00:42.658Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2025-12-28T13:00:43.396Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent

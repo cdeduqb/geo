@@ -1,0 +1,563 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String                     @id @default(uuid())
+  email              String                     @unique
+  password           String
+  name               String?
+  role               Role                       @default(USER)
+  createdAt          DateTime                   @default(now())
+  updatedAt          DateTime                   @updatedAt
+  avatar             String?
+  bio                String?                    @db.Text
+  expertise          String?
+  github             String?
+  isPublicAuthor     Boolean                    @default(false)
+  linkedin           String?
+  twitter            String?
+  website            String?
+  articles           Article[]
+  automationProjects ArticleAutomationProject[]
+  files              File[]
+  orders             Order[]
+}
+
+model Page {
+  id                 String        @id @default(uuid())
+  slug               String
+  content            String        @db.LongText
+  type               PageType      @default(CUSTOM)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  status             PublishStatus @default(DRAFT)
+  templateId         String?
+  title              String
+  footerTemplateId   String?
+  headerTemplateId   String?
+  sections           Json?
+  editorMode         EditorMode?
+  lang               String        @default("zh")
+  translationGroupId String?
+  footerTemplate     PageTemplate? @relation("PageFooter", fields: [footerTemplateId], references: [id])
+  headerTemplate     PageTemplate? @relation("PageHeader", fields: [headerTemplateId], references: [id])
+  template           PageTemplate? @relation(fields: [templateId], references: [id])
+  seo                SEOSetting?
+
+  @@unique([slug, lang])
+  @@index([lang])
+  @@index([translationGroupId])
+  @@index([footerTemplateId], map: "Page_footerTemplateId_fkey")
+  @@index([headerTemplateId], map: "Page_headerTemplateId_fkey")
+  @@index([templateId], map: "Page_templateId_fkey")
+}
+
+model PageTemplate {
+  id            String     @id @default(uuid())
+  name          String
+  description   String?
+  content       String     @db.LongText
+  style         String?    @db.LongText
+  type          PageType
+  isDefault     Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  isActive      Boolean    @default(false)
+  moduleType    ModuleType @default(HOME_PAGE)
+  preview       String?
+  version       Int        @default(1)
+  sections      Json?
+  isAIGenerated Boolean    @default(false)
+  pagesFooter   Page[]     @relation("PageFooter")
+  pagesHeader   Page[]     @relation("PageHeader")
+  pages         Page[]
+}
+
+model Article {
+  id                  String                    @id @default(uuid())
+  title               String
+  slug                String
+  content             String                    @db.LongText
+  summary             String?                   @db.Text
+  coverImage          String?                   @db.Text
+  status              PublishStatus             @default(DRAFT)
+  authorId            String
+  categoryId          String?
+  aiGenerated         Boolean                   @default(false)
+  aiPrompt            String?                   @db.Text
+  views               Int                       @default(0)
+  createdAt           DateTime                  @default(now())
+  updatedAt           DateTime                  @updatedAt
+  citations           Json?
+  entities            Json?
+  sortOrder           Int                       @default(0)
+  automationProjectId String?
+  lang                String                    @default("zh")
+  translationGroupId  String?
+  creationTasks       AICreationTask[]
+  author              User                      @relation(fields: [authorId], references: [id])
+  automationProject   ArticleAutomationProject? @relation(fields: [automationProjectId], references: [id])
+  category            Category?                 @relation(fields: [categoryId], references: [id])
+  seo                 SEOSetting?
+  tags                Tag[]                     @relation("ArticleToTag")
+
+  @@unique([slug, lang])
+  @@index([lang])
+  @@index([translationGroupId])
+  @@index([authorId], map: "Article_authorId_fkey")
+  @@index([automationProjectId], map: "Article_automationProjectId_fkey")
+  @@index([categoryId], map: "Article_categoryId_fkey")
+}
+
+model Category {
+  id                 String                     @id @default(uuid())
+  name               String
+  slug               String
+  description        String?
+  parentId           String?
+  sortOrder          Int                        @default(0)
+  lang               String                     @default("zh")
+  translationGroupId String?
+  articles           Article[]
+  automationProjects ArticleAutomationProject[]
+  parent             Category?                  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children           Category[]                 @relation("CategoryHierarchy")
+
+  @@unique([slug, lang])
+  @@index([lang])
+  @@index([translationGroupId])
+  @@index([parentId], map: "Category_parentId_fkey")
+}
+
+model Tag {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  articles Article[] @relation("ArticleToTag")
+}
+
+model SEOSetting {
+  id          String   @id @default(uuid())
+  title       String?
+  keywords    String?
+  description String?
+  ogImage     String?  @db.Text
+  canonical   String?
+  pageId      String?  @unique
+  articleId   String?  @unique
+  article     Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  page        Page?    @relation(fields: [pageId], references: [id], onDelete: Cascade)
+}
+
+model AIConfig {
+  id                String         @id @default(uuid())
+  provider          String
+  apiKey            String
+  modelName         String?
+  isActive          Boolean        @default(true)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  baseUrl           String?
+  priority          Int            @default(0)
+  secretKey         String?
+  dailyTokenLimit   Int?
+  monthlyTokenLimit Int?
+  useCase           AIUseCase      @default(GENERAL)
+  usageLogs         AITokenUsage[]
+}
+
+model AITokenUsage {
+  id         String   @id @default(uuid())
+  configId   String
+  date       String
+  tokensUsed Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  config     AIConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+
+  @@unique([configId, date])
+  @@index([date])
+}
+
+model AIStrategy {
+  id                 String                     @id @default(uuid())
+  name               String
+  prompt             String                     @db.Text
+  temperature        Float                      @default(0.7)
+  maxTokens          Int?
+  targetType         String
+  createdAt          DateTime                   @default(now())
+  updatedAt          DateTime                   @updatedAt
+  type               AIUseCase                  @default(WRITING)
+  tasks              AICreationTask[]
+  automationProjects ArticleAutomationProject[]
+}
+
+model SystemSetting {
+  id          String  @id @default(uuid())
+  key         String  @unique
+  value       String  @db.Text
+  description String?
+}
+
+model SiteSettings {
+  id             String   @id @default(uuid())
+  headerSections Json?
+  footerSections Json?
+  logo           String?
+  favicon        String?
+  siteName       String?
+  primaryColor   String   @default("#2563eb")
+  secondaryColor String?
+  phone          String?
+  email          String?
+  address        String?  @db.Text
+  copyright      String?
+  socialLinks    Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model ComponentModule {
+  id        String     @id @default(uuid())
+  name      String
+  type      ModuleType
+  content   String     @db.LongText
+  style     String?    @db.LongText
+  isActive  Boolean    @default(false)
+  order     Int        @default(0)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model SEOPushConfig {
+  id         String       @id @default(uuid())
+  platform   String       @unique
+  apiUrl     String       @db.Text
+  token      String       @db.Text
+  siteId     String?
+  isActive   Boolean      @default(true)
+  lastPushAt DateTime?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  pushLogs   SEOPushLog[]
+}
+
+model SEOPushLog {
+  id        String        @id @default(uuid())
+  configId  String
+  url       String        @db.MediumText
+  status    String
+  response  String?       @db.Text
+  createdAt DateTime      @default(now())
+  config    SEOPushConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+
+  @@index([configId], map: "SEOPushLog_configId_fkey")
+}
+
+model AICreationTask {
+  id          String                    @id @default(uuid())
+  strategyId  String
+  topic       String
+  keywords    String?
+  status      TaskStatus                @default(PENDING)
+  articleId   String?
+  error       String?                   @db.Text
+  createdAt   DateTime                  @default(now())
+  completedAt DateTime?
+  projectId   String?
+  scheduledAt DateTime?
+  article     Article?                  @relation(fields: [articleId], references: [id])
+  project     ArticleAutomationProject? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  strategy    AIStrategy                @relation(fields: [strategyId], references: [id])
+
+  @@index([articleId], map: "AICreationTask_articleId_fkey")
+  @@index([projectId], map: "AICreationTask_projectId_fkey")
+  @@index([strategyId], map: "AICreationTask_strategyId_fkey")
+}
+
+model ArticleAutomationProject {
+  id               String           @id @default(uuid())
+  name             String
+  topic            String           @db.Text
+  keywords         String?          @db.Text
+  totalCount       Int              @default(1)
+  dailyLimit       Int              @default(1)
+  status           ProjectStatus    @default(ACTIVE)
+  enableGeo        Boolean          @default(true)
+  enableIllustrate Boolean          @default(true)
+  enableAutoLink   Boolean          @default(true)
+  enableCover      Boolean          @default(true)
+  enableSEO        Boolean          @default(true)
+  enableCitations  Boolean          @default(true)
+  enableEntities   Boolean          @default(true)
+  categoryId       String?
+  authorId         String
+  strategyId       String
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  tasks            AICreationTask[]
+  articles         Article[]
+  author           User             @relation(fields: [authorId], references: [id])
+  category         Category?        @relation(fields: [categoryId], references: [id])
+  strategy         AIStrategy       @relation(fields: [strategyId], references: [id])
+
+  @@index([authorId], map: "ArticleAutomationProject_authorId_fkey")
+  @@index([categoryId], map: "ArticleAutomationProject_categoryId_fkey")
+  @@index([strategyId], map: "ArticleAutomationProject_strategyId_fkey")
+}
+
+model StorageConfig {
+  id        String   @id @default(uuid())
+  name      String
+  provider  String
+  isActive  Boolean  @default(false)
+  isDefault Boolean  @default(false)
+  config    Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  files     File[]
+
+  @@index([provider])
+  @@index([isActive])
+}
+
+model File {
+  id           String         @id @default(uuid())
+  filename     String
+  storageKey   String
+  mimeType     String
+  size         Int
+  url          String         @db.Text
+  category     String?
+  folder       String?
+  width        Int?
+  height       Int?
+  duration     Int?
+  uploadedById String
+  storageId    String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  description  String?
+  storage      StorageConfig? @relation(fields: [storageId], references: [id])
+  uploadedBy   User           @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+
+  @@index([category])
+  @@index([uploadedById])
+  @@index([createdAt])
+  @@index([storageId], map: "File_storageId_fkey")
+}
+
+model ProductCategory {
+  id                 String            @id @default(uuid())
+  name               String
+  slug               String
+  description        String?           @db.Text
+  parentId           String?
+  sortOrder          Int               @default(0)
+  isActive           Boolean           @default(true)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  lang               String            @default("zh")
+  translationGroupId String?
+  products           Product[]
+  parent             ProductCategory?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children           ProductCategory[] @relation("CategoryTree")
+
+  @@unique([slug, lang])
+  @@index([slug, lang])
+  @@index([lang])
+  @@index([translationGroupId])
+  @@index([parentId])
+}
+
+model Product {
+  id                 String           @id @default(uuid())
+  name               String
+  slug               String
+  description        String?          @db.Text
+  content            String?          @db.LongText
+  price              Decimal          @db.Decimal(10, 2)
+  comparePrice       Decimal?         @db.Decimal(10, 2)
+  costPrice          Decimal?         @db.Decimal(10, 2)
+  stock              Int              @default(0)
+  sku                String?          @unique
+  coverImage         String?          @db.Text
+  images             Json?
+  categoryId         String?
+  attributes         Json?
+  specifications     Json?
+  metaTitle          String?
+  metaDescription    String?
+  metaKeywords       String?
+  status             PublishStatus    @default(DRAFT)
+  isFeatured         Boolean          @default(false)
+  viewCount          Int              @default(0)
+  salesCount         Int              @default(0)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  sortOrder          Int              @default(0)
+  lang               String           @default("zh")
+  translationGroupId String?
+  orderItems         OrderItem[]
+  category           ProductCategory? @relation(fields: [categoryId], references: [id])
+
+  @@unique([slug, lang])
+  @@index([slug, lang])
+  @@index([lang])
+  @@index([translationGroupId])
+  @@index([categoryId])
+  @@index([status])
+  @@index([isFeatured])
+  @@index([sortOrder])
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  orderNumber     String      @unique
+  userId          String?
+  totalAmount     Decimal     @db.Decimal(10, 2)
+  status          OrderStatus @default(PENDING)
+  customerName    String?
+  customerEmail   String?
+  customerPhone   String?
+  shippingAddress String?     @db.Text
+  note            String?     @db.Text
+  paidAt          DateTime?
+  shippedAt       DateTime?
+  completedAt     DateTime?
+  cancelledAt     DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  user            User?       @relation(fields: [userId], references: [id])
+  items           OrderItem[]
+
+  @@index([orderNumber])
+  @@index([userId])
+  @@index([status])
+}
+
+model OrderItem {
+  id          String   @id @default(uuid())
+  orderId     String
+  productId   String?
+  productName String
+  productSku  String?
+  price       Decimal  @db.Decimal(10, 2)
+  quantity    Int      @default(1)
+  attributes  Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product? @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  name      String
+  email     String?
+  phone     String?
+  subject   String?
+  content   String   @db.Text
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isRead])
+  @@index([createdAt])
+}
+
+model CrawlerLog {
+  id         String   @id @default(uuid())
+  crawler    String
+  userAgent  String   @db.Text
+  path       String
+  statusCode Int
+  ip         String?
+  referer    String?
+  isAbnormal Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([crawler])
+  @@index([createdAt])
+  @@index([path])
+  @@index([isAbnormal])
+}
+
+enum Role {
+  USER
+  ADMIN
+  EDITOR
+}
+
+enum EditorMode {
+  VISUAL
+  CODE
+}
+
+enum PageType {
+  HOME
+  ARTICLE_LIST
+  PRODUCT_LIST
+  ABOUT
+  CONTACT
+  CUSTOM
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  SCHEDULED
+}
+
+enum ModuleType {
+  HEADER
+  FOOTER
+  HOME_PAGE
+  ARTICLE_PAGE
+  ABOUT_PAGE
+  CONTACT_PAGE
+  PRODUCT_PAGE
+  SERVICE_PAGE
+  FAQ_PAGE
+  CUSTOM_PAGE
+}
+
+enum AIUseCase {
+  GENERAL
+  WRITING
+  CODE
+  IMAGE
+}
+
+enum TaskStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum ProjectStatus {
+  ACTIVE
+  PAUSED
+  COMPLETED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}

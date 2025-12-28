@@ -1,0 +1,274 @@
+// 授权系统独立数据库配置
+// 数据库: cmssq (商业授权数据库)
+
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../node_modules/@prisma/client-license"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("LICENSE_DATABASE_URL")
+}
+
+//==============================================================================
+// 授权管理模型
+//==============================================================================
+
+// 客户信息表
+model Customer {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  companyName   String?   @map("company_name")
+  contactPerson String?   @map("contact_person")
+  phone         String?
+  address       String?   @db.Text
+  status        String    @default("active") // active, suspended, closed
+  metadata      Json?     @db.Json
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  licenses      License[]
+  orders        Order[]
+
+  @@map("customers")
+}
+
+// 授权许可证表
+model License {
+  id                 String    @id @default(uuid())
+  licenseCode        String    @unique @map("license_code") @db.VarChar(255)
+  customerId         String    @map("customer_id")
+  customer           Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  
+  // 授权信息
+  plan               String    // TRIAL, BASIC, PRO, ENTERPRISE
+  features           Json      @db.Json // {"pages": true, "ai": true, "seo": true}
+  domains            Json      @db.Json // ["example.com", "*.example.com"]
+  
+  // 硬件绑定
+  fingerprint        String?   @db.VarChar(64)
+  
+  // 激活限制
+  maxActivations     Int       @default(1) @map("max_activations")
+  currentActivations Int       @default(0) @map("current_activations")
+  
+  // 时间管理
+  issuedAt           DateTime  @map("issued_at")
+  expiresAt          DateTime  @map("expires_at")
+  lastActivatedAt    DateTime? @map("last_activated_at")
+  
+  // 状态管理
+  status             String    @default("active") // active, suspended, expired, revoked
+  suspendedReason    String?   @map("suspended_reason") @db.Text
+  
+  // 签名验证
+  signature          String    @db.Text
+  version            String    @default("1.0")
+  
+  // 元数据
+  metadata           Json?     @db.Json
+  notes              String?   @db.Text
+  
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  instances          LicenseInstance[]
+  heartbeats         LicenseHeartbeat[]
+  orders             Order[]
+
+  @@index([customerId])
+  @@index([status])
+  @@index([expiresAt])
+  @@map("licenses")
+}
+
+// 授权实例表（监控每个安装）
+model LicenseInstance {
+  id            String    @id @default(uuid())
+  licenseId     String    @map("license_id")
+  license       License   @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+  
+  // 设备信息
+  fingerprint   String    @unique @db.VarChar(64)
+  domain        String?   @db.VarChar(255)
+  ipAddress     String?   @map("ip_address") @db.VarChar(45)
+  
+  // 地理位置
+  geoLocation   Json?     @map("geo_location") @db.Json // {country, city, lat, lng}
+  
+  // 系统信息
+  platform      String?   @db.VarChar(50)
+  version       String?   @db.VarChar(50)
+  
+  // 环境信息
+  isVirtual     Boolean   @default(false) @map("is_virtual")
+  isContainer   Boolean   @default(false) @map("is_container")
+  
+  // 状态
+  status        String    @default("online") // online, offline, suspicious, blocked
+  lastHeartbeat DateTime? @map("last_heartbeat")
+  
+  // 激活信息
+  activatedAt   DateTime  @default(now()) @map("activated_at")
+  lastSeenAt    DateTime  @default(now()) @map("last_seen_at")
+  
+  // 元数据
+  metadata      Json?     @db.Json
+  
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  heartbeats    LicenseHeartbeat[]
+
+  @@index([licenseId])
+  @@index([status])
+  @@index([lastHeartbeat])
+  @@map("license_instances")
+}
+
+// 心跳日志表
+model LicenseHeartbeat {
+  id           BigInt    @id @default(autoincrement())
+  licenseId    String    @map("license_id")
+  license      License   @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+  instanceId   String    @map("instance_id")
+  instance     LicenseInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  
+  // 心跳数据
+  status       String    // success, failed, warning
+  responseTime Int?      @map("response_time") // 毫秒
+  errorMessage String?   @map("error_message") @db.Text
+  
+  // 运行时信息
+  cpuUsage     Float?    @map("cpu_usage")
+  memoryUsage  Float?    @map("memory_usage")
+  diskUsage    Float?    @map("disk_usage")
+  
+  // 元数据
+  metadata     Json?     @db.Json
+  timestamp    DateTime  @default(now())
+
+  @@index([licenseId])
+  @@index([instanceId])
+  @@index([timestamp])
+  @@map("license_heartbeats")
+}
+
+// 订单表
+model Order {
+  id             String    @id @default(uuid())
+  orderNumber    String    @unique @map("order_number") @db.VarChar(50)
+  customerId     String    @map("customer_id")
+  customer       Customer  @relation(fields: [customerId], references: [id])
+  licenseId      String?   @map("license_id")
+  license        License?  @relation(fields: [licenseId], references: [id])
+  
+  // 订单信息
+  plan           String
+  duration       Int       // 月数
+  quantity       Int       @default(1)
+  
+  // 价格信息
+  amount         Decimal   @db.Decimal(10, 2)
+  currency       String    @default("CNY") @db.VarChar(10)
+  discount       Decimal?  @db.Decimal(10, 2)
+  finalAmount    Decimal   @map("final_amount") @db.Decimal(10, 2)
+  
+  // 支付信息
+  paymentMethod  String?   @map("payment_method") @db.VarChar(50)
+  paymentStatus  String    @default("pending") @map("payment_status") // pending, completed, failed, refunded
+  transactionId  String?   @unique @map("transaction_id") @db.VarChar(255)
+  paidAt         DateTime? @map("paid_at")
+  
+  // 发票信息
+  invoiceIssued  Boolean   @default(false) @map("invoice_issued")
+  invoiceNumber  String?   @map("invoice_number") @db.VarChar(50)
+  invoiceUrl     String?   @map("invoice_url") @db.Text
+  
+  // 元数据
+  metadata       Json?     @db.Json
+  notes          String?   @db.Text
+  
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  @@index([customerId])
+  @@index([paymentStatus])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+// 版权信息表
+model Copyright {
+  id            String    @id @default(uuid())
+  licenseId     String?   @unique @map("license_id")
+  
+  // 版权信息
+  companyName   String    @map("company_name") @db.VarChar(255)
+  companyUrl    String?   @map("company_url") @db.VarChar(500)
+  icpNumber     String?   @map("icp_number") @db.VarChar(100)
+  customText    String?   @map("custom_text") @db.Text
+  
+  // 显示控制
+  showPoweredBy Boolean   @default(true) @map("show_powered_by")
+  position      String    @default("footer") // footer, header, both
+  
+  // 状态
+  isActive      Boolean   @default(true) @map("is_active")
+  
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  @@map("copyrights")
+}
+
+// 系统配置表
+model SystemConfig {
+  id          String    @id @default(uuid())
+  key         String    @unique @db.VarChar(100)
+  value       String    @db.Text
+  category    String    @default("general") @db.VarChar(50)
+  description String?   @db.Text
+  isPublic    Boolean   @default(false) @map("is_public")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([category])
+  @@map("system_configs")
+}
+
+// 管理员表
+model Admin {
+  id          String    @id @default(uuid())
+  username    String    @unique @db.VarChar(50)
+  email       String    @unique @db.VarChar(255)
+  password    String    @db.VarChar(255)
+  role        String    @default("admin") // super_admin, admin, operator
+  status      String    @default("active") // active, inactive, suspended
+  lastLoginAt DateTime? @map("last_login_at")
+  lastLoginIp String?   @map("last_login_ip") @db.VarChar(45)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("admins")
+}
+
+// 操作日志表
+model AuditLog {
+  id          BigInt    @id @default(autoincrement())
+  adminId     String?   @map("admin_id")
+  action      String    @db.VarChar(100)
+  resourceType String   @map("resource_type") @db.VarChar(50)
+  resourceId  String?   @map("resource_id") @db.VarChar(100)
+  details     Json?     @db.Json
+  ipAddress   String?   @map("ip_address") @db.VarChar(45)
+  userAgent   String?   @map("user_agent") @db.Text
+  timestamp   DateTime  @default(now())
+
+  @@index([adminId])
+  @@index([timestamp])
+  @@index([resourceType])
+  @@map("audit_logs")
+}

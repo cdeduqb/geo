@@ -1,0 +1,54 @@
+services:
+  # MySQL数据库
+  mysql:
+    image: docker.m.daocloud.io/library/mysql:8.0
+    container_name: geocms-mysql
+    restart: always
+    env_file: .env
+    environment:
+      # 显式引用环境变量，解决 MySQL 初始化报错
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: cms
+      MYSQL_USER: cms
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3306:3306"
+    networks:
+      - geocms-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  # GeoCMS应用
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: geocms-app
+    restart: always
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      # DATABASE_URL 等变量现在直接从 .env 加载
+    ports:
+      - "3000:3000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - geocms-network
+
+volumes:
+  mysql_data:
+
+
+networks:
+  geocms-network:
+    driver: bridge

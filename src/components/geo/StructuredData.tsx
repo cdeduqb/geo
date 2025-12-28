@@ -1,0 +1,350 @@
+'use client';
+
+import Script from 'next/script';
+
+// ============================================================================
+// Schema.org Type Definitions
+// ============================================================================
+
+export interface ArticleSchemaProps {
+    type: 'Article' | 'NewsArticle' | 'BlogPosting';
+    title: string;
+    description?: string;
+    author?: {
+        name: string;
+        url?: string;
+    };
+    datePublished: string;
+    dateModified?: string;
+    image?: string;
+    url: string;
+    publisher?: {
+        name: string;
+        logo?: string;
+    };
+    mentions?: Array<{
+        name: string;
+        description?: string;
+        url?: string;
+    }>;
+    citations?: Array<{
+        url?: string;
+        name: string;
+    }>;
+}
+
+export interface FAQSchemaProps {
+    type: 'FAQPage';
+    questions: Array<{
+        question: string;
+        answer: string;
+    }>;
+}
+
+export interface OrganizationSchemaProps {
+    type: 'Organization';
+    name: string;
+    url?: string;
+    logo?: string;
+    description?: string;
+    sameAs?: string[];
+}
+
+export interface ProductSchemaProps {
+    type: 'Product';
+    name: string;
+    description?: string;
+    image?: string;
+    brand?: string;
+    sku?: string;
+    gtin?: string;
+    price?: number;
+    currency?: string;
+    availability?: 'InStock' | 'OutOfStock' | 'PreOrder' | 'BackOrder';
+    aggregateRating?: {
+        ratingValue: number;
+        reviewCount: number;
+    };
+}
+
+export interface BreadcrumbSchemaProps {
+    type: 'BreadcrumbList';
+    items: Array<{
+        name: string;
+        url: string;
+    }>;
+}
+
+export interface WebSiteSchemaProps {
+    type: 'WebSite';
+    name: string;
+    url: string;
+    description?: string;
+    searchAction?: {
+        targetUrl: string;
+        queryInput: string;
+    };
+}
+
+export interface DatasetSchemaProps {
+    type: 'Dataset';
+    name: string;
+    description?: string;
+    url: string;
+    creator?: {
+        name: string;
+    };
+}
+
+export interface HowToSchemaProps {
+    type: 'HowTo';
+    name: string;
+    steps: string[];
+}
+
+export type StructuredDataProps =
+    | ArticleSchemaProps
+    | FAQSchemaProps
+    | OrganizationSchemaProps
+    | ProductSchemaProps
+    | BreadcrumbSchemaProps
+    | WebSiteSchemaProps
+    | DatasetSchemaProps
+    | HowToSchemaProps;
+
+// ============================================================================
+// Schema Generators
+// ============================================================================
+
+function generateArticleSchema(props: ArticleSchemaProps): object {
+    return {
+        '@context': 'https://schema.org',
+        '@type': props.type,
+        headline: props.title,
+        description: props.description,
+        author: props.author ? {
+            '@type': 'Person',
+            name: props.author.name,
+            url: props.author.url
+        } : undefined,
+        datePublished: props.datePublished,
+        dateModified: props.dateModified || props.datePublished,
+        image: props.image,
+        mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': props.url
+        },
+        publisher: props.publisher ? {
+            '@type': 'Organization',
+            name: props.publisher.name,
+            logo: props.publisher.logo ? {
+                '@type': 'ImageObject',
+                url: props.publisher.logo
+            } : undefined
+        } : undefined,
+        mentions: props.mentions?.map(m => ({
+            '@type': 'Thing',
+            name: m.name,
+            description: m.description,
+            url: m.url
+        })),
+        citation: props.citations?.map(c => ({
+            '@type': 'CreativeWork',
+            name: c.name,
+            url: c.url
+        }))
+    };
+}
+
+function generateFAQSchema(props: FAQSchemaProps): object {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: props.questions.map(q => ({
+            '@type': 'Question',
+            name: q.question,
+            acceptedAnswer: {
+                '@type': 'Answer',
+                text: q.answer
+            }
+        }))
+    };
+}
+
+function generateOrganizationSchema(props: OrganizationSchemaProps): object {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: props.name,
+        url: props.url,
+        logo: props.logo,
+        description: props.description,
+        sameAs: props.sameAs
+    };
+}
+
+function generateProductSchema(props: ProductSchemaProps): object {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: props.name,
+        description: props.description,
+        image: props.image,
+        brand: props.brand ? {
+            '@type': 'Brand',
+            name: props.brand
+        } : undefined,
+        sku: props.sku,
+        gtin: props.gtin,
+        aggregateRating: props.aggregateRating ? {
+            '@type': 'AggregateRating',
+            ratingValue: props.aggregateRating.ratingValue,
+            reviewCount: props.aggregateRating.reviewCount
+        } : undefined,
+        offers: props.price ? {
+            '@type': 'Offer',
+            price: props.price,
+            priceCurrency: props.currency || 'CNY',
+            availability: `https://schema.org/${props.availability || 'InStock'}`,
+            url: typeof window !== 'undefined' ? window.location.href : undefined
+        } : undefined
+    };
+}
+
+function generateBreadcrumbSchema(props: BreadcrumbSchemaProps): object {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: props.items.map((item, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            name: item.name,
+            item: item.url
+        }))
+    };
+}
+
+function generateWebSiteSchema(props: WebSiteSchemaProps): object {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: props.name,
+        url: props.url,
+        description: props.description,
+        potentialAction: props.searchAction ? {
+            '@type': 'SearchAction',
+            target: {
+                '@type': 'EntryPoint',
+                urlTemplate: props.searchAction.targetUrl
+            },
+            'query-input': props.searchAction.queryInput
+        } : undefined
+    };
+}
+
+// ============================================================================
+// Main Component
+// ============================================================================
+
+export function StructuredData(props: StructuredDataProps) {
+    let schema: object;
+
+    switch (props.type) {
+        case 'Article':
+        case 'NewsArticle':
+        case 'BlogPosting':
+            schema = generateArticleSchema(props);
+            break;
+        case 'FAQPage':
+            schema = generateFAQSchema(props);
+            break;
+        case 'Organization':
+            schema = generateOrganizationSchema(props);
+            break;
+        case 'Product':
+            schema = generateProductSchema(props);
+            break;
+        case 'BreadcrumbList':
+            schema = generateBreadcrumbSchema(props);
+            break;
+        case 'WebSite':
+            schema = generateWebSiteSchema(props);
+            break;
+        case 'Dataset':
+            schema = {
+                '@context': 'https://schema.org',
+                '@type': 'Dataset',
+                name: (props as any).name,
+                description: (props as any).description,
+                url: (props as any).url,
+                creator: (props as any).creator ? {
+                    '@type': 'Person',
+                    name: (props as any).creator.name
+                } : undefined
+            };
+            break;
+        case 'HowTo':
+            schema = {
+                '@context': 'https://schema.org',
+                '@type': 'HowTo',
+                name: (props as any).name,
+                step: (props as any).steps?.map((s: any, i: number) => ({
+                    '@type': 'HowToStep',
+                    position: i + 1,
+                    text: s
+                }))
+            };
+            break;
+        default:
+            return null;
+    }
+
+    // 移除 undefined 值
+    const cleanSchema = JSON.parse(JSON.stringify(schema));
+
+    return (
+        <script
+            id={`structured-data-${props.type}`}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(cleanSchema) }}
+        />
+    );
+}
+
+// ============================================================================
+// Convenience Components
+// ============================================================================
+
+export function ArticleStructuredData(props: Omit<ArticleSchemaProps, 'type'> & { type?: ArticleSchemaProps['type'] }) {
+    return <StructuredData {...props} type={props.type || 'Article'} />;
+}
+
+export function FAQStructuredData(props: Omit<FAQSchemaProps, 'type'>) {
+    return <StructuredData {...props} type="FAQPage" />;
+}
+
+export function OrganizationStructuredData(props: Omit<OrganizationSchemaProps, 'type'>) {
+    return <StructuredData {...props} type="Organization" />;
+}
+
+export function ProductStructuredData(props: Omit<ProductSchemaProps, 'type'>) {
+    return <StructuredData {...props} type="Product" />;
+}
+
+export function BreadcrumbStructuredData(props: Omit<BreadcrumbSchemaProps, 'type'>) {
+    return <StructuredData {...props} type="BreadcrumbList" />;
+}
+
+export function WebSiteStructuredData(props: Omit<WebSiteSchemaProps, 'type'>) {
+    return <StructuredData {...props} type="WebSite" />;
+}
+
+export function DatasetStructuredData(props: Omit<DatasetSchemaProps, 'type'>) {
+    return <StructuredData {...props} type="Dataset" />;
+}
+
+export function HowToStructuredData(props: Omit<HowToSchemaProps, 'type'>) {
+    return <StructuredData {...props} type="HowTo" />;
+}
+
+export default StructuredData;

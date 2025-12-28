@@ -1,0 +1,17 @@
+[2025-12-18T14:09:42.376Z] [POST] Creating strategy {
+  "name": "很好",
+  "prompt": "不变",
+  "targetType": "article",
+  "type": "WRITING"
+}
+[2025-12-18T14:09:42.659Z] [POST] Strategy created {
+  "id": "4a25c2e8-2bb5-460b-b768-6b4fc99ebeb9",
+  "name": "很好",
+  "prompt": "不变",
+  "temperature": 0.7,
+  "maxTokens": null,
+  "targetType": "article",
+  "type": "WRITING",
+  "createdAt": "2025-12-18T14:09:42.377Z",
+  "updatedAt": "2025-12-18T14:09:42.377Z"
+}
