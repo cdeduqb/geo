@@ -63,6 +63,15 @@ async function scoreWithAI(title: string, content: string): Promise<any> {
         const baseUrl = aiConfig.baseUrl;
         const model = aiConfig.modelName || 'gpt-3.5-turbo';
 
+        // 详细日志
+        console.log('[AI评分] 配置信息:', {
+            provider: aiConfig.provider,
+            baseUrl,
+            model,
+            hasApiKey: !!apiKey,
+            apiKeyPrefix: apiKey?.substring(0, 10) + '...'
+        });
+
         if (aiConfig.provider === 'openai') {
             response = await fetch(`${baseUrl || 'https://api.openai.com/v1'}/chat/completions`, {
                 method: 'POST',
@@ -96,6 +105,24 @@ async function scoreWithAI(title: string, content: string): Promise<any> {
                     temperature: 0.3,
                 }),
             });
+        } else if (aiConfig.provider === 'volcengine') {
+            // 火山引擎特殊处理 - 不同的API格式
+            response = await fetch(`${baseUrl}/chat/completions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`,
+                },
+                body: JSON.stringify({
+                    model,  // 使用用户配置的endpoint ID
+                    messages: [
+                        { role: 'system', content: '你是一个专业的内容质量评估专家。请以JSON格式返回评分结果。' },
+                        { role: 'user', content: prompt }
+                    ],
+                    temperature: 0.3,
+                    // 火山引擎不支持response_format参数
+                }),
+            });
         } else {
             // 其他provider使用通用OpenAI格式
             response = await fetch(`${baseUrl}/chat/completions`, {
@@ -115,19 +142,42 @@ async function scoreWithAI(title: string, content: string): Promise<any> {
             });
         }
 
+        console.log('[AI评分] API响应状态:', response.status, response.statusText);
+
         if (!response.ok) {
-            throw new Error(`AI API调用失败: ${response.statusText}`);
+            // 获取详细错误信息
+            const errorText = await response.text();
+            console.error('[AI评分] AI API错误响应:', errorText);
+            throw new Error(`AI API调用失败: ${response.statusText} - ${errorText}`);
         }
 
         const data = await response.json();
+        console.log('[AI评分] AI返回数据:', data);
+
         const content_result = data.choices?.[0]?.message?.content;
 
         if (!content_result) {
             throw new Error('AI返回内容为空');
         }
 
-        // 解析JSON
-        const scores = JSON.parse(content_result);
+        console.log('[AI评分] AI返回内容:', content_result.substring(0, 500));
+
+        // 解析JSON - 处理可能包裹在```json```代码块中的情况
+        let jsonText = content_result.trim();
+
+        // 移除markdown代码块标记
+        if (jsonText.startsWith('```')) {
+            // 提取代码块中的内容
+            const match = jsonText.match(/```(?:json)?\n?([\s\S]*?)\n?```/);
+            if (match) {
+                jsonText = match[1].trim();
+            } else {
+                // 简单移除开头和结尾的```
+                jsonText = jsonText.replace(/^```(?:json)?/, '').replace(/```$/, '').trim();
+            }
+        }
+
+        const scores = JSON.parse(jsonText);
 
         // 验证和标准化数据
         const {
