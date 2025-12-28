@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import AISimulator from './_components/AISimulator';
 import CitationTracker from './_components/CitationTracker';
+import ContentScorer from './_components/ContentScorer';
 
 // AI 爬虫配置 (与之前保持一致)
 const AI_CRAWLERS = [
@@ -267,6 +268,12 @@ export default function GEOSettingsPage() {
                         引用追踪
                     </TabsTrigger>
                     <TabsTrigger
+                        value="quality"
+                        className="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:border-blue-600"
+                    >
+                        质量评分
+                    </TabsTrigger>
+                    <TabsTrigger
                         value="logs"
                         className="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:border-blue-600"
                     >
@@ -277,6 +284,11 @@ export default function GEOSettingsPage() {
                 {/* 引用追踪面板 */}
                 <TabsContent value="citations">
                     <CitationTracker />
+                </TabsContent>
+
+                {/* 质量评分面板 */}
+                <TabsContent value="quality">
+                    <ContentScorer />
                 </TabsContent>
 
                 {/* 视角模拟面板 */}

@@ -1,0 +1,299 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { db as prisma } from '@/lib/db';
+
+// AI 评分提示词模板
+const SCORING_PROMPT = `你是一个专业的内容质量评估专家。请从以下5个维度客观评估这篇文章的质量，每个维度给出0-100的分数：
+
+1. **结构清晰度** (structureScore): 评估标题层次是否合理、段落组织是否清晰、是否有明确的大纲结构
+2. **事实密度** (factualScore): 评估包含多少具体数据、是否有可验证的事实、信息密度如何
+3. **可引用性** (citationScore): 评估内容是否具有权威性、是否包含独特见解、是否适合作为引用来源
+4. **实体丰富度** (entityScore): 评估包含多少命名实体(人名、地名、组织等)、实体之间的关联度
+5. **语义深度** (semanticScore): 评估内容深度、是否有深入分析、专业程度
+
+**文章标题**: {title}
+
+**文章内容**:
+{content}
+
+**要求**:
+1. 严格按照0-100的标准打分
+2. 总分(overallScore)为5个维度的平均分
+3. 至少提供3-5条具体的改进建议
+4. 建议要具体、可操作
+5. 必须返回valid JSON格式
+
+**返回格式**:
+\`\`\`json
+{
+  "structureScore": 85,
+  "factualScore": 90,
+  "citationScore": 88,
+  "entityScore": 75,
+  "semanticScore": 82,
+  "overallScore": 84,
+  "suggestions": [
+    "增加更多具体的数据支撑，提高事实密度",
+    "补充更多命名实体的详细介绍，增强实体丰富度",
+    "优化标题层次，使用H2、H3等标签明确内容结构"
+  ]
+}
+\`\`\``;
+
+// 调用AI进行评分
+async function scoreWithAI(title: string, content: string): Promise<any> {
+    try {
+        // 获取可用的AI配置
+        const aiConfig = await prisma.aIConfig.findFirst({
+            where: { isActive: true },
+            orderBy: { updatedAt: 'desc' },
+        });
+
+        if (!aiConfig) {
+            throw new Error('没有可用的AI配置');
+        }
+
+        // 构建提示词
+        const prompt = SCORING_PROMPT
+            .replace('{title}', title)
+            .replace('{content}', content.substring(0, 4000)); // 限制长度
+
+        // 调用AI API（根据配置的provider）
+        let response;
+        const apiKey = aiConfig.apiKey;
+        const baseUrl = aiConfig.baseUrl;
+        const model = aiConfig.modelName || 'gpt-3.5-turbo';
+
+        if (aiConfig.provider === 'openai') {
+            response = await fetch(`${baseUrl || 'https://api.openai.com/v1'}/chat/completions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`,
+                },
+                body: JSON.stringify({
+                    model,
+                    messages: [
+                        { role: 'system', content: '你是一个专业的内容质量评估专家。' },
+                        { role: 'user', content: prompt }
+                    ],
+                    temperature: 0.3,
+                    response_format: { type: 'json_object' },
+                }),
+            });
+        } else if (aiConfig.provider === 'deepseek') {
+            response = await fetch(`${baseUrl || 'https://api.deepseek.com/v1'}/chat/completions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`,
+                },
+                body: JSON.stringify({
+                    model: model || 'deepseek-chat',
+                    messages: [
+                        { role: 'system', content: '你是一个专业的内容质量评估专家。' },
+                        { role: 'user', content: prompt }
+                    ],
+                    temperature: 0.3,
+                }),
+            });
+        } else {
+            // 其他provider使用通用OpenAI格式
+            response = await fetch(`${baseUrl}/chat/completions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`,
+                },
+                body: JSON.stringify({
+                    model,
+                    messages: [
+                        { role: 'system', content: '你是一个专业的内容质量评估专家。' },
+                        { role: 'user', content: prompt }
+                    ],
+                    temperature: 0.3,
+                }),
+            });
+        }
+
+        if (!response.ok) {
+            throw new Error(`AI API调用失败: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        const content_result = data.choices?.[0]?.message?.content;
+
+        if (!content_result) {
+            throw new Error('AI返回内容为空');
+        }
+
+        // 解析JSON
+        const scores = JSON.parse(content_result);
+
+        // 验证和标准化数据
+        const {
+            structureScore = 0,
+            factualScore = 0,
+            citationScore = 0,
+            entityScore = 0,
+            semanticScore = 0,
+            suggestions = []
+        } = scores;
+
+        const overallScore = Math.round(
+            (structureScore + factualScore + citationScore + entityScore + semanticScore) / 5
+        );
+
+        return {
+            structureScore: Math.min(100, Math.max(0, structureScore)),
+            factualScore: Math.min(100, Math.max(0, factualScore)),
+            citationScore: Math.min(100, Math.max(0, citationScore)),
+            entityScore: Math.min(100, Math.max(0, entityScore)),
+            semanticScore: Math.min(100, Math.max(0, semanticScore)),
+            overallScore: Math.min(100, Math.max(0, overallScore)),
+            suggestions: Array.isArray(suggestions) ? suggestions : [],
+        };
+    } catch (error) {
+        console.error('AI评分失败:', error);
+        throw error;
+    }
+}
+
+// POST - 评分文章
+export async function POST(request: NextRequest) {
+    try {
+        const body = await request.json();
+        const { articleId, forceRefresh = false } = body;
+
+        if (!articleId) {
+            return NextResponse.json(
+                { error: '缺少articleId参数' },
+                { status: 400 }
+            );
+        }
+
+        // 检查是否已有评分（不强制刷新时）
+        if (!forceRefresh) {
+            const existingScore = await prisma.contentAIScore.findUnique({
+                where: { articleId },
+            });
+
+            if (existingScore) {
+                return NextResponse.json({ score: existingScore });
+            }
+        }
+
+        // 获取文章内容
+        const article = await prisma.article.findUnique({
+            where: { id: articleId },
+            select: {
+                id: true,
+                title: true,
+                content: true,
+            },
+        });
+
+        if (!article) {
+            return NextResponse.json(
+                { error: '文章不存在' },
+                { status: 404 }
+            );
+        }
+
+        // 调用AI评分
+        const scores = await scoreWithAI(article.title, article.content);
+
+        // 保存到数据库
+        const scoreRecord = await prisma.contentAIScore.upsert({
+            where: { articleId },
+            create: {
+                articleId,
+                ...scores,
+                suggestions: JSON.stringify(scores.suggestions),
+            },
+            update: {
+                ...scores,
+                suggestions: JSON.stringify(scores.suggestions),
+                updatedAt: new Date(),
+            },
+        });
+
+        return NextResponse.json({
+            score: {
+                ...scoreRecord,
+                suggestions: JSON.parse(scoreRecord.suggestions || '[]'),
+            },
+        });
+    } catch (error: any) {
+        console.error('评分失败:', error);
+        return NextResponse.json(
+            { error: error.message || '评分失败' },
+            { status: 500 }
+        );
+    }
+}
+
+// GET - 获取文章评分
+export async function GET(request: NextRequest) {
+    try {
+        const { searchParams } = new URL(request.url);
+        const articleId = searchParams.get('articleId');
+
+        if (!articleId) {
+            // 获取所有已评分的文章
+            const scores = await prisma.contentAIScore.findMany({
+                include: {
+                    article: {
+                        select: {
+                            id: true,
+                            title: true,
+                            slug: true,
+                        },
+                    },
+                },
+                orderBy: { overallScore: 'desc' },
+                take: 50,
+            });
+
+            return NextResponse.json({
+                scores: scores.map(s => ({
+                    ...s,
+                    suggestions: JSON.parse(s.suggestions || '[]'),
+                })),
+            });
+        }
+
+        // 获取特定文章的评分
+        const score = await prisma.contentAIScore.findUnique({
+            where: { articleId },
+            include: {
+                article: {
+                    select: {
+                        id: true,
+                        title: true,
+                        slug: true,
+                    },
+                },
+            },
+        });
+
+        if (!score) {
+            return NextResponse.json(
+                { error: '该文章尚未评分' },
+                { status: 404 }
+            );
+        }
+
+        return NextResponse.json({
+            score: {
+                ...score,
+                suggestions: JSON.parse(score.suggestions || '[]'),
+            },
+        });
+    } catch (error) {
+        console.error('获取评分失败:', error);
+        return NextResponse.json(
+            { error: '获取评分失败' },
+            { status: 500 }
+        );
+    }
+}
