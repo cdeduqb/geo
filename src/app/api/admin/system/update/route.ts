@@ -13,8 +13,9 @@ export async function POST() {
 
         const scriptPath = path.join(process.cwd(), 'scripts', 'update.sh');
 
-        // Spawn the update script in detached mode so it continues after this process dies (if it kills it)
-        const subprocess = spawn('bash', [scriptPath], {
+        // Spawn the update script in detached mode
+        // Pass the current PID so the script knows precisely which process to kill
+        const subprocess = spawn('bash', [scriptPath, String(process.pid)], {
             detached: true,
             stdio: 'ignore', // Ignore stdio to allow unref
             cwd: process.cwd()
