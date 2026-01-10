@@ -1,3 +1,6 @@
+import { db } from './db';
+import { User } from '@prisma/client';
+import { cookies } from 'next/headers';
 import bcrypt from 'bcryptjs';
 
 // bcrypt 配置
