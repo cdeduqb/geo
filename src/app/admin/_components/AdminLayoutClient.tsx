@@ -100,6 +100,7 @@ const MENU_ITEMS: MenuItem[] = [
             { label: 'AI 配置', href: '/admin/settings/ai' },
             { label: '存储配置', href: '/admin/settings/storage' },
             { label: '文件管理', href: '/admin/files' },
+            { label: '系统日志', href: '/admin/settings/logs' },
             { label: '清理缓存', href: '/admin/settings/cache' },
             { label: '留言管理', href: '/admin/messages' }
         ]
