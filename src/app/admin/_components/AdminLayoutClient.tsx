@@ -34,6 +34,7 @@ interface AdminLayoutClientProps {
     siteName?: string;
     siteLogo?: string | null;
     enableMultiLanguage?: boolean;
+    isLicensed?: boolean;
 }
 
 type MenuItem = {
@@ -111,7 +112,8 @@ export default function AdminLayoutClient({
     logoutAction,
     siteName,
     siteLogo,
-    enableMultiLanguage = false
+    enableMultiLanguage = false,
+    isLicensed = false
 }: AdminLayoutClientProps) {
     const [expandedMenus, setExpandedMenus] = useState<string[]>([
         '内容管理', '产品管理', '装修管理', 'AI 创作', '推广营销', '系统设置', 'SEO/GEO'
@@ -299,6 +301,13 @@ export default function AdminLayoutClient({
                             const filteredChildren = item.children.filter(child => child.label !== '语言中心');
                             return renderMenuItem({ ...item, children: filteredChildren });
                         }
+
+                        // 如果未授权（isLicensed 为 false），隐藏“语言中心”
+                        if (!isLicensed && item.label === '系统设置' && item.children) {
+                            const filteredChildren = item.children.filter(child => child.label !== '语言中心');
+                            return renderMenuItem({ ...item, children: filteredChildren });
+                        }
+
                         return renderMenuItem(item);
                     })}
                 </nav>

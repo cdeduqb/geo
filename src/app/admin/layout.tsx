@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import AdminLayoutClient from './_components/AdminLayoutClient';
 import { ToastProvider } from '@/components/ui/toast';
 import { getSEOSettings } from '@/lib/system-settings';
+import { LicenseManager } from '@/lib/license';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,6 +20,10 @@ export default async function AdminLayout({
 
     const settings = await getSEOSettings();
 
+    // 获取授权信息
+    const license = LicenseManager.getLicense();
+    const isLicenseValid = license?.status === 'active';
+
     // 简单的登出处理
     async function handleLogout() {
         'use server';
@@ -34,6 +39,7 @@ export default async function AdminLayout({
                 siteName={settings.siteName}
                 siteLogo={settings.siteLogo}
                 enableMultiLanguage={settings.enableMultiLanguage}
+                isLicensed={isLicenseValid}
             >
                 {children}
             </AdminLayoutClient>
