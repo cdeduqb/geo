@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     ChevronLeft, Loader2, PlayCircle, PauseCircle, Clock, CheckCircle2,
     XCircle, Calendar, Sparkles, Target, ExternalLink, Trash2, AlertCircle
@@ -10,9 +10,9 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/toast';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
-export default function AutomationProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
-    const unwrappedParams = use(params);
+export default function AutomationProjectDetailPage({ params }: { params: { id: string } | Promise<{ id: string }> }) {
     const router = useRouter();
+    const [projectId, setProjectId] = useState<string | null>(null);
     const [project, setProject] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isActionLoading, setIsActionLoading] = useState(false);
@@ -20,9 +20,23 @@ export default function AutomationProjectDetailPage({ params }: { params: Promis
     const [deleteProjectModal, setDeleteProjectModal] = useState(false);
     const { showToast } = useToast();
 
+    // 处理 params 可能是 Promise 的情况
+    useEffect(() => {
+        const resolveParams = async () => {
+            if (params instanceof Promise) {
+                const resolved = await params;
+                setProjectId(resolved.id);
+            } else {
+                setProjectId(params.id);
+            }
+        };
+        resolveParams();
+    }, [params]);
+
     const fetchProject = async () => {
+        if (!projectId) return;
         try {
-            const res = await fetch(`/api/admin/articles/automation/${unwrappedParams.id}`);
+            const res = await fetch(`/api/admin/articles/automation/${projectId}`);
             if (!res.ok) throw new Error('项目不存在');
             const data = await res.json();
             setProject(data);
@@ -34,17 +48,17 @@ export default function AutomationProjectDetailPage({ params }: { params: Promis
     };
 
     useEffect(() => {
-        if (unwrappedParams.id) {
+        if (projectId) {
             fetchProject();
         }
-    }, [unwrappedParams.id]);
+    }, [projectId]);
 
     const handleStatusToggle = async () => {
-        if (!project) return;
+        if (!project || !projectId) return;
         setIsActionLoading(true);
         const newStatus = project.status === 'ACTIVE' ? 'PAUSED' : 'ACTIVE';
         try {
-            const res = await fetch(`/api/admin/articles/automation/${unwrappedParams.id}`, {
+            const res = await fetch(`/api/admin/articles/automation/${projectId}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: newStatus })
@@ -71,10 +85,11 @@ export default function AutomationProjectDetailPage({ params }: { params: Promis
 
     // 确认删除项目
     const handleDelete = async () => {
+        if (!projectId) return;
         closeDeleteProjectModal();
         setIsActionLoading(true);
         try {
-            const res = await fetch(`/api/admin/articles/automation/${unwrappedParams.id}`, {
+            const res = await fetch(`/api/admin/articles/automation/${projectId}`, {
                 method: 'DELETE'
             });
             if (res.ok) {
@@ -136,7 +151,7 @@ export default function AutomationProjectDetailPage({ params }: { params: Promis
         }
     };
 
-    if (isLoading) {
+    if (isLoading || !projectId) {
         return (
             <div className="flex flex-col items-center justify-center py-32 bg-white rounded-3xl border border-dashed border-gray-200">
                 <Loader2 className="w-12 h-12 text-blue-500 animate-spin mb-4" />
