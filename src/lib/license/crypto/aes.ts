@@ -20,7 +20,10 @@ export class AESCrypto {
      * 注意：实际部署时应该从环境变量读取
      */
     static getAppKey(): string {
-        return process.env.LICENSE_ENCRYPTION_KEY || this.generateKey();
+        // 使用固定的默认密钥以确保缓存可以正确解密
+        const baseKey = process.env.LICENSE_ENCRYPTION_KEY || 'geocms-license-default-encryption-key-2024';
+        // 绑定到运行目录，防止缓存文件被直接拷贝到其他未授权站点目录使用
+        return `${baseKey}@${process.cwd()}`;
     }
 
     /**

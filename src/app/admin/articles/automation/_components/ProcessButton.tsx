@@ -2,9 +2,11 @@
 
 import { useState } from 'react';
 import { Play } from 'lucide-react';
+import { useToast } from '@/components/ui/toast';
 
 export function ProcessAutomationButton() {
     const [loading, setLoading] = useState(false);
+    const { showToast } = useToast();
 
     const handleProcess = async () => {
         try {
@@ -14,15 +16,15 @@ export function ProcessAutomationButton() {
             });
             const data = await res.json();
             if (res.ok) {
-                alert('自动化任务触发成功！已开始后台处理。');
+                showToast('自动化任务触发成功！已开始后台处理。', 'success');
                 // Optional: Trigger a refresh of the page data
                 window.location.reload();
             } else {
-                alert('触发失败: ' + (data.error || res.statusText));
+                showToast('触发失败: ' + (data.error || res.statusText), 'error');
             }
         } catch (error) {
             console.error('Failed to trigger automation:', error);
-            alert('网络请求失败');
+            showToast('网络请求失败', 'error');
         } finally {
             setLoading(false);
         }

@@ -18,17 +18,20 @@ export default function StrategyList({ strategies }: StrategyListProps) {
 
     if (editingStrategy) {
         return (
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-                    <h3 className="font-semibold text-gray-900">编辑策略</h3>
+            <div className="bg-white rounded-[32px] border border-gray-100 shadow-sm shadow-gray-100/50 overflow-hidden">
+                <div className="px-8 py-5 border-b border-gray-100 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-1.5 h-6 bg-blue-600 rounded-full" />
+                        <h3 className="font-black text-gray-900 tracking-tight">编辑策略</h3>
+                    </div>
                     <button
                         onClick={() => setEditingStrategy(null)}
-                        className="text-sm text-gray-500 hover:text-gray-700 font-medium"
+                        className="text-sm text-gray-500 hover:text-gray-700 font-bold px-4 py-2 rounded-xl hover:bg-gray-50 transition-colors"
                     >
                         取消
                     </button>
                 </div>
-                <div className="p-6">
+                <div className="p-8">
                     <StrategyForm
                         initialData={editingStrategy}
                         onSuccess={() => setEditingStrategy(null)}
@@ -40,17 +43,20 @@ export default function StrategyList({ strategies }: StrategyListProps) {
 
     if (showCreateForm) {
         return (
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-                    <h3 className="font-semibold text-gray-900">新建策略</h3>
+            <div className="bg-white rounded-[32px] border border-gray-100 shadow-sm shadow-gray-100/50 overflow-hidden">
+                <div className="px-8 py-5 border-b border-gray-100 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-1.5 h-6 bg-green-600 rounded-full" />
+                        <h3 className="font-black text-gray-900 tracking-tight">新建策略</h3>
+                    </div>
                     <button
                         onClick={() => setShowCreateForm(false)}
-                        className="text-sm text-gray-500 hover:text-gray-700 font-medium"
+                        className="text-sm text-gray-500 hover:text-gray-700 font-bold px-4 py-2 rounded-xl hover:bg-gray-50 transition-colors"
                     >
                         取消
                     </button>
                 </div>
-                <div className="p-6">
+                <div className="p-8">
                     <StrategyForm onSuccess={() => setShowCreateForm(false)} />
                 </div>
             </div>
@@ -58,32 +64,35 @@ export default function StrategyList({ strategies }: StrategyListProps) {
     }
 
     return (
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-                <h3 className="font-semibold text-gray-900">策略列表</h3>
+        <div className="bg-white rounded-[32px] border border-gray-100 shadow-sm shadow-gray-100/50 overflow-hidden">
+            <div className="px-8 py-5 border-b border-gray-100 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <div className="w-1.5 h-6 bg-blue-600 rounded-full" />
+                    <h3 className="font-black text-gray-900 tracking-tight">策略列表</h3>
+                </div>
                 <button
                     onClick={() => setShowCreateForm(true)}
-                    className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                    className="inline-flex items-center justify-center rounded-2xl bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-100 hover:bg-blue-700 transition-all active:scale-95"
                 >
-                    <Plus className="h-4 w-4 mr-1.5" />
+                    <Plus className="h-4 w-4 mr-2" />
                     新建策略
                 </button>
             </div>
 
-            <div className="p-6">
+            <div className="p-8">
                 {strategies.length === 0 ? (
-                    <div className="text-center py-12 text-gray-400 bg-gray-50 rounded-lg border border-dashed border-gray-200">
-                        <Target className="w-10 h-10 mx-auto mb-3 text-gray-300" />
-                        <p>暂无 AI 策略，点击右上角按钮创建第一个策略</p>
+                    <div className="text-center py-16 text-gray-400 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                        <Target className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                        <p className="font-medium">暂无 AI 策略，点击右上角按钮创建第一个策略</p>
                     </div>
                 ) : (
                     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {strategies.map((strategy) => (
                             <div
                                 key={strategy.id}
-                                className="group relative flex flex-col bg-white rounded-xl border border-gray-100 hover:border-primary-200 hover:shadow-md transition-all duration-200"
+                                className="group relative flex flex-col bg-white rounded-[24px] border border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all duration-300"
                             >
-                                <div className="p-5 flex-1">
+                                <div className="p-6 flex-1">
                                     <div className="flex items-start justify-between mb-4">
                                         <div>
                                             <h3 className="text-base font-bold text-gray-900 mb-1 line-clamp-1" title={strategy.name}>

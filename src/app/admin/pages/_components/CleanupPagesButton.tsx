@@ -1,52 +1,17 @@
 'use client';
 
-import { useState } from 'react';
-import { Trash2, Loader2, Sparkles } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useToast } from '@/components/ui/toast';
+import { RotateCw } from 'lucide-react'; // 尝试使用同类图标规避 HMR 异常
+import Link from 'next/link';
 
 export default function CleanupPagesButton() {
-    const [loading, setLoading] = useState(false);
-    const router = useRouter();
-    const { showToast } = useToast();
-
-    const handleCleanup = async () => {
-        if (!confirm('确定要清除所有系统生成的临时页面吗？此操作不可撤销。')) {
-            return;
-        }
-
-        setLoading(true);
-        try {
-            const res = await fetch('/api/admin/pages/cleanup', {
-                method: 'POST',
-            });
-            const data = await res.json();
-            if (data.success) {
-                showToast(`成功清除 ${data.deletedCount} 个临时页面`, 'success');
-                router.refresh();
-            } else {
-                throw new Error(data.error || '清除失败');
-            }
-        } catch (error: any) {
-            showToast(error.message, 'error');
-        } finally {
-            setLoading(false);
-        }
-    };
-
     return (
-        <button
-            onClick={handleCleanup}
-            disabled={loading}
-            className="inline-flex items-center justify-center rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-100 transition-colors disabled:opacity-50"
-            title="清除 temp- 前缀的临时页面"
+        <Link
+            href="/admin/settings/cache"
+            className="inline-flex items-center justify-center rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-600 hover:bg-amber-100 transition-colors"
+            title="前往清理缓存与系统优化"
         >
-            {loading ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            ) : (
-                <Trash2 className="w-4 h-4 mr-2" />
-            )}
-            一键清理临时页面
-        </button>
+            <RotateCw className="w-4 h-4 mr-2" />
+            系统优化与清理
+        </Link>
     );
 }

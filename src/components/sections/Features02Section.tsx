@@ -1,6 +1,7 @@
 'use client';
 
 import { registerSection, SectionProps } from '@/lib/sections/registry';
+import { useTranslation } from '@/lib/i18n/use-translation';
 
 // Features02Section: 现代卡片式功能网格
 export const Features02Section: React.FC<SectionProps> = ({ data, style = {} }) => {

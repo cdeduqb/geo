@@ -10,7 +10,7 @@ import { createPushService } from '@/lib/seo/push-service';
 const ArticleSchema = z.object({
     title: z.string().min(1, '标题不能为空'),
     slug: z.string().min(1, 'URL 路径不能为空'),
-    content: z.string().min(1, '内容不能为空'),
+    content: z.string().optional().default(''),
     summary: z.string().optional(),
     coverImage: z.string().optional().nullable(),
     categoryId: z.string().optional(),
@@ -25,52 +25,72 @@ const ArticleSchema = z.object({
     translationGroupId: z.string().optional().nullable(),
 });
 
-async function autoPushToSEO(articleSlug: string) {
+export async function autoPushToSEO(articleSlug: string, lang: string = 'zh') {
     try {
         const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-        const articleUrl = `${baseUrl}/articles/${articleSlug}`;
+
+        // 构建多版本 URL（默认语言和多语言路径）
+        const urls: string[] = [];
+        if (lang === 'zh') {
+            urls.push(`${baseUrl}/articles/${articleSlug}`);
+        }
+        urls.push(`${baseUrl}/${lang}/articles/${articleSlug}`);
 
         const configs = await db.sEOPushConfig.findMany({
             where: { isActive: true },
         });
 
-        if (configs.length === 0) {
-            console.log('No active SEO configs, skipping auto push');
+        // 导入平台配置以过滤仅脚本平台
+        const { SEO_PLATFORMS } = await import('@/lib/seo/platform-config');
+        const apiConfigs = configs.filter(config => {
+            const platformCfg = SEO_PLATFORMS[config.platform];
+            return platformCfg && (platformCfg.pushType === 'api' || platformCfg.pushType === 'both');
+        });
+
+        if (apiConfigs.length === 0) {
+            console.log('[SEO Push] 没有支持 API 推送的激活配置，跳过推送');
             return;
         }
 
-        configs.forEach(async (config) => {
+        // 使用 Promise.allSettled 确保所有推送完成
+        const pushPromises = apiConfigs.map(async (config) => {
             try {
                 const service = createPushService(
                     config.platform,
-                    config.apiUrl,
-                    config.token,
+                    config.apiUrl || '',
+                    config.token || '',
                     config.siteId || undefined
                 );
 
-                const result = await service.push([articleUrl]);
+                const result = await service.push(urls);
 
+                // 记录推送日志
                 await db.sEOPushLog.create({
                     data: {
                         configId: config.id,
-                        url: articleUrl,
+                        url: urls.join(', '),
                         status: result.success ? 'success' : 'failed',
-                        response: JSON.stringify(result.response || {}),
+                        response: JSON.stringify(result.response || result.message || {}),
                     },
                 });
 
+                // 更新最后推送时间
                 await db.sEOPushConfig.update({
                     where: { id: config.id },
                     data: { lastPushAt: new Date() },
                 });
 
-                console.log(`Auto pushed to ${config.platform}:`, result.message);
-            } catch (error) {
-                console.error(`Failed to push to ${config.platform}:`, error);
+                console.log(`[SEO Push] ${config.platform}: ${result.message}`);
+                return { platform: config.platform, success: result.success };
+            } catch (error: any) {
+                console.error(`[SEO Push] ${config.platform} 失败:`, error.message);
+                return { platform: config.platform, success: false, error: error.message };
             }
         });
+
+        await Promise.allSettled(pushPromises);
     } catch (error) {
-        console.error('Auto SEO push error:', error);
+        console.error('[SEO Push] 自动推送出错:', error);
     }
 }
 
@@ -128,7 +148,12 @@ export async function createArticle(formData: FormData) {
         });
 
         if (validatedData.status === 'PUBLISHED') {
-            autoPushToSEO(article.slug);
+            autoPushToSEO(article.slug, article.lang);
+            // 重新验证静态页面
+            revalidatePath(`/articles/${article.slug}`);
+            revalidatePath(`/${article.lang}/articles/${article.slug}`);
+            revalidatePath('/articles');
+            revalidatePath(`/${article.lang}/articles`);
         }
     } catch (error) {
         console.error('创建文章失败:', error);
@@ -139,11 +164,10 @@ export async function createArticle(formData: FormData) {
     redirect('/admin/articles');
 }
 
-export async function updateArticle(formData: FormData) {
+export async function updateArticle(id: string, formData: FormData) {
     const user = await getCurrentUser();
     if (!user) throw new Error('未授权');
 
-    const id = formData.get('id') as string;
     if (!id) throw new Error('文章 ID 不能为空');
 
     const rawData = {
@@ -205,8 +229,19 @@ export async function updateArticle(formData: FormData) {
             },
         });
 
-        if (oldArticle?.status !== 'PUBLISHED' && validatedData.status === 'PUBLISHED') {
-            autoPushToSEO(article.slug);
+        if (validatedData.status === 'PUBLISHED') {
+            // 重新验证静态页面
+            revalidatePath(`/articles/${article.slug}`);
+            revalidatePath(`/${article.lang}/articles/${article.slug}`);
+            revalidatePath('/articles');
+            revalidatePath(`/${article.lang}/articles`);
+
+            if (oldArticle?.status !== 'PUBLISHED') {
+                autoPushToSEO(article.slug, article.lang);
+            } else {
+                // 如果已经是发布状态，更新时也触发推送（支持 IndexNow/Google 的更新通知）
+                autoPushToSEO(article.slug, article.lang);
+            }
         }
     } catch (error) {
         console.error('[updateArticle] Error:', error);
@@ -225,9 +260,18 @@ export async function deleteArticle(formData: FormData) {
     if (!id) throw new Error('缺少文章 ID');
 
     try {
+        const article = await db.article.findUnique({ where: { id } });
+
         await db.article.delete({
             where: { id },
         });
+
+        if (article) {
+            revalidatePath(`/articles/${article.slug}`);
+            revalidatePath(`/${article.lang}/articles/${article.slug}`);
+            revalidatePath('/articles');
+            revalidatePath(`/${article.lang}/articles`);
+        }
 
         revalidatePath('/admin/articles');
         return { success: true };

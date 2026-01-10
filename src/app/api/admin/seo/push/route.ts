@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 import { createPushService } from '@/lib/seo/push-service';
+import { SEO_PLATFORMS } from '@/lib/seo/platform-config';
 
 // POST /api/admin/seo/push - Push URLs to search engines
 export async function POST(request: NextRequest) {
@@ -26,18 +27,27 @@ export async function POST(request: NextRequest) {
             },
         });
 
-        if (configs.length === 0) {
-            return NextResponse.json({ error: 'No active SEO push configs found' }, { status: 400 });
+        // 过滤掉仅支持脚本收录的平台（这些平台不支持 API 推送）
+        const apiConfigs = configs.filter(config => {
+            const platformCfg = SEO_PLATFORMS[config.platform];
+            return platformCfg && (platformCfg.pushType === 'api' || platformCfg.pushType === 'both');
+        });
+
+        if (apiConfigs.length === 0) {
+            return NextResponse.json({
+                error: '没有发现支持 API 推送的激活配置',
+                results: []
+            }, { status: 200 }); // 返回 200 避免前端报错，但告知没任务
         }
 
         // Push to each platform
         const results = await Promise.all(
-            configs.map(async (config) => {
+            apiConfigs.map(async (config) => {
                 try {
                     const service = createPushService(
                         config.platform,
-                        config.apiUrl,
-                        config.token,
+                        config.apiUrl || '',
+                        config.token || '',
                         config.siteId || undefined
                     );
 

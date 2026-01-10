@@ -58,7 +58,12 @@ export async function POST(request: NextRequest) {
 
         // 检查slug是否已存在
         const existingCategory = await db.productCategory.findUnique({
-            where: { slug },
+            where: {
+                slug_lang: {
+                    slug,
+                    lang: lang || 'zh'
+                }
+            },
         });
 
         if (existingCategory) {
@@ -68,7 +73,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const category = await (db.productCategory as any).create({
+        const category = await db.productCategory.create({
             data: {
                 name,
                 slug,

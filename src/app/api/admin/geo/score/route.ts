@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db as prisma } from '@/lib/db';
+import { requireAdmin } from '@/lib/auth';
 
 // AI 评分提示词模板
 const SCORING_PROMPT = `你是一个专业的内容质量评估专家。请从以下5个维度客观评估这篇文章的质量，每个维度给出0-100的分数：
@@ -234,8 +235,11 @@ async function scoreWithAI(title: string, content: string): Promise<any> {
 // POST - 评分文章
 export async function POST(request: NextRequest) {
     try {
+        await requireAdmin();
+
         const body = await request.json();
         const { articleId, forceRefresh = false } = body;
+
 
         if (!articleId) {
             return NextResponse.json(
@@ -308,8 +312,11 @@ export async function POST(request: NextRequest) {
 // GET - 获取文章评分
 export async function GET(request: NextRequest) {
     try {
+        await requireAdmin();
+
         const { searchParams } = new URL(request.url);
         const articleId = searchParams.get('articleId');
+
 
         if (!articleId) {
             // 获取所有已评分的文章

@@ -194,52 +194,68 @@ export default function AIConfigPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">AI 平台配置</h1>
-                    <p className="text-gray-500 mt-1">配置各 AI 平台的 API Key 以启用联网搜索和内容生成功能</p>
+            {/* 页面头部 */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-purple-600 flex items-center justify-center text-white shadow-lg shadow-purple-100">
+                        <Save className="w-6 h-6" />
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">AI 平台配置</h1>
+                        <p className="text-[13px] text-gray-500 font-medium">
+                            配置各 AI 平台的 API Key 以启用智能创作功能
+                        </p>
+                    </div>
                 </div>
-                <Button onClick={handleSave} disabled={saving}>
-                    <Save className="w-4 h-4 mr-2" />
-                    {saving ? '保存中...' : '保存配置'}
-                </Button>
+
+                <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="flex items-center gap-2.5 px-6 py-2.5 rounded-2xl text-sm font-bold transition-all duration-300 shadow-lg bg-purple-600 text-white hover:bg-purple-700 shadow-purple-100 hover:shadow-purple-200 disabled:opacity-50 active:scale-95"
+                >
+                    {saving ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Save className="w-4 h-4" />}
+                    保存配置
+                </button>
             </div>
 
-            <div className="grid gap-4">
+            <div className="grid gap-6">
                 {AI_PROVIDERS.map(provider => {
                     const config = configs.find(c => c.provider === provider.id);
                     const hasApiKey = !!config?.apiKey?.trim();
 
                     return (
-                        <Card key={provider.id} className={hasApiKey ? 'border-green-200 bg-green-50/50' : ''}>
-                            <CardHeader className="pb-3">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <CardTitle className="text-lg">{provider.name}</CardTitle>
+                        <div key={provider.id} className={`bg-white rounded-[32px] border shadow-sm overflow-hidden ${hasApiKey ? 'border-green-200 shadow-green-50' : 'border-gray-100 shadow-gray-100/50'}`}>
+                            <div className="px-8 py-6">
+                                <div className="flex items-center justify-between mb-3">
+                                    <div className="flex items-center gap-4">
+                                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg ${hasApiKey ? 'bg-green-600 shadow-green-100' : 'bg-gray-300 shadow-gray-100'}`}>
+                                            <span className="text-white text-lg font-black">{provider.name.charAt(0)}</span>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-black text-gray-900 tracking-tight">{provider.name}</h3>
+                                            <p className="text-xs text-gray-400 font-medium">{provider.description}</p>
+                                        </div>
                                         {hasApiKey && (
-                                            <span className="flex items-center gap-1 text-xs text-green-600 bg-green-100 px-2 py-0.5 rounded-full">
-                                                <Check className="w-3 h-3" /> 已配置
+                                            <span className="flex items-center gap-1.5 text-xs font-bold text-green-600 bg-green-100 px-3 py-1.5 rounded-full">
+                                                <Check className="w-3.5 h-3.5" /> 已配置
                                             </span>
                                         )}
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <label className="flex items-center gap-2 text-sm">
-                                            <input
-                                                type="checkbox"
-                                                checked={config?.isActive || false}
-                                                onChange={(e) => updateConfig(provider.id, 'isActive', e.target.checked)}
-                                                className="rounded border-gray-300"
-                                            />
-                                            启用
-                                        </label>
-                                    </div>
+                                    <label className="flex items-center gap-2.5 text-sm font-bold text-gray-600 cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={config?.isActive || false}
+                                            onChange={(e) => updateConfig(provider.id, 'isActive', e.target.checked)}
+                                            className="w-5 h-5 rounded-lg border-gray-300 text-purple-600 focus:ring-purple-500"
+                                        />
+                                        启用
+                                    </label>
                                 </div>
-                                <CardDescription>{provider.description}</CardDescription>
                                 {provider.note && (
-                                    <p className="text-xs text-amber-600 mt-1">⚠️ {provider.note}</p>
+                                    <p className="text-xs text-amber-600 font-medium bg-amber-50 px-4 py-2 rounded-xl mb-4">⚠️ {provider.note}</p>
                                 )}
-                            </CardHeader>
-                            <CardContent className="space-y-4">
+                            </div>
+                            <div className="px-8 pb-8 space-y-5">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -317,7 +333,7 @@ export default function AIConfigPage() {
                                         <select
                                             value={config?.useCase || 'GENERAL'}
                                             onChange={(e) => updateConfig(provider.id, 'useCase', e.target.value as 'GENERAL' | 'WRITING' | 'CODE')}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:border-primary-500"
                                         >
                                             {USE_CASE_OPTIONS.map(opt => (
                                                 <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -335,33 +351,48 @@ export default function AIConfigPage() {
                                     >
                                         查看平台文档 →
                                     </a>
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
+                                    <button
                                         onClick={() => testConnection(provider.id)}
                                         disabled={!hasApiKey}
+                                        className="px-5 py-2.5 rounded-2xl text-sm font-bold border border-gray-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50 disabled:opacity-50 transition-all"
                                     >
                                         测试连接
-                                    </Button>
+                                    </button>
                                 </div>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
                     );
                 })}
             </div>
 
-            <Card className="bg-blue-50 border-blue-200">
-                <CardContent className="pt-4">
-                    <h3 className="font-medium text-blue-900 mb-2">💡 使用说明</h3>
-                    <ul className="text-sm text-blue-800 space-y-1">
-                        <li>• <strong>Kimi</strong> 和 <strong>通义千问</strong> 的 API 支持联网搜索，可获取 AI 引用的来源文章</li>
-                        <li>• <strong>豆包</strong> 需要在火山方舟创建带联网功能的 Endpoint，并填写 Endpoint ID 作为模型名</li>
-                        <li>• <strong>DeepSeek</strong> API 不支持联网搜索，但可用于内容生成和分析</li>
-                        <li>• 建议至少配置一个支持联网搜索的平台（Kimi 或 通义千问）</li>
-                        <li>• 配置多个平台时，系统会并行请求所有启用的平台并合并结果</li>
-                    </ul>
-                </CardContent>
-            </Card>
-        </div>
+            <div className="bg-blue-50 rounded-[32px] border border-blue-200 p-8">
+                <div className="flex items-center gap-3 mb-4">
+                    <div className="w-1.5 h-6 bg-blue-600 rounded-full" />
+                    <h3 className="font-black text-blue-900 tracking-tight">使用说明</h3>
+                </div>
+                <ul className="text-sm text-blue-800 space-y-2">
+                    <li className="flex items-start gap-2">
+                        <span className="text-blue-500 mt-0.5">•</span>
+                        <strong>Kimi</strong> 和 <strong>通义千问</strong> 的 API 支持联网搜索，可获取 AI 引用的来源文章
+                    </li>
+                    <li className="flex items-start gap-2">
+                        <span className="text-blue-500 mt-0.5">•</span>
+                        <strong>豆包</strong> 需要在火山方舟创建带联网功能的 Endpoint，并填写 Endpoint ID 作为模型名
+                    </li>
+                    <li className="flex items-start gap-2">
+                        <span className="text-blue-500 mt-0.5">•</span>
+                        <strong>DeepSeek</strong> API 不支持联网搜索，但可用于内容生成和分析
+                    </li>
+                    <li className="flex items-start gap-2">
+                        <span className="text-blue-500 mt-0.5">•</span>
+                        建议至少配置一个支持联网搜索的平台（Kimi 或 通义千问）
+                    </li>
+                    <li className="flex items-start gap-2">
+                        <span className="text-blue-500 mt-0.5">•</span>
+                        配置多个平台时，系统会并行请求所有启用的平台并合并结果
+                    </li>
+                </ul>
+            </div>
+        </div >
     );
 }

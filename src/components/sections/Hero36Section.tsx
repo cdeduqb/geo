@@ -4,7 +4,6 @@ import { registerSection, SectionProps } from '@/lib/sections/registry';
 
 // Hero36Section: SaaS 仪表盘
 export const Hero36Section: React.FC<SectionProps> = ({ data, style = {} }) => {
-    const { t } = useTranslation();
     const {
         title,
         subtitle,

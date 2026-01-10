@@ -90,10 +90,10 @@ export default function PageCreationWizard({ onModeSelect, existingPages = [] }:
     return (
         <div className="space-y-8">
             <div className="text-center">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                <h2 className="text-xl font-black text-gray-900 mb-2 tracking-tight">
                     选择创建方式
                 </h2>
-                <p className="text-gray-500 max-w-2xl mx-auto">
+                <p className="text-gray-400 max-w-2xl mx-auto text-sm font-medium">
                     请选择您喜欢的页面创建方式。不同方式适合不同场景，您可以根据需要灵活选择。
                 </p>
             </div>
@@ -104,18 +104,18 @@ export default function PageCreationWizard({ onModeSelect, existingPages = [] }:
                         key={mode.id}
                         onClick={() => handleModeClick(mode.id)}
                         disabled={isLoading}
-                        className={`group relative flex flex-col items-center p-6 bg-white rounded-2xl border-2 border-gray-200 ${mode.hoverBorder} transition-all hover:shadow-xl text-left disabled:opacity-50 disabled:cursor-not-allowed`}
+                        className={`group relative flex flex-col items-center p-8 bg-white rounded-[32px] border border-gray-100 shadow-sm shadow-gray-100/50 ${mode.hoverBorder} hover:shadow-xl hover:-translate-y-1 transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
-                        <div className={`w-16 h-16 ${mode.bgColor} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                        <div className={`w-16 h-16 ${mode.bgColor} rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-lg`}>
                             <mode.icon className={`w-8 h-8 ${mode.iconColor}`} />
                         </div>
-                        <h3 className="text-lg font-bold text-gray-900 mb-2 text-center">
+                        <h3 className="text-lg font-black text-gray-900 mb-2 text-center tracking-tight">
                             {mode.title}
                         </h3>
-                        <p className="text-sm text-gray-500 text-center mb-4 leading-relaxed">
+                        <p className="text-sm text-gray-400 text-center mb-4 leading-relaxed font-medium">
                             {mode.description}
                         </p>
-                        <div className={`mt-auto flex items-center ${mode.arrowColor} font-medium opacity-0 group-hover:opacity-100 transition-opacity`}>
+                        <div className={`mt-auto flex items-center ${mode.arrowColor} font-bold opacity-0 group-hover:opacity-100 transition-opacity`}>
                             开始 <ArrowRight className="w-4 h-4 ml-1" />
                         </div>
                     </button>
@@ -124,41 +124,51 @@ export default function PageCreationWizard({ onModeSelect, existingPages = [] }:
 
             {/* Clone Selector Modal */}
             {showCloneSelector && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[80vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
-                        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-                            <h3 className="text-lg font-bold text-gray-900">选择要克隆的页面</h3>
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
+                    <div className="bg-white rounded-[32px] shadow-xl max-w-lg w-full max-h-[80vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
+                        <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center">
+                                    <Copy className="w-6 h-6 text-orange-600" />
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-black text-gray-900 tracking-tight">选择要克隆的页面</h3>
+                                    <p className="text-sm text-gray-400 font-medium">基于已有页面创建新页面</p>
+                                </div>
+                            </div>
                             <button
                                 onClick={() => setShowCloneSelector(false)}
-                                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                className="p-2.5 hover:bg-gray-100 rounded-xl transition-colors"
                             >
-                                <X className="w-5 h-5 text-gray-500" />
+                                <X className="w-5 h-5 text-gray-400" />
                             </button>
                         </div>
-                        <div className="flex-1 overflow-y-auto p-4">
+                        <div className="flex-1 overflow-y-auto p-6">
                             {existingPages.length === 0 ? (
-                                <div className="text-center py-8">
-                                    <Copy className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                                    <p className="text-gray-500">暂无可克隆的页面</p>
-                                    <p className="text-sm text-gray-400 mt-1">请先创建一个页面</p>
+                                <div className="text-center py-12">
+                                    <Copy className="w-14 h-14 text-gray-300 mx-auto mb-4" />
+                                    <p className="text-gray-500 font-bold">暂无可克隆的页面</p>
+                                    <p className="text-sm text-gray-400 mt-1 font-medium">请先创建一个页面</p>
                                 </div>
                             ) : (
-                                <div className="space-y-2">
+                                <div className="space-y-3">
                                     {existingPages.map(page => (
                                         <button
                                             key={page.id}
                                             onClick={() => handleClonePage(page.id)}
                                             disabled={isLoading}
-                                            className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-orange-50 rounded-xl border border-gray-200 hover:border-orange-300 transition-all disabled:opacity-50"
+                                            className="w-full flex items-center justify-between p-5 bg-gray-50 hover:bg-orange-50 rounded-2xl border border-gray-100 hover:border-orange-200 transition-all disabled:opacity-50"
                                         >
                                             <div className="text-left">
-                                                <p className="font-medium text-gray-900">{page.title}</p>
-                                                <p className="text-sm text-gray-500">/{page.slug}</p>
+                                                <p className="font-bold text-gray-900">{page.title}</p>
+                                                <p className="text-sm text-gray-400 font-medium">/{page.slug}</p>
                                             </div>
                                             {isLoading ? (
                                                 <Loader2 className="w-5 h-5 text-orange-500 animate-spin" />
                                             ) : (
-                                                <Copy className="w-5 h-5 text-gray-400" />
+                                                <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+                                                    <Copy className="w-5 h-5 text-orange-600" />
+                                                </div>
                                             )}
                                         </button>
                                     ))}

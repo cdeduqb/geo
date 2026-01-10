@@ -6,7 +6,7 @@ import { getSiteSettings } from '@/lib/site-settings';
 import { getLocale } from '@/lib/locale-server';
 import { t } from '@/lib/i18n';
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({
     params,

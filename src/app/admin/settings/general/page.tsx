@@ -3,7 +3,7 @@ import SystemSettingsForm from './_components/SystemSettingsForm';
 import { Settings } from 'lucide-react';
 
 export const metadata = {
-    title: '系统设置 - GeoCMS 管理后台',
+    title: '系统设置 - 企业官网 管理后台',
 };
 
 export default async function GeneralSettingsPage() {

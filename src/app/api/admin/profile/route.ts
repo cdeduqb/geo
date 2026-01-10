@@ -11,11 +11,12 @@ export async function GET() {
         }
 
         // 获取最新数据
-        const profile = await db.user.findUnique({
+        const profile = await (db.user as any).findUnique({
             where: { id: user.id },
             select: {
                 id: true,
                 email: true,
+                username: true,
                 name: true,
                 role: true,
                 avatar: true,
@@ -51,6 +52,7 @@ export async function PUT(request: NextRequest) {
         const body = await request.json();
         const {
             name,
+            username,
             avatar,
             bio,
             expertise,
@@ -91,10 +93,11 @@ export async function PUT(request: NextRequest) {
         }
 
         // 更新其他信息
-        const updatedUser = await db.user.update({
+        const updatedUser = await (db.user as any).update({
             where: { id: user.id },
             data: {
                 name,
+                username,
                 avatar,
                 bio,
                 expertise,
@@ -106,6 +109,7 @@ export async function PUT(request: NextRequest) {
             select: {
                 id: true,
                 email: true,
+                username: true,
                 name: true,
                 role: true,
                 avatar: true,

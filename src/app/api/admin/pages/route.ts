@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { requireAuth } from '@/lib/auth';
+import { requireAuth, requireAdmin } from '@/lib/auth';
+
 
 // Create a new page
 export async function POST(request: NextRequest) {
@@ -49,11 +50,14 @@ export async function POST(request: NextRequest) {
 // List all pages
 export async function GET() {
     try {
+        await requireAdmin();
+
         const pages = await db.page.findMany({
             orderBy: { createdAt: 'desc' },
         });
 
         return NextResponse.json({ pages });
+
     } catch (error) {
         console.error('Fetch pages error:', error);
         return NextResponse.json(

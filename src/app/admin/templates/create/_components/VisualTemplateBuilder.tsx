@@ -279,7 +279,7 @@ export default function VisualTemplateBuilder({ onBack }: VisualTemplateBuilderP
                             type="text"
                             value={templateInfo.name}
                             onChange={(e) => setTemplateInfo({ ...templateInfo, name: e.target.value })}
-                            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 ${nameError ? 'border-red-500' : 'border-gray-300'
+                            className={`w-full px-4 py-2 border rounded-lg focus:border-blue-500 ${nameError ? 'border-red-500' : 'border-gray-300'
                                 }`}
                             placeholder="例如：企业官网首页模板"
                         />
@@ -300,7 +300,7 @@ export default function VisualTemplateBuilder({ onBack }: VisualTemplateBuilderP
                             onChange={(e) => setTemplateInfo({
                                 ...templateInfo, moduleType: e.target.value
                             })}
-                            className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white text-gray-900"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-500 outline-none bg-white text-gray-900"
                         >
                             <option value="HEADER">页眉</option>
                             <option value="FOOTER">页脚</option>
@@ -324,7 +324,7 @@ export default function VisualTemplateBuilder({ onBack }: VisualTemplateBuilderP
                             onChange={(e) => setTemplateInfo({ ...templateInfo, description: e.target.value })}
                             placeholder="简要描述此模板的用途和特点..."
                             rows={3}
-                            className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-none bg-white text-gray-900"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-500 outline-none resize-none bg-white text-gray-900"
                         />
                     </div>
 

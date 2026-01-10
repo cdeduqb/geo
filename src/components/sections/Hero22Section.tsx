@@ -5,7 +5,6 @@ import { registerSection, SectionProps } from '@/lib/sections/registry';
 
 // Hero22Section: 打字机特效
 export const Hero22Section: React.FC<SectionProps> = ({ data, style = {} }) => {
-    const { t } = useTranslation();
     const {
         prefix,
         words = [], // Array of strings to cycle

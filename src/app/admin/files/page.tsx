@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useTransition, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Upload, Image, File, Video, Trash2, Search, Filter, Loader2, CheckSquare, Square } from 'lucide-react';
+import { Upload, Image, File, Video, Trash2, Search, Filter, Loader2, CheckSquare, Square, ChevronRight } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import { Pagination } from '@/components/ui/Pagination';
@@ -22,10 +22,24 @@ interface FileItem {
     };
 }
 
+// 🔧 全局缓存：存储已加载的文件数据
+const filesCache = new Map<string, {
+    files: FileItem[];
+    pagination: {
+        totalPages: number;
+        total: number;
+    };
+    timestamp: number;
+}>();
+
+// 缓存有效期：5分钟
+const CACHE_DURATION = 5 * 60 * 1000;
+
 export default function FilesPage() {
     const searchParams = useSearchParams();
     const [files, setFiles] = useState<FileItem[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isPending, startTransition] = useTransition(); // 🔧 非阻塞加载
     const [uploading, setUploading] = useState(false);
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('');
@@ -49,6 +63,34 @@ export default function FilesPage() {
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const { showToast } = useToast();
 
+    // 🔧 生成缓存键
+    const cacheKey = useMemo(() => {
+        return `page=${currentPage}&search=${search}&category=${category}`;
+    }, [currentPage, search, category]);
+
+    // 🔧 检查缓存是否有效
+    const getCachedData = (key: string) => {
+        const cached = filesCache.get(key);
+        if (!cached) return null;
+
+        const now = Date.now();
+        if (now - cached.timestamp > CACHE_DURATION) {
+            // 缓存过期，删除
+            filesCache.delete(key);
+            return null;
+        }
+
+        return cached;
+    };
+
+    // 🔧 设置缓存
+    const setCachedData = (key: string, data: any) => {
+        filesCache.set(key, {
+            ...data,
+            timestamp: Date.now(),
+        });
+    };
+
     // ... existing code ...
 
     const handleDelete = async (id: string) => {
@@ -68,7 +110,9 @@ export default function FilesPage() {
             showToast('删除成功', 'success');
             // Remove from selectedIds if present
             setSelectedIds(prev => prev.filter(id => id !== deletingId));
-            fetchFiles();
+            // 🔧 清除缓存并强制刷新
+            filesCache.clear();
+            fetchFiles(true);
         } catch (error) {
             showToast('删除失败', 'error');
         } finally {
@@ -88,7 +132,9 @@ export default function FilesPage() {
             showToast('批量删除成功', 'success');
             setSelectedIds([]);
             setIsBatchConfirmOpen(false);
-            fetchFiles();
+            // 🔧 清除缓存并强制刷新
+            filesCache.clear();
+            fetchFiles(true);
         } catch (error) {
             showToast('批量删除失败', 'error');
         } finally {
@@ -112,31 +158,54 @@ export default function FilesPage() {
         }
     };
 
-    const fetchFiles = useCallback(async () => {
-        try {
-            setLoading(true);
-            const params = new URLSearchParams();
-            params.append('page', currentPage.toString());
-            params.append('limit', '24'); // 6x4 grid
-            if (search) params.append('search', search);
-            if (category) params.append('category', category);
-
-            const res = await fetch(`/api/admin/files?${params}`);
-            if (!res.ok) throw new Error('获取文件失败');
-
-            const data = await res.json();
-            setFiles(data.files);
-
-            if (data.pagination) {
-                setTotalPages(data.pagination.totalPages);
-                setTotalFiles(data.pagination.total);
+    const fetchFiles = useCallback(async (forceRefresh = false) => {
+        // 🔧 先检查缓存
+        if (!forceRefresh) {
+            const cached = getCachedData(cacheKey);
+            if (cached) {
+                console.log('✅ 使用缓存数据');
+                setFiles(cached.files);
+                setTotalPages(cached.pagination.totalPages);
+                setTotalFiles(cached.pagination.total);
+                setLoading(false);
+                return;
             }
+        }
+
+        try {
+            // 🔧 使用 startTransition 实现非阻塞加载
+            // 这样在加载过程中切换页面不会被阻塞
+            startTransition(async () => {
+                const params = new URLSearchParams();
+                params.append('page', currentPage.toString());
+                params.append('limit', '24'); // 6x4 grid
+                if (search) params.append('search', search);
+                if (category) params.append('category', category);
+
+                const res = await fetch(`/api/admin/files?${params}`);
+                if (!res.ok) throw new Error('获取文件失败');
+
+                const data = await res.json();
+
+                // 🔧 更新缓存
+                setCachedData(cacheKey, {
+                    files: data.files,
+                    pagination: data.pagination || { totalPages: 1, total: 0 },
+                });
+
+                setFiles(data.files);
+
+                if (data.pagination) {
+                    setTotalPages(data.pagination.totalPages);
+                    setTotalFiles(data.pagination.total);
+                }
+            });
         } catch (error) {
             showToast('获取文件失败', 'error');
         } finally {
             setLoading(false);
         }
-    }, [currentPage, search, category, showToast]);
+    }, [currentPage, search, category, cacheKey, showToast, startTransition]);
 
     useEffect(() => {
         fetchFiles();
@@ -162,7 +231,9 @@ export default function FilesPage() {
             }
 
             showToast('上传成功', 'success');
-            fetchFiles();
+            // 🔧 清除缓存并强制刷新
+            filesCache.clear();
+            fetchFiles(true);
         } catch (error: any) {
             showToast(error.message || '上传失败', 'error');
         } finally {
@@ -206,145 +277,162 @@ export default function FilesPage() {
 
     return (
         <div className="space-y-6">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                        <Upload className="w-8 h-8 text-blue-600" />
-                        文件管理
-                    </h1>
-                    <p className="mt-1 text-sm text-gray-500">
-                        共 {totalFiles} 个文件
-                    </p>
-                </div>
-
-                <div className="flex items-center gap-2">
-                    {selectedIds.length > 0 && (
-                        <button
-                            onClick={() => setIsBatchConfirmOpen(true)}
-                            className="inline-flex items-center justify-center rounded-lg bg-red-50 text-red-600 border border-red-200 px-4 py-2 text-sm font-medium hover:bg-red-100 transition-colors"
-                        >
-                            <Trash2 className="w-4 h-4 mr-2" />
-                            批量删除 ({selectedIds.length})
-                        </button>
-                    )}
-
-                    {/* Upload Button */}
-                    <label className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 cursor-pointer transition-colors">
-                        <Upload className="w-4 h-4 mr-2" />
-                        {uploading ? '上传中...' : '上传文件'}
-                        <input
-                            type="file"
-                            className="hidden"
-                            onChange={handleUpload}
-                            disabled={uploading}
-                        />
-                    </label>
+            {/* Page Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                        <File className="w-6 h-6" />
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-black text-gray-900 tracking-tight">文件管理</h1>
+                    </div>
                 </div>
             </div>
 
-            {/* Filters */}
-            <div className="bg-white rounded-lg border border-gray-200 p-4">
-                <div className="flex gap-4 items-center">
+            {/* Action & Filter Bar */}
+            <div className="bg-white rounded-[24px] border border-gray-100 p-3 shadow-sm shadow-gray-100/50 flex flex-col lg:flex-row items-center gap-3">
+                <div className="flex items-center gap-4 flex-1 w-full lg:w-auto px-2">
                     <button
                         onClick={toggleSelectAll}
-                        className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 font-medium px-2"
+                        className="flex items-center gap-2 text-xs font-black text-gray-400 hover:text-blue-600 transition-colors whitespace-nowrap"
                     >
                         {selectedIds.length === files.length && files.length > 0 ? (
                             <CheckSquare className="w-5 h-5 text-blue-600" />
                         ) : (
-                            <Square className="w-5 h-5 text-gray-400" />
+                            <Square className="w-5 h-5 text-gray-300" />
                         )}
                         全选当页
                     </button>
-                    <div className="h-6 w-px bg-gray-200"></div>
-                    <div className="flex-1 relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <div className="w-px h-6 bg-gray-100 hidden sm:block" />
+                    <div className="relative flex-1 group">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 group-focus-within:text-blue-500 transition-colors" />
                         <input
                             type="text"
                             placeholder="搜索文件名..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                            className="w-full pl-10 pr-4 py-2.5 bg-gray-50/50 border border-transparent focus:bg-white focus:border-blue-100 rounded-xl text-sm font-bold transition-all outline-none"
                         />
                     </div>
+                </div>
+
+                <div className="flex items-center gap-3 w-full lg:w-auto">
                     <select
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
-                        className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                        className="px-4 py-2.5 bg-gray-50/50 border border-transparent focus:bg-white focus:border-blue-100 rounded-xl text-xs font-black transition-all outline-none min-w-[120px]"
                     >
-                        <option value="">所有类型</option>
-                        <option value="image">图片</option>
-                        <option value="video">视频</option>
-                        <option value="document">文档</option>
-                        <option value="other">其他</option>
+                        <option value="">所有媒体类型</option>
+                        <option value="image">视觉图片</option>
+                        <option value="video">视频素材</option>
+                        <option value="document">办公文档</option>
+                        <option value="other">其它资源</option>
                     </select>
+
+                    <div className="flex items-center gap-2">
+                        {selectedIds.length > 0 && (
+                            <button
+                                onClick={() => setIsBatchConfirmOpen(true)}
+                                className="inline-flex items-center justify-center rounded-xl bg-red-50 text-red-600 border border-red-100 px-5 py-2.5 text-xs font-black hover:bg-red-100 transition-all active:scale-95"
+                            >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                批量移除 ({selectedIds.length})
+                            </button>
+                        )}
+
+                        <label className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-2.5 text-xs font-black text-white shadow-lg shadow-blue-100 hover:bg-blue-700 cursor-pointer transition-all active:scale-95 whitespace-nowrap">
+                            <Upload className="w-4 h-4 mr-2" />
+                            {uploading ? '正在传输...' : '上传新素材'}
+                            <input
+                                type="file"
+                                className="hidden"
+                                onChange={handleUpload}
+                                disabled={uploading}
+                            />
+                        </label>
+                    </div>
                 </div>
             </div>
 
             {/* Files Grid */}
-            {loading ? (
-                <div className="text-center py-12">
-                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
-                    <p className="mt-2 text-gray-500">加载中...</p>
+            {loading && files.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[32px] border border-gray-100 shadow-sm">
+                    <div className="relative">
+                        <div className="absolute inset-0 bg-blue-400/20 rounded-full blur-2xl animate-pulse" />
+                        <Loader2 className="relative w-12 h-12 text-blue-600 animate-spin" />
+                    </div>
+                    <p className="mt-6 text-xs text-gray-400 font-black uppercase tracking-widest">正在加载素材库...</p>
                 </div>
             ) : files.length === 0 ? (
-                <div className="text-center py-12 bg-white rounded-lg border-2 border-dashed border-gray-300">
-                    <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                    <h3 className="mt-2 text-sm font-medium text-gray-900">
-                        {search || category ? '未找到文件' : '暂无文件'}
+                <div className="text-center py-24 bg-white rounded-[32px] border-2 border-dashed border-gray-100 flex flex-col items-center">
+                    <div className="w-20 h-20 bg-gray-50 rounded-[28px] flex items-center justify-center mb-6 border border-gray-100">
+                        <Upload className="h-10 w-10 text-gray-200" />
+                    </div>
+                    <h3 className="text-xl font-black text-gray-900 mb-2 tracking-tight">
+                        {search || category ? '未找到相关素材' : '素材库空空如也'}
                     </h3>
-                    <p className=" mt-1 text-sm text-gray-500">
-                        {search || category ? '尝试更改搜索条件' : '点击上传按钮开始上传文件'}
+                    <p className="text-sm text-gray-400 font-medium max-w-xs leading-relaxed">
+                        {search || category ? '尝试更换搜索关键词或筛选类型' : '开始上传您的第一张图片或视频素材，丰富站点内容'}
                     </p>
                 </div>
             ) : (
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
                     {files.map((file) => (
                         <div
                             key={file.id}
-                            className={`group relative bg-white rounded-lg border overflow-hidden hover:shadow-md transition-all ${selectedIds.includes(file.id) ? 'ring-2 ring-blue-500 border-transparent' : 'border-gray-200'
+                            className={`group relative bg-white rounded-[28px] border-2 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-50/50 overflow-hidden ${selectedIds.includes(file.id) ? 'border-blue-600 scale-[0.98]' : 'border-gray-50'
                                 }`}
                         >
-                            {/* Checkbox Overlay */}
-                            <div className="absolute top-2 left-2 z-10">
-                                <button
-                                    onClick={() => toggleSelect(file.id)}
-                                    className="p-1 rounded-md bg-white/80 hover:bg-white text-gray-500 hover:text-blue-600 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity aria-selected:opacity-100 text-blue-600"
-                                    aria-selected={selectedIds.includes(file.id)}
-                                >
-                                    {selectedIds.includes(file.id) ? (
-                                        <CheckSquare className="w-4 h-4 text-blue-600" />
-                                    ) : (
-                                        <Square className="w-4 h-4" />
-                                    )}
-                                </button>
-                            </div>
+                            {/* 选择状态遮罩 */}
+                            {selectedIds.includes(file.id) && (
+                                <div className="absolute inset-0 bg-blue-600/5 z-10 pointer-events-none" />
+                            )}
 
-                            {/* Preview */}
-                            <div className="aspect-square bg-gray-50 flex items-center justify-center overflow-hidden">
+                            {/* 预览区域 */}
+                            <div className="aspect-square bg-gray-50 relative overflow-hidden">
                                 {file.category === 'image' ? (
                                     <img
                                         src={file.url}
                                         alt={file.filename}
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                     />
                                 ) : (
-                                    <div className="flex flex-col items-center justify-center p-4">
+                                    <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-gradient-to-br from-gray-50 to-gray-100">
                                         {getFileIcon(file.mimeType)}
-                                        <span className="mt-2 text-xs text-gray-500 text-center line-clamp-2">
-                                            {file.filename}
+                                        <span className="mt-3 text-[10px] font-black text-gray-400 text-center line-clamp-2 uppercase tracking-tighter">
+                                            {file.filename.split('.').pop()} 素材
                                         </span>
                                     </div>
                                 )}
+
+                                {/* 悬浮快捷操作 - 仅在未选中时显示 */}
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2 z-20">
+                                    <button
+                                        onClick={() => toggleSelect(file.id)}
+                                        className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${selectedIds.includes(file.id) ? 'bg-blue-600 text-white' : 'bg-white/20 backdrop-blur-md text-white hover:bg-white hover:text-blue-600'
+                                            }`}
+                                    >
+                                        <CheckSquare className="w-5 h-5" />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(file.id)}
+                                        className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md text-white hover:bg-red-500 transition-all flex items-center justify-center"
+                                    >
+                                        <Trash2 className="w-5 h-5" />
+                                    </button>
+                                </div>
                             </div>
 
-                            {/* Info */}
-                            <div className="p-2">
-                                <p className="text-xs text-gray-900 line-clamp-1" title={file.filename}>
-                                    {file.filename}
-                                </p>
-                                <p className="text-xs text-gray-500">{formatFileSize(file.size)}</p>
+                            {/* 信息区域 */}
+                            <div className="p-4 space-y-2 relative z-20">
+                                <div className="flex items-start justify-between gap-2">
+                                    <p className="text-[11px] font-black text-gray-900 truncate flex-1" title={file.filename}>
+                                        {file.filename}
+                                    </p>
+                                    <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest whitespace-nowrap">
+                                        {formatFileSize(file.size)}
+                                    </span>
+                                </div>
                                 <input
                                     type="text"
                                     defaultValue={(file as any).description || ''}
@@ -353,20 +441,9 @@ export default function FilesPage() {
                                             handleUpdateDescription(file.id, e.target.value);
                                         }
                                     }}
-                                    placeholder="添加描述..."
-                                    className="mt-2 w-full text-xs px-2 py-1 border border-gray-200 rounded bg-gray-50 focus:bg-white focus:ring-1 focus:ring-blue-500 outline-none"
+                                    placeholder="添加备注..."
+                                    className="w-full text-[10px] px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-300 focus:bg-white focus:border-blue-600 outline-none font-bold text-gray-500 placeholder:text-gray-300 transition-all"
                                 />
-                            </div>
-
-                            {/* Actions */}
-                            <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button
-                                    onClick={() => handleDelete(file.id)}
-                                    className="p-1.5 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-                                    title="删除"
-                                >
-                                    <Trash2 className="w-3 h-3" />
-                                </button>
                             </div>
                         </div>
                     ))}

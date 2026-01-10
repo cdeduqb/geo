@@ -14,6 +14,7 @@ export default function CreateTaskForm({ strategies, onSuccess }: CreateTaskForm
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [topics, setTopics] = useState('');
+    const [keyword, setKeyword] = useState('');
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -25,14 +26,14 @@ export default function CreateTaskForm({ strategies, onSuccess }: CreateTaskForm
 
         // Parse topics (one per line)
         const topicLines = topics.trim().split('\n').filter(line => line.trim());
-        const parsedTopics = topicLines.map(line => {
-            // Format: "Topic | keywords" or just "Topic"
-            const parts = line.split('|').map(p => p.trim());
-            return {
-                topic: parts[0],
-                keywords: parts[1] || '',
-            };
-        });
+
+        // 所有主题使用同一个优化词
+        const optimizationKeyword = keyword.trim();
+
+        const parsedTopics = topicLines.map(line => ({
+            topic: line.trim(),
+            keywords: optimizationKeyword, // 所有主题使用相同的优化词
+        }));
 
         if (parsedTopics.length === 0) {
             setError('请至少输入一个主题');
@@ -57,8 +58,8 @@ export default function CreateTaskForm({ strategies, onSuccess }: CreateTaskForm
 
             const result = await res.json();
             setTopics('');
+            setKeyword('');
             router.refresh();
-            // alert(`成功创建 ${result.created} 个任务！`);
             if (onSuccess) onSuccess();
         } catch (err: any) {
             setError(err.message);
@@ -66,6 +67,8 @@ export default function CreateTaskForm({ strategies, onSuccess }: CreateTaskForm
             setLoading(false);
         }
     };
+
+    const topicCount = topics.trim().split('\n').filter(line => line.trim()).length;
 
     return (
         <div className="space-y-6">
@@ -80,7 +83,7 @@ export default function CreateTaskForm({ strategies, onSuccess }: CreateTaskForm
                     <label className="text-sm font-medium text-gray-700">选择策略</label>
                     <select
                         name="strategyId"
-                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                         required
                     >
                         <option value="">请选择策略</option>
@@ -96,22 +99,46 @@ export default function CreateTaskForm({ strategies, onSuccess }: CreateTaskForm
 
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-gray-700">
+                        优化词
+                        <span className="ml-2 text-xs text-gray-500 font-normal">
+                            所有主题将使用此优化词进行内容优化
+                        </span>
+                    </label>
+                    <input
+                        type="text"
+                        value={keyword}
+                        onChange={e => setKeyword(e.target.value)}
+                        placeholder="例如：人工智能,机器学习,深度学习"
+                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm placeholder-gray-400 focus:border-blue-500 focus:outline-none"
+                    />
+                    <p className="text-xs text-gray-500">
+                        多个优化词可用逗号分隔
+                    </p>
+                </div>
+
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">
                         主题列表
                         <span className="ml-2 text-xs text-gray-500 font-normal">
-                            每行一个，格式：主题 | 关键词（可选）
+                            每行填写一个主题
                         </span>
                     </label>
                     <textarea
                         value={topics}
                         onChange={e => setTopics(e.target.value)}
-                        placeholder="AI 在医疗领域的应用 | 人工智能,医疗,诊断&#10;区块链技术如何改变金融行业 | 区块链,金融,去中心化&#10;元宇宙的未来发展趋势"
+                        placeholder="AI 在医疗领域的应用&#10;区块链技术如何改变金融行业&#10;元宇宙的未来发展趋势&#10;自动驾驶汽车的安全挑战"
                         rows={8}
-                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 font-mono"
+                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm placeholder-gray-400 focus:border-blue-500 focus:outline-none font-mono"
                         required
                     />
-                    <p className="text-xs text-gray-500">
-                        共 {topics.trim().split('\n').filter(line => line.trim()).length} 个主题
-                    </p>
+                    <div className="flex items-center justify-between text-xs text-gray-500">
+                        <span>共 {topicCount} 个主题</span>
+                        {topicCount > 0 && keyword && (
+                            <span className="text-blue-600">
+                                将创建 {topicCount} 篇文章，统一使用优化词: {keyword}
+                            </span>
+                        )}
+                    </div>
                 </div>
 
                 <div className="flex justify-end border-t border-gray-200 pt-4">

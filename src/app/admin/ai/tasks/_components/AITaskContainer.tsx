@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Sparkles, Plus, Play, Loader2 } from 'lucide-react';
+import { Sparkles, Plus, Play, Loader2, Clock, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -73,50 +73,94 @@ export default function AITaskContainer({ tasks, strategies, stats, pagination }
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                        <Sparkles className="w-8 h-8 text-blue-600" />
-                        批量 AI 创作任务
-                    </h1>
-                    <p className="mt-1 text-sm text-gray-500">
-                        批量创建文章，自动生成内容
-                    </p>
+            {/* 页面头部 */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                        <Sparkles className="w-6 h-6" />
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">批量 AI 创作任务</h1>
+                        <p className="text-[13px] text-gray-500 font-medium">
+                            批量创建文章，自动生成优质内容
+                        </p>
+                    </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <Button
-                        variant="outline"
+                    <button
                         onClick={handleRunTasks}
                         disabled={isRunning || stats.pending === 0}
-                        className="gap-2"
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-bold transition-all duration-300 border border-gray-200 text-gray-600 hover:text-gray-900 hover:bg-gray-50 disabled:opacity-50"
                     >
                         {isRunning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
                         立即运行
-                    </Button>
-                    <Button onClick={() => setOpen(true)} className="gap-2">
+                    </button>
+                    <button
+                        onClick={() => setOpen(true)}
+                        className="flex items-center gap-2.5 px-6 py-2.5 rounded-2xl text-sm font-bold transition-all duration-300 shadow-lg bg-blue-600 text-white hover:bg-blue-700 shadow-blue-100 hover:shadow-blue-200 active:scale-95"
+                    >
                         <Plus className="w-4 h-4" />
                         创建新任务
-                    </Button>
+                    </button>
                 </div>
             </div>
 
             {/* Stats */}
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-                    <div className="text-sm font-medium text-gray-500 mb-1">待处理</div>
-                    <div className="text-2xl font-bold text-gray-900">{stats.pending}</div>
+                {/* Pending */}
+                <div className="bg-white rounded-[20px] border-2 border-gray-300 p-4 flex items-center gap-4 transition-all duration-300 shadow-sm shadow-gray-100/50 cursor-default group">
+                    <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-500 group-hover:scale-110 transition-transform duration-300 shrink-0">
+                        <Clock className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <div className="text-[11px] font-bold text-gray-400 mb-0.5 truncate">待处理任务</div>
+                        <div className="text-2xl font-black text-gray-900 leading-none tracking-tight">{stats.pending}</div>
+                    </div>
+                    <div className="shrink-0">
+                        <span className="px-2 py-1 rounded-lg bg-gray-50 text-gray-500 text-[10px] font-bold block text-center">待机中</span>
+                    </div>
                 </div>
-                <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-                    <div className="text-sm font-medium text-gray-500 mb-1">处理中</div>
-                    <div className="text-2xl font-bold text-blue-600">{stats.processing}</div>
+
+                {/* Processing */}
+                <div className="bg-white rounded-[20px] border-2 border-blue-300 p-4 flex items-center gap-4 transition-all duration-300 shadow-sm shadow-blue-50 cursor-default group">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform duration-300 shrink-0">
+                        <Loader2 className={`w-5 h-5 ${stats.processing > 0 || isRunning ? 'animate-spin' : ''}`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <div className="text-[11px] font-bold text-gray-400 mb-0.5 truncate">执行中任务</div>
+                        <div className="text-2xl font-black text-gray-900 leading-none tracking-tight">{stats.processing}</div>
+                    </div>
+                    <div className="shrink-0">
+                        <span className="px-2 py-1 rounded-lg bg-blue-50 text-blue-600 text-[10px] font-bold block text-center">运行中</span>
+                    </div>
                 </div>
-                <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-                    <div className="text-sm font-medium text-gray-500 mb-1">已完成</div>
-                    <div className="text-2xl font-bold text-green-600">{stats.completed}</div>
+
+                {/* Completed */}
+                <div className="bg-white rounded-[20px] border-2 border-emerald-300 p-4 flex items-center gap-4 transition-all duration-300 shadow-sm shadow-emerald-50 cursor-default group">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform duration-300 shrink-0">
+                        <CheckCircle2 className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <div className="text-[11px] font-bold text-gray-400 mb-0.5 truncate">已完成任务</div>
+                        <div className="text-2xl font-black text-gray-900 leading-none tracking-tight">{stats.completed}</div>
+                    </div>
+                    <div className="shrink-0">
+                        <span className="px-2 py-1 rounded-lg bg-emerald-50 text-emerald-600 text-[10px] font-bold block text-center">已完成</span>
+                    </div>
                 </div>
-                <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-                    <div className="text-sm font-medium text-gray-500 mb-1">失败</div>
-                    <div className="text-2xl font-bold text-red-600">{stats.failed}</div>
+
+                {/* Failed */}
+                <div className="bg-white rounded-[20px] border-2 border-red-300 p-4 flex items-center gap-4 transition-all duration-300 shadow-sm shadow-red-50 cursor-default group">
+                    <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform duration-300 shrink-0">
+                        <XCircle className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <div className="text-[11px] font-bold text-gray-400 mb-0.5 truncate">失败任务</div>
+                        <div className="text-2xl font-black text-gray-900 leading-none tracking-tight">{stats.failed}</div>
+                    </div>
+                    <div className="shrink-0">
+                        <span className="px-2 py-1 rounded-lg bg-red-50 text-red-500 text-[10px] font-bold block text-center">已失败</span>
+                    </div>
                 </div>
             </div>
 

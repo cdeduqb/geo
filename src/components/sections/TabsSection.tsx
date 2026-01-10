@@ -1,6 +1,7 @@
 'use client';
 
 import { registerSection, SectionProps } from '@/lib/sections/registry';
+import { RichTextContent } from '@/components/security/SafeHTML';
 import React, { useState } from 'react';
 
 export const TabsSection: React.FC<SectionProps> = ({ data, style = {}, isEditing }) => {
@@ -38,9 +39,9 @@ export const TabsSection: React.FC<SectionProps> = ({ data, style = {}, isEditin
                     {/* Tab Content */}
                     <div className="flex-1 bg-white  rounded-xl p-6 md:p-8 shadow-sm border border-gray-100  min-h-[300px]">
                         {tabs?.[activeTab] && (
-                            <div className="prose  max-w-none animate-fadeIn">
+                            <div className="prose max-w-none animate-fadeIn">
                                 <h3 className="text-xl font-bold mb-4">{tabs[activeTab].label}</h3>
-                                <div dangerouslySetInnerHTML={{ __html: tabs[activeTab].content }} />
+                                <RichTextContent content={tabs[activeTab].content} />
                             </div>
                         )}
                     </div>

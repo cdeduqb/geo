@@ -6,13 +6,13 @@ import { getSiteSettings } from '@/lib/site-settings';
 import { Metadata } from 'next';
 import { t } from '@/lib/i18n';
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {
     const locale = await getLocale();
 
     return {
-        title: `${t(locale, 'article.list')} | GeoCMS`,
+        title: `${t(locale, 'article.list')} | 企业官网`,
         description: t(locale, 'article.stayUpdated'),
     };
 }

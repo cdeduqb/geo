@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Sparkles, X, Loader2, Send } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './dialog';
+import { RichTextContent } from '@/components/security/SafeHTML';
 
 interface AIInsertModalProps {
     isOpen: boolean;
@@ -87,7 +88,7 @@ export default function AIInsertModal({ isOpen, onClose, onInsert, context }: AI
                     {result && !isLoading && (
                         <div className="space-y-3">
                             <div className="p-4 bg-gray-50 border rounded-lg max-h-[300px] overflow-y-auto">
-                                <div className="prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: result }} />
+                                <RichTextContent content={result} className="prose prose-sm max-w-none" />
                             </div>
                             <div className="flex justify-end gap-2">
                                 <button

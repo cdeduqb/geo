@@ -10,7 +10,7 @@ const PageSchema = z.object({
     title: z.string().min(1, '标题不能为空'),
     slug: z.string().min(1, 'URL 路径不能为空'),
     content: z.string().optional().default(''),
-    type: z.enum(['HOME', 'ARTICLE_LIST', 'PRODUCT_LIST', 'ABOUT', 'CONTACT', 'CUSTOM']),
+    type: z.enum(['HOME', 'ARTICLE_LIST', 'PRODUCT_LIST', 'ABOUT', 'CONTACT', 'CUSTOM', 'HEADER', 'FOOTER', 'GENERAL']),
     status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']),
     templateId: z.string().optional().nullable(),
     headerTemplateId: z.string().optional().nullable(),
@@ -21,6 +21,7 @@ const PageSchema = z.object({
     seoDescription: z.string().optional().nullable(),
     lang: z.string().default('zh'),
     translationGroupId: z.string().optional().nullable(),
+    isDefault: z.boolean().default(false),
 });
 
 export async function createPage(formData: FormData) {
@@ -30,11 +31,15 @@ export async function createPage(formData: FormData) {
         throw new Error('未授权');
     }
 
+    const type = formData.get('type')?.toString() || 'CUSTOM';
+    const lang = formData.get('lang')?.toString() || 'zh';
+    const isDefault = formData.get('isDefault') === 'true';
+
     const rawData = {
         title: formData.get('title')?.toString() || '',
         slug: formData.get('slug')?.toString() || '',
         content: formData.get('content')?.toString() || '',
-        type: formData.get('type')?.toString() || 'CUSTOM',
+        type: type as any,
         status: formData.get('status')?.toString() || 'DRAFT',
         templateId: formData.get('templateId')?.toString() || null,
         headerTemplateId: formData.get('headerTemplateId')?.toString() || null,
@@ -42,17 +47,34 @@ export async function createPage(formData: FormData) {
         seoTitle: formData.get('seoTitle')?.toString() || null,
         seoKeywords: formData.get('seoKeywords')?.toString() || null,
         seoDescription: formData.get('seoDescription')?.toString() || null,
-        lang: formData.get('lang')?.toString() || 'zh',
+        lang: lang,
         translationGroupId: formData.get('translationGroupId')?.toString() || null,
+        isDefault: isDefault,
     };
 
     const validatedData = PageSchema.parse(rawData);
+    console.log('Creating Page with data:', JSON.stringify(validatedData, null, 2));
+
+    // 只有首页类型(HOME)才处理 isDefault
+    const shouldBeDefault = isDefault && validatedData.type === 'HOME';
+
+    // If setting as default for HOME type, unset others of same type and lang
+    if (shouldBeDefault) {
+        console.log(`Setting default homepage for ${validatedData.lang}. Unsetting others...`);
+        await (db.page as any).updateMany({
+            where: { type: 'HOME', lang: validatedData.lang, isDefault: true },
+            data: { isDefault: false }
+        });
+    }
+
+    // 非 HOME 类型强制设置为 false
+    validatedData.isDefault = shouldBeDefault;
 
     // Separate SEO data from Page data
     const { seoTitle, seoKeywords, seoDescription, ...pageData } = validatedData;
 
     try {
-        await (db.page as any).create({
+        const newPage = await (db.page as any).create({
             data: {
                 ...pageData,
                 seo: {
@@ -64,12 +86,14 @@ export async function createPage(formData: FormData) {
                 }
             },
         });
-    } catch (error) {
-        console.error('创建页面失败:', error);
-        return { error: '创建页面失败，可能是 URL 路径重复' };
+        console.log('Page created successfully:', newPage.id);
+    } catch (error: any) {
+        console.error(' [CRITICAL] 创建页面失败:', error);
+        throw new Error(`创建页面失败: ${error.message || '未知错误'}`);
     }
 
     revalidatePath('/admin/pages');
+    revalidatePath('/');
     redirect('/admin/pages');
 }
 
@@ -86,11 +110,15 @@ export async function updatePage(formData: FormData) {
         throw new Error('页面 ID 不能为空');
     }
 
+    const type = formData.get('type')?.toString() || 'CUSTOM';
+    const lang = formData.get('lang')?.toString() || 'zh';
+    const isDefault = formData.get('isDefault') === 'true';
+
     const rawData = {
         title: formData.get('title')?.toString() || '',
         slug: formData.get('slug')?.toString() || '',
         content: formData.get('content')?.toString() || '',
-        type: formData.get('type')?.toString() || 'CUSTOM',
+        type: type as any,
         status: formData.get('status')?.toString() || 'DRAFT',
         templateId: formData.get('templateId')?.toString() || null,
         headerTemplateId: formData.get('headerTemplateId')?.toString() || null,
@@ -98,13 +126,33 @@ export async function updatePage(formData: FormData) {
         seoTitle: formData.get('seoTitle')?.toString() || null,
         seoKeywords: formData.get('seoKeywords')?.toString() || null,
         seoDescription: formData.get('seoDescription')?.toString() || null,
-        lang: formData.get('lang')?.toString() || 'zh',
+        lang: lang,
         translationGroupId: formData.get('translationGroupId')?.toString() || null,
+        isDefault: isDefault,
     };
 
-    console.log('Update Page Raw Data:', rawData);
-
     const validatedData = PageSchema.parse(rawData);
+    console.log(`Updating Page ${id} with data:`, JSON.stringify(validatedData, null, 2));
+
+    // 只有首页类型(HOME)才处理 isDefault
+    const shouldBeDefault = isDefault && validatedData.type === 'HOME';
+
+    // If setting as default for HOME type, unset others of same type and lang
+    if (shouldBeDefault) {
+        console.log(`Setting default homepage for ${validatedData.lang}. Unsetting others (except ${id})...`);
+        await (db.page as any).updateMany({
+            where: {
+                type: 'HOME',
+                lang: validatedData.lang,
+                isDefault: true,
+                id: { not: id }
+            },
+            data: { isDefault: false }
+        });
+    }
+
+    // 非 HOME 类型强制设置为 false
+    validatedData.isDefault = shouldBeDefault;
 
     // Separate SEO data from Page data
     const { seoTitle, seoKeywords, seoDescription, ...pageData } = validatedData;
@@ -130,12 +178,14 @@ export async function updatePage(formData: FormData) {
                 }
             },
         });
-    } catch (error) {
-        console.error('更新页面失败:', error);
-        return { error: '更新页面失败' };
+        console.log(`Page ${id} updated successfully.`);
+    } catch (error: any) {
+        console.error(' [CRITICAL] 更新页面失败:', error);
+        throw new Error(`更新页面失败: ${error.message || '未知错误'}`);
     }
 
     revalidatePath('/admin/pages');
+    revalidatePath('/');
     redirect('/admin/pages');
 }
 

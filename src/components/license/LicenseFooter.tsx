@@ -12,7 +12,7 @@ export default function LicenseFooter() {
         fetch('/api/license/info')
             .then(res => res.json())
             .then(data => setLicenseInfo(data))
-            .catch(() => {})
+            .catch(() => { })
             .finally(() => setLoading(false));
     }, []);
 
@@ -38,7 +38,7 @@ export default function LicenseFooter() {
                             激活授权
                         </Link>
                         <span className="text-gray-400">|</span>
-                        <a href="https://moli123.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                        <a href="https://sq.moli123.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                             购买授权
                         </a>
                     </div>

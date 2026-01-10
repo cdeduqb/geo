@@ -1,5 +1,6 @@
 import { PageTemplate } from '@prisma/client';
 import { PageRenderer } from '@/components/PageRenderer';
+import { CustomHTML } from '@/components/security/SafeHTML';
 
 interface PageLayoutProps {
     headerTemplate?: PageTemplate | null;
@@ -9,6 +10,7 @@ interface PageLayoutProps {
     contentTemplate?: PageTemplate | null;
     children: React.ReactNode;
     className?: string;
+    translationGroupId?: string | null;
 }
 
 // Helper to replace system settings placeholders
@@ -31,6 +33,7 @@ export default async function PageLayout({
     contentTemplate,
     children,
     className = '',
+    translationGroupId,
 }: PageLayoutProps) {
     // Fetch settings for replacement
     const settings = await (await import('@/lib/system-settings')).getSystemSettings();
@@ -46,7 +49,7 @@ export default async function PageLayout({
     } : null;
 
     return (
-        <div className={`min-h-screen flex flex-col ${className}`}>
+        <div className={`min-h-screen flex flex-col ${className}`} data-translation-group-id={translationGroupId || ''}>
             {/* Header */}
             {headerTemplate ? (
                 // If page has a specific header template, use it
@@ -58,7 +61,7 @@ export default async function PageLayout({
                             {processedHeader.style && (
                                 <style dangerouslySetInnerHTML={{ __html: processedHeader.style }} />
                             )}
-                            <div dangerouslySetInnerHTML={{ __html: processedHeader.content }} />
+                            <CustomHTML html={processedHeader.content} />
                         </>
                     )
                 )
@@ -76,7 +79,7 @@ export default async function PageLayout({
                         {contentTemplate.style && (
                             <style dangerouslySetInnerHTML={{ __html: contentTemplate.style }} />
                         )}
-                        <div dangerouslySetInnerHTML={{ __html: contentTemplate.content }} />
+                        <CustomHTML html={contentTemplate.content} />
                     </>
                 ) : (
                     children
@@ -94,7 +97,7 @@ export default async function PageLayout({
                             {processedFooter.style && (
                                 <style dangerouslySetInnerHTML={{ __html: processedFooter.style }} />
                             )}
-                            <div dangerouslySetInnerHTML={{ __html: processedFooter.content }} />
+                            <CustomHTML html={processedFooter.content} />
                         </>
                     )
                 )

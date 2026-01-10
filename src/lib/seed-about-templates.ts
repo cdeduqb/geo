@@ -21,7 +21,7 @@ async function main() {
         </div>
         <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
             <div class="mx-auto max-w-2xl lg:mx-0">
-                <h2 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">我们是 GeoCMS</h2>
+                <h2 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">我们是 企业官网</h2>
                 <p class="mt-6 text-lg leading-8 text-gray-300">
                     致力于为企业提供最先进的内容管理解决方案。我们相信技术的力量可以改变信息的传播方式，让每一个声音都能被世界听见。
                 </p>
@@ -158,7 +158,7 @@ async function main() {
                     <div class="text-xl font-bold text-gray-900">2023</div>
                     <h3 class="mt-2 text-lg font-semibold text-gray-900">全球化扩张</h3>
                     <p class="mt-2 text-base leading-7 text-gray-600">
-                        GeoCMS 正式推出多语言版本，并在新加坡设立亚太区总部，开始服务全球客户。
+                        企业官网 正式推出多语言版本，并在新加坡设立亚太区总部，开始服务全球客户。
                     </p>
                 </div>
 
@@ -182,7 +182,7 @@ async function main() {
                     <div class="text-xl font-bold text-gray-900">2021</div>
                     <h3 class="mt-2 text-lg font-semibold text-gray-900">公司成立</h3>
                     <p class="mt-2 text-base leading-7 text-gray-600">
-                        三位创始人在上海的一间车库里写下了 GeoCMS 的第一行代码。
+                        三位创始人在上海的一间车库里写下了 企业官网 的第一行代码。
                     </p>
                 </div>
             </div>

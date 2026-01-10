@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Loader2, Sparkles, Eye, Code } from 'lucide-react';
+import { RichTextContent } from '@/components/security/SafeHTML';
 
 interface AIRewritePanelProps {
     originalText: string;
@@ -99,11 +100,11 @@ export default function AIRewritePanel({ originalText, onAccept, onCancel }: AIR
                         </button>
                     )}
                 </div>
-                <div className="flex-1 p-4 border border-t-0 border-gray-200  rounded-b-lg bg-white  overflow-y-auto">
+                <div className="flex-1 p-4 border border-t-0 border-gray-200 rounded-b-lg bg-white overflow-y-auto">
                     {isActivePreview && isHtml ? (
-                        <div className="prose prose-sm  max-w-none" dangerouslySetInnerHTML={{ __html: text }} />
+                        <RichTextContent content={text} className="prose prose-sm max-w-none" />
                     ) : (
-                        <div className="whitespace-pre-wrap font-mono text-xs text-gray-600 ">{text}</div>
+                        <div className="whitespace-pre-wrap font-mono text-xs text-gray-600">{text}</div>
                     )}
                 </div>
             </div>

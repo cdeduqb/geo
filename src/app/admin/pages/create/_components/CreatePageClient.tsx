@@ -14,7 +14,8 @@ interface CreatePageClientProps {
     contentTemplates: any[];
     existingPages: { id: string; title: string; slug: string }[];
     enableMultiLanguage?: boolean;
-    translationGroups?: { id: string; label: string }[];
+    translationGroups?: { id: string; label: string; lang: string }[];
+    supportedLocales?: string[];
 }
 
 export default function CreatePageClient({
@@ -25,6 +26,7 @@ export default function CreatePageClient({
     existingPages,
     enableMultiLanguage = false,
     translationGroups = [],
+    supportedLocales = ['zh', 'en'],
 }: CreatePageClientProps) {
     const router = useRouter();
     const [mode, setMode] = useState<'wizard' | 'blank' | 'template' | 'ai'>('wizard');
@@ -128,7 +130,7 @@ export default function CreatePageClient({
                 <div className="mb-6">
                     <button
                         onClick={() => setMode('wizard')}
-                        className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+                        className="flex items-center gap-2 text-gray-500 hover:text-gray-900 font-bold transition-colors px-4 py-2 rounded-xl hover:bg-gray-100"
                     >
                         <ArrowLeft className="w-4 h-4" />
                         返回选择
@@ -148,10 +150,10 @@ export default function CreatePageClient({
             {mode === 'template' && (
                 <div className="space-y-6">
                     <div className="text-center mb-8">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                        <h2 className="text-xl font-black text-gray-900 mb-2 tracking-tight">
                             选择模板创建
                         </h2>
-                        <p className="text-gray-500">
+                        <p className="text-gray-400 text-sm font-medium">
                             从已有的模板中选择一个开始创建页面
                         </p>
                     </div>
@@ -162,28 +164,29 @@ export default function CreatePageClient({
                         contentTemplates={contentTemplates}
                         enableMultiLanguage={enableMultiLanguage}
                         translationGroups={translationGroups}
+                        supportedLocales={supportedLocales}
                     />
                 </div>
             )}
 
             {/* AI 生成弹窗 */}
             {showAIModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 relative animate-in zoom-in-95 duration-200">
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4">
+                    <div className="bg-white rounded-[32px] shadow-xl max-w-lg w-full p-8 relative animate-in zoom-in-95 duration-200">
                         <button
                             onClick={() => setShowAIModal(false)}
-                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+                            className="absolute top-6 right-6 p-2.5 hover:bg-gray-100 rounded-xl transition-colors"
                         >
-                            <X className="w-5 h-5" />
+                            <X className="w-5 h-5 text-gray-400" />
                         </button>
 
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
-                                <Wand2 className="w-5 h-5 text-green-600" />
+                        <div className="flex items-center gap-4 mb-6">
+                            <div className="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center">
+                                <Wand2 className="w-6 h-6 text-green-600" />
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-gray-900">AI 智能生成页面</h3>
-                                <p className="text-sm text-gray-500">描述您想要的页面，AI 将为您自动生成</p>
+                                <h3 className="text-lg font-black text-gray-900 tracking-tight">AI 智能生成页面</h3>
+                                <p className="text-sm text-gray-400 font-medium">描述您想要的页面，AI 将为您自动生成</p>
                             </div>
                         </div>
 
@@ -191,20 +194,20 @@ export default function CreatePageClient({
                             value={aiPrompt}
                             onChange={(e) => setAiPrompt(e.target.value)}
                             placeholder="例如：创建一个现代化的关于我们页面，包含公司介绍、团队展示、企业文化和联系方式..."
-                            className="w-full h-40 p-4 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-green-500 outline-none resize-none mb-6 text-sm"
+                            className="w-full h-40 p-5 rounded-2xl border border-gray-300 bg-gray-50 focus:border-green-600 outline-none resize-none mb-6 text-sm font-medium placeholder-gray-300 transition-all"
                         />
 
                         <div className="flex justify-end gap-3">
                             <button
                                 onClick={() => setShowAIModal(false)}
-                                className="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                                className="px-5 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-100 rounded-2xl transition-colors"
                             >
                                 取消
                             </button>
                             <button
                                 onClick={handleAIGenerate}
                                 disabled={!aiPrompt.trim() || isGenerating}
-                                className="flex items-center gap-2 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors text-sm font-medium shadow-sm"
+                                className="flex items-center gap-2 px-6 py-2.5 bg-green-600 text-white rounded-2xl hover:bg-green-700 disabled:opacity-50 transition-all text-sm font-bold shadow-lg shadow-green-100 active:scale-95"
                             >
                                 {isGenerating ? (
                                     <>

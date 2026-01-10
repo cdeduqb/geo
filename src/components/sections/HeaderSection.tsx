@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { registerSection, SectionProps } from '@/lib/sections/registry';
 import { useTranslation } from '@/lib/i18n/use-translation';
 import Link from 'next/link';
@@ -7,9 +8,10 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export const HeaderSection: React.FC<SectionProps> = ({ data, style = {}, isEditing }) => {
     const { t } = useTranslation();
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const {
         logo,
-        logoText = 'GeoCMS',
+        logoText = '企业官网',
         navItems = [],
         ctaButtonText,
         ctaButtonLink,
@@ -257,13 +259,56 @@ export const HeaderSection: React.FC<SectionProps> = ({ data, style = {}, isEdit
         >
             <div className="container mx-auto px-4">
                 {renderLayout()}
-                {/* Mobile Menu Button - 显示在所有布局上 */}
-                <button className="md:hidden absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
+                {/* Mobile Menu Button */}
+                <button
+                    className="md:hidden absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 z-50"
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    aria-label="Toggle menu"
+                >
+                    {mobileMenuOpen ? (
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    ) : (
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    )}
                 </button>
             </div>
+
+            {/* Mobile Menu Panel */}
+            {mobileMenuOpen && (
+                <div className="md:hidden fixed inset-0 z-40 bg-white">
+                    <div className="pt-20 pb-6 px-6 h-full overflow-y-auto">
+                        <nav className="space-y-4">
+                            {defaultNavItems.map((item: any, index: number) => (
+                                <Link
+                                    key={index}
+                                    href={item.link || '#'}
+                                    className="block py-3 text-lg font-medium text-gray-900 border-b border-gray-100"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    {item.label}
+                                </Link>
+                            ))}
+                        </nav>
+                        <div className="mt-8 space-y-4">
+                            <LanguageSwitcher />
+                            {ctaButtonText && (
+                                <Link
+                                    href={ctaButtonLink || '#'}
+                                    className="block w-full text-center py-3 px-4 rounded-lg font-medium text-white"
+                                    style={{ background: ctaButtonColor }}
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    {ctaButtonText}
+                                </Link>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </header>
     );
 };
@@ -351,7 +396,7 @@ registerSection({
         }
     },
     defaultData: {
-        logoText: 'GeoCMS',
+        logoText: '企业官网',
         navItems: [
             { label: '首页', link: '/' },
             { label: '产品', link: '/products' },

@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { User, Lock, Save, Loader2, Camera, AlertCircle, CheckCircle } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { User, Lock, Save, Loader2, Camera, AlertCircle, CheckCircle, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/toast';
 
 interface ProfileData {
     id: string;
     email: string;
+    username: string | null;
     name: string | null;
     avatar: string | null;
     bio: string | null;
@@ -19,8 +21,10 @@ interface ProfileData {
 
 export default function ProfilePage() {
     const router = useRouter();
+    const { showToast } = useToast();
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
     const [profile, setProfile] = useState<ProfileData | null>(null);
 
     // 密码修改状态
@@ -29,6 +33,51 @@ export default function ProfilePage() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [passwordSuccess, setPasswordSuccess] = useState('');
+
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (file.size > 5 * 1024 * 1024) {
+            showToast('文件大小不能超过 5MB', 'error');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        setIsUploading(true);
+        try {
+            const res = await fetch('/api/admin/files/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                // Check data.file.url first, fallback to data.url
+                const url = data.file?.url || data.url;
+                if (url) {
+                    setProfile(prev => prev ? { ...prev, avatar: url } : null);
+                    showToast('头像上传成功', 'success');
+                } else {
+                    showToast('上传成功但未返回URL', 'warning');
+                }
+            } else {
+                const err = await res.json();
+                showToast('图片上传失败: ' + (err.error || '未知错误'), 'error');
+            }
+        } catch (error) {
+            console.error('Upload error:', error);
+            showToast('上传出错', 'error');
+        } finally {
+            setIsUploading(false);
+            if (fileInputRef.current) fileInputRef.current.value = '';
+        }
+    };
 
     useEffect(() => {
         fetchProfile();
@@ -59,6 +108,7 @@ export default function ProfilePage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     name: profile.name,
+                    username: profile.username,
                     avatar: profile.avatar,
                     bio: profile.bio,
                     expertise: profile.expertise,
@@ -70,15 +120,15 @@ export default function ProfilePage() {
             });
 
             if (res.ok) {
-                alert('个人资料已更新');
+                showToast('个人资料已更新', 'success');
                 router.refresh();
             } else {
                 const data = await res.json();
-                alert('更新失败: ' + data.error);
+                showToast('更新失败: ' + data.error, 'error');
             }
         } catch (error) {
             console.error('Error updating profile:', error);
-            alert('更新失败，请重试');
+            showToast('更新失败，请重试', 'error');
         } finally {
             setIsSaving(false);
         }
@@ -140,137 +190,129 @@ export default function ProfilePage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                        <User className="w-8 h-8 text-blue-600" />
-                        个人资料
-                    </h1>
-                    <p className="mt-1 text-sm text-gray-500">
-                        管理您的个人信息和安全设置
-                    </p>
+            {/* Page Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-xl shadow-blue-100/50">
+                        <User className="w-6 h-6" />
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-black text-gray-900 tracking-tight">个人资料</h1>
+                        <p className="text-[11px] text-gray-400 font-bold uppercase tracking-wider opacity-60">Personal Account Settings</p>
+                    </div>
                 </div>
+
+
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* 左侧：基本信息 */}
-                <div className="lg:col-span-2 space-y-6">
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                        <h2 className="text-lg font-semibold mb-6 text-gray-900 flex items-center gap-2">
-                            <User className="w-5 h-5" />
-                            基本信息
-                        </h2>
-                        <form onSubmit={handleProfileUpdate} className="space-y-6">
-                            {/* 头像 */}
-                            <div className="flex items-center gap-6">
-                                <div className="relative group">
-                                    <div className="w-24 h-24 rounded-full bg-gray-100 overflow-hidden border-2 border-gray-200">
+                <div className="lg:col-span-2 space-y-8">
+                    <div className="bg-white rounded-[32px] border border-gray-100 p-8 shadow-sm shadow-gray-100/30">
+                        <div className="flex items-center gap-3 mb-8">
+                            <div className="w-1.5 h-6 bg-blue-600 rounded-full" />
+                            <h2 className="text-xl font-black text-gray-900 tracking-tight">基本信息</h2>
+                        </div>
+
+                        <form onSubmit={handleProfileUpdate} className="space-y-8">
+                            {/* 头像区域 */}
+                            <div className="flex flex-col sm:flex-row items-center gap-8 p-6 bg-gray-50/50 rounded-3xl border border-gray-100/50">
+                                <div className="relative group cursor-pointer" onClick={() => !isUploading && fileInputRef.current?.click()}>
+                                    <input
+                                        type="file"
+                                        hidden
+                                        ref={fileInputRef}
+                                        onChange={handleFileChange}
+                                        accept="image/png,image/jpeg,image/gif,image/webp"
+                                    />
+                                    <div className="w-32 h-32 rounded-[40px] bg-white overflow-hidden border-4 border-white shadow-xl shadow-gray-200/50 flex flex-col items-center justify-center transition-transform duration-500 group-hover:scale-105 relative">
                                         {profile.avatar ? (
                                             <img src={profile.avatar} alt={profile.name || ''} className="w-full h-full object-cover" />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-gray-400">
-                                                <User className="w-10 h-10" />
+                                            <div className="w-full h-full flex items-center justify-center bg-blue-50 text-blue-300">
+                                                <User className="w-16 h-16" />
+                                            </div>
+                                        )}
+                                        <div className={`absolute inset-0 bg-gray-900/40 flex items-center justify-center transition-opacity ${isUploading ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'}`}>
+                                            <Camera className="w-8 h-8 text-white" />
+                                        </div>
+                                        {isUploading && (
+                                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
+                                                <Loader2 className="w-8 h-8 text-white animate-spin" />
                                             </div>
                                         )}
                                     </div>
+                                    <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-100 border-4 border-white">
+                                        {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
+                                    </div>
                                 </div>
-                                <div className="flex-1 space-y-2">
-                                    <label className="text-sm font-medium text-gray-700">头像 URL</label>
+                                <div className="flex-1 space-y-3 w-full">
+                                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">头像图片地址</label>
                                     <input
                                         type="text"
                                         value={profile.avatar || ''}
                                         onChange={(e) => setProfile({ ...profile, avatar: e.target.value })}
-                                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                        placeholder="https://example.com/avatar.jpg"
+                                        className="w-full rounded-2xl border border-gray-300 bg-gray-50/50 px-6 py-4 text-sm font-bold text-gray-900 focus:border-blue-600 focus:bg-white transition-all outline-none placeholder:text-gray-300"
+                                        placeholder="请输入头像 URL"
                                     />
-                                    <p className="text-xs text-gray-500">支持 JPG, PNG, WebP 格式图片链接</p>
+                                    <p className="text-[10px] text-gray-400 font-bold ml-1">支持常见图片格式的公开链接</p>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-700">昵称</label>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div className="space-y-3">
+                                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">展示昵称</label>
                                     <input
                                         type="text"
                                         value={profile.name || ''}
                                         onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                        className="w-full rounded-2xl border border-gray-300 bg-gray-50/50 px-6 py-4 text-sm font-bold text-gray-900 focus:border-blue-600 focus:bg-white transition-all outline-none"
                                     />
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium text-gray-700">邮箱</label>
+                                <div className="space-y-3">
+                                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">登录账号</label>
                                     <input
-                                        type="email"
-                                        value={profile.email}
-                                        disabled
-                                        className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-500 cursor-not-allowed"
+                                        type="text"
+                                        value={profile.username || ''}
+                                        onChange={(e) => setProfile({ ...profile, username: e.target.value })}
+                                        className="w-full rounded-2xl border border-gray-300 bg-gray-50/50 px-6 py-4 text-sm font-bold text-gray-900 focus:border-blue-600 focus:bg-white transition-all outline-none"
                                     />
                                 </div>
+
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-700">个人简介</label>
+                            <div className="space-y-3">
+                                <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">个人简介</label>
                                 <textarea
                                     value={profile.bio || ''}
                                     onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-                                    rows={3}
-                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
+                                    rows={4}
+                                    className="w-full rounded-2xl border border-gray-300 bg-gray-50/50 px-6 py-4 text-sm font-bold text-gray-900 focus:border-blue-600 focus:bg-white transition-all outline-none resize-none leading-relaxed placeholder:text-gray-300"
+                                    placeholder="写一点关于您的简介..."
                                 />
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-700">专业领域</label>
+                            <div className="space-y-3">
+                                <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">专业技能 / 领域</label>
                                 <input
                                     type="text"
                                     value={profile.expertise || ''}
                                     onChange={(e) => setProfile({ ...profile, expertise: e.target.value })}
-                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                    className="w-full rounded-2xl border border-gray-300 bg-gray-50/50 px-6 py-4 text-sm font-bold text-gray-900 focus:border-blue-600 focus:bg-white transition-all outline-none placeholder:text-gray-300"
                                     placeholder="例如：SEO 专家, 全栈开发"
                                 />
                             </div>
 
-                            <div className="border-t border-gray-100 pt-6">
-                                <h3 className="text-sm font-medium text-gray-900 mb-4">社交链接</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <input
-                                        type="text"
-                                        value={profile.website || ''}
-                                        onChange={(e) => setProfile({ ...profile, website: e.target.value })}
-                                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                        placeholder="个人网站 URL"
-                                    />
-                                    <input
-                                        type="text"
-                                        value={profile.github || ''}
-                                        onChange={(e) => setProfile({ ...profile, github: e.target.value })}
-                                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                        placeholder="GitHub URL"
-                                    />
-                                    <input
-                                        type="text"
-                                        value={profile.twitter || ''}
-                                        onChange={(e) => setProfile({ ...profile, twitter: e.target.value })}
-                                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                        placeholder="Twitter URL"
-                                    />
-                                    <input
-                                        type="text"
-                                        value={profile.linkedin || ''}
-                                        onChange={(e) => setProfile({ ...profile, linkedin: e.target.value })}
-                                        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                        placeholder="LinkedIn URL"
-                                    />
-                                </div>
-                            </div>
+
 
                             <div className="flex justify-end pt-4">
                                 <button
                                     type="submit"
                                     disabled={isSaving}
-                                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    className="inline-flex items-center px-10 py-4 bg-blue-600 text-white text-sm font-black rounded-2xl hover:bg-blue-700 shadow-xl shadow-blue-100 hover:shadow-blue-200 active:scale-95 transition-all disabled:opacity-50"
                                 >
                                     {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-                                    保存修改
+                                    保存个人资料
                                 </button>
                             </div>
                         </form>
@@ -278,74 +320,89 @@ export default function ProfilePage() {
                 </div>
 
                 {/* 右侧：安全设置 */}
-                <div className="space-y-6">
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-6">
-                        <h2 className="text-lg font-semibold mb-6 text-gray-900 flex items-center gap-2">
-                            <Lock className="w-5 h-5" />
-                            修改密码
-                        </h2>
-                        <form onSubmit={handlePasswordChange} className="space-y-4">
+                <div className="space-y-8">
+                    <div className="bg-white rounded-[32px] border border-gray-100 p-8 shadow-sm shadow-gray-100/30">
+                        <div className="flex items-center gap-3 mb-8">
+                            <div className="w-1.5 h-6 bg-gray-900 rounded-full" />
+                            <h2 className="text-xl font-black text-gray-900 tracking-tight">安全中心</h2>
+                        </div>
+
+                        <form onSubmit={handlePasswordChange} className="space-y-6">
                             {passwordError && (
-                                <div className="p-3 bg-red-50 text-red-600 text-sm rounded-lg flex items-start gap-2">
+                                <div className="p-4 bg-red-50 border border-red-100 text-red-600 text-xs font-bold rounded-2xl flex items-start gap-3 animate-shake">
                                     <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                                     <span>{passwordError}</span>
                                 </div>
                             )}
                             {passwordSuccess && (
-                                <div className="p-3 bg-green-50 text-green-600 text-sm rounded-lg flex items-start gap-2">
+                                <div className="p-4 bg-emerald-50 border border-emerald-100 text-emerald-600 text-xs font-bold rounded-2xl flex items-start gap-3">
                                     <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                                     <span>{passwordSuccess}</span>
                                 </div>
                             )}
 
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-700">当前密码</label>
-                                <input
-                                    type="password"
-                                    value={currentPassword}
-                                    onChange={(e) => setCurrentPassword(e.target.value)}
-                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                    placeholder="请输入当前密码"
-                                    required
-                                />
+                            <div className="space-y-3">
+                                <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">当前密码</label>
+                                <div className="relative">
+                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
+                                    <input
+                                        type="password"
+                                        value={currentPassword}
+                                        onChange={(e) => setCurrentPassword(e.target.value)}
+                                        className="w-full rounded-2xl border border-gray-300 bg-gray-50/50 pl-12 pr-6 py-4 text-sm font-bold text-gray-900 focus:border-blue-600 focus:bg-white transition-all outline-none"
+                                        placeholder="确认身份"
+                                        required
+                                    />
+                                </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-700">新密码</label>
+                            <div className="space-y-3">
+                                <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">新密码</label>
                                 <input
                                     type="password"
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
-                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                    placeholder="至少6位字符"
+                                    className="w-full rounded-2xl border border-gray-300 bg-gray-50/50 px-6 py-4 text-sm font-bold text-gray-900 focus:border-blue-600 focus:bg-white transition-all outline-none"
+                                    placeholder="至少6位安全密码"
                                     required
                                     minLength={6}
                                 />
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-700">确认新密码</label>
+                            <div className="space-y-3">
+                                <label className="text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">确认新密码</label>
                                 <input
                                     type="password"
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
-                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                    placeholder="再次输入新密码"
+                                    className="w-full rounded-2xl border border-gray-300 bg-gray-50/50 px-6 py-4 text-sm font-bold text-gray-900 focus:border-blue-600 focus:bg-white transition-all outline-none"
+                                    placeholder="确保一致"
                                     required
                                 />
                             </div>
 
-                            <div className="pt-2">
+                            <div className="pt-4">
                                 <button
                                     type="submit"
                                     disabled={isSaving || !currentPassword || !newPassword}
-                                    className="w-full inline-flex items-center justify-center px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    className="w-full h-14 bg-red-600 text-white text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-red-700 shadow-xl shadow-red-200 active:scale-95 transition-all disabled:opacity-50"
                                 >
-                                    {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Lock className="w-4 h-4 mr-2" />}
-                                    修改密码
+                                    {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : '重设安全密码'}
                                 </button>
                             </div>
                         </form>
+                    </div>
+
+                    <div className="p-8 bg-blue-50/50 rounded-[32px] border border-blue-100/50">
+                        <div className="flex items-center gap-4 mb-3">
+                            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-blue-600 shadow-sm border border-blue-100">
+                                <AlertCircle className="w-5 h-5" />
+                            </div>
+                            <h4 className="text-sm font-black text-gray-900">安全建议</h4>
+                        </div>
+                        <p className="text-[11px] text-gray-500 font-bold leading-relaxed">
+                            为了您的账户安全，建议定期更改密码并使用包含字母、数字和特殊字符的复杂组合。
+                        </p>
                     </div>
                 </div>
             </div>

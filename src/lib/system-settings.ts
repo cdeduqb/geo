@@ -51,7 +51,7 @@ export async function getSEOSettings() {
     try {
         const settings = await getSystemSettings();
         return {
-            siteName: settings.site_name || 'GeoCMS',
+            siteName: settings.site_name || '企业官网',
             siteDescription: settings.site_description || '企业官网内容管理系统',
             siteUrl: settings.site_url || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
             siteLogo: settings.site_logo || null,
@@ -60,7 +60,7 @@ export async function getSEOSettings() {
         };
     } catch (error) {
         return {
-            siteName: 'GeoCMS',
+            siteName: '企业官网',
             siteDescription: '企业官网内容管理系统',
             siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
             siteLogo: null,
@@ -86,6 +86,7 @@ export interface GEOSettings {
         enabled?: boolean;
         amazonbotAllowed?: boolean;
     };
+    // 注意：自动收录脚本配置已迁移到 SEO 推送配置 (SEOPushConfig) 数据库中
     [key: string]: any;
 }
 

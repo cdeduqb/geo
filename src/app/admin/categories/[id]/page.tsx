@@ -1,10 +1,12 @@
 import { db } from '@/lib/db';
 import { updateCategory } from '../actions';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, FolderEdit } from 'lucide-react';
 import Link from 'next/link';
 import CategoryForm from '../_components/CategoryForm';
 import { notFound } from 'next/navigation';
 import { getI18nSettings } from '@/lib/system-settings';
+
+export const dynamic = 'force-dynamic';
 
 export default async function EditCategoryPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -22,8 +24,21 @@ export default async function EditCategoryPage({ params }: { params: Promise<{ i
         orderBy: { name: 'asc' }
     });
 
-    const i18nSettings = await getI18nSettings();
-    const enableMultiLanguage = i18nSettings.enableMultiLanguage;
+    const enableMultiLanguageSetting = await db.systemSetting.findUnique({
+        where: { key: 'enable_multi_language' }
+    });
+    const enableMultiLanguage = enableMultiLanguageSetting?.value === 'true';
+
+    const i18nSettingsStr = await db.systemSetting.findUnique({ where: { key: 'i18n_settings' } });
+    let supportedLocales = ['zh', 'en'];
+    if (i18nSettingsStr?.value) {
+        try {
+            const config = JSON.parse(i18nSettingsStr.value);
+            if (Array.isArray(config.supportedLocales)) {
+                supportedLocales = config.supportedLocales;
+            }
+        } catch { }
+    }
 
     // Fetch translation groups if multi-language is enabled
     let translationGroups: { id: string; label: string; lang: string }[] = [];
@@ -43,26 +58,16 @@ export default async function EditCategoryPage({ params }: { params: Promise<{ i
     }
 
     return (
-        <div className="max-w-2xl mx-auto space-y-6">
-            <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                    <Link
-                        href="/admin/categories"
-                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                    >
-                        <ArrowLeft className="w-5 h-5 text-gray-500" />
-                    </Link>
-                    <h1 className="text-2xl font-bold text-gray-900">编辑分类</h1>
-                </div>
-            </div>
-
+        <div className="space-y-6">
             <CategoryForm
                 category={category}
                 categories={categories}
                 action={updateCategory}
                 enableMultiLanguage={enableMultiLanguage}
                 translationGroups={translationGroups}
+                supportedLocales={supportedLocales}
             />
         </div>
     );
 }
+

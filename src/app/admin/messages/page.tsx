@@ -1,19 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, Mail, MailOpen, Trash2, CheckCircle, RefreshCw, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
+import { Search, Mail, MailOpen, Trash2, CheckCircle, RefreshCw, ChevronLeft, ChevronRight, Filter, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import { useToast } from '@/components/ui/toast';
 
@@ -170,265 +162,297 @@ export default function MessagesPage() {
     };
 
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-2xl font-bold text-gray-900">留言管理</h1>
-                <p className="text-sm text-gray-500">查看和管理用户留言 · 共 {total} 条，{unreadCount} 条未读</p>
-            </div>
-
-            {/* 工具栏 */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div className="flex items-center gap-4 w-full md:w-auto">
-                        <div className="flex rounded-lg overflow-hidden bg-white">
-                            <button
-                                onClick={() => { setFilter('all'); setPage(1); }}
-                                className={`px-4 py-2 text-sm transition-colors ${filter === 'all' ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-50'}`}
-                            >
-                                全部
-                            </button>
-                            <button
-                                onClick={() => { setFilter('unread'); setPage(1); }}
-                                className={`px-4 py-2 text-sm flex items-center gap-2 transition-colors ${filter === 'unread' ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-50'}`}
-                            >
-                                未读
-                                {unreadCount > 0 && (
-                                    <span className={`px-1.5 py-0.5 text-[10px] rounded-full ${filter === 'unread' ? 'bg-white text-blue-500' : 'bg-gray-100 text-gray-600'}`}>
-                                        {unreadCount}
-                                    </span>
-                                )}
-                            </button>
-                            <button
-                                onClick={() => { setFilter('read'); setPage(1); }}
-                                className={`px-4 py-2 text-sm transition-colors ${filter === 'read' ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-50'}`}
-                            >
-                                已读
-                            </button>
-                        </div>
+        <div className="space-y-6 pb-12">
+            {/* Page Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                        <Mail className="w-6 h-6" />
                     </div>
-
-                    <div className="flex items-center gap-2 w-full md:w-auto">
-                        {selectedIds.length > 0 && (
-                            <div className="flex items-center gap-2 mr-2 animate-in fade-in slide-in-from-right-4 duration-200">
-                                <span className="text-sm text-gray-500 whitespace-nowrap hidden sm:inline">已选 {selectedIds.length} 项</span>
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="text-green-600 hover:text-green-700 hover:bg-green-50 border-green-200"
-                                    onClick={() => handleBatchAction('markRead')}
-                                >
-                                    <MailOpen className="w-4 h-4 mr-1.5" />
-                                    标记已读
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
-                                    onClick={() => handleBatchAction('delete')}
-                                >
-                                    <Trash2 className="w-4 h-4 mr-1.5" />
-                                    删除
-                                </Button>
-                            </div>
-                        )}
-                        <form onSubmit={handleSearch} className="flex items-center gap-2 flex-1 md:flex-none">
-                            <div className="relative flex-1 md:w-64">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                <Input
-                                    type="text"
-                                    value={localSearch}
-                                    onChange={e => setLocalSearch(e.target.value)}
-                                    placeholder="搜索姓名、邮箱或内容..."
-                                    className="pl-9"
-                                />
-                            </div>
-                            <Button type="submit" size="icon" variant="secondary">
-                                <Search className="w-4 h-4" />
-                            </Button>
-                            <Button type="button" variant="outline" size="icon" onClick={() => { fetchMessages(); }}>
-                                <RefreshCw className="w-4 h-4" />
-                            </Button>
-                        </form>
+                    <div>
+                        <h1 className="text-2xl font-black text-gray-900 tracking-tight">留言管理</h1>
                     </div>
                 </div>
             </div>
 
-            {/* 留言列表 */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="w-12">
-                                <input
-                                    type="checkbox"
-                                    checked={selectedIds.length === messages.length && messages.length > 0}
-                                    onChange={toggleSelectAll}
-                                    className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                />
-                            </TableHead>
-                            <TableHead>姓名</TableHead>
-                            <TableHead>邮箱</TableHead>
-                            <TableHead>主题</TableHead>
-                            <TableHead>内容预览</TableHead>
-                            <TableHead>时间</TableHead>
-                            <TableHead className="w-24 text-right">操作</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {loading ? (
-                            <TableRow>
-                                <TableCell colSpan={7} className="h-48 text-center text-gray-500">
-                                    <div className="flex items-center justify-center gap-2">
-                                        <RefreshCw className="w-4 h-4 animate-spin" />
-                                        加载中...
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        ) : messages.length === 0 ? (
-                            <TableRow>
-                                <TableCell colSpan={7} className="h-48 text-center text-gray-500">
-                                    暂无留言
-                                </TableCell>
-                            </TableRow>
-                        ) : (
-                            messages.map(msg => (
-                                <TableRow
-                                    key={msg.id}
-                                    className={`cursor-pointer transition-colors ${!msg.isRead ? 'bg-blue-50/50 hover:bg-blue-50' : 'hover:bg-gray-50'}`}
-                                    onClick={() => handleViewMessage(msg)}
-                                >
-                                    <TableCell onClick={e => e.stopPropagation()}>
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedIds.includes(msg.id)}
-                                            onChange={() => toggleSelect(msg.id)}
-                                            className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                        />
-                                    </TableCell>
-                                    <TableCell>
-                                        <div className="flex items-center gap-2">
-                                            {!msg.isRead && <span className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0" />}
-                                            <span className={`truncate ${!msg.isRead ? 'font-semibold text-gray-900' : 'text-gray-700'}`}>
-                                                {msg.name}
-                                            </span>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell className="text-gray-600">{msg.email}</TableCell>
-                                    <TableCell className="text-gray-600 truncate max-w-[150px]">{msg.subject || '-'}</TableCell>
-                                    <TableCell className="text-gray-500 truncate max-w-[200px]">{msg.content}</TableCell>
-                                    <TableCell className="text-gray-500 text-xs">
-                                        {new Date(msg.createdAt).toLocaleString('zh-CN', {
-                                            year: 'numeric',
-                                            month: '2-digit',
-                                            day: '2-digit',
-                                            hour: '2-digit',
-                                            minute: '2-digit'
-                                        })}
-                                    </TableCell>
-                                    <TableCell className="text-right" onClick={e => e.stopPropagation()}>
-                                        <Button
-                                            size="icon"
-                                            variant="ghost"
-                                            className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
-                                            onClick={() => handleDeleteSingle(msg.id)}
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))
+            {/* Toolbar */}
+            <div className="bg-white rounded-[24px] border border-gray-100 p-3 shadow-sm shadow-gray-100/50 flex flex-col lg:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth px-1">
+                    <button
+                        onClick={() => { setFilter('all'); setPage(1); }}
+                        className={`flex items-center gap-2.5 px-6 py-2.5 rounded-2xl text-xs font-black transition-all duration-300 whitespace-nowrap ${filter === 'all'
+                            ? 'bg-blue-600 text-white shadow-xl shadow-blue-100'
+                            : 'text-gray-500 hover:text-gray-900 hover:bg-white'
+                            }`}
+                    >
+                        <Mail className={`w-4 h-4 transition-transform ${filter === 'all' ? 'scale-110' : ''}`} />
+                        全部留言
+                    </button>
+                    <button
+                        onClick={() => { setFilter('unread'); setPage(1); }}
+                        className={`flex items-center gap-2.5 px-6 py-2.5 rounded-2xl text-xs font-black transition-all duration-300 whitespace-nowrap ${filter === 'unread'
+                            ? 'bg-blue-600 text-white shadow-xl shadow-blue-100'
+                            : 'text-gray-500 hover:text-gray-900 hover:bg-white'
+                            }`}
+                    >
+                        <MailOpen className={`w-4 h-4 transition-transform ${filter === 'unread' ? 'scale-110' : ''}`} />
+                        未读消息
+                        {unreadCount > 0 && (
+                            <span className={`px-2 py-0.5 text-[10px] rounded-full transition-colors ${filter === 'unread' ? 'bg-white text-blue-600' : 'bg-blue-50 text-blue-600'}`}>
+                                {unreadCount}
+                            </span>
                         )}
-                    </TableBody>
-                </Table>
+                    </button>
+                    <button
+                        onClick={() => { setFilter('read'); setPage(1); }}
+                        className={`flex items-center gap-2.5 px-6 py-2.5 rounded-2xl text-xs font-black transition-all duration-300 whitespace-nowrap ${filter === 'read'
+                            ? 'bg-blue-600 text-white shadow-xl shadow-blue-100'
+                            : 'text-gray-500 hover:text-gray-900 hover:bg-white'
+                            }`}
+                    >
+                        <CheckCircle className={`w-4 h-4 transition-transform ${filter === 'read' ? 'scale-110' : ''}`} />
+                        已读存档
+                    </button>
+                </div>
 
-                {/* 分页 */}
-                {!loading && messages.length > 0 && (
-                    <div className="p-4 flex items-center justify-between border-t border-gray-100">
-                        <span className="text-sm text-gray-500">第 {page} / {totalPages} 页</span>
-                        <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3 w-full lg:w-auto">
+                    {selectedIds.length > 0 && (
+                        <div className="flex items-center gap-2 animate-in slide-in-from-right-2 duration-300">
                             <Button
-                                variant="outline"
                                 size="sm"
-                                onClick={() => setPage(p => Math.max(1, p - 1))}
-                                disabled={page === 1}
+                                variant="outline"
+                                className="h-10 rounded-xl text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 border-emerald-100 font-bold px-4"
+                                onClick={() => handleBatchAction('markRead')}
                             >
-                                <ChevronLeft className="w-4 h-4" />
+                                <MailOpen className="w-4 h-4 mr-2" />
+                                标记已读
                             </Button>
                             <Button
-                                variant="outline"
                                 size="sm"
-                                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                                disabled={page === totalPages}
+                                variant="outline"
+                                className="h-10 rounded-xl text-red-600 hover:text-red-700 hover:bg-red-50 border-red-100 font-bold px-4"
+                                onClick={() => handleBatchAction('delete')}
                             >
-                                <ChevronRight className="w-4 h-4" />
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                批量删除
                             </Button>
                         </div>
-                    </div>
-                )}
+                    )}
+
+                    <form onSubmit={handleSearch} className="flex items-center gap-2 flex-1 lg:flex-none">
+                        <div className="relative flex-1 lg:w-64 group">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 group-focus-within:text-blue-500 transition-colors" />
+                            <Input
+                                type="text"
+                                value={localSearch}
+                                onChange={e => setLocalSearch(e.target.value)}
+                                placeholder="搜索姓名、邮箱或内容..."
+                                className="pl-10 h-11 border-none bg-gray-50/50 focus:bg-white rounded-xl text-xs font-bold transition-all"
+                            />
+                        </div>
+                        <Button type="submit" size="icon" className="h-11 w-11 rounded-xl bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-100">
+                            <Search className="w-4 h-4" />
+                        </Button>
+                        <Button type="button" variant="ghost" size="icon" className="h-11 w-11 rounded-xl text-gray-400 hover:text-blue-600 hover:bg-blue-50" onClick={() => { fetchMessages(); }}>
+                            <RefreshCw className="w-4 h-4" />
+                        </Button>
+                    </form>
+                </div>
             </div>
 
-            {/* 留言详情弹窗 */}
-            {viewingMessage && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200" onClick={() => setViewingMessage(null)}>
-                    <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-hidden shadow-xl flex flex-col" onClick={e => e.stopPropagation()}>
-                        <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-                            <div>
-                                <h3 className="text-xl font-bold text-gray-900">留言详情</h3>
-                                <p className="text-sm text-gray-500 mt-1">
-                                    提交于 {new Date(viewingMessage.createdAt).toLocaleString('zh-CN')}
-                                </p>
-                            </div>
-                            <Button variant="ghost" size="icon" onClick={() => setViewingMessage(null)} className="rounded-full">
-                                <span className="sr-only">关闭</span>
-                                <span aria-hidden="true" className="text-2xl font-light">&times;</span>
-                            </Button>
-                        </div>
-                        <div className="p-8 space-y-6 overflow-y-auto">
-                            <div className="grid grid-cols-2 gap-x-8 gap-y-6">
-                                <div className="space-y-1">
-                                    <span className="text-xs font-medium uppercase tracking-wider text-gray-500">姓名</span>
-                                    <p className="font-medium text-gray-900 text-lg">{viewingMessage.name}</p>
-                                </div>
-                                <div className="space-y-1">
-                                    <span className="text-xs font-medium uppercase tracking-wider text-gray-500">邮箱</span>
-                                    <p className="font-medium text-gray-900 flex items-center gap-2">
-                                        <Mail className="w-4 h-4 text-gray-400" />
-                                        {viewingMessage.email}
-                                    </p>
-                                </div>
-                                {viewingMessage.phone && (
-                                    <div className="space-y-1">
-                                        <span className="text-xs font-medium uppercase tracking-wider text-gray-500">手机</span>
-                                        <p className="font-medium text-gray-900">{viewingMessage.phone}</p>
-                                    </div>
-                                )}
-                            </div>
-
-                            {viewingMessage.subject && (
-                                <div className="space-y-2 pt-2">
-                                    <span className="text-xs font-medium uppercase tracking-wider text-gray-500">主题</span>
-                                    <p className="font-medium text-gray-900 text-lg">{viewingMessage.subject}</p>
-                                </div>
+            {/* Message List */}
+            {loading && messages.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[32px] border border-gray-100 shadow-sm">
+                    <div className="relative">
+                        <div className="absolute inset-0 bg-blue-400/20 rounded-full blur-2xl animate-pulse" />
+                        <Loader2 className="relative w-12 h-12 text-blue-600 animate-spin" />
+                    </div>
+                    <p className="mt-6 text-xs text-gray-400 font-black uppercase tracking-widest">正在检索咨询记录...</p>
+                </div>
+            ) : messages.length === 0 ? (
+                <div className="text-center py-24 bg-white rounded-[32px] border-2 border-dashed border-gray-100 flex flex-col items-center">
+                    <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6 border border-gray-100">
+                        <Mail className="h-10 w-10 text-gray-200" />
+                    </div>
+                    <h3 className="text-xl font-black text-gray-900 mb-2 tracking-tight">暂无咨询留言</h3>
+                    <p className="text-sm text-gray-400 font-medium max-w-xs leading-relaxed">
+                        目前还没有客户提交咨询。一旦有新动态，我们会立即在此处通知您。
+                    </p>
+                </div>
+            ) : (
+                <div className="grid gap-4">
+                    {messages.map((message) => (
+                        <div
+                            key={message.id}
+                            onClick={() => handleViewMessage(message)}
+                            className={`group relative bg-white rounded-[24px] border transition-all duration-300 cursor-pointer overflow-hidden p-6 flex flex-col md:flex-row md:items-center gap-6 ${message.isRead ? 'border-gray-50' : 'border-blue-100 bg-blue-50/10 shadow-lg shadow-blue-50/50'
+                                } hover:border-blue-200 hover:shadow-xl hover:shadow-blue-100/20`}
+                        >
+                            {/* 未读状态指示器 */}
+                            {!message.isRead && (
+                                <div className="absolute top-0 left-0 w-1.5 h-full bg-blue-600" />
                             )}
 
-                            <div className="space-y-2 pt-2">
-                                <span className="text-xs font-medium uppercase tracking-wider text-gray-500">留言内容</span>
-                                <div className="p-6 bg-gray-50 rounded-xl text-gray-700 whitespace-pre-wrap leading-relaxed border border-gray-100 shadow-inner">
+                            {/* 勾选框 */}
+                            <div className="flex-shrink-0" onClick={e => e.stopPropagation()}>
+                                <input
+                                    type="checkbox"
+                                    checked={selectedIds.includes(message.id)}
+                                    onChange={() => toggleSelect(message.id)}
+                                    className="w-5 h-5 rounded-lg border-2 border-gray-200 text-blue-600 focus:ring-blue-600 transition-all cursor-pointer"
+                                />
+                            </div>
+
+                            {/* 发送者信息 */}
+                            <div className="flex-shrink-0 flex items-center gap-4 min-w-[200px]">
+                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-lg font-black ${!message.isRead ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-400'}`}>
+                                    {message.name.charAt(0).toUpperCase()}
+                                </div>
+                                <div className="flex-1 overflow-hidden">
+                                    <h4 className="font-black text-gray-900 leading-tight truncate">{message.name}</h4>
+                                    <p className="text-[11px] text-gray-400 font-bold uppercase tracking-tighter mt-0.5 truncate">{message.email}</p>
+                                </div>
+                            </div>
+
+                            {/* 预览内容 */}
+                            <div className="flex-1 min-w-0">
+                                <p className={`text-sm line-clamp-1 ${!message.isRead ? 'text-gray-900 font-bold' : 'text-gray-500'}`}>
+                                    {message.subject ? `【${message.subject}】` : ''}{message.content}
+                                </p>
+                                <div className="flex items-center gap-3 mt-1.5">
+                                    <span className="text-[10px] font-black text-blue-600 bg-blue-50 px-2 py-0.5 rounded-lg uppercase tracking-widest border border-blue-100/50">
+                                        咨询消息
+                                    </span>
+                                    {message.phone && (
+                                        <span className="text-[10px] font-bold text-gray-400">{message.phone}</span>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* 时间与操作 */}
+                            <div className="flex-shrink-0 flex items-center gap-6">
+                                <div className="text-right">
+                                    <p className="text-xs text-gray-400 font-bold">
+                                        {new Date(message.createdAt).toLocaleDateString('zh-CN')}
+                                    </p>
+                                    <p className="text-[10px] text-gray-300 font-medium">
+                                        {new Date(message.createdAt).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}
+                                    </p>
+                                </div>
+                                <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2">
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); handleDeleteSingle(message.id); }}
+                                        className="p-3 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                                        title="删除"
+                                    >
+                                        <Trash2 className="w-5 h-5" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {/* Pagination */}
+            {!loading && total > 0 && (
+                <div className="flex justify-center pt-8">
+                    <div className="bg-white rounded-2xl border border-gray-100 p-2 flex items-center gap-1 shadow-sm">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            disabled={page === 1}
+                            onClick={() => setPage(p => p - 1)}
+                            className="rounded-xl h-10 w-10 p-0"
+                        >
+                            <ChevronLeft className="w-4 h-4" />
+                        </Button>
+                        <div className="px-4 text-[11px] font-black text-gray-400 uppercase tracking-widest">
+                            {page} / {totalPages}
+                        </div>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            disabled={page === totalPages}
+                            onClick={() => setPage(p => p + 1)}
+                            className="rounded-xl h-10 w-10 p-0"
+                        >
+                            <ChevronRight className="w-4 h-4" />
+                        </Button>
+                    </div>
+                </div>
+            )}
+
+            {/* Detail View Placeholder or Modal */}
+            {viewingMessage && (
+                <div className="fixed inset-0 bg-gray-900/40 backdrop-blur-xl z-[100] flex items-center justify-center p-4 animate-in fade-in duration-500" onClick={() => setViewingMessage(null)}>
+                    <div className="bg-white max-w-2xl w-full rounded-[40px] shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-500" onClick={e => e.stopPropagation()}>
+                        <div className="bg-gray-900 p-10 text-white relative h-64 flex items-end">
+                            {/* Decorative background */}
+                            <div className="absolute top-0 right-0 w-80 h-80 bg-blue-600/30 rounded-full blur-[80px] -mr-40 -mt-40 transition-transform duration-1000 group-hover:scale-110" />
+                            <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-[60px] -ml-32 -mb-32" />
+
+                            <div className="relative z-10 flex items-center gap-8 w-full">
+                                <div className="w-24 h-24 rounded-[32px] bg-blue-600 flex items-center justify-center text-4xl font-black text-white shadow-2xl shadow-blue-500/50 flex-shrink-0">
+                                    {viewingMessage.name.charAt(0).toUpperCase()}
+                                </div>
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-[10px] font-black uppercase tracking-widest ring-1 ring-blue-500/30">
+                                            咨询留言详情
+                                        </span>
+                                    </div>
+                                    <h2 className="text-3xl font-black tracking-tight">{viewingMessage.name}</h2>
+                                    <p className="text-blue-100/60 text-sm font-bold uppercase tracking-widest mt-1">{viewingMessage.email}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="p-10 space-y-10 overflow-y-auto max-h-[50vh]">
+                            <div className="grid grid-cols-2 gap-10">
+                                <div>
+                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+                                        联系人信息
+                                    </p>
+                                    <p className="text-sm font-black text-gray-900">{viewingMessage.phone || '未提供联系电话'}</p>
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                        提交时间
+                                    </p>
+                                    <p className="text-sm font-black text-gray-900">{new Date(viewingMessage.createdAt).toLocaleString('zh-CN')}</p>
+                                </div>
+                            </div>
+
+                            <div className="space-y-4 pt-4">
+                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+                                    留言内容详情
+                                </p>
+                                <div className="bg-gray-50 rounded-[32px] p-8 text-sm text-gray-700 leading-relaxed font-bold border border-gray-100/50 shadow-inner">
+                                    {viewingMessage.subject && (
+                                        <p className="mb-4 text-gray-900 text-lg font-black">【{viewingMessage.subject}】</p>
+                                    )}
                                     {viewingMessage.content}
                                 </div>
                             </div>
                         </div>
-                        <div className="p-6 border-t border-gray-100 bg-gray-50/50 flex justify-end gap-3">
-                            <Button
-                                variant="destructive"
-                                className="gap-2"
-                                onClick={() => handleDeleteSingle(viewingMessage.id, true)}
+
+                        <div className="p-10 bg-gray-50/50 border-t border-gray-50 flex justify-between items-center">
+                            <button
+                                onClick={() => handleDeleteSingle(viewingMessage.id)}
+                                className="px-6 py-4 rounded-2xl bg-red-50 text-red-600 text-xs font-black hover:bg-red-100 transition-all flex items-center gap-2"
                             >
                                 <Trash2 className="w-4 h-4" />
-                                删除留言
-                            </Button>
-                            <Button variant="outline" onClick={() => setViewingMessage(null)}>
-                                关闭
+                                删除此留言
+                            </button>
+                            <Button
+                                className="bg-gray-900 hover:bg-black text-white px-10 py-5 rounded-[24px] font-black uppercase text-xs tracking-widest h-auto shadow-2xl shadow-gray-200 active:scale-95 transition-all"
+                                onClick={() => setViewingMessage(null)}
+                            >
+                                标记为已完成
                             </Button>
                         </div>
                     </div>

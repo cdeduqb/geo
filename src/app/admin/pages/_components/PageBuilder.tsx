@@ -6,7 +6,15 @@ import {
     Move, Layout, Type, Image as ImageIcon, LayoutGrid, Users, ChevronDown, ChevronRight
 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Editor from '@monaco-editor/react';
+import Editor, { loader } from '@monaco-editor/react';
+
+// Configure monaco loader to use local assets for reliability
+loader.config({
+    paths: {
+        vs: '/monaco-editor/min/vs'
+    }
+});
+
 import { PageRenderer } from '@/components/PageRenderer';
 import {
     DndContext,
@@ -34,7 +42,6 @@ import MenuEditor from '@/components/ui/MenuEditor';
 import LinkEditor from '@/components/ui/LinkEditor';
 import PartnerEditor from '@/components/ui/PartnerEditor';
 import dynamic from 'next/dynamic';
-import AIRecommendPanel from './AIRecommendPanel';
 
 const RichTextEditor = dynamic(() => import('@/components/ui/RichTextEditor'), { ssr: false });
 
@@ -703,18 +710,11 @@ export default function PageBuilder({ pageId, initialSections, pageType, moduleT
                         <h2 className="font-bold text-gray-900">组件库</h2>
                     </div>
                     <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                        {/* AI 智能推荐 */}
-                        <AIRecommendPanel
-                            currentSections={sections}
-                            onAddSection={(type) => addSection(type)}
-                        />
-
-                        {[
-                            { id: 'layout', label: '基础布局', icon: <Layout className="w-4 h-4" /> },
-                            { id: 'content', label: '内容展示', icon: <Type className="w-4 h-4" /> },
-                            { id: 'data', label: '数据与列表', icon: <LayoutGrid className="w-4 h-4" /> },
-                            { id: 'marketing', label: '营销与转化', icon: <Sparkles className="w-4 h-4" /> },
-                            { id: 'contact', label: '联系与互动', icon: <Users className="w-4 h-4" /> }
+                        {[{ id: 'layout', label: '基础布局', icon: <Layout className="w-4 h-4" /> },
+                        { id: 'content', label: '内容展示', icon: <Type className="w-4 h-4" /> },
+                        { id: 'data', label: '数据与列表', icon: <LayoutGrid className="w-4 h-4" /> },
+                        { id: 'marketing', label: '营销与转化', icon: <Sparkles className="w-4 h-4" /> },
+                        { id: 'contact', label: '联系与互动', icon: <Users className="w-4 h-4" /> }
                         ].map(category => {
                             const categorySections = availableSections.filter(s => s.category === category.id);
                             const isCategoryExpanded = expandedCategory === category.id;

@@ -99,7 +99,7 @@ export default function AuthorForm({ authorId }: AuthorFormProps) {
                                     id="name"
                                     name="name"
                                     defaultValue={author.name || ''}
-                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                                     placeholder="张三"
                                 />
                             </div>
@@ -126,7 +126,7 @@ export default function AuthorForm({ authorId }: AuthorFormProps) {
                                     name="bio"
                                     defaultValue={author.bio || ''}
                                     rows={4}
-                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
+                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none resize-none"
                                     placeholder="介绍一下您的背景、经验和专长..."
                                 />
                             </div>
@@ -140,7 +140,7 @@ export default function AuthorForm({ authorId }: AuthorFormProps) {
                                     id="expertise"
                                     name="expertise"
                                     defaultValue={author.expertise || ''}
-                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                                     placeholder="人工智能, 机器学习, 前端开发 (用逗号分隔)"
                                 />
                             </div>
@@ -154,7 +154,7 @@ export default function AuthorForm({ authorId }: AuthorFormProps) {
                                     id="avatar"
                                     name="avatar"
                                     defaultValue={author.avatar || ''}
-                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                                     placeholder="https://example.com/avatar.jpg"
                                 />
                             </div>
@@ -173,7 +173,7 @@ export default function AuthorForm({ authorId }: AuthorFormProps) {
                                     id="website"
                                     name="website"
                                     defaultValue={author.website || ''}
-                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                                     placeholder="https://yourwebsite.com"
                                 />
                             </div>
@@ -187,7 +187,7 @@ export default function AuthorForm({ authorId }: AuthorFormProps) {
                                     id="twitter"
                                     name="twitter"
                                     defaultValue={author.twitter || ''}
-                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                                     placeholder="@username"
                                 />
                             </div>
@@ -201,7 +201,7 @@ export default function AuthorForm({ authorId }: AuthorFormProps) {
                                     id="linkedin"
                                     name="linkedin"
                                     defaultValue={author.linkedin || ''}
-                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                                     placeholder="https://linkedin.com/in/username"
                                 />
                             </div>
@@ -215,7 +215,7 @@ export default function AuthorForm({ authorId }: AuthorFormProps) {
                                     id="github"
                                     name="github"
                                     defaultValue={author.github || ''}
-                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                    className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
                                     placeholder="username"
                                 />
                             </div>

@@ -5,7 +5,6 @@ import { registerSection, SectionProps } from '@/lib/sections/registry';
 
 // Hero32Section: 电影感视频轮播
 export const Hero32Section: React.FC<SectionProps> = ({ data, style = {} }) => {
-    const { t } = useTranslation();
     const {
         slides = [], // { video, image, title, subtitle, btnText, btnLink, btnTarget }
         isMainTitle = true

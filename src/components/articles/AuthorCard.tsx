@@ -24,15 +24,15 @@ export default function AuthorCard({ author }: AuthorCardProps) {
     const { t } = useTranslation();
 
     // 如果作者未设置为公开，则不显示卡片
-    if (!author.isPublicAuthor) {
-        return null;
-    }
+    // if (!author.isPublicAuthor) {
+    //     return null;
+    // }
 
     const displayName = author.name === '管理员' || author.name === 'Admin' ? t('common.admin') : (author.name || t('common.unknownAuthor'));
 
     return (
-        <div className="pt-12 border-t border-gray-100 ">
-            <div className="flex flex-col sm:flex-row gap-8 items-start">
+        <div className="mt-12 p-8 bg-white rounded-[24px] border border-gray-100 shadow-lg shadow-gray-100/50 hover:shadow-xl hover:shadow-gray-200/50 hover:-translate-y-1 transition-all duration-300 group">
+            <div className="flex flex-col sm:flex-row gap-8 items-center">
                 {/* 头像 */}
                 <div className="flex-shrink-0">
                     {author.avatar ? (

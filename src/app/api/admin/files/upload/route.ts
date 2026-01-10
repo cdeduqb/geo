@@ -3,9 +3,23 @@ import { getCurrentUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { getActiveStorageProvider, getFileCategory, generateFileKey } from '@/lib/storage/factory';
 import sharp from 'sharp';
+import {
+    isValidFileExtension,
+    isValidMimeType,
+    sanitizeFilename,
+    ALL_ALLOWED_EXTENSIONS
+} from '@/lib/security/sanitize';
+import { checkRateLimit, RateLimitPresets } from '@/lib/security/rate-limit';
+import crypto from 'crypto';
 
 // POST /api/admin/files/upload - 上传文件
 export async function POST(request: NextRequest) {
+    // 速率限制：防止滥用上传
+    const rateLimitResponse = checkRateLimit(request, RateLimitPresets.UPLOAD);
+    if (rateLimitResponse) {
+        return rateLimitResponse;
+    }
+
     try {
         const user = await getCurrentUser();
         if (!user || user.role !== 'ADMIN') {
@@ -22,6 +36,22 @@ export async function POST(request: NextRequest) {
 
         if (!file) {
             return NextResponse.json({ error: '未提供文件' }, { status: 400 });
+        }
+
+        // 安全检查 1：验证文件扩展名
+        if (!isValidFileExtension(file.name, ALL_ALLOWED_EXTENSIONS)) {
+            return NextResponse.json({
+                error: '不支持的文件类型',
+                details: '只允许上传图片、文档、音视频文件'
+            }, { status: 400 });
+        }
+
+        // 安全检查 2：验证 MIME 类型与扩展名匹配
+        if (!isValidMimeType(file.type, file.name)) {
+            return NextResponse.json({
+                error: '文件类型不匹配',
+                details: 'MIME 类型与文件扩展名不符'
+            }, { status: 400 });
         }
 
         // 文件大小限制 (10MB)
@@ -57,8 +87,13 @@ export async function POST(request: NextRequest) {
             }
         }
 
-        // 生成文件key
-        const key = generateFileKey(file.name, folder || undefined);
+        // 安全检查 3：生成安全的文件名（防止路径遍历和覆盖攻击）
+        const safeOriginalName = sanitizeFilename(file.name);
+        const ext = safeOriginalName.substring(safeOriginalName.lastIndexOf('.'));
+        const randomName = `${crypto.randomUUID()}${ext}`;
+
+        // 生成文件key（使用随机文件名）
+        const key = generateFileKey(randomName, folder || undefined);
 
         // 获取存储提供商并上传
         const storage = await getActiveStorageProvider();

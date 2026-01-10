@@ -57,21 +57,5 @@ export default async function SiteSettingsPage() {
         footerTemplates: JSON.parse(JSON.stringify(footerTemplates)),
     };
 
-    return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                        <Globe className="w-8 h-8 text-blue-600" />
-                        站点设置
-                    </h1>
-                    <p className="mt-1 text-sm text-gray-500">
-                        配置全站通用的页眉、页脚、品牌和联系信息，所有页面将自动继承这些设置
-                    </p>
-                </div>
-            </div>
-
-            <SiteSettingsClient initialData={serializedData} />
-        </div>
-    );
+    return <SiteSettingsClient initialData={serializedData} />;
 }

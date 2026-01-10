@@ -13,6 +13,8 @@ const AI_CRAWLERS = [
     'CCBot',
     'Amazonbot',
     'FacebookBot',
+    'Bingbot',
+    'Applebot-Extended',
     // 中国 AI 平台
     'Bytespider',       // 豆包
     'Baiduspider',      // 百度文心一言

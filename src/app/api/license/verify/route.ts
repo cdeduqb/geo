@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { LicenseVerifier } from '@/lib/license/core/verifier';
 import { LicenseCache } from '@/lib/license/core/cache';
-import { FingerprintGenerator } from '@/lib/license/fingerprint/generator';
-import { LicenseData, VerifyOptions } from '@/lib/license/types';
+import { LicenseVerifier } from '@/lib/license/core/verifier';
+
+import { LICENSE_CONFIG } from '@/lib/license/config';
+
+const LICENSE_SERVER_URL = LICENSE_CONFIG.SERVER_URL;
 
 /**
  * POST /api/license/verify
@@ -11,120 +13,111 @@ import { LicenseData, VerifyOptions } from '@/lib/license/types';
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { licenseCode, fingerprint, domain, options } = body;
+        const { licenseCode, domain } = body;
 
-        // 从缓存加载授权
-        let licenseData: LicenseData | null = LicenseCache.getLicense();
+        // 首先检查本地缓存
+        const cachedLicense = LicenseCache.getLicense();
 
-        // 如果提供了授权码但缓存不存在或不匹配，返回错误
-        if (licenseCode && (!licenseData || licenseData.licenseCode !== licenseCode)) {
-            return NextResponse.json(
-                {
-                    valid: false,
-                    error: 'LICENSE_NOT_FOUND',
-                    message: '授权未找到，请先激活'
-                },
-                { status: 404 }
-            );
+        if (cachedLicense) {
+            // 本地验证签名和有效期
+            const localResult = await LicenseVerifier.verify(cachedLicense, {
+                checkDomain: !!domain,
+                currentDomain: domain || process.env.NEXT_PUBLIC_SITE_URL,
+                checkExpiration: true
+            });
+
+            // 如果本地验证通过且不需要重新验证，直接返回
+            if (localResult.valid && !LicenseCache.needsRevalidation()) {
+                return NextResponse.json({
+                    valid: true,
+                    license: cachedLicense,
+                    message: '授权有效（本地验证）',
+                    verifiedAt: Date.now(),
+                    isOnline: false
+                });
+            }
         }
 
-        // 如果没有缓存，返回错误
-        if (!licenseData) {
-            return NextResponse.json(
-                {
-                    valid: false,
-                    error: 'NO_LICENSE',
-                    message: '未找到授权信息'
-                },
-                { status: 404 }
-            );
+        // 需要在线验证
+        try {
+            const response = await fetch(`${LICENSE_SERVER_URL}/api/license/verify`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    licenseCode: licenseCode || cachedLicense?.licenseCode,
+                    domain: domain || process.env.NEXT_PUBLIC_SITE_URL
+                })
+            });
+
+            const data = await response.json();
+
+            // 更新本地缓存
+            if (data.valid && data.license) {
+                try {
+                    LicenseCache.save(data.license);
+                } catch (cacheError) {
+                    console.warn('更新授权缓存失败:', cacheError);
+                }
+            }
+
+            return NextResponse.json(data);
+
+        } catch (networkError) {
+            // 网络失败时使用本地缓存
+            if (cachedLicense && LicenseCache.isInGracePeriod()) {
+                return NextResponse.json({
+                    valid: true,
+                    license: cachedLicense,
+                    message: '授权有效（离线模式）',
+                    verifiedAt: Date.now(),
+                    isOnline: false
+                });
+            }
+
+            throw networkError;
         }
 
-        // 验证选项
-        const verifyOptions: VerifyOptions = {
-            checkDomain: options?.checkDomain !== false,
-            checkFingerprint: options?.checkFingerprint !== false,
-            checkExpiration: options?.checkExpiration !== false,
-            currentDomain: domain || request.headers.get('host') || undefined,
-            allowOffline: options?.allowOffline ?? true,
-            strictMode: options?.strictMode ?? false
-        };
-
-        // 执行验证
-        const result = await LicenseVerifier.verify(licenseData, verifyOptions);
-
-        // 如果验证成功，刷新缓存
-        if (result.valid) {
-            LicenseCache.updateLastVerified();
-        }
-
-        return NextResponse.json({
-            valid: result.valid,
-            license: result.valid ? {
-                licenseId: licenseData.licenseId,
-                plan: licenseData.plan,
-                status: licenseData.status,
-                expiresAt: licenseData.expiresAt,
-                features: licenseData.features,
-                domains: licenseData.domains
-            } : undefined,
-            error: result.error,
-            message: result.errorMessage,
-            warnings: result.warnings,
-            details: result.details,
-            verifiedAt: result.verifiedAt,
-            isOnline: result.isOnline
-        });
     } catch (error) {
         console.error('License verification error:', error);
-        return NextResponse.json(
-            {
-                valid: false,
-                error: 'INTERNAL_ERROR',
-                message: '验证过程发生错误'
-            },
-            { status: 500 }
-        );
+        return NextResponse.json({
+            valid: false,
+            error: 'VERIFICATION_FAILED',
+            message: '验证失败'
+        }, { status: 500 });
     }
 }
 
 /**
  * GET /api/license/verify
- * 快速验证（仅检查缓存）
+ * 快速验证
  */
-export async function GET() {
-    try {
-        const licenseData = LicenseCache.getLicense();
+export async function GET(request: NextRequest) {
+    const { searchParams } = new URL(request.url);
+    const licenseCode = searchParams.get('licenseCode');
+    const domain = searchParams.get('domain');
 
-        if (!licenseData) {
-            return NextResponse.json({
-                valid: false,
-                error: 'NO_LICENSE',
-                message: '未找到授权信息'
-            });
-        }
+    // 首先检查本地缓存
+    const cachedLicense = LicenseCache.getLicense();
 
-        const valid = LicenseVerifier.quickVerify(licenseData);
+    if (cachedLicense) {
+        const isValid = LicenseVerifier.quickVerify(cachedLicense);
+        const daysRemaining = LicenseVerifier.getDaysRemaining(cachedLicense);
 
         return NextResponse.json({
-            valid,
-            license: valid ? {
-                licenseId: licenseData.licenseId,
-                plan: licenseData.plan,
-                status: licenseData.status,
-                expiresAt: licenseData.expiresAt,
-                daysRemaining: LicenseVerifier.getDaysRemaining(licenseData)
-            } : undefined
+            valid: isValid,
+            license: {
+                licenseId: cachedLicense.licenseId,
+                plan: cachedLicense.plan,
+                status: cachedLicense.status,
+                expiresAt: cachedLicense.expiresAt,
+                daysRemaining
+            }
         });
-    } catch (error) {
-        console.error('Quick verification error:', error);
-        return NextResponse.json(
-            {
-                valid: false,
-                error: 'INTERNAL_ERROR',
-                message: '验证失败'
-            },
-            { status: 500 }
-        );
     }
+
+    return NextResponse.json({
+        valid: false,
+        error: 'NO_LICENSE',
+        message: '未找到授权信息'
+    });
 }

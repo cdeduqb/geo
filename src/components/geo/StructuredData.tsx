@@ -67,6 +67,31 @@ export interface ProductSchemaProps {
     };
 }
 
+export interface LocalBusinessSchemaProps {
+    type: 'LocalBusiness' | 'Restaurant' | 'Store';
+    name: string;
+    description?: string;
+    image?: string;
+    address: string;
+    telephone?: string;
+    priceRange?: string;
+    geo?: {
+        latitude: number;
+        longitude: number;
+    };
+}
+
+export interface SoftwareApplicationSchemaProps {
+    type: 'SoftwareApplication';
+    name: string;
+    operatingSystem?: string;
+    applicationCategory?: string;
+    offers?: {
+        price: number;
+        priceCurrency: string;
+    };
+}
+
 export interface BreadcrumbSchemaProps {
     type: 'BreadcrumbList';
     items: Array<{
@@ -110,7 +135,9 @@ export type StructuredDataProps =
     | BreadcrumbSchemaProps
     | WebSiteSchemaProps
     | DatasetSchemaProps
-    | HowToSchemaProps;
+    | HowToSchemaProps
+    | LocalBusinessSchemaProps
+    | SoftwareApplicationSchemaProps;
 
 // ============================================================================
 // Schema Generators
@@ -206,7 +233,7 @@ function generateProductSchema(props: ProductSchemaProps): object {
             price: props.price,
             priceCurrency: props.currency || 'CNY',
             availability: `https://schema.org/${props.availability || 'InStock'}`,
-            url: typeof window !== 'undefined' ? window.location.href : undefined
+            url: undefined // Remove window dependency to avoid hydration mismatch
         } : undefined
     };
 }
@@ -238,6 +265,42 @@ function generateWebSiteSchema(props: WebSiteSchemaProps): object {
                 urlTemplate: props.searchAction.targetUrl
             },
             'query-input': props.searchAction.queryInput
+        } : undefined
+    };
+}
+
+function generateLocalBusinessSchema(props: LocalBusinessSchemaProps): object {
+    return {
+        '@context': 'https://schema.org',
+        '@type': props.type,
+        name: props.name,
+        description: props.description,
+        image: props.image,
+        address: {
+            '@type': 'PostalAddress',
+            streetAddress: props.address
+        },
+        telephone: props.telephone,
+        priceRange: props.priceRange,
+        geo: props.geo ? {
+            '@type': 'GeoCoordinates',
+            latitude: props.geo.latitude,
+            longitude: props.geo.longitude
+        } : undefined
+    };
+}
+
+function generateSoftwareApplicationSchema(props: SoftwareApplicationSchemaProps): object {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareApplication',
+        name: props.name,
+        operatingSystem: props.operatingSystem,
+        applicationCategory: props.applicationCategory,
+        offers: props.offers ? {
+            '@type': 'Offer',
+            price: props.offers.price,
+            priceCurrency: props.offers.priceCurrency
         } : undefined
     };
 }
@@ -294,6 +357,14 @@ export function StructuredData(props: StructuredDataProps) {
                     text: s
                 }))
             };
+            break;
+        case 'LocalBusiness':
+        case 'Restaurant':
+        case 'Store':
+            schema = generateLocalBusinessSchema(props as LocalBusinessSchemaProps);
+            break;
+        case 'SoftwareApplication':
+            schema = generateSoftwareApplicationSchema(props as SoftwareApplicationSchemaProps);
             break;
         default:
             return null;

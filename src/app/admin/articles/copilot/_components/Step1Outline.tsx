@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Loader2, Sparkles } from 'lucide-react';
 import { Outline } from './CopilotWizard';
+import { useToast } from '@/components/ui/toast';
 
 interface Step1OutlineProps {
     topic: string;
@@ -20,6 +21,7 @@ interface Strategy {
 
 export default function Step1Outline({ topic, setTopic, keywords, setKeywords, strategyId, setStrategyId, onNext }: Step1OutlineProps) {
     const [isLoading, setIsLoading] = useState(false);
+    const { showToast } = useToast();
     const [strategies, setStrategies] = useState<Strategy[]>([]);
 
     useEffect(() => {
@@ -45,7 +47,7 @@ export default function Step1Outline({ topic, setTopic, keywords, setKeywords, s
 
     const handleGenerate = async () => {
         if (!topic) {
-            alert('请输入文章主题');
+            showToast('请输入文章主题', 'warning');
             return;
         }
 
@@ -68,7 +70,7 @@ export default function Step1Outline({ topic, setTopic, keywords, setKeywords, s
         } catch (error) {
             console.error('Outline generation error:', error);
             const errorMessage = error instanceof Error ? error.message : '生成大纲失败';
-            alert(`生成大纲失败: ${errorMessage}\n\n请检查AI配置是否正确，或稍后重试。`);
+            showToast(`生成大纲失败: ${errorMessage}`, 'error');
         } finally {
             setIsLoading(false);
         }

@@ -10,21 +10,54 @@ import Link from 'next/link';
 import AuthorCard from '@/components/articles/AuthorCard';
 import { ArticleStructuredData, BreadcrumbStructuredData } from '@/components/geo/StructuredData';
 import { getSiteSettings } from '@/lib/site-settings';
+import { RichTextContent } from '@/components/security/SafeHTML';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // 每小时重新生成静态页面
+
+export async function generateStaticParams() {
+    try {
+        const articles = await db.article.findMany({
+            where: { status: 'PUBLISHED' },
+            select: { slug: true }
+        });
+
+        return articles.map(article => ({
+            slug: article.slug,
+        }));
+    } catch (error) {
+        console.error('Error generating static params:', error);
+        return [];
+    }
+}
 
 import { Badge } from "@/components/ui/badge";
 
 import { getLocale } from '@/lib/locale-server';
 import { getLocalePath, t } from '@/lib/i18n';
+import ViewCounter from '../_components/ViewCounter';
 
 interface ArticlePageProps {
     params: Promise<{ slug: string, locale?: string }>;
 }
 
+// 获取语言设置的静态友好版本
+async function getSafeLocale(paramLocale?: string) {
+    if (paramLocale) return paramLocale;
+    // 在构建时或无语言路径时，尝试获取默认语言
+    // 如果数据库连接可用则获取，否则默认 zh
+    try {
+        const setting = await db.systemSetting.findUnique({
+            where: { key: 'default_locale' }
+        });
+        return setting?.value || 'zh';
+    } catch {
+        return 'zh';
+    }
+}
+
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
     const { slug, locale: paramLocale } = await params;
-    const locale = paramLocale || await getLocale();
+    const locale = await getSafeLocale(paramLocale);
 
     // 1. 优先匹配 slug + lang
     let article = await (db.article as any).findFirst({
@@ -89,7 +122,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
     const { slug, locale: paramLocale } = await params;
-    const locale = paramLocale || await getLocale();
+    const locale = await getSafeLocale(paramLocale);
     const geo = await getGEOSettings();
 
     let article = await (db.article as any).findFirst({
@@ -131,7 +164,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
                 if (translation) {
                     const { redirect } = await import('next/navigation');
-                    redirect(getLocalePath(`/articles/${translation.slug}`, locale as any));
+                    // 🔧 对 slug 进行 URL 编码，避免特殊字符导致的错误
+                    const encodedSlug = encodeURIComponent(translation.slug);
+                    const redirectPath = getLocalePath(`/articles/${encodedSlug}`, locale as any);
+                    redirect(redirectPath);
                 }
             }
 
@@ -162,11 +198,25 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     // 获取站点设置 (全局页眉页脚)
     const siteSettings = await getSiteSettings(locale);
 
-    // 增加浏览量
-    await db.article.update({
-        where: { id: article.id },
-        data: { views: { increment: 1 } }
+    // 获取显示设置
+    const showAuthorCardSetting = await db.systemSetting.findUnique({
+        where: { key: 'show_author_card' }
     });
+    const showAuthorCard = showAuthorCardSetting?.value === 'true';
+
+    // 获取参考资料和关键实体显示设置
+    const showCitationsSetting = await db.systemSetting.findUnique({
+        where: { key: 'show_citations' }
+    });
+    const showCitations = showCitationsSetting?.value !== 'false'; // 默认显示
+
+    const showEntitiesSetting = await db.systemSetting.findUnique({
+        where: { key: 'show_entities' }
+    });
+    const showEntities = showEntitiesSetting?.value !== 'false'; // 默认显示
+
+    // 浏览量现在由客户端组件 ViewCounter 处理，以支持静态页面
+    // 增加浏览量的逻辑已移出服务端渲染过程
 
     // 处理文章内容
     const processedContent = article.content;
@@ -178,6 +228,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             headerSections={siteSettings?.headerSections as any[]}
             footerSections={siteSettings?.footerSections as any[]}
         >
+            <ViewCounter slug={article.slug} />
             {/* GEO: 结构化数据 */}
             {geo.enableStructuredData && (
                 <ArticleStructuredData
@@ -191,12 +242,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                     dateModified={article.updatedAt.toISOString()}
                     image={article.coverImage || undefined}
                     url={getLocalePath(`/articles/${article.slug}`, locale as any)}
-                    mentions={article.entities ? (article.entities as any[]).map(e => ({
+                    mentions={Array.isArray(article.entities) ? (article.entities as any[]).map(e => ({
                         name: e.text,
                         description: e.description,
                         url: e.url
                     })) : undefined}
-                    citations={article.citations ? (article.citations as any[]).map(c => ({
+                    citations={Array.isArray(article.citations) ? (article.citations as any[]).map(c => ({
                         name: c.title,
                         url: c.url
                     })) : undefined}
@@ -293,7 +344,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                     )}
 
                     {/* 文章内容 */}
-                    <div
+                    <RichTextContent
+                        content={processedContent}
                         className="prose prose-lg md:prose-xl max-w-none
                             prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-gray-900
                             prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6
@@ -307,7 +359,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                             prose-img:rounded-xl prose-img:shadow-lg prose-img:my-8
                             prose-ul:list-disc prose-ul:pl-6 prose-ul:my-6 prose-li:my-2 prose-li:pl-2
                             prose-ol:list-decimal prose-ol:pl-6 prose-ol:my-6"
-                        dangerouslySetInnerHTML={{ __html: processedContent }}
                     />
 
                     {/* 底部信息区 */}
@@ -331,7 +382,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                         )}
 
                         {/* 参考资料 (GEO Phase 2) */}
-                        {article.citations && Array.isArray(article.citations) && article.citations.length > 0 && (
+                        {showCitations && article.citations && Array.isArray(article.citations) && article.citations.length > 0 && (
                             <div className="rounded-xl bg-gray-50 p-6 border border-gray-100">
                                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                                     <span className="w-1 h-6 bg-blue-500 rounded-full"></span>
@@ -362,7 +413,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                         )}
 
                         {/* 实体识别 (GEO Phase 3) */}
-                        {article.entities && Array.isArray(article.entities) && article.entities.length > 0 && (
+                        {showEntities && article.entities && Array.isArray(article.entities) && article.entities.length > 0 && (
                             <div className="rounded-xl bg-purple-50 p-6 border border-purple-100">
                                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                                     <span className="w-1 h-6 bg-purple-500 rounded-full"></span>
@@ -389,7 +440,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                         )}
 
                         {/* 作者卡片 */}
-                        <AuthorCard author={(article as any).author} />
+                        {showAuthorCard && <AuthorCard author={(article as any).author} />}
                     </div>
                 </div>
             </article>

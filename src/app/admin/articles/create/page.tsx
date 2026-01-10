@@ -1,15 +1,30 @@
 import { db } from '@/lib/db';
 import { createArticle } from '../actions';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import CreateArticleClient from './_components/CreateArticleClient';
 import { getI18nSettings } from '@/lib/system-settings';
 
+export const dynamic = 'force-dynamic';
+
 export default async function CreateArticlePage() {
     const categories = await db.category.findMany();
-    const i18nSettings = await getI18nSettings();
-    const enableMultiLanguage = i18nSettings.enableMultiLanguage;
+    const enableMultiLanguageSetting = await db.systemSetting.findUnique({
+        where: { key: 'enable_multi_language' }
+    });
+    const enableMultiLanguage = enableMultiLanguageSetting?.value === 'true';
+
+    const i18nSettingsStr = await db.systemSetting.findUnique({ where: { key: 'i18n_settings' } });
+    let supportedLocales = ['zh', 'en'];
+    if (i18nSettingsStr?.value) {
+        try {
+            const config = JSON.parse(i18nSettingsStr.value);
+            if (Array.isArray(config.supportedLocales)) {
+                supportedLocales = config.supportedLocales;
+            }
+        } catch { }
+    }
 
     // 获取所有翻译组（用于下拉选择）
     let translationGroups: { id: string; label: string; lang: string }[] = [];
@@ -33,15 +48,24 @@ export default async function CreateArticlePage() {
 
     return (
         <div className="max-w-7xl mx-auto space-y-6">
-            <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
+            {/* 页面头部 */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
                     <Link
                         href="/admin/articles"
-                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                        className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-xl flex items-center justify-center transition-colors"
                     >
                         <ArrowLeft className="w-5 h-5 text-gray-500" />
                     </Link>
-                    <h1 className="text-2xl font-bold text-gray-900">新建文章</h1>
+                    <div className="w-12 h-12 rounded-2xl bg-purple-600 flex items-center justify-center text-white shadow-lg shadow-purple-100">
+                        <FileText className="w-6 h-6" />
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">新建文章</h1>
+                        <p className="text-[13px] text-gray-500 font-medium">
+                            创建一篇新的文章并发布
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -55,8 +79,10 @@ export default async function CreateArticlePage() {
                     action={createArticle}
                     enableMultiLanguage={enableMultiLanguage}
                     translationGroups={translationGroups}
+                    supportedLocales={supportedLocales}
                 />
             </Suspense>
         </div>
     );
 }
+

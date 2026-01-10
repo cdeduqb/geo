@@ -5,7 +5,6 @@ import { registerSection, SectionProps } from '@/lib/sections/registry';
 
 // Hero40Section: 倒计时注册
 export const Hero40Section: React.FC<SectionProps> = ({ data, style = {} }) => {
-    const { t } = useTranslation();
     const {
         title,
         subtitle,

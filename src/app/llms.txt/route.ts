@@ -18,7 +18,7 @@ export async function GET() {
         const config: Record<string, string> = {};
         settings.forEach(s => config[s.key] = s.value);
 
-        const siteName = config.site_name || 'GeoCMS';
+        const siteName = config.site_name || '企业官网';
         const siteDesc = config.site_description || 'A modern CMS built for the AI era.';
         const baseUrl = await getSiteUrl();
 

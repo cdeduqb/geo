@@ -1,16 +1,22 @@
 // SEO平台配置模板和文档
 
+export type PushType = 'api' | 'script' | 'both';
+
 export interface PlatformConfig {
     id: string;
     name: string;
     description: string;
-    apiTemplates: {
+    pushType: PushType; // 推送类型：api=API推送, script=JS脚本注入, both=两者都支持
+    apiTemplates?: {
         normal?: string;
         fast?: string;
     };
     documentUrl: string;
-    tokenGuide: string;
+    tokenGuide?: string;
+    scriptGuide?: string; // JS脚本获取指引
     requiresSiteId: boolean;
+    requiresToken: boolean; // 是否需要 Token
+    requiresScript?: boolean; // 是否需要 JS 脚本
     rateLimit?: {
         perDay: number;
         perMinute?: number;
@@ -21,57 +27,31 @@ export const SEO_PLATFORMS: Record<string, PlatformConfig> = {
     baidu: {
         id: 'baidu',
         name: '百度',
-        description: '百度搜索引擎推送',
+        description: '中国最大的搜索引擎，支持 API 主动推送方式。API 推送可精确控制提交时机，确保内容第一时间被发现。',
+        pushType: 'api',
         apiTemplates: {
             normal: 'http://data.zz.baidu.com/urls?site={siteId}&token={token}',
             fast: 'http://data.zz.baidu.com/urls?site={siteId}&token={token}&type=daily'
         },
         documentUrl: 'https://ziyuan.baidu.com/linksubmit/index',
-        tokenGuide: '登录百度站长平台 → 资源提交 → API提交 → 获取Token',
+        tokenGuide: '百度站长平台 → 资源提交 → API提交 → 复制 Token 和站点地址',
         requiresSiteId: true,
+        requiresToken: true,
         rateLimit: {
             perDay: 10000,
             perMinute: 100
         }
     },
-    '360': {
-        id: '360',
-        name: '360搜索',
-        description: '360搜索引擎推送',
-        apiTemplates: {
-            normal: 'https://zhanzhang.so.com/api/push'
-        },
-        documentUrl: 'https://zhanzhang.so.com/',
-        tokenGuide: '登录360站长平台 → 数据提交 → API提交 → 获取Token和站点ID',
-        requiresSiteId: true,
-        rateLimit: {
-            perDay: 5000
-        }
-    },
-    sogou: {
-        id: 'sogou',
-        name: '搜狗',
-        description: '搜狗搜索引擎推送',
-        apiTemplates: {
-            normal: 'http://zhanzhang.sogou.com/push'
-        },
-        documentUrl: 'http://zhanzhang.sogou.com/',
-        tokenGuide: '登录搜狗站长平台 → 验证站点 → API提交 → 获取Token',
-        requiresSiteId: false,
-        rateLimit: {
-            perDay: 3000
-        }
-    },
     toutiao: {
         id: 'toutiao',
         name: '头条搜索',
-        description: '头条搜索引擎推送',
-        apiTemplates: {
-            normal: 'https://zhanzhang.toutiao.com/push/urls'
-        },
+        description: '字节跳动旗下搜索引擎，覆盖今日头条、抖音等亿级用户。采用 JS 自动收录方式，用户浏览页面时自动向头条提交链接。',
+        pushType: 'script',
         documentUrl: 'https://zhanzhang.toutiao.com/',
-        tokenGuide: '登录头条搜索站长平台 → 数据提交 → 获取Token',
+        scriptGuide: '头条站长平台 → 工具 → 自动收录 → JS提交 → 复制代码（仅需 script 标签内的内容）',
         requiresSiteId: false,
+        requiresToken: false,
+        requiresScript: true,
         rateLimit: {
             perDay: 10000
         }
@@ -79,18 +59,40 @@ export const SEO_PLATFORMS: Record<string, PlatformConfig> = {
     indexnow: {
         id: 'indexnow',
         name: 'IndexNow (Bing/Yandex)',
-        description: '通用 IndexNow 协议推送，支持 Bing, Yandex, Seznam 等',
+        description: '开放协议，一次提交同时通知 Bing、Yandex、Seznam 等多个搜索引擎。是最快速通知搜索引擎内容更新的方式，强烈推荐配置。',
+        pushType: 'api',
         apiTemplates: {
             normal: 'https://api.indexnow.org/indexnow'
         },
         documentUrl: 'https://www.indexnow.org/documentation',
-        tokenGuide: '在 IndexNow 官网或 Bing 站长平台生成 API Key',
-        requiresSiteId: true, // 这里 siteId 代表 Host/Domain
+        tokenGuide: '1. 访问 indexnow.org 生成 Key → 2. 将 Key 填入 Token 字段 → 3. 站点ID 填写完整域名（如 https://www.example.com）',
+        requiresSiteId: true,
+        requiresToken: true,
         rateLimit: {
             perDay: 10000
         }
+    },
+    google: {
+        id: 'google',
+        name: 'Google Indexing',
+        description: 'Google 官方 Indexing API，仅适用于 JobPosting（招聘）和 BroadcastEvent（直播活动）类型的结构化数据页面。普通网页建议使用 Sitemap。',
+        pushType: 'api',
+        apiTemplates: {
+            normal: 'https://indexing.googleapis.com/v3/urlNotifications:publish'
+        },
+        documentUrl: 'https://developers.google.com/search/apis/indexing-api/v3/quickstart',
+        tokenGuide: '1. Google Cloud Console 创建项目并启用 Indexing API → 2. 创建服务账号 → 3. 在 Search Console 添加服务账号权限 → 4. 运行 gcloud auth print-access-token 获取 Token',
+        requiresSiteId: false,
+        requiresToken: true,
+        rateLimit: {
+            perDay: 200,
+            perMinute: 10
+        }
     }
 };
+
+// 获取所有可用平台 ID 列表
+export const AVAILABLE_PLATFORMS = Object.keys(SEO_PLATFORMS);
 
 /**
  * 获取平台配置
@@ -116,29 +118,40 @@ export function fillApiTemplate(template: string, siteId?: string, token?: strin
 /**
  * 验证配置完整性
  */
-export function validateConfig(platformId: string, apiUrl: string, token: string, siteId?: string): {
+export function validateConfig(platformId: string, config: {
+    apiUrl?: string;
+    token?: string;
+    siteId?: string;
+    script?: string;
+}): {
     valid: boolean;
     errors: string[];
 } {
     const errors: string[] = [];
-    const config = getPlatformConfig(platformId);
+    const platformConfig = getPlatformConfig(platformId);
 
-    if (!config) {
+    if (!platformConfig) {
         errors.push(`未知的平台: ${platformId}`);
         return { valid: false, errors };
     }
 
-    if (!apiUrl || !apiUrl.startsWith('http')) {
-        errors.push('API地址格式错误，必须以http或https开头');
+    // API 推送类型的验证
+    if (platformConfig.pushType === 'api' || platformConfig.pushType === 'both') {
+        if (platformConfig.requiresToken && (!config.token || config.token.trim().length === 0)) {
+            errors.push('Token不能为空');
+        }
+
+        if (platformConfig.requiresSiteId && (!config.siteId || config.siteId.trim().length === 0)) {
+            errors.push(`${platformConfig.name}平台需要提供站点ID`);
+        }
+
+        if (config.apiUrl && !config.apiUrl.startsWith('http')) {
+            errors.push('API地址格式错误，必须以http或https开头');
+        }
     }
 
-    if (!token || token.trim().length === 0) {
-        errors.push('Token不能为空');
-    }
-
-    if (config.requiresSiteId && (!siteId || siteId.trim().length === 0)) {
-        errors.push(`${config.name}平台需要提供站点ID`);
-    }
+    // JS 脚本类型的验证（仅在 script 或 both 类型时，如果提供了脚本则进行简单校验）
+    // 注意：脚本不是强制的，用户可以选择只用 API 或只用脚本
 
     return {
         valid: errors.length === 0,

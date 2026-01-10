@@ -117,16 +117,16 @@ export default function TaskList({ tasks }: TaskListProps) {
     };
 
     return (
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-[32px] border border-gray-100 shadow-sm shadow-gray-100/50 overflow-hidden">
             {selectedIds.length > 0 && (
-                <div className="bg-blue-50 px-6 py-2 flex items-center justify-between border-b border-blue-100">
-                    <span className="text-sm text-blue-700">
+                <div className="bg-blue-50 px-8 py-3 flex items-center justify-between border-b border-blue-100">
+                    <span className="text-sm font-bold text-blue-700">
                         已选择 {selectedIds.length} 个任务
                     </span>
                     <button
                         onClick={() => setIsBatchConfirmOpen(true)}
                         disabled={isBatchDeleting}
-                        className="text-sm text-red-600 hover:text-red-700 font-medium flex items-center gap-1 disabled:opacity-50"
+                        className="text-sm text-red-600 hover:text-red-700 font-bold flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-red-50 transition-colors disabled:opacity-50"
                     >
                         {isBatchDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                         批量删除
@@ -146,80 +146,89 @@ export default function TaskList({ tasks }: TaskListProps) {
             )}
 
             {tasks.length === 0 ? (
-                <div className="py-12 text-center">
-                    <ListTodo className="mx-auto h-12 w-12 text-gray-400" />
-                    <h3 className="mt-2 text-sm font-medium text-gray-900">暂无任务</h3>
-                    <p className="mt-1 text-sm text-gray-500">
+                <div className="py-20 text-center">
+                    <ListTodo className="mx-auto h-14 w-14 text-gray-300" />
+                    <h3 className="mt-4 text-lg font-black text-gray-900 tracking-tight">暂无任务</h3>
+                    <p className="mt-1 text-sm text-gray-400 font-medium">
                         请创建批量任务以开始
                     </p>
                 </div>
             ) : (
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                <table className="w-full text-left">
+                    <thead className="border-b border-gray-100">
                         <tr>
-                            <th className="px-6 py-3 w-4">
+                            <th className="pl-10 py-4 w-[50px]">
                                 <input
                                     type="checkbox"
-                                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                    className="w-4 h-4 rounded-lg border-gray-300 text-blue-600 focus:ring-blue-500"
                                     checked={tasks.length > 0 && selectedIds.length === tasks.length}
                                     onChange={toggleSelectAll}
                                 />
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                主题
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                策略
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                状态
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                关键词
-                            </th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                操作
-                            </th>
+                            <th className="px-8 py-4 text-[11px] font-black text-gray-400 uppercase tracking-widest w-[450px]">任务信息</th>
+                            <th className="px-8 py-4 text-[11px] font-black text-gray-400 uppercase tracking-widest">执行策略</th>
+                            <th className="px-8 py-4 text-[11px] font-black text-gray-400 uppercase tracking-widest">状态</th>
+                            <th className="px-8 py-4 text-[11px] font-black text-gray-400 uppercase tracking-widest text-right pr-10">操作</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="divide-y divide-gray-100">
                         {tasks.map((task) => (
-                            <tr key={task.id} className={selectedIds.includes(task.id) ? 'bg-blue-50' : 'hover:bg-gray-50'}>
-                                <td className="px-6 py-6">
+                            <tr
+                                key={task.id}
+                                className={`group transition-colors ${selectedIds.includes(task.id) ? 'bg-blue-50/30' : 'hover:bg-gray-50'}`}
+                            >
+                                <td className="pl-10 py-5">
                                     <input
                                         type="checkbox"
-                                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                                         checked={selectedIds.includes(task.id)}
                                         onChange={() => toggleSelect(task.id)}
                                     />
                                 </td>
-                                <td className="px-6 py-6">
-                                    <div className="font-medium text-gray-900">{task.topic}</div>
-                                    {task.error && (
-                                        <div className="text-xs text-red-500 mt-1">
-                                            错误: {task.error}
+                                <td className="px-6 py-5">
+                                    <div className="flex flex-col gap-1.5">
+                                        <span className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-1">
+                                            {task.topic}
+                                        </span>
+                                        <div className="flex flex-wrap gap-2 items-center">
+                                            {task.keywords ? (
+                                                <div className="flex items-center gap-1.5 text-[10px] text-gray-400 font-mono bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">
+                                                    <span>关键词:</span>
+                                                    <span className="truncate max-w-[200px]" title={task.keywords}>
+                                                        {task.keywords}
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <span className="text-[10px] text-gray-300 italic">无关键词</span>
+                                            )}
                                         </div>
-                                    )}
-                                </td>
-                                <td className="px-6 py-6">
-                                    <Badge variant="secondary" className="font-normal text-gray-400 bg-gray-50 hover:bg-gray-100 border border-gray-100">
-                                        {task.strategy.name}
-                                    </Badge>
-                                </td>
-                                <td className="px-6 py-6">
-                                    {getStatusBadge(task.status)}
-                                </td>
-                                <td className="px-6 py-6 text-sm text-gray-500">
-                                    <div className="truncate max-w-[200px]" title={task.keywords || ''}>
-                                        {task.keywords || '-'}
+                                        {task.error && (
+                                            <div className="text-[10px] text-red-500 bg-red-50 px-2 py-0.5 rounded border border-red-100 mt-1 inline-block w-fit">
+                                                错误: {task.error}
+                                            </div>
+                                        )}
                                     </div>
                                 </td>
-                                <td className="px-6 py-6 text-right text-sm font-medium">
+                                <td className="px-6 py-5">
+                                    <div className="flex flex-col gap-1">
+                                        <Badge
+                                            variant="outline"
+                                            className="font-mono text-[10px] px-1.5 py-0 border-0 bg-blue-50 text-blue-700 w-fit"
+                                        >
+                                            {task.strategy.name}
+                                        </Badge>
+                                        <span className="text-[10px] text-gray-400 font-mono">ID: {task.id.substring(0, 8)}</span>
+                                    </div>
+                                </td>
+                                <td className="px-6 py-5">
+                                    {getStatusBadge(task.status)}
+                                </td>
+                                <td className="px-6 py-5 text-right pr-10">
                                     <div className="flex items-center justify-end gap-2">
                                         {task.status === 'COMPLETED' && task.article && (
                                             <Link
                                                 href={`/admin/articles/${task.article.id}`}
-                                                className="text-blue-600 hover:text-blue-900 p-1"
+                                                className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                                 title="查看文章"
                                             >
                                                 <ExternalLink className="h-4 w-4" />
@@ -229,7 +238,7 @@ export default function TaskList({ tasks }: TaskListProps) {
                                             <button
                                                 onClick={() => handleProcess(task.id)}
                                                 disabled={processing === task.id}
-                                                className="text-green-600 hover:text-green-900 disabled:opacity-50 p-1"
+                                                className="p-2 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors disabled:opacity-50"
                                                 title="开始处理"
                                             >
                                                 {processing === task.id ? (
@@ -241,7 +250,7 @@ export default function TaskList({ tasks }: TaskListProps) {
                                         )}
                                         <button
                                             onClick={() => setDeletingId(task.id)}
-                                            className="text-red-600 hover:text-red-900 p-1"
+                                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                             title="删除"
                                         >
                                             <Trash2 className="h-4 w-4" />

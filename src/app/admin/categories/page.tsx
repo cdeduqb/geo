@@ -33,60 +33,60 @@ export default async function CategoriesPage() {
 
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left">
-                        <thead className="text-xs text-gray-500 uppercase bg-gray-50 border-b border-gray-100">
+                    <table className="w-full text-left">
+                        <thead className="bg-gray-50/50 border-b border-gray-100">
                             <tr>
-                                <th className="px-6 py-4 font-medium w-20">排序</th>
-                                <th className="px-6 py-4 font-medium">UUID</th>
-                                <th className="px-6 py-4 font-medium">名称</th>
-                                <th className="px-6 py-4 font-medium">Slug</th>
-                                <th className="px-6 py-4 font-medium">父级分类</th>
-                                <th className="px-6 py-4 font-medium">文章数量</th>
-                                <th className="px-6 py-4 font-medium text-right">操作</th>
+                                <th className="pl-10 py-4 font-semibold text-gray-700 w-24">排序</th>
+                                <th className="px-6 py-4 font-semibold text-gray-700">名称/路径</th>
+                                <th className="px-6 py-4 font-semibold text-gray-700 w-48">UUID</th>
+                                <th className="px-6 py-4 font-semibold text-gray-700">统计</th>
+                                <th className="px-6 py-4 font-semibold text-gray-700">父级</th>
+                                <th className="px-6 py-4 font-semibold text-gray-700 text-right pr-6">操作</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
                             {categories.length === 0 ? (
                                 <tr>
-                                    <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
+                                    <td colSpan={6} className="px-6 py-12 text-center text-gray-400">
                                         <div className="flex flex-col items-center justify-center">
-                                            <FolderTree className="w-12 h-12 text-gray-300 mb-3" />
+                                            <FolderTree className="w-12 h-12 text-gray-200 mb-3" />
                                             <p>暂无分类</p>
                                         </div>
                                     </td>
                                 </tr>
                             ) : (
                                 categories.map((category) => (
-                                    <tr key={category.id} className="hover:bg-gray-50 transition-colors">
-                                        <td className="px-6 py-4">
-                                            <span className="inline-flex items-center justify-center min-w-[2rem] px-2 py-1 rounded bg-gray-100 text-gray-500 text-xs font-mono">
+                                    <tr key={category.id} className="group hover:bg-gray-50/50 transition-colors">
+                                        <td className="pl-10 py-5">
+                                            <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-gray-50 text-gray-400 font-mono text-xs border border-gray-100 group-hover:bg-blue-50 group-hover:text-blue-500 group-hover:border-blue-100 transition-colors">
                                                 {category.sortOrder}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-6 py-5">
+                                            <div className="flex flex-col gap-1">
+                                                <span className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{category.name}</span>
+                                                <span className="text-[10px] text-gray-400 font-mono italic">/{category.slug}</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-5">
                                             <CategoryUuid uuid={category.id} />
                                         </td>
-                                        <td className="px-6 py-4 font-medium text-gray-900">
-                                            {category.name}
+                                        <td className="px-6 py-5">
+                                            <div className="flex items-center gap-1.5">
+                                                <span className="text-sm font-semibold text-gray-700">{category._count.articles}</span>
+                                                <span className="text-xs text-gray-400">文章</span>
+                                            </div>
                                         </td>
-                                        <td className="px-6 py-4 text-gray-500 font-mono text-xs">
-                                            {category.slug}
-                                        </td>
-                                        <td className="px-6 py-4 text-gray-500">
+                                        <td className="px-6 py-5">
                                             {category.parent ? (
-                                                <span className="inline-flex items-center px-2 py-1 rounded-md bg-gray-100 text-xs">
+                                                <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-gray-50 text-gray-500 text-xs border border-gray-100">
                                                     {category.parent.name}
                                                 </span>
                                             ) : (
-                                                <span className="text-gray-300">-</span>
+                                                <span className="text-gray-300 text-xs">-</span>
                                             )}
                                         </td>
-                                        <td className="px-6 py-4 text-gray-500">
-                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
-                                                {category._count.articles}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-right">
+                                        <td className="px-6 py-5 text-right pr-6">
                                             <div className="flex items-center justify-end gap-2">
                                                 <Link
                                                     href={`/admin/categories/${category.id}`}

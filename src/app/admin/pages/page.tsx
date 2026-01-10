@@ -1,6 +1,6 @@
 import { db } from '@/lib/db';
 import Link from 'next/link';
-import { Plus, Search, Edit, Trash2, Eye, File, Layout } from 'lucide-react';
+import { Plus, Search, Trash2, Eye, File, ChevronRight, Pencil, ChevronDown } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import DeletePageButton from './_components/DeletePageButton';
 import CleanupPagesButton from './_components/CleanupPagesButton';
@@ -70,82 +70,89 @@ export default async function PagesPage({
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                        <File className="w-8 h-8 text-blue-600" />
-                        页面管理
-                    </h1>
-                    <p className="mt-1 text-sm text-gray-500">
-                        管理系统中的所有页面内容
-                    </p>
+            {/* Page Header & Actions */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-xl shadow-blue-100/50">
+                        <File className="w-7 h-7" />
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-black text-gray-900 tracking-tight">页面管理</h1>
+                    </div>
                 </div>
-                <div className="flex items-center gap-3">
-                    <CleanupPagesButton />
-                    <Link href="/admin/pages/create" className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 transition-colors">
-                        <Plus className="w-4 h-4 mr-2" />
-                        新建页面
-                    </Link>
-                </div>
+
+                <Link
+                    href="/admin/pages/create"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3.5 rounded-2xl text-sm font-bold transition-all duration-300 shadow-lg shadow-blue-100 hover:shadow-blue-200 active:scale-95 flex items-center justify-center gap-2.5"
+                >
+                    <Plus className="w-5 h-5" />
+                    <span>新建页面</span>
+                </Link>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                {/* 筛选栏 */}
-                <div className="p-6 border-b border-gray-100 bg-gray-50/30">
+            {/* Main Content Card: Combined Filters & Table */}
+            <div className="bg-white rounded-[32px] border border-gray-100 shadow-sm shadow-gray-100/50 overflow-hidden">
+                {/* Integrated Filters */}
+                <div className="p-8 border-b border-gray-50 bg-gray-50/20">
                     <AdminFilters>
-                        <div className="relative flex-1">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <div className="flex-1 relative group">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-blue-600 transition-colors" />
                             <input
                                 type="text"
                                 name="q"
-                                placeholder="搜索页面标题..."
+                                placeholder="搜索页面标题名称或标识 slug..."
                                 defaultValue={query}
-                                className="w-full pl-10 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all bg-white"
+                                className="w-full pl-11 pr-5 py-3.5 border border-gray-300 bg-white rounded-2xl focus:border-blue-600 outline-none transition-all font-bold text-sm placeholder:text-gray-300 shadow-sm"
                             />
                         </div>
-                        <select
-                            defaultValue={status || ''}
-                            name="status"
-                            className="w-40 px-3 py-2 text-sm border border-gray-200 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none bg-white"
-                        >
-                            <option value="">所有状态</option>
-                            <option value="PUBLISHED">已发布</option>
-                            <option value="DRAFT">草稿</option>
-                            <option value="ARCHIVED">已归档</option>
-                        </select>
-                        <select
-                            defaultValue={lang || ''}
-                            name="lang"
-                            className="w-32 px-3 py-2 text-sm border border-gray-200 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none bg-white"
-                        >
-                            <option value="">所有语言</option>
-                            <option value="zh">中文</option>
-                            <option value="en">English</option>
-                        </select>
+                        <div className="relative group min-w-[140px]">
+                            <select
+                                defaultValue={status || ''}
+                                name="status"
+                                className="w-full px-6 pr-12 py-3.5 border border-gray-300 bg-white rounded-2xl focus:border-blue-600 outline-none transition-all font-bold text-sm text-gray-600 appearance-none shadow-sm"
+                            >
+                                <option value="">所有状态</option>
+                                <option value="PUBLISHED">已发布</option>
+                                <option value="DRAFT">草稿</option>
+                                <option value="ARCHIVED">已归档</option>
+                            </select>
+                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none group-focus-within:text-blue-600 transition-colors" />
+                        </div>
+                        <div className="relative group min-w-[140px]">
+                            <select
+                                defaultValue={lang || ''}
+                                name="lang"
+                                className="w-full px-6 pr-12 py-3.5 border border-gray-300 bg-white rounded-2xl focus:border-blue-600 outline-none transition-all font-bold text-sm text-gray-600 appearance-none shadow-sm"
+                            >
+                                <option value="">所有语言</option>
+                                <option value="zh">简体中文 (ZH)</option>
+                                <option value="en">English (EN)</option>
+                            </select>
+                            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none group-focus-within:text-blue-600 transition-colors" />
+                        </div>
                     </AdminFilters>
                 </div>
 
-                {/* 页面列表 */}
                 <div className="overflow-x-auto">
                     <Table>
                         <TableHeader>
-                            <TableRow className="border-b border-gray-200">
-                                <TableHead className="w-[300px] py-3.5 text-xs font-semibold text-gray-600 uppercase tracking-wider">标题</TableHead>
-                                <TableHead className="py-3.5 text-xs font-semibold text-gray-600 uppercase tracking-wider">语言</TableHead>
-                                <TableHead className="py-3.5 text-xs font-semibold text-gray-600 uppercase tracking-wider">状态</TableHead>
-                                <TableHead className="py-3.5 text-xs font-semibold text-gray-600 uppercase tracking-wider">类型</TableHead>
-                                <TableHead className="py-3.5 text-xs font-semibold text-gray-600 uppercase tracking-wider">URL 路径</TableHead>
-                                <TableHead className="py-3.5 text-xs font-semibold text-gray-600 uppercase tracking-wider">更新时间</TableHead>
-                                <TableHead className="text-right py-3.5 text-xs font-semibold text-gray-600 uppercase tracking-wider">操作</TableHead>
+                            <TableRow className="bg-gray-50/50 border-b border-gray-100 hover:bg-transparent">
+                                <TableHead className="px-10 py-5 text-left text-[11px] font-black text-gray-400 uppercase tracking-widest">页面基础信息</TableHead>
+                                <TableHead className="px-6 py-5 text-left text-[11px] font-black text-gray-400 uppercase tracking-widest">语言/模板类型</TableHead>
+                                <TableHead className="px-6 py-5 text-left text-[11px] font-black text-gray-400 uppercase tracking-widest">发布状态</TableHead>
+                                <TableHead className="px-6 py-5 text-left text-[11px] font-black text-gray-400 uppercase tracking-widest">更新时间</TableHead>
+                                <TableHead className="px-10 py-5 text-right text-[11px] font-black text-gray-400 uppercase tracking-widest">操作</TableHead>
                             </TableRow>
                         </TableHeader>
-                        <TableBody>
+                        <TableBody className="divide-y divide-gray-100">
                             {pages.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={6} className="h-40 text-center">
-                                        <div className="flex flex-col items-center justify-center">
-                                            <File className="w-12 h-12 text-gray-300 mb-3" />
-                                            <p className="text-sm text-gray-500">暂无页面</p>
+                                    <TableCell colSpan={6} className="px-10 py-24 text-center">
+                                        <div className="flex flex-col items-center gap-4">
+                                            <div className="w-20 h-20 rounded-[28px] bg-gray-50 flex items-center justify-center text-gray-200">
+                                                <File className="w-10 h-10" />
+                                            </div>
+                                            <p className="text-gray-400 font-bold">暂无页面数据</p>
                                         </div>
                                     </TableCell>
                                 </TableRow>
@@ -153,61 +160,53 @@ export default async function PagesPage({
                                 pages.map((page: any) => (
                                     <TableRow
                                         key={page.id}
-                                        className="group hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0"
+                                        className="group hover:bg-blue-50/30 transition-all duration-300 border-none"
                                     >
-                                        <TableCell className="py-4">
-                                            <span className="font-medium text-sm text-gray-900 group-hover:text-blue-600 transition-colors">{page.title}</span>
+                                        <TableCell className="px-10 py-6">
+                                            <div className="flex flex-col gap-1.5">
+                                                <span className="font-black text-gray-900 group-hover:text-blue-600 transition-colors tracking-tight text-base">{page.title}</span>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest bg-gray-50 px-2 py-0.5 rounded-md border border-gray-100 font-mono italic opacity-70 group-hover:bg-blue-100/50 group-hover:text-blue-600 group-hover:border-blue-200 transition-all opacity-80 group-hover:opacity-100">
+                                                        Slug: /{page.slug}
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </TableCell>
-                                        <TableCell className="py-4">
-                                            <Badge
-                                                variant="outline"
-                                                className={`font-mono text-[10px] px-1.5 py-0 border-0 ${page.lang === 'en'
-                                                    ? 'bg-purple-50 text-purple-700'
-                                                    : page.lang === 'zh'
-                                                        ? 'bg-blue-50 text-blue-700'
-                                                        : 'bg-gray-50 text-gray-700'
-                                                    }`}
-                                            >
-                                                {(page.lang || 'zh').toString().toUpperCase()}
-                                            </Badge>
+                                        <TableCell className="px-6 py-6">
+                                            <div className="flex flex-col gap-2">
+                                                <div className="flex items-center gap-3">
+                                                    <span className={`px-2 py-0.5 rounded-lg font-mono text-[10px] font-black uppercase tracking-widest ${page.lang === 'en' ? 'bg-purple-50 text-purple-600' : 'bg-blue-50 text-blue-600'}`}>
+                                                        {(page.lang || 'zh').toString().toUpperCase()}
+                                                    </span>
+                                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest bg-gray-50 px-2 py-0.5 rounded-lg ring-1 ring-gray-100 group-hover:bg-white group-hover:ring-blue-100 transition-all">
+                                                        {page.type}
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </TableCell>
-                                        <TableCell className="py-4">
+                                        <TableCell className="px-6 py-6">
                                             {getStatusBadge(page.status)}
                                         </TableCell>
-                                        <TableCell className="py-4">
-                                            <Badge variant="outline" className="font-normal text-xs text-gray-700 border-gray-300">{page.type}</Badge>
+                                        <TableCell className="px-6 py-6 font-mono text-xs font-black text-gray-400">
+                                            {formatDate(page.updatedAt)}
                                         </TableCell>
-                                        <TableCell className="py-4">
-                                            <span className="text-xs text-gray-500 font-mono">/{page.slug}</span>
-                                        </TableCell>
-                                        <TableCell className="py-4">
-                                            <span className="text-xs text-gray-500 font-mono">
-                                                {formatDate(page.updatedAt)}
-                                            </span>
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            <div className="flex items-center justify-end gap-2">
+                                        <TableCell className="px-10 py-6 text-right">
+                                            <div className="flex items-center justify-end gap-2 transition-all">
                                                 <Link
                                                     href={`/${page.slug}`}
                                                     target="_blank"
-                                                    className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                    className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all border border-transparent hover:border-blue-100 shadow-sm hover:shadow-lg"
                                                     title="预览"
                                                 >
                                                     <Eye className="w-4 h-4" />
                                                 </Link>
-                                                <Link
-                                                    href={`/admin/pages/builder/${page.id}`}
-                                                    className="p-2 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
-                                                    title="可视化编辑"
-                                                >
-                                                    <Layout className="w-4 h-4" />
-                                                </Link>
+
                                                 <Link
                                                     href={`/admin/pages/${page.id}`}
-                                                    className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                    className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all border border-transparent hover:border-blue-100 shadow-sm hover:shadow-lg"
                                                     title="编辑"
                                                 >
-                                                    <Edit className="w-4 h-4" />
+                                                    <Pencil className="w-4 h-4" />
                                                 </Link>
                                                 <DeletePageButton id={page.id} title={page.title} />
                                             </div>
@@ -217,31 +216,40 @@ export default async function PagesPage({
                             )}
                         </TableBody>
                     </Table>
-
-                    {/* 分页 */}
-                    {totalPages > 1 && (
-                        <div className="p-4 border-t border-gray-200 bg-gray-50/30 flex items-center justify-between">
-                            <div className="text-sm text-gray-500">
-                                显示 {skip + 1} 到 {Math.min(skip + limit, total)} 条，共 {total} 条
-                            </div>
-                            <div className="flex gap-2">
-                                <Link
-                                    href={`?page=${page - 1}`}
-                                    className={`px-3 py-1.5 text-sm border border-gray-200 rounded-lg hover:bg-white hover:border-gray-300 transition-colors ${page <= 1 ? 'pointer-events-none opacity-50' : 'bg-white'}`}
-                                >
-                                    上一页
-                                </Link>
-                                <Link
-                                    href={`?page=${page + 1}`}
-                                    className={`px-3 py-1.5 text-sm border border-gray-200 rounded-lg hover:bg-white hover:border-gray-300 transition-colors ${page >= totalPages ? 'pointer-events-none opacity-50' : 'bg-white'}`}
-                                >
-                                    下一页
-                                </Link>
-                            </div>
-                        </div>
-                    )}
                 </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                    <div className="px-10 py-6 bg-gray-50/50 border-t border-gray-100 flex items-center justify-between">
+                        <div className="text-[11px] font-black text-gray-400 uppercase tracking-widest">
+                            显示 {skip + 1}-{Math.min(skip + limit, total)} 共 {total} 条
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Link
+                                href={`?page=${page - 1}`}
+                                className={`h-11 px-6 flex items-center justify-center text-xs font-black uppercase tracking-widest rounded-xl transition-all ${page <= 1
+                                    ? 'bg-gray-100 text-gray-300 pointer-events-none'
+                                    : 'bg-white text-gray-600 border border-gray-100 hover:border-blue-600 hover:text-blue-600 shadow-sm hover:shadow-md'
+                                    }`}
+                            >
+                                上一页
+                            </Link>
+                            <div className="w-11 h-11 flex items-center justify-center bg-blue-600 text-white rounded-xl text-xs font-black shadow-lg shadow-blue-100">
+                                {page}
+                            </div>
+                            <Link
+                                href={`?page=${page + 1}`}
+                                className={`h-11 px-6 flex items-center justify-center text-xs font-black uppercase tracking-widest rounded-xl transition-all ${page >= totalPages
+                                    ? 'bg-gray-100 text-gray-300 pointer-events-none'
+                                    : 'bg-white text-gray-600 border border-gray-100 hover:border-blue-600 hover:text-blue-600 shadow-sm hover:shadow-md'
+                                    }`}
+                            >
+                                下一页
+                            </Link>
+                        </div>
+                    </div>
+                )}
             </div>
-        </div>
+        </div >
     );
 }

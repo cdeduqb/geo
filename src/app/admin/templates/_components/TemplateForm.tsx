@@ -1,11 +1,9 @@
 'use client';
 
 import { PageTemplate } from '@prisma/client';
-import { Save, Loader2, Sparkles, Layout, Eye, Code, Plus, Monitor, Smartphone } from 'lucide-react';
+import { Save, Loader2, Sparkles, Eye, Code, Monitor, Smartphone } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect, useRef } from 'react';
-import { TEMPLATE_COMPONENTS } from '@/lib/template-components';
-import Editor, { OnMount } from '@monaco-editor/react';
+import { useState } from 'react';
 
 interface TemplateFormProps {
     template?: PageTemplate;
@@ -25,10 +23,6 @@ export default function TemplateForm({ template, isEdit = false }: TemplateFormP
     // AI 生成状态
     const [aiPrompt, setAiPrompt] = useState('');
     const [isGenerating, setIsGenerating] = useState(false);
-
-    // Monaco Editor 引用
-    const editorRef = useRef<any>(null);
-    const monacoRef = useRef<any>(null);
 
     // 实时预览内容构建
     const getPreviewHtml = () => {
@@ -58,11 +52,6 @@ export default function TemplateForm({ template, isEdit = false }: TemplateFormP
         `;
     };
 
-    const handleEditorDidMount: OnMount = (editor, monaco) => {
-        editorRef.current = editor;
-        monacoRef.current = monaco;
-    };
-
     const handleAiGenerate = async () => {
         if (!aiPrompt.trim()) {
             alert('请输入描述信息');
@@ -79,7 +68,7 @@ export default function TemplateForm({ template, isEdit = false }: TemplateFormP
                 body: JSON.stringify({
                     prompt: aiPrompt,
                     moduleType,
-                    style: '现代简约' // 可以后续添加选项
+                    style: '现代简约'
                 }),
             });
 
@@ -88,34 +77,12 @@ export default function TemplateForm({ template, isEdit = false }: TemplateFormP
             const data = await res.json();
             if (data.html) {
                 setContent(data.html);
-                // 如果是 Monaco Editor，也可以直接 setValue，但 React state 绑定会自动更新
             }
         } catch (err) {
             console.error(err);
             alert('AI 生成失败，请重试');
         } finally {
             setIsGenerating(false);
-        }
-    };
-
-    const insertComponent = (code: string) => {
-        const editor = editorRef.current;
-        const monaco = monacoRef.current;
-
-        if (editor && monaco) {
-            const position = editor.getPosition();
-            const range = new monaco.Range(position.lineNumber, position.column, position.lineNumber, position.column);
-
-            editor.executeEdits('insert-component', [{
-                range: range,
-                text: code,
-                forceMoveMarkers: true
-            }]);
-
-            editor.focus();
-        } else {
-            // 降级处理：如果编辑器未加载，直接追加
-            setContent(prev => prev + code);
         }
     };
 
@@ -241,7 +208,7 @@ export default function TemplateForm({ template, isEdit = false }: TemplateFormP
                                     value={aiPrompt}
                                     onChange={(e) => setAiPrompt(e.target.value)}
                                     placeholder="描述您想要的模板，例如：一个带有渐变背景和居中标题的 Hero 区域..."
-                                    className="w-full pl-9 pr-3 py-2 rounded-lg border border-purple-200 bg-white text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                    className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-300 bg-white text-sm focus:border-purple-500"
                                     onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAiGenerate())}
                                 />
                             </div>
@@ -264,44 +231,14 @@ export default function TemplateForm({ template, isEdit = false }: TemplateFormP
                                 <Code className="w-4 h-4 text-gray-500" />
                                 <span className="text-xs font-medium text-gray-700">HTML 代码</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                                {/* 组件插入下拉菜单 */}
-                                <div className="relative group">
-                                    <button type="button" className="text-xs flex items-center gap-1 text-blue-600 hover:text-blue-700 font-medium">
-                                        <Plus className="w-3 h-3" /> 插入组件
-                                    </button>
-                                    <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 hidden group-hover:block z-10">
-                                        {TEMPLATE_COMPONENTS.map(comp => (
-                                            <button
-                                                key={comp.id}
-                                                type="button"
-                                                onClick={() => insertComponent(comp.code)}
-                                                className="w-full text-left px-3 py-2 text-xs hover:bg-gray-50 text-gray-700"
-                                                title={comp.description}
-                                            >
-                                                {comp.name}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <div className="flex-1 overflow-hidden">
-                            <Editor
-                                height="100%"
-                                defaultLanguage="html"
+                            <textarea
                                 value={content}
-                                onChange={(value) => setContent(value || '')}
-                                onMount={handleEditorDidMount}
-                                theme="vs-dark"
-                                options={{
-                                    minimap: { enabled: false },
-                                    fontSize: 14,
-                                    wordWrap: 'on',
-                                    padding: { top: 16 },
-                                    scrollBeyondLastLine: false,
-                                    automaticLayout: true,
-                                }}
+                                onChange={(e) => setContent(e.target.value)}
+                                className="w-full h-full p-4 font-mono text-sm bg-gray-900 text-gray-100 resize-none focus:outline-none"
+                                placeholder="在此输入 HTML 代码..."
+                                spellCheck={false}
                             />
                         </div>
                     </div>

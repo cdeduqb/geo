@@ -1,15 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db as prisma } from '@/lib/db';
+import { requireAdmin } from '@/lib/auth';
 
 // GET - 获取引用列表
 export async function GET(request: NextRequest) {
-    const { searchParams } = new URL(request.url);
-    const articleId = searchParams.get('articleId');
-    const platform = searchParams.get('platform');
-    const limit = parseInt(searchParams.get('limit') || '50');
-
     try {
+        await requireAdmin();
+
+        const { searchParams } = new URL(request.url);
+        const articleId = searchParams.get('articleId');
+        const platform = searchParams.get('platform');
+        const limit = parseInt(searchParams.get('limit') || '50');
+
         const citations = await prisma.aICitation.findMany({
+
             where: {
                 ...(articleId && { articleId }),
                 ...(platform && { platform }),

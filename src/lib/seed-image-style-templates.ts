@@ -23,7 +23,7 @@ async function main() {
                     <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
                         G
                     </div>
-                    <span class="text-xl font-bold text-gray-900 tracking-tight">GeoCMS</span>
+                    <span class="text-xl font-bold text-gray-900 tracking-tight">企业官网</span>
                 </a>
 
                 <!-- Navigation -->
@@ -76,7 +76,7 @@ async function main() {
                     <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
                         G
                     </div>
-                    <span class="text-xl font-bold text-gray-900 tracking-tight">GeoCMS</span>
+                    <span class="text-xl font-bold text-gray-900 tracking-tight">企业官网</span>
                 </div>
                 <p class="text-gray-500 text-sm leading-relaxed">
                     企业级内容管理系统，为您提供强大的内容发布和管理解决方案。

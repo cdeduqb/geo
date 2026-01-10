@@ -23,7 +23,10 @@ interface EntityManagerProps {
     lang?: string; // 文章语言
 }
 
-export default function EntityManager({ entities, onChange, content, lang = 'zh' }: EntityManagerProps) {
+export default function EntityManager({ entities: rawEntities, onChange, content, lang = 'zh' }: EntityManagerProps) {
+    // 防守性检查：确保 entities 始终是一个数组
+    const entities: Entity[] = Array.isArray(rawEntities) ? rawEntities : [];
+
     const [isExtracting, setIsExtracting] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editingIndex, setEditingIndex] = useState<number | null>(null);

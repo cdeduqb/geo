@@ -15,7 +15,7 @@ export const HeroSection: React.FC<SectionProps> = ({ data, style = {} }) => {
 
             <div className={`container mx-auto px-4 relative z-10 ${textAlign}`} itemScope itemType="http://schema.org/CreativeWork">
                 <TitleTag className={`text-4xl md:text-6xl font-bold mb-6 ${backgroundImage ? 'text-white' : textColor}`} itemProp="headline">
-                    {title || 'Welcome to GeoCMS'}
+                    {title || 'Welcome to 企业官网'}
                 </TitleTag>
                 <p className={`text-xl md:text-2xl mb-8 max-w-2xl mx-auto ${backgroundImage ? 'text-gray-200' : 'text-gray-600'}`} itemProp="description">
                     {subtitle || 'Build stunning websites with AI-powered tools.'}
@@ -55,7 +55,7 @@ registerSection({
     category: 'layout',
     component: HeroSection,
     defaultData: {
-        title: '欢迎使用 GeoCMS',
+        title: '欢迎使用 企业官网',
         subtitle: '下一代 AI 驱动的内容管理系统',
         primaryButtonText: '开始使用',
         primaryButtonLink: '/admin',

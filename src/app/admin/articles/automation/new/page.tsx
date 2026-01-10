@@ -121,7 +121,7 @@ export default function NewAutomationProject() {
                         <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
                             <Sparkles className="w-6 h-6 animate-pulse" />
                         </div>
-                        新全自动创作项目
+                        新建自动创作项目
                     </h1>
                     <p className="text-gray-500">通过 AI 自动化管线，持续、稳定地生成高质量 SEO 文章。</p>
                 </div>
@@ -144,7 +144,7 @@ export default function NewAutomationProject() {
                                     required
                                     value={formData.name}
                                     onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all outline-none"
+                                    className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none"
                                     placeholder="例如：2024 夏季数码转码专题"
                                 />
                             </div>
@@ -155,19 +155,19 @@ export default function NewAutomationProject() {
                                     required
                                     value={formData.topic}
                                     onChange={e => setFormData(prev => ({ ...prev, topic: e.target.value }))}
-                                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all outline-none min-h-[120px] resize-none"
+                                    className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none min-h-[120px] resize-none"
                                     placeholder="描述您希望 AI 创作的核心方向..."
                                 />
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-sm font-bold text-gray-700">关键词 (可选，逗号分隔)</label>
+                                <label className="text-sm font-bold text-gray-700">优化词</label>
                                 <input
                                     type="text"
                                     value={formData.keywords}
                                     onChange={e => setFormData(prev => ({ ...prev, keywords: e.target.value }))}
-                                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all outline-none"
-                                    placeholder="SEO, 内容营销, AI写作..."
+                                    className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none"
+                                    placeholder="例如:全域魔力GEOCMS系统"
                                 />
                             </div>
                         </div>
@@ -227,7 +227,7 @@ export default function NewAutomationProject() {
                                     max="500"
                                     value={formData.totalCount}
                                     onChange={e => setFormData(prev => ({ ...prev, totalCount: parseInt(e.target.value) || 1 }))}
-                                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all outline-none"
+                                    className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none"
                                 />
                             </div>
 
@@ -239,7 +239,7 @@ export default function NewAutomationProject() {
                                     max="50"
                                     value={formData.dailyLimit}
                                     onChange={e => setFormData(prev => ({ ...prev, dailyLimit: parseInt(e.target.value) || 1 }))}
-                                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all outline-none"
+                                    className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none"
                                 />
                                 <p className="text-[10px] text-gray-400">系统将自动分散发布时间以保持自然更新频率。</p>
                             </div>
@@ -249,7 +249,7 @@ export default function NewAutomationProject() {
                                 <select
                                     value={formData.categoryId}
                                     onChange={e => setFormData(prev => ({ ...prev, categoryId: e.target.value }))}
-                                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all outline-none cursor-pointer"
+                                    className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none cursor-pointer"
                                 >
                                     <option value="">默认（无分类）</option>
                                     {categories.length > 0 ? (
@@ -268,7 +268,7 @@ export default function NewAutomationProject() {
                                     required
                                     value={formData.strategyId}
                                     onChange={e => setFormData(prev => ({ ...prev, strategyId: e.target.value }))}
-                                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all outline-none cursor-pointer"
+                                    className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none cursor-pointer"
                                 >
                                     {strategies.length > 0 ? (
                                         <>

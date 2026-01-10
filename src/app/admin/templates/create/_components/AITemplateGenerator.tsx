@@ -3,7 +3,14 @@
 import { useState, useEffect } from 'react';
 import { Wand2, Loader2, ArrowLeft, Save, Eye, Code } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import Editor from '@monaco-editor/react';
+import Editor, { loader } from '@monaco-editor/react';
+
+// Configure monaco loader to use local assets for reliability
+loader.config({
+    paths: {
+        vs: '/monaco-editor/min/vs'
+    }
+});
 import { useToast } from '@/components/ui/toast';
 
 interface AITemplateGeneratorProps {
@@ -202,7 +209,7 @@ export default function AITemplateGenerator({ onBack }: AITemplateGeneratorProps
                             value={templateInfo.name}
                             onChange={(e) => setTemplateInfo({ ...templateInfo, name: e.target.value })}
                             placeholder="例如：公司简介页面"
-                            className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none bg-white text-gray-900 ${nameError ? 'border-red-500' : 'border-gray-200'
+                            className={`w-full px-3 py-2 border rounded-lg focus:border-green-500 outline-none bg-white text-gray-900 ${nameError ? 'border-red-500' : 'border-gray-300'
                                 }`}
                         />
                         {isCheckingName && (
@@ -223,7 +230,7 @@ export default function AITemplateGenerator({ onBack }: AITemplateGeneratorProps
                         <select
                             value={templateInfo.moduleType}
                             onChange={(e) => setTemplateInfo({ ...templateInfo, moduleType: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 outline-none bg-white text-gray-900"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-500 outline-none bg-white text-gray-900"
                         >
                             <option value="HEADER">页眉</option>
                             <option value="FOOTER">页脚</option>
@@ -247,7 +254,7 @@ export default function AITemplateGenerator({ onBack }: AITemplateGeneratorProps
                             onChange={(e) => setTemplateInfo({ ...templateInfo, description: e.target.value })}
                             placeholder="简要描述此模板的用途和特点..."
                             rows={3}
-                            className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 outline-none resize-none bg-white text-gray-900"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-500 outline-none resize-none bg-white text-gray-900"
                         />
                     </div>
 
@@ -290,7 +297,7 @@ export default function AITemplateGenerator({ onBack }: AITemplateGeneratorProps
                             <select
                                 value={preferences.language}
                                 onChange={(e) => setPreferences({ ...preferences, language: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 outline-none bg-white text-gray-900"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-500 outline-none bg-white text-gray-900"
                             >
                                 <option value="zh-CN">简体中文</option>
                                 <option value="en-US">English</option>
@@ -305,7 +312,7 @@ export default function AITemplateGenerator({ onBack }: AITemplateGeneratorProps
                             <select
                                 value={preferences.style}
                                 onChange={(e) => setPreferences({ ...preferences, style: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 outline-none bg-white text-gray-900"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-green-500 outline-none bg-white text-gray-900"
                             >
                                 {styleOptions.map(opt => (
                                     <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -350,7 +357,7 @@ export default function AITemplateGenerator({ onBack }: AITemplateGeneratorProps
                             onChange={(e) => setAiPrompt(e.target.value)}
                             placeholder="例如：创建一个现代化的关于我们页面，包含公司介绍、团队成员卡片（3列布局）、企业文化模块、联系方式等。使用蓝色主题，卡片式设计，添加悬停动画。"
                             rows={8}
-                            className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 outline-none resize-none bg-white text-gray-900"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-green-500 outline-none resize-none bg-white text-gray-900"
                         />
                         <p className="mt-2 text-xs text-gray-500">
                             提示：描述越详细，生成的结果越符合您的期望。可以包含布局、颜色、风格、具体内容等。

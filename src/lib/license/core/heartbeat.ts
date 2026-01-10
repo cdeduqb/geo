@@ -14,7 +14,8 @@ export class HeartbeatService {
     private isRunning: boolean = false;
 
     private constructor() {
-        this.serverUrl = process.env.LICENSE_SERVER_URL || 'https://sq.moli123.com';
+        const { LICENSE_CONFIG } = require('../config');
+        this.serverUrl = LICENSE_CONFIG.SERVER_URL;
         this.interval = parseInt(process.env.LICENSE_HEARTBEAT_INTERVAL || '3600000'); // 1小时
     }
 

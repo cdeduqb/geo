@@ -1,6 +1,6 @@
 import { db } from '@/lib/db';
 import Link from 'next/link';
-import { Plus, HardDrive, Check } from 'lucide-react';
+import { Plus, HardDrive, Check, Sparkles } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import StorageConfigActions from './_components/StorageConfigActions';
 
@@ -17,111 +17,114 @@ export default async function StorageConfigsPage() {
 
     return (
         <div className="space-y-6">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                        <HardDrive className="w-8 h-8 text-blue-600" />
-                        存储配置
-                    </h1>
-                    <p className="mt-1 text-sm text-gray-500">
-                        管理文件存储方式，支持本地存储和云存储
-                    </p>
+            {/* Page Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                        <HardDrive className="w-6 h-6" />
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-black text-gray-900 tracking-tight">存储配置</h1>
+                        <p className="text-[11px] text-gray-400 font-bold uppercase tracking-wider opacity-60">Storage Management</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Action Bar */}
+            <div className="bg-white rounded-[24px] border border-gray-100 p-3 flex items-center justify-between gap-4 shadow-sm shadow-gray-100/50">
+                <div className="px-4">
+                    <p className="text-sm text-gray-500 font-medium">管理系统文件存储方式，保障资源跨域访问与安全性</p>
                 </div>
                 <Link
                     href="/admin/settings/storage/create"
-                    className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 transition-colors"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-blue-100 flex items-center gap-2"
                 >
-                    <Plus className="w-4 h-4 mr-2" />
+                    <Plus className="w-4 h-4" />
                     新建配置
                 </Link>
             </div>
 
             {/* Configs List */}
-            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                {configs.length === 0 ? (
-                    <div className="py-12 text-center">
-                        <HardDrive className="mx-auto h-12 w-12 text-gray-400" />
-                        <h3 className="mt-2 text-sm font-medium text-gray-900">暂无存储配置</h3>
-                        <p className="mt-1 text-sm text-gray-500">
-                            开始创建一个存储配置
-                        </p>
-                        <div className="mt-6">
+            <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm shadow-gray-100/50 p-6">
+                <div className="space-y-4">
+                    {configs.length === 0 ? (
+                        <div className="text-center py-20 bg-gray-50/50 rounded-2xl border-2 border-dashed border-gray-100">
+                            <HardDrive className="w-12 h-12 text-gray-200 mx-auto mb-4" />
+                            <h3 className="text-sm font-bold text-gray-400 mb-2">暂无存储配置</h3>
                             <Link
                                 href="/admin/settings/storage/create"
-                                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                                className="text-blue-600 text-sm font-bold hover:underline"
                             >
-                                <Plus className="w-4 h-4 mr-2" />
-                                新建配置
+                                点击此处开始创建一个新配置
                             </Link>
                         </div>
-                    </div>
-                ) : (
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    配置名称
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    存储类型
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    状态
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    创建时间
-                                </th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    操作
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                    ) : (
+                        <div className="divide-y divide-gray-50">
                             {configs.map((config) => (
-                                <tr key={config.id} className="hover:bg-gray-50">
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center">
-                                            <div className="font-medium text-gray-900">
-                                                {config.name}
+                                <div key={config.id} className="flex items-center justify-between py-5 first:pt-0 last:pb-0 group">
+                                    <div className="flex items-center gap-5">
+                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${config.isActive ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-50 text-gray-400'}`}>
+                                            <Check className="w-6 h-6" />
+                                        </div>
+                                        <div>
+                                            <div className="flex items-center gap-3">
+                                                <h4 className="font-bold text-gray-900 text-lg">{config.name}</h4>
+                                                <span className="text-[11px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg bg-gray-100 text-gray-500 border border-gray-200/50">
+                                                    {PROVIDER_LABELS[config.provider] || config.provider}
+                                                </span>
                                                 {config.isActive && (
-                                                    <Check className="inline-block w-4 h-4 ml-2 text-green-600" />
+                                                    <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-100/50 uppercase tracking-widest">
+                                                        当前默认存储
+                                                    </span>
                                                 )}
                                             </div>
+                                            <p className="text-xs text-gray-400 mt-1 font-medium">
+                                                创建于 {new Date(config.createdAt).toLocaleDateString('zh-CN')}
+                                            </p>
                                         </div>
-                                    </td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">
-                                        {PROVIDER_LABELS[config.provider] || config.provider}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {config.isActive ? (
-                                            <Badge variant="success">已激活</Badge>
-                                        ) : (
-                                            <Badge variant="secondary">未激活</Badge>
-                                        )}
-                                    </td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">
-                                        {new Date(config.createdAt).toLocaleDateString('zh-CN')}
-                                    </td>
-                                    <td className="px-6 py-4 text-right text-sm font-medium">
+                                    </div>
+                                    <div className="flex items-center gap-3">
                                         <StorageConfigActions config={config} />
-                                    </td>
-                                </tr>
+                                    </div>
+                                </div>
                             ))}
-                        </tbody>
-                    </table>
-                )}
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Info Card */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h3 className="text-sm font-medium text-blue-900 mb-2">💡 存储配置说明</h3>
-                <ul className="text-sm text-blue-800 space-y-1">
-                    <li>• <strong>本地存储</strong>: 文件保存在服务器 public/uploads 目录</li>
-                    <li>• <strong>阿里云 OSS</strong>: 需要配置 AccessKey、SecretKey、Bucket 和 Region</li>
-                    <li>• <strong>腾讯云 COS</strong>: 需要配置 SecretId、SecretKey、Bucket 和 Region</li>
-                    <li>• 同时只能激活一个存储配置，切换后新上传的文件将使用新配置</li>
-                </ul>
+            <div className="bg-blue-50/50 border border-blue-100/50 rounded-[24px] p-6 shadow-sm">
+                <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0">
+                        <Sparkles className="w-5 h-5" />
+                    </div>
+                    <div>
+                        <h3 className="text-sm font-black text-blue-900 mb-2 tracking-tight">存储配置说明</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
+                            <ul className="text-xs text-blue-800/70 space-y-2 font-medium">
+                                <li className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                                    <strong>本地存储</strong>：文件保存在服务器 public/uploads 目录
+                                </li>
+                                <li className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                                    <strong>阿里云 OSS</strong>：需要 AccessKey、Bucket 和 Region
+                                </li>
+                            </ul>
+                            <ul className="text-xs text-blue-800/70 space-y-2 font-medium">
+                                <li className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                                    <strong>腾讯云 COS</strong>：需要 SecretId、Bucket 和 Region
+                                </li>
+                                <li className="flex items-center gap-2 text-blue-700">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-sm" />
+                                    系统仅支持同时激活一个存储配置，切换后即刻生效
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

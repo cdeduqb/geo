@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Step1Outline from './Step1Outline';
 import Step2Draft from './Step2Draft';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/toast';
 
 export type OutlineSection = {
     title: string;
@@ -20,6 +21,7 @@ export type Outline = {
 
 export default function CopilotWizard() {
     const router = useRouter();
+    const { showToast } = useToast();
     const [step, setStep] = useState(1);
     const [topic, setTopic] = useState('');
     const [keywords, setKeywords] = useState('');
@@ -55,11 +57,15 @@ export default function CopilotWizard() {
 
             if (res.ok) {
                 const data = await res.json();
+                showToast('草稿已存，正在跳转编辑器...', 'success');
                 router.push(`/admin/articles/${data.id}`);
+            } else {
+                const errorData = await res.json();
+                showToast(`保存草稿失败: ${errorData.message || res.statusText}`, 'error');
             }
         } catch (error) {
             console.error('Failed to create article:', error);
-            alert('保存草稿失败');
+            showToast('保存草稿失败', 'error');
         }
     };
 

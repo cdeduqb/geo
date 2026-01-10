@@ -26,6 +26,27 @@ export const db = new Proxy(client, {
         const original = Reflect.get(target, prop, receiver);
 
         // 如果是访问数据库模型（如 db.page, db.user 等）
+        // 注意：新添加的模型可能在 client 上是 undefined，如果 client 是旧的
+        if (original === undefined) {
+            console.warn(`[DB Proxy] Model "${String(prop)}" is undefined. The Prisma client might need a refresh.`);
+
+            // 如果确实需要访问某个模型但它不在 client 上，
+            // 我们可以返回一个临时的对象，它的所有数据库操作方法都返回空/null，
+            // 这样应用就不会因为 TypeError 而崩溃。
+            return new Proxy({}, {
+                get(_, modelProp) {
+                    const methodName = String(modelProp);
+                    console.error(`[DB Shield] Attempted to access missing model "${String(prop)}.${methodName}".`);
+                    return async () => {
+                        if (methodName.startsWith('findMany')) return [];
+                        if (methodName.startsWith('findFirst') || methodName.startsWith('findUnique')) return null;
+                        if (methodName.startsWith('count')) return 0;
+                        return null;
+                    };
+                }
+            });
+        }
+
         if (typeof original === 'object' && original !== null) {
             return new Proxy(original, {
                 get(modelTarget, modelProp) {

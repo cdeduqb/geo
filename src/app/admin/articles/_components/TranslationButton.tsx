@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Languages, Loader2 } from 'lucide-react';
 import { createTranslation } from '../actions';
+import { useToast } from '@/components/ui/toast';
 
 interface TranslationButtonProps {
     articleId: string;
@@ -13,6 +14,7 @@ interface TranslationButtonProps {
 export default function TranslationButton({ articleId, currentLang }: TranslationButtonProps) {
     const [isCreating, setIsCreating] = useState(false);
     const router = useRouter();
+    const { showToast } = useToast();
 
     const targetLang = currentLang === 'zh' ? 'en' : 'zh';
     const targetLangName = targetLang === 'zh' ? '中文' : 'English';
@@ -31,12 +33,12 @@ export default function TranslationButton({ articleId, currentLang }: Translatio
                     // 翻译已存在，跳转到该翻译
                     router.push(`/admin/articles/${result.articleId}`);
                 } else {
-                    alert(result.error);
+                    showToast(result.error, 'error');
                 }
             }
         } catch (error) {
             console.error('创建翻译失败:', error);
-            alert('创建翻译失败，请重试');
+            showToast('创建翻译失败，请重试', 'error');
         } finally {
             setIsCreating(false);
         }

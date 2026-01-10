@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 
@@ -49,6 +50,9 @@ export async function POST(request: NextRequest) {
         });
 
         await Promise.all(updatePromises);
+
+        // Revalidate layout to update metadata like favicon
+        revalidatePath('/', 'layout');
 
         return NextResponse.json({ success: true });
     } catch (error) {

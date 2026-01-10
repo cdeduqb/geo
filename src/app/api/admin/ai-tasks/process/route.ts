@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 import { getAIService } from '@/lib/ai/service';
+import { sanitizeHTML } from '@/lib/security/sanitize';
 
 // POST /api/admin/ai-tasks/process - Process pending tasks
 export async function POST(request: NextRequest) {
@@ -54,19 +55,33 @@ export async function POST(request: NextRequest) {
                 customPrompt: prompt,
             });
 
+            // 🔒 安全关键：清理 AI 生成的内容
+            const cleanContent = sanitizeHTML(result.content, 'standard');
+            const rawSummary = extractSummary(result.content);
+            const cleanSummary = sanitizeHTML(rawSummary, 'strict');
+
+            // 🔍 检测是否有恶意内容被清理
+            const contentWasCleaned = cleanContent !== result.content;
+            if (contentWasCleaned) {
+                console.warn(`[AI Security API] ⚠️ Malicious content detected in task ${taskId}`);
+            }
+
             // Create article
             const article = await db.article.create({
                 data: {
                     title: task.topic,
                     slug: generateSlug(task.topic),
-                    content: result.content,
-                    summary: extractSummary(result.content),
-                    status: 'DRAFT',
+                    content: cleanContent,  // ✅ 已清理
+                    summary: cleanSummary,  // ✅ 已清理
+                    status: 'DRAFT',  // 🔒 草稿状态
                     authorId: user.id,
                     aiGenerated: true,
                     aiPrompt: prompt,
                 },
             });
+
+            // 📋 安全审核日志
+            console.log(`[AI Security API] ✅ Article ${article.id} created, sanitized: ${contentWasCleaned}`);
 
             // Update task status to COMPLETED
             await db.aICreationTask.update({

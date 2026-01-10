@@ -192,7 +192,7 @@ export default async function TemplatesPage({ searchParams }: TemplatesPageProps
                                                             {new Date(template.createdAt).toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' })}
                                                         </div>
 
-                                                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <div className="flex items-center gap-1 transition-opacity">
                                                             {/* Smart edit button */}
                                                             {creationMethod === 'visual' ? (
                                                                 <Link

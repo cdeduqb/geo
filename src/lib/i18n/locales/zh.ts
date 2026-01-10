@@ -54,7 +54,7 @@ const zh = {
 
     // 页眉
     header: {
-        siteName: 'GeoCMS',
+        siteName: '企业官网',
         navigation: '导航',
     },
 
@@ -71,12 +71,13 @@ const zh = {
         helpCenter: '帮助中心',
         documentation: '开发者文档',
         forum: '社区论坛',
+        support: '支持',
         company: '公司',
         aboutUs: '关于我们',
         careers: '加入我们',
         contactUs: '联系方式',
         privacy: '隐私政策',
-        copyright: '© {year} GeoCMS Inc. 保留所有权利。',
+        copyright: '© {year} 企业官网 Inc. 保留所有权利。',
     },
 
     // 首页
@@ -86,7 +87,7 @@ const zh = {
         featuredArticles: '精选文章',
         latestArticles: '最新文章',
         browseArticles: '浏览文章',
-        whyChoose: '为什么选择 GeoCMS',
+        whyChoose: '为什么选择 企业官网',
         whyChooseSubtitle: '强大的功能，简洁的体验',
         featureAI: 'AI 智能创作',
         featureAIDesc: '集成 DeepSeek 等多个大模型，一键生成高质量文章，提升内容生产效率 10 倍。',
@@ -98,7 +99,7 @@ const zh = {
         heroBadge: 'AI 驱动的企业级 CMS',
         heroMainTitle: '让内容创作',
         heroHighlight: '更智能',
-        heroDesc: 'GeoCMS 是新一代企业级内容管理系统，集成 AI 写作助手、SEO 优化、多模型支持，助力您的内容营销。',
+        heroDesc: '企业官网 是新一代企业级内容管理系统，集成 AI 写作助手、SEO 优化、多模型支持，助力您的内容营销。',
         heroAdminButton: '管理后台',
         statAIModels: 'AI 模型',
         statArticleGen: '文章生成',

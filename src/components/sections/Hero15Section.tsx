@@ -84,7 +84,7 @@ registerSection({
         title: '赢得百万用户的信赖',
         description: '我们为全球最挑剔的企业提供稳定、安全、高效的基础设施服务。',
         btnText: '免费开始',
-        proofTitle: '他们都在使用 GeoCMS',
+        proofTitle: '他们都在使用 企业官网',
         isMainTitle: true,
         partners: [
             { name: 'Google', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg' },

@@ -1,16 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db as prisma } from '@/lib/db';
+import { requireAdmin } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
-    const { searchParams } = new URL(request.url);
-    const days = parseInt(searchParams.get('days') || '30');
-
-    const since = new Date();
-    since.setDate(since.getDate() - days);
-
     try {
+        await requireAdmin();
+
+        const { searchParams } = new URL(request.url);
+        const days = parseInt(searchParams.get('days') || '30');
+
+        const since = new Date();
+        since.setDate(since.getDate() - days);
+
         // 总引用数
         const totalCitations = await prisma.aICitation.count({
+
             where: { citedAt: { gte: since } },
         });
 

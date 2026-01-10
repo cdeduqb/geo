@@ -4,6 +4,7 @@ import { getAIService, getAIServiceForUseCase } from '@/lib/ai/service';
 import { ContentPipelineService } from '@/lib/ai/pipeline';
 import { getActiveStorageProvider, generateFileKey } from '@/lib/storage/factory';
 import { logger } from '@/lib/logger';
+import { autoPushToSEO } from '@/app/admin/articles/actions';
 
 // 这个 API 用于执行自动化流水线。
 // 它可以被 Cron Job 或者手动触发。
@@ -128,10 +129,24 @@ export async function POST(request: NextRequest) {
                 // --- STEP 5: 创建文章记录 ---
                 logger.info(`[Automation] Task ${task.id}: Finalizing Article`);
                 const articleTitle = seoData?.title || task.topic.split(': ')[1] || task.topic;
+                const baseSlug = seoData?.slug || `${project.name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}-${task.id.slice(0, 4)}`;
+                const articleLang = 'zh'; // 默认语言
+
+                // 唯一性检查与处理
+                let finalSlug = baseSlug;
+                const existingSlug = await db.article.findFirst({
+                    where: { slug: finalSlug, lang: articleLang }
+                });
+
+                if (existingSlug) {
+                    finalSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 6)}`;
+                    logger.warn(`[Automation] Slug collision detected: ${baseSlug}. New slug: ${finalSlug}`);
+                }
+
                 const article = await db.article.create({
                     data: {
                         title: articleTitle,
-                        slug: seoData?.slug || `${project.name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}-${task.id.slice(0, 4)}`,
+                        slug: finalSlug,
                         content: currentContent,
                         summary: seoData?.description || currentContent.slice(0, 300).replace(/<[^>]*>/g, ''),
                         coverImage: coverImage,
@@ -166,6 +181,15 @@ export async function POST(request: NextRequest) {
                     }
                 }
 
+                // --- STEP 7: 自动推送 SEO (放在最后，确保推送的是最终完善的内容) ---
+                if (article.status === 'PUBLISHED') {
+                    logger.info(`[Automation] Task ${task.id}: Triggering SEO Auto-push`);
+                    // 使用非阻塞方式调用
+                    autoPushToSEO(article.slug, article.lang || 'zh').catch(err => {
+                        logger.error(`[Automation] SEO Auto-push failed for task ${task.id}`, err);
+                    });
+                }
+
                 // 完成任务
                 await db.aICreationTask.update({
                     where: { id: task.id },
@@ -177,6 +201,10 @@ export async function POST(request: NextRequest) {
                 });
 
                 results.push({ id: task.id, status: 'SUCCESS', articleId: article.id });
+
+                // --- STEP 8: 呼吸时间 (延迟 3 秒) ---
+                // 缓解 AI 接口频率限制建议，并降低数据库并发压力
+                await new Promise(resolve => setTimeout(resolve, 3000));
 
             } catch (err: any) {
                 console.error(`[Automation] Task ${task.id} Failed:`, err);

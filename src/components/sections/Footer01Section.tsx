@@ -50,7 +50,7 @@ export const Footer01Section: React.FC<SectionProps> = ({ data = {}, style = {},
                             ))}
                         </div>
                     )}
-                    <div className="pt-8 border-t border-current  w-full max-w-2xl">
+                    <div className="pt-8 border-t border-current/10 opacity-60 w-full max-w-2xl">
                         <p className="text-xs">
                             <Copyright systemCopyright={systemSettings?.copyright} />
                             {systemSettings?.icp_number && (

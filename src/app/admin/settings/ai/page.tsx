@@ -2,7 +2,7 @@ import { db } from '@/lib/db';
 import AIConfigContainer from './_components/AIConfigContainer';
 
 export const metadata = {
-    title: 'AI 配置 - GeoCMS 管理后台',
+    title: 'AI 配置 - 企业官网 管理后台',
 };
 
 export default async function AISettingsPage() {

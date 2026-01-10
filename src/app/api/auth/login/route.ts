@@ -1,23 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { login, createSession } from '@/lib/auth';
+import { checkRateLimit, RateLimitPresets } from '@/lib/security/rate-limit';
 
 export async function POST(request: NextRequest) {
+    // 速率限制：防止暴力破解
+    const rateLimitResponse = checkRateLimit(request, RateLimitPresets.LOGIN);
+    if (rateLimitResponse) {
+        return rateLimitResponse;
+    }
+
     try {
         const body = await request.json();
-        const { email, password } = body;
+        const { identifier, password } = body;
 
-        if (!email || !password) {
+        if (!identifier || !password) {
             return NextResponse.json(
-                { error: '邮箱和密码不能为空' },
+                { error: '账号和密码不能为空' },
                 { status: 400 }
             );
         }
 
-        const user = await login(email, password);
+        const user = await login(identifier, password);
 
         if (!user) {
             return NextResponse.json(
-                { error: '邮箱或密码错误' },
+                { error: '账号或密码错误' },
                 { status: 401 }
             );
         }

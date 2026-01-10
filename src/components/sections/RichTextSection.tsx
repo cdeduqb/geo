@@ -1,4 +1,5 @@
 import { registerSection, SectionProps } from '@/lib/sections/registry';
+import { RichTextContent } from '@/components/security/SafeHTML';
 
 export const RichTextSection: React.FC<SectionProps> = ({ data, style = {} }) => {
     const { content } = data;
@@ -7,9 +8,9 @@ export const RichTextSection: React.FC<SectionProps> = ({ data, style = {} }) =>
     return (
         <section className={`${backgroundColor} ${padding}`}>
             <div className={`container mx-auto px-4 ${maxWidth} mx-auto`}>
-                <div
-                    className="prose prose-lg  max-w-none"
-                    dangerouslySetInnerHTML={{ __html: content || '' }}
+                <RichTextContent
+                    content={content || ''}
+                    className="prose prose-lg max-w-none"
                 />
             </div>
         </section>

@@ -3,6 +3,9 @@ import { notFound } from 'next/navigation';
 import ProductEditForm from './_components/ProductEditForm';
 import { getI18nSettings } from '@/lib/system-settings';
 
+
+export const dynamic = 'force-dynamic';
+
 export default async function EditProductPage({
     params,
 }: {
@@ -25,11 +28,25 @@ export default async function EditProductPage({
         orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
     });
 
-    const i18nSettings = await getI18nSettings();
+    const enableMultiLanguageSetting = await db.systemSetting.findUnique({
+        where: { key: 'enable_multi_language' }
+    });
+    const enableMultiLanguage = enableMultiLanguageSetting?.value === 'true';
+
+    const i18nSettingsStr = await db.systemSetting.findUnique({ where: { key: 'i18n_settings' } });
+    let supportedLocales = ['zh', 'en'];
+    if (i18nSettingsStr?.value) {
+        try {
+            const config = JSON.parse(i18nSettingsStr.value);
+            if (Array.isArray(config.supportedLocales)) {
+                supportedLocales = config.supportedLocales;
+            }
+        } catch { }
+    }
 
     // Fetch translation groups if multi-language is enabled
     let translationGroups: { id: string; label: string; lang: string }[] = [];
-    if (i18nSettings.enableMultiLanguage) {
+    if (enableMultiLanguage) {
         const productsWithGroups = await db.product.findMany({
             where: {
                 translationGroupId: { not: null },
@@ -58,8 +75,9 @@ export default async function EditProductPage({
         <ProductEditForm
             product={serializedProduct as any}
             categories={categories}
-            enableMultiLanguage={i18nSettings.enableMultiLanguage}
+            enableMultiLanguage={enableMultiLanguage}
             translationGroups={translationGroups}
+            supportedLocales={supportedLocales}
         />
     );
 }

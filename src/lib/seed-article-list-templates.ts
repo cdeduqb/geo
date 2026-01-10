@@ -207,10 +207,10 @@ async function main() {
                         <span>2025/11/28</span>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                        <a href="#">GeoCMS 完成 A 轮融资，加速全球化布局</a>
+                        <a href="#">企业官网 完成 A 轮融资，加速全球化布局</a>
                     </h3>
                     <p class="text-gray-500 leading-relaxed line-clamp-2">
-                        我们很高兴地宣布，GeoCMS 已完成由顶级风投领投的 A 轮融资。这笔资金将用于扩大我们的研发团队，并加速在北美和欧洲市场的业务拓展...
+                        我们很高兴地宣布，企业官网 已完成由顶级风投领投的 A 轮融资。这笔资金将用于扩大我们的研发团队，并加速在北美和欧洲市场的业务拓展...
                     </p>
                 </div>
                 <div class="w-full sm:w-48 aspect-[3/2] rounded-lg overflow-hidden bg-gray-100 shrink-0">
@@ -247,10 +247,10 @@ async function main() {
                         <span>2025/11/20</span>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                        <a href="#">TechCrunch: GeoCMS 正在重新定义企业内容管理</a>
+                        <a href="#">TechCrunch: 企业官网 正在重新定义企业内容管理</a>
                     </h3>
                     <p class="text-gray-500 leading-relaxed line-clamp-2">
-                        知名科技媒体 TechCrunch 对 GeoCMS 进行了深度报道，称赞其创新的模块化设计和强大的 AI 集成能力...
+                        知名科技媒体 TechCrunch 对 企业官网 进行了深度报道，称赞其创新的模块化设计和强大的 AI 集成能力...
                     </p>
                 </div>
                 <div class="w-full sm:w-48 aspect-[3/2] rounded-lg overflow-hidden bg-gray-100 shrink-0">

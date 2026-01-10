@@ -57,7 +57,7 @@ const en: Translations = {
 
     // Header
     header: {
-        siteName: 'GeoCMS',
+        siteName: '企业官网',
         navigation: 'Navigation',
     },
 
@@ -74,12 +74,13 @@ const en: Translations = {
         helpCenter: 'Help Center',
         documentation: 'Documentation',
         forum: 'Forum',
+        support: 'Support',
         company: 'Company',
         aboutUs: 'About Us',
         careers: 'Careers',
         contactUs: 'Contact',
         privacy: 'Privacy',
-        copyright: '© {year} GeoCMS Inc. All rights reserved.',
+        copyright: '© {year} 企业官网 Inc. All rights reserved.',
     },
 
     // Home
@@ -89,7 +90,7 @@ const en: Translations = {
         featuredArticles: 'Featured Articles',
         latestArticles: 'Latest Articles',
         browseArticles: 'Browse Articles',
-        whyChoose: 'Why Choose GeoCMS',
+        whyChoose: 'Why Choose 企业官网',
         whyChooseSubtitle: 'Powerful features, simple experience',
         featureAI: 'AI Intelligent Creation',
         featureAIDesc: 'Integrate multi-LLMs like DeepSeek to generate high-quality articles with one click, boosting content production efficiency 10x.',
@@ -100,7 +101,7 @@ const en: Translations = {
         heroBadge: 'AI-Powered Enterprise CMS',
         heroMainTitle: 'Make Content Creation',
         heroHighlight: 'Smarter',
-        heroDesc: 'GeoCMS is a next-gen enterprise content management system with AI writing assistant, SEO optimization, and multi-model support for your content marketing.',
+        heroDesc: '企业官网 is a next-gen enterprise content management system with AI writing assistant, SEO optimization, and multi-model support for your content marketing.',
         heroAdminButton: 'Admin Panel',
         statAIModels: 'AI Models',
         statArticleGen: 'Generations',

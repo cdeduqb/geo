@@ -9,14 +9,16 @@ interface CreateArticleClientProps {
     categories: Category[];
     action: (formData: FormData) => any;
     enableMultiLanguage?: boolean;
-    translationGroups?: { id: string; label: string }[];
+    translationGroups?: { id: string; label: string; lang: string }[];
+    supportedLocales?: string[];
 }
 
 export default function CreateArticleClient({
     categories,
     action,
     enableMultiLanguage = false,
-    translationGroups = []
+    translationGroups = [],
+    supportedLocales = ['zh', 'en']
 }: CreateArticleClientProps) {
     const searchParams = useSearchParams();
     const [initialArticle, setInitialArticle] = useState<any>(null);
@@ -44,6 +46,7 @@ export default function CreateArticleClient({
             action={action}
             enableMultiLanguage={enableMultiLanguage}
             translationGroups={translationGroups}
+            supportedLocales={supportedLocales}
         />
     );
 }

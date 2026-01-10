@@ -1,7 +1,14 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import Editor from '@monaco-editor/react';
+import Editor, { loader } from '@monaco-editor/react';
+
+// Configure monaco loader to use local assets for reliability
+loader.config({
+    paths: {
+        vs: '/monaco-editor/min/vs'
+    }
+});
 import { Save, Loader2, ArrowLeft, Eye, Code } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -55,8 +62,8 @@ export default function CodeEditor({ pageId, initialContent }: CodeEditorProps) 
                     <button
                         onClick={() => setIsPreview(!isPreview)}
                         className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${isPreview
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                             }`}
                     >
                         {isPreview ? <Code className="w-4 h-4" /> : <Eye className="w-4 h-4" />}

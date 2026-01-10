@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Save, Bot, Shield, Eye, EyeOff, Loader2, RefreshCw, BarChart3, List, AlertTriangle, Database, Globe } from 'lucide-react';
+import { Save, Bot, Shield, Eye, EyeOff, Loader2, RefreshCw, BarChart3, List, AlertTriangle, Database, Globe, LayoutPanelLeft, Sparkles, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/toast';
@@ -10,6 +10,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import AISimulator from './_components/AISimulator';
 import CitationTracker from './_components/CitationTracker';
 import ContentScorer from './_components/ContentScorer';
+import RankingTracker from './_components/RankingTracker';
+import BehaviorAnalysis from './_components/BehaviorAnalysis';
+import CompetitorAnalysis from './_components/CompetitorAnalysis';
+import GEOAudit from './_components/GEOAudit';
+import BulkOptimizer from './_components/BulkOptimizer';
 
 // AI 爬虫配置 (与之前保持一致)
 const AI_CRAWLERS = [
@@ -22,6 +27,8 @@ const AI_CRAWLERS = [
     { id: 'CCBot', name: 'Common Crawl', description: '开源数据集（被多个 AI 使用）' },
     { id: 'Amazonbot', name: 'Amazon', description: 'Alexa/Amazon AI' },
     { id: 'FacebookBot', name: 'Meta AI', description: 'Meta/Facebook AI' },
+    { id: 'Bingbot', name: 'Microsoft Bing', description: '必应搜索引擎/IndexNow 核心爬虫' },
+    { id: 'Applebot-Extended', name: 'Apple Intelligence', description: '苹果 AI 训练/抓取' },
     // 中国 AI 平台
     { id: 'Bytespider', name: '豆包 (Bytespider)', description: '字节跳动 AI 爬虫' },
     { id: 'Baiduspider', name: '百度文心一言', description: '百度 AI 爬虫' },
@@ -49,6 +56,11 @@ interface GEOSettings {
     googleOptimization?: {
         enabled?: boolean;
         verificationId?: string;
+    };
+    bingOptimization?: {
+        enabled?: boolean;
+        verificationId?: string;
+        indexNowEnabled?: boolean;
     };
     amazonOptimization?: {
         enabled?: boolean;
@@ -88,6 +100,10 @@ const defaultSettings: GEOSettings = {
     googleOptimization: {
         enabled: true,
     },
+    bingOptimization: {
+        enabled: true,
+        indexNowEnabled: true
+    },
     amazonOptimization: {
         enabled: true,
         amazonbotAllowed: true
@@ -99,16 +115,41 @@ export default function GEOSettingsPage() {
     const [settings, setSettings] = useState<GEOSettings>(defaultSettings);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [siteUrl, setSiteUrl] = useState('https://yourdomain.com');
 
     // 统计数据
     const [stats, setStats] = useState<CrawlerStats | null>(null);
     const [logs, setLogs] = useState<CrawlerLog[]>([]);
     const [logsLoading, setLogsLoading] = useState(false);
+    const [logsPage, setLogsPage] = useState(1);
+    const [logsPagination, setLogsPagination] = useState({ total: 0, totalPages: 0, limit: 100 });
 
     useEffect(() => {
         fetchSettings();
         fetchStats();
+        fetchSiteUrl();
     }, []);
+
+    const fetchSiteUrl = async () => {
+        try {
+            // 从系统设置 API 获取 site_url
+            const res = await fetch('/api/admin/settings');
+            if (res.ok) {
+                const data = await res.json();
+                if (data.site_url) {
+                    setSiteUrl(data.site_url.replace(/\/$/, ''));
+                    return;
+                }
+            }
+        } catch (error) {
+            console.error('Failed to fetch site settings:', error);
+        }
+        // 回退到环境变量
+        const envUrl = process.env.NEXT_PUBLIC_SITE_URL;
+        if (envUrl) {
+            setSiteUrl(envUrl.replace(/\/$/, ''));
+        }
+    };
 
     const fetchSettings = async () => {
         try {
@@ -145,13 +186,15 @@ export default function GEOSettingsPage() {
         }
     };
 
-    const fetchLogs = async () => {
+    const fetchLogs = async (page = 1) => {
         setLogsLoading(true);
         try {
-            const res = await fetch('/api/admin/geo/crawler-logs?limit=50');
+            const res = await fetch(`/api/admin/geo/crawler-logs?limit=100&page=${page}`);
             if (res.ok) {
                 const data = await res.json();
                 setLogs(data.logs);
+                setLogsPagination(data.pagination);
+                setLogsPage(data.pagination.page);
             }
         } catch (error) {
             console.error('Failed to fetch logs:', error);
@@ -191,6 +234,32 @@ export default function GEOSettingsPage() {
         }));
     };
 
+    const handleBrandProfiler = async () => {
+        try {
+            showToast('AI 正在分析品牌特征...', 'info');
+            const res = await fetch('/api/admin/geo/brand-profiler', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ siteName: '', description: '' }), // 这里可以传入全局 SiteSettings
+            });
+            const data = await res.json();
+            if (res.ok) {
+                const { analysis } = data;
+                setSettings(p => ({
+                    ...p,
+                    entityInfo: {
+                        ...p.entityInfo,
+                        alternateName: analysis.alternateName,
+                        sameAs: analysis.sameAs
+                    }
+                }));
+                showToast('AI 已为您生成品牌建议', 'success');
+            }
+        } catch (e) {
+            showToast('AI 品牌分析失败', 'error');
+        }
+    };
+
     const allowAll = () => {
         setSettings(prev => ({
             ...prev,
@@ -205,7 +274,7 @@ export default function GEOSettingsPage() {
         }));
     };
 
-    const [activeTab, setActiveTab] = useState('stats');
+    const [activeTab, setActiveTab] = useState('audit');
 
     const handleTabChange = (value: string) => {
         setActiveTab(value);
@@ -224,62 +293,129 @@ export default function GEOSettingsPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">GEO 优化中心</h1>
-                    <p className="text-gray-500 mt-1">管理 AI 爬虫访问、监控抓取数据和优化设置</p>
+            {/* 页面头部 */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                        <Bot className="w-6 h-6" />
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">生成式引擎优化</h1>
+                        <p className="text-[13px] text-gray-500 font-medium">
+                            优化内容以提升在 AI 搜索引擎中的可见性和引用率
+                        </p>
+                    </div>
                 </div>
-                <Button onClick={handleSave} disabled={saving}>
-                    {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-                    保存设置
-                </Button>
+
             </div>
 
-            <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
-                <TabsList className="h-auto p-0 bg-transparent space-x-2">
-                    <TabsTrigger
-                        value="stats"
-                        className="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:border-blue-600"
-                    >
-                        数据概览
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="settings"
-                        className="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:border-blue-600"
-                    >
-                        访问控制
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="optimization"
-                        className="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:border-blue-600"
-                    >
-                        内容优化
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="simulation"
-                        className="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:border-blue-600"
-                    >
-                        视角模拟
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="citations"
-                        className="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:border-blue-600"
-                    >
-                        引用追踪
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="quality"
-                        className="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:border-blue-600"
-                    >
-                        质量评分
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="logs"
-                        className="px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:border-blue-600"
-                    >
-                        抓取日志
-                    </TabsTrigger>
-                </TabsList>
+            <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
+                {/* 主操作栏：标签页 + 保存按钮 */}
+                <div className="bg-white rounded-[24px] border border-gray-100 p-2 shadow-sm shadow-gray-100/50">
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <TabsList className="h-auto p-0 bg-transparent flex flex-wrap gap-2 flex-1">
+                            <TabsTrigger
+                                value="audit"
+                                className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
+                            >
+                                <Shield className="w-4 h-4" />
+                                综合诊断
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="stats"
+                                className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
+                            >
+                                <BarChart3 className="w-4 h-4" />
+                                数据概览
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="settings"
+                                className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
+                            >
+                                <List className="w-4 h-4" />
+                                爬虫控制
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="behavior"
+                                className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
+                            >
+                                <Bot className="w-4 h-4" />
+                                行为分析
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="competitors"
+                                className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
+                            >
+                                <Sparkles className="w-4 h-4" />
+                                竞品分析
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="optimization"
+                                className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
+                            >
+                                <Database className="w-4 h-4" />
+                                内容优化
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="simulation"
+                                className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
+                            >
+                                <Eye className="w-4 h-4" />
+                                视角模拟
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="citations"
+                                className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
+                            >
+                                <List className="w-4 h-4" />
+                                引用追踪
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="quality"
+                                className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
+                            >
+                                <Sparkles className="w-4 h-4" />
+                                质量评分
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="ranking"
+                                className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
+                            >
+                                <TrendingUp className="w-4 h-4" />
+                                排名追踪
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="logs"
+                                className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
+                            >
+                                <Database className="w-4 h-4" />
+                                访问日志
+                            </TabsTrigger>
+                        </TabsList>
+                        <div className="flex items-center gap-2 px-1">
+                            <button
+                                onClick={() => window.location.reload()}
+                                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 border border-gray-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                            >
+                                <RefreshCw className="w-4 h-4" />
+                                刷新
+                            </button>
+                            <button
+                                onClick={handleSave}
+                                disabled={saving}
+                                className="flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold transition-all duration-300 shadow-lg bg-blue-600 text-white hover:bg-blue-700 shadow-blue-100 disabled:opacity-50 active:scale-95"
+                            >
+                                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                                保存设置
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* 综合诊断面板 */}
+                <TabsContent value="audit">
+                    <GEOAudit onNavigate={handleTabChange} />
+                </TabsContent>
 
                 {/* 引用追踪面板 */}
                 <TabsContent value="citations">
@@ -289,6 +425,23 @@ export default function GEOSettingsPage() {
                 {/* 质量评分面板 */}
                 <TabsContent value="quality">
                     <ContentScorer />
+                </TabsContent>
+
+
+
+                {/* 排名追踪面板 */}
+                <TabsContent value="ranking">
+                    <RankingTracker />
+                </TabsContent>
+
+                {/* 行为分析面板 */}
+                <TabsContent value="behavior">
+                    <BehaviorAnalysis />
+                </TabsContent>
+
+                {/* 竞品对比面板 */}
+                <TabsContent value="competitors">
+                    <CompetitorAnalysis />
                 </TabsContent>
 
                 {/* 视角模拟面板 */}
@@ -328,13 +481,24 @@ export default function GEOSettingsPage() {
 
                             {/* 实体信息配置 */}
                             <div className="space-y-4 border-t border-gray-100 pt-6">
-                                <h3 className="font-medium text-gray-900 flex items-center gap-2">
-                                    <Globe className="w-4 h-4" />
-                                    品牌知识图谱实体信息
-                                </h3>
+                                <div className="flex items-center justify-between">
+                                    <h3 className="font-medium text-gray-900 flex items-center gap-2">
+                                        <Globe className="w-4 h-4" />
+                                        品牌知识图谱实体信息
+                                    </h3>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="text-xs h-7 border-blue-200 text-blue-600 hover:bg-blue-50"
+                                        onClick={handleBrandProfiler}
+                                    >
+                                        <Sparkles className="w-3 h-3 mr-1" />
+                                        AI 智能填充建议
+                                    </Button>
+                                </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">品牌别名 (Alternate Name)</label>
+                                    <div className="space-y-3">
+                                        <label className="text-[13px] font-bold text-gray-700 ml-1 block">品牌别名 (Alternate Name)</label>
                                         <input
                                             type="text"
                                             value={settings.entityInfo?.alternateName || ''}
@@ -342,29 +506,33 @@ export default function GEOSettingsPage() {
                                                 ...p,
                                                 entityInfo: { ...p.entityInfo, alternateName: e.target.value }
                                             }))}
-                                            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                                            className="w-full rounded-2xl border border-gray-300 bg-gray-50/50 px-6 py-4 text-sm font-bold text-gray-900 focus:border-blue-600 focus:bg-white transition-all outline-none placeholder:text-gray-300"
                                             placeholder="例如：Geo AI"
                                         />
-                                        <p className="text-xs text-gray-500">用于帮助 AI 识别品牌的其他称呼</p>
+                                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest ml-1">用于帮助 AI 识别品牌的其他称呼</p>
                                     </div>
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-gray-700">社交媒体主页 (SameAs)</label>
+                                    <div className="space-y-3">
+                                        <label className="text-[13px] font-bold text-gray-700 ml-1 block">社交媒体主页 (SameAs)</label>
                                         <textarea
                                             value={settings.entityInfo?.sameAs?.join('\n') || ''}
                                             onChange={(e) => setSettings(p => ({
                                                 ...p,
                                                 entityInfo: { ...p.entityInfo, sameAs: e.target.value.split('\n').filter(Boolean) }
                                             }))}
-                                            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                                            className="w-full rounded-2xl border border-gray-300 bg-gray-50/50 px-6 py-4 text-sm font-bold text-gray-900 focus:border-blue-600 focus:bg-white transition-all outline-none placeholder:text-gray-300 resize-none leading-relaxed"
                                             placeholder="https://weibo.com/geocms&#10;https://twitter.com/geocms"
                                             rows={3}
                                         />
-                                        <p className="text-xs text-gray-500">每行一个 URL，用于建立品牌关联</p>
+                                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest ml-1">每行一个 URL，用于建立品牌关联</p>
                                     </div>
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
+
+
+                    {/* 批量内容优化增强 (Fix for FAQ/HowTo issue) */}
+                    <BulkOptimizer />
 
                     {/* 预览 */}
                     <Card className="border-gray-100 shadow-sm">
@@ -376,9 +544,9 @@ export default function GEOSettingsPage() {
                                 {JSON.stringify({
                                     "@context": "https://schema.org",
                                     "@type": "Organization",
-                                    "name": "GeoCMS (示例)",
+                                    "name": settings.entityInfo?.alternateName || "您的网站名称",
                                     "alternateName": settings.entityInfo?.alternateName,
-                                    "url": "https://example.com",
+                                    "url": siteUrl,
                                     "sameAs": settings.entityInfo?.sameAs
                                 }, null, 2)}
                             </pre>
@@ -508,7 +676,7 @@ export default function GEOSettingsPage() {
                                     <div className="space-y-1">
                                         <div className="flex items-center gap-2">
                                             <span className="font-bold text-gray-900">Google AI (Gemini) 策略</span>
-                                            <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase">SGE Optimized</span>
+                                            <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase">SGE 已优化</span>
                                         </div>
                                         <p className="text-xs text-gray-500">
                                             控制 <code className="bg-gray-100 px-1 rounded">Google-Extended</code>。
@@ -549,7 +717,7 @@ export default function GEOSettingsPage() {
                                     <div className="space-y-1">
                                         <div className="flex items-center gap-2">
                                             <span className="font-bold text-gray-900">Amazon (Alexa/AI) 策略</span>
-                                            <span className="text-[10px] bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded font-bold uppercase">Product Ready</span>
+                                            <span className="text-[10px] bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded font-bold uppercase">产品适配完成</span>
                                         </div>
                                         <p className="text-xs text-gray-500">
                                             针对 <code className="bg-gray-100 px-1 rounded">Amazonbot</code>。
@@ -573,7 +741,7 @@ export default function GEOSettingsPage() {
                                     <div className="space-y-1">
                                         <div className="flex items-center gap-2">
                                             <span className="font-bold text-gray-900">DeepSeek (深度求索) 策略</span>
-                                            <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-bold uppercase">Reasoning Ready</span>
+                                            <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-bold uppercase">推理能力适配</span>
                                         </div>
                                         <p className="text-xs text-gray-500">
                                             针对 <code className="bg-gray-100 px-1 rounded">DeepSeek-Bot</code>。
@@ -597,7 +765,7 @@ export default function GEOSettingsPage() {
                                     <div className="space-y-1">
                                         <div className="flex items-center gap-2">
                                             <span className="font-bold text-gray-900">豆包 (ByteDance/Bytespider) 策略</span>
-                                            <span className="text-[10px] bg-cyan-100 text-cyan-700 px-1.5 py-0.5 rounded font-bold uppercase">Traffic Oriented</span>
+                                            <span className="text-[10px] bg-cyan-100 text-cyan-700 px-1.5 py-0.5 rounded font-bold uppercase">流量导向</span>
                                         </div>
                                         <p className="text-xs text-gray-500">
                                             针对 <code className="bg-gray-100 px-1 rounded">Bytespider</code>。
@@ -641,6 +809,47 @@ export default function GEOSettingsPage() {
                                         </Button>
                                     </div>
                                 </div>
+                                <div className="p-4 flex items-center justify-between">
+                                    <div className="space-y-1">
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-bold text-gray-900">Microsoft Bing / IndexNow 策略</span>
+                                            <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase">Bing Search Ready</span>
+                                        </div>
+                                        <p className="text-xs text-gray-500">
+                                            针对 <code className="bg-gray-100 px-1 rounded">Bingbot</code>。
+                                            允许它可以让您的网站在 Bing 搜索结果中展示更丰富的 AI 回答。
+                                        </p>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <Button
+                                            variant={settings.crawlerConfig['Bingbot'] === 'allow' ? 'default' : 'secondary'}
+                                            size="sm"
+                                            className={settings.crawlerConfig['Bingbot'] === 'allow'
+                                                ? 'h-8 bg-green-500 hover:bg-green-600 text-white border-none shadow-sm'
+                                                : 'h-8 bg-gray-200 text-gray-600 hover:bg-gray-300'}
+                                            onClick={() => toggleCrawler('Bingbot')}
+                                        >
+                                            {settings.crawlerConfig['Bingbot'] === 'allow' ? '状态：已允许' : '状态：已禁止'}
+                                        </Button>
+                                    </div>
+                                </div>
+                                {settings.bingOptimization?.enabled !== false && (
+                                    <div className="px-4 py-3 bg-blue-50/50 border-b border-blue-100">
+                                        <div className="flex items-center gap-4">
+                                            <label className="text-xs font-bold text-blue-800 whitespace-nowrap outline-none">Bing 搜索验证 ID:</label>
+                                            <input
+                                                type="text"
+                                                value={settings.bingOptimization?.verificationId || ''}
+                                                onChange={(e) => setSettings(p => ({
+                                                    ...p,
+                                                    bingOptimization: { ...p.bingOptimization, verificationId: e.target.value }
+                                                }))}
+                                                className="flex-1 bg-white border border-blue-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-500"
+                                                placeholder="粘贴 bing-site-verification 的 content 值"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
                                 <div className="p-4 flex items-center justify-between">
                                     <div className="space-y-1">
                                         <div className="flex items-center gap-2">
@@ -697,7 +906,7 @@ export default function GEOSettingsPage() {
                                 {AI_CRAWLERS.map(crawler => (
                                     <div
                                         key={crawler.id}
-                                        className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${settings.crawlerConfig[crawler.id] === 'allow'
+                                        className={`p-4 rounded-lg border cursor-pointer transition-all ${settings.crawlerConfig[crawler.id] === 'allow'
                                             ? 'border-green-200 bg-green-50'
                                             : 'border-red-200 bg-red-50'
                                             }`}
@@ -739,7 +948,9 @@ export default function GEOSettingsPage() {
                         </CardHeader>
                         <CardContent>
                             <pre className="p-4 bg-gray-900 text-gray-100 rounded-lg text-sm overflow-x-auto font-mono">
-                                {`# AI Crawler Rules (Generated by GeoCMS GEO)
+                                {`# AI Crawler Rules (Generated by 企业官网 GEO)
+Sitemap: ${siteUrl}/sitemap.xml
+
 ${AI_CRAWLERS.map(crawler => {
                                     const status = settings.crawlerConfig[crawler.id];
                                     return `
@@ -756,8 +967,11 @@ ${status === 'allow' ? 'Allow: /' : 'Disallow: /'}`;
                     <Card className="border-gray-100 shadow-sm">
                         <CardHeader>
                             <div className="flex items-center justify-between">
-                                <CardTitle className="text-lg">详细抓取日志</CardTitle>
-                                <Button variant="outline" size="sm" onClick={fetchLogs} disabled={logsLoading}>
+                                <div>
+                                    <CardTitle className="text-lg">详细抓取日志</CardTitle>
+                                    <p className="text-xs text-gray-400 mt-1">系统仅保留并显示最近 7 天内的访问记录</p>
+                                </div>
+                                <Button variant="outline" size="sm" onClick={() => fetchLogs(logsPage)} disabled={logsLoading}>
                                     <RefreshCw className={`w-4 h-4 mr-2 ${logsLoading ? 'animate-spin' : ''}`} />
                                     刷新
                                 </Button>
@@ -811,6 +1025,48 @@ ${status === 'allow' ? 'Allow: /' : 'Disallow: /'}`;
                                     )}
                                 </TableBody>
                             </Table>
+
+                            {/* 分页控制 */}
+                            {logsPagination.totalPages > 1 && (
+                                <div className="flex items-center justify-between mt-6">
+                                    <div className="text-sm text-gray-500">
+                                        共 {logsPagination.total} 条记录，当前第 {logsPage}/{logsPagination.totalPages} 页
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => fetchLogs(logsPage - 1)}
+                                            disabled={logsPage <= 1 || logsLoading}
+                                        >
+                                            上一页
+                                        </Button>
+                                        <div className="flex items-center gap-1 bg-gray-50 p-1 rounded-md border border-gray-100">
+                                            {Array.from({ length: Math.min(5, logsPagination.totalPages) }).map((_, i) => {
+                                                const pageNum = i + 1; // 简化处理，只显示前几页或简单的逻辑
+                                                return (
+                                                    <button
+                                                        key={pageNum}
+                                                        onClick={() => fetchLogs(pageNum)}
+                                                        className={`px-3 py-1 text-xs font-bold rounded ${logsPage === pageNum ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-100'}`}
+                                                    >
+                                                        {pageNum}
+                                                    </button>
+                                                );
+                                            })}
+                                            {logsPagination.totalPages > 5 && <span className="text-gray-300 text-xs px-2">...</span>}
+                                        </div>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => fetchLogs(logsPage + 1)}
+                                            disabled={logsPage >= logsPagination.totalPages || logsLoading}
+                                        >
+                                            下一页
+                                        </Button>
+                                    </div>
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
                 </TabsContent>

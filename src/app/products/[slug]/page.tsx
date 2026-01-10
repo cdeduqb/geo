@@ -8,8 +8,9 @@ import ProductImageGallery from './_components/ProductImageGallery';
 import { getSEOSettings, getGEOSettings } from '@/lib/system-settings';
 import { ProductStructuredData, BreadcrumbStructuredData } from '@/components/geo/StructuredData';
 import { getSiteSettings } from '@/lib/site-settings';
+import { RichTextContent } from '@/components/security/SafeHTML';
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 import { getLocale } from '@/lib/locale-server';
 import { getLocalePath, t } from '@/lib/i18n';
@@ -248,9 +249,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 {product.content && (
                     <div className="mt-16 pt-16 border-t border-gray-200">
                         <h2 className="text-2xl font-bold text-gray-900 mb-8">{t(locale, 'product.details')}</h2>
-                        <div
+                        <RichTextContent
+                            content={product.content}
                             className="prose prose-lg max-w-none"
-                            dangerouslySetInnerHTML={{ __html: product.content }}
                         />
                     </div>
                 )}

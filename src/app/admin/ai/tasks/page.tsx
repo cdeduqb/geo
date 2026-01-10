@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 import AITaskContainer from './_components/AITaskContainer';
 
 export const metadata = {
-    title: '批量 AI 创作 - GeoCMS 管理后台',
+    title: '批量 AI 创作 - 企业官网 管理后台',
 };
 
 export default async function AITasksPage({

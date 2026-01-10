@@ -7,8 +7,9 @@ import { getSystemSettings } from '@/lib/system-settings';
 import { getSiteSettings } from '@/lib/site-settings';
 import { getLocale } from '@/lib/locale-server';
 import { getLocalePath } from '@/lib/i18n';
+import { CustomHTML } from '@/components/security/SafeHTML';
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 interface PageProps {
     params: Promise<{ slug: string, locale?: string }>;
@@ -118,6 +119,7 @@ export async function DynamicPageContent({ params }: PageProps) {
                 footerTemplate={(page as any).footerTemplate}
                 headerSections={(siteSettings as any)?.headerSections as any[]}
                 footerSections={(siteSettings as any)?.footerSections as any[]}
+                translationGroupId={page.translationGroupId}
                 contentTemplate={null}
             >
                 <PageRenderer sections={effectiveSections as any} systemSettings={systemSettings} />
@@ -141,14 +143,15 @@ export async function DynamicPageContent({ params }: PageProps) {
                 footerTemplate={(page as any).footerTemplate}
                 headerSections={(siteSettings as any)?.headerSections as any[]}
                 footerSections={(siteSettings as any)?.footerSections as any[]}
+                translationGroupId={page.translationGroupId}
                 contentTemplate={null}
             >
                 {(page as any).template?.style && (
                     <style dangerouslySetInnerHTML={{ __html: (page as any).template.style }} />
                 )}
-                <div dangerouslySetInnerHTML={{ __html: before }} />
+                <CustomHTML html={before} />
                 <ArticleList layout={layout as 'grid' | 'list' | 'magazine'} locale={locale as any} />
-                <div dangerouslySetInnerHTML={{ __html: after }} />
+                <CustomHTML html={after} />
             </PageLayout>
         );
     }
@@ -165,9 +168,10 @@ export async function DynamicPageContent({ params }: PageProps) {
             footerTemplate={(page as any).footerTemplate}
             headerSections={(siteSettings as any)?.headerSections as any[]}
             footerSections={(siteSettings as any)?.footerSections as any[]}
+            translationGroupId={page.translationGroupId}
             contentTemplate={effectiveContentTemplate}
         >
-            {!effectiveContentTemplate && <div dangerouslySetInnerHTML={{ __html: page.content }} />}
+            {!effectiveContentTemplate && <CustomHTML html={page.content} />}
         </PageLayout>
     );
 }

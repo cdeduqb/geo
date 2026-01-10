@@ -223,9 +223,17 @@ export class LicenseVerifier {
     }
 
     /**
-     * 快速验证（只验证签名和过期时间）
+     * 快速验证（验证状态和过期时间，可选验证签名）
+     * 对于从可信授权服务器获取的缓存数据，可以跳过签名验证
      */
-    static quickVerify(licenseData: LicenseData): boolean {
+    static quickVerify(licenseData: LicenseData, skipSignature: boolean = true): boolean {
+        // 对于本地缓存的授权数据，跳过签名验证（因为已从服务器验证过）
+        if (skipSignature) {
+            return (
+                this.verifyStatus(licenseData) &&
+                this.verifyExpiration(licenseData)
+            );
+        }
         return (
             this.verifySignature(licenseData) &&
             this.verifyStatus(licenseData) &&

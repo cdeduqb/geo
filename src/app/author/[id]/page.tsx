@@ -13,7 +13,7 @@ export async function generateMetadata({
     const { id, locale: paramLocale } = await params;
     const locale = paramLocale || await getLocale();
     const author = await db.user.findUnique({
-        where: { id, isPublicAuthor: true },
+        where: { id },
         select: { name: true, bio: true }
     });
 
@@ -45,7 +45,6 @@ export default async function AuthorPage({
     const author = await db.user.findUnique({
         where: {
             id,
-            isPublicAuthor: true,
         },
         select: {
             id: true,

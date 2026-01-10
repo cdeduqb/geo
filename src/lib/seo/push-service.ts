@@ -1,4 +1,4 @@
-// SEO Push Service - 改进版，包含重试机制和详细错误处理
+// SEO Push Service - 精简版，仅保留百度、头条、IndexNow、Google 四个平台
 
 export interface PushResult {
     success: boolean;
@@ -93,6 +93,10 @@ export abstract class SEOPushService {
                 errorType = 'API地址错误';
                 suggestion = '请检查API地址是否正确';
                 break;
+            case statusCode === 422:
+                errorType = '参数验证失败';
+                suggestion = '请检查站点域名是否与推送URL的域名一致';
+                break;
             case statusCode === 429:
                 errorType = '请求过于频繁';
                 suggestion = '已达到速率限制，请稍后再试';
@@ -170,7 +174,7 @@ export abstract class SEOPushService {
     }
 }
 
-// Baidu Push Service - 改进版
+// ========== 百度推送服务 ==========
 export class BaiduPushService extends SEOPushService {
     async push(urls: string[]): Promise<PushResult> {
         return this.pushWithRetry(
@@ -211,90 +215,7 @@ export class BaiduPushService extends SEOPushService {
     }
 }
 
-// 360 Push Service - 改进版
-export class So360PushService extends SEOPushService {
-    async push(urls: string[]): Promise<PushResult> {
-        return this.pushWithRetry(
-            () => fetch(this.apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    site_id: this.siteId,
-                    token: this.token,
-                    urls: urls,
-                }),
-            }),
-            urls
-        );
-    }
-
-    protected async parseSuccessResponse(response: Response, urlCount: number): Promise<PushResult> {
-        const data = await response.json();
-
-        if (data.code === 0 || data.errno === 0) {
-            return {
-                success: true,
-                message: data.message || data.errmsg || `成功推送 ${urlCount} 条URL`,
-                response: data
-            };
-        } else {
-            return {
-                success: false,
-                message: data.message || data.errmsg || '推送失败',
-                response: data,
-                details: {
-                    errorType: '360返回错误',
-                    suggestion: '请检查站点ID和Token是否正确'
-                }
-            };
-        }
-    }
-}
-
-// Sogou Push Service - 改进版
-export class SogouPushService extends SEOPushService {
-    async push(urls: string[]): Promise<PushResult> {
-        return this.pushWithRetry(
-            () => fetch(this.apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    token: this.token,
-                    urls: urls.join(','),
-                }).toString(),
-            }),
-            urls
-        );
-    }
-
-    protected async parseSuccessResponse(response: Response, urlCount: number): Promise<PushResult> {
-        const data = await response.json();
-
-        if (data.status === 'success' || data.code === 200) {
-            return {
-                success: true,
-                message: data.message || `成功推送 ${urlCount} 条URL`,
-                response: data
-            };
-        } else {
-            return {
-                success: false,
-                message: data.message || '推送失败',
-                response: data,
-                details: {
-                    errorType: '搜狗返回错误',
-                    suggestion: '请检查Token是否正确'
-                }
-            };
-        }
-    }
-}
-
-// Toutiao Push Service - 改进版
+// ========== 头条推送服务 ==========
 export class ToutiaoPushService extends SEOPushService {
     async push(urls: string[]): Promise<PushResult> {
         return this.pushWithRetry(
@@ -335,9 +256,39 @@ export class ToutiaoPushService extends SEOPushService {
     }
 }
 
-// IndexNow Push Service - 支持 Bing, Yandex 等
+// ========== IndexNow 推送服务 (支持 Bing, Yandex, Seznam 等) ==========
 export class IndexNowPushService extends SEOPushService {
     async push(urls: string[]): Promise<PushResult> {
+        if (!urls || urls.length === 0) {
+            return { success: false, message: '没有发现待推送的 URL' };
+        }
+
+        // 从待推送的 URL 中提取 Host，确保与 IndexNow 要求完全匹配
+        let host = '';
+        let keyLocationBase = '';
+
+        try {
+            const firstUrl = new URL(urls[0]);
+            host = firstUrl.hostname;
+            keyLocationBase = firstUrl.origin;
+        } catch (e) {
+            // 如果 URL 解析失败，则回退到 siteId 配置
+            host = this.siteId || '';
+            if (host.startsWith('http')) {
+                try {
+                    const u = new URL(host);
+                    host = u.hostname;
+                    keyLocationBase = u.origin;
+                } catch {
+                    host = host.replace(/^https?:\/\//, '').split('/')[0];
+                    keyLocationBase = (this.siteId?.startsWith('https') ? 'https://' : 'http://') + host;
+                }
+            } else {
+                host = host.split('/')[0];
+                keyLocationBase = `https://${host}`;
+            }
+        }
+
         return this.pushWithRetry(
             () => fetch(this.apiUrl, {
                 method: 'POST',
@@ -345,9 +296,9 @@ export class IndexNowPushService extends SEOPushService {
                     'Content-Type': 'application/json; charset=utf-8',
                 },
                 body: JSON.stringify({
-                    host: this.siteId, // 域名
-                    key: this.token,   // API Key
-                    keyLocation: `https://${this.siteId}/${this.token}.txt`, // 验证文件路径
+                    host: host,
+                    key: this.token,
+                    keyLocation: `${keyLocationBase}/${this.token}.txt`,
                     urlList: urls,
                 }),
             }),
@@ -356,24 +307,79 @@ export class IndexNowPushService extends SEOPushService {
     }
 
     protected async parseSuccessResponse(response: Response, urlCount: number): Promise<PushResult> {
-        // IndexNow returns 200/202 with empty body or metadata
-        let data = {};
+        let data: any = { status: response.status };
         try {
             const text = await response.text();
-            data = text ? JSON.parse(text) : { success: true };
+            if (text) data = { ...data, ...JSON.parse(text) };
         } catch (e) {
-            // 忽略解析错误
+            // IndexNow 成功时可能返回空 body
         }
 
         return {
             success: true,
-            message: `IndexNow推送成功：${urlCount} 条URL`,
+            message: `IndexNow 推送成功：${urlCount} 条URL (HTTP ${response.status})`,
             response: data
         };
     }
 }
 
-// Factory function
+// ========== Google Indexing API 服务 ==========
+export class GooglePushService extends SEOPushService {
+    async push(urls: string[]): Promise<PushResult> {
+        if (!urls || urls.length === 0) {
+            return { success: false, message: '没有待推送的 URL' };
+        }
+
+        // Google Indexing API 每次只能推送一个 URL
+        const results: { url: string; success: boolean; error?: string }[] = [];
+        let successCount = 0;
+
+        for (const url of urls) {
+            try {
+                const response = await fetch(this.apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.token}`,
+                    },
+                    body: JSON.stringify({
+                        url: url,
+                        type: 'URL_UPDATED',
+                    }),
+                });
+
+                if (response.ok) {
+                    successCount++;
+                    results.push({ url, success: true });
+                } else {
+                    const errorData = await response.json().catch(() => ({}));
+                    results.push({
+                        url,
+                        success: false,
+                        error: errorData.error?.message || `HTTP ${response.status}`
+                    });
+                }
+            } catch (err: any) {
+                results.push({ url, success: false, error: err.message });
+            }
+        }
+
+        const allSuccess = successCount === urls.length;
+        return {
+            success: successCount > 0,
+            message: allSuccess
+                ? `Google Indexing 推送成功：${successCount} 条URL`
+                : `Google Indexing 推送完成：成功 ${successCount}/${urls.length}`,
+            response: results,
+            details: successCount === 0 ? {
+                errorType: '全部失败',
+                suggestion: '请确保 Token 是有效的 Google OAuth Access Token，且已授予 Indexing API 权限'
+            } : undefined
+        };
+    }
+}
+
+// ========== 推送服务工厂函数 ==========
 export function createPushService(
     platform: string,
     apiUrl: string,
@@ -383,15 +389,13 @@ export function createPushService(
     switch (platform) {
         case 'baidu':
             return new BaiduPushService(apiUrl, token, siteId);
-        case '360':
-            return new So360PushService(apiUrl, token, siteId);
-        case 'sogou':
-            return new SogouPushService(apiUrl, token, siteId);
         case 'toutiao':
             return new ToutiaoPushService(apiUrl, token, siteId);
         case 'indexnow':
             return new IndexNowPushService(apiUrl, token, siteId);
+        case 'google':
+            return new GooglePushService(apiUrl, token, siteId);
         default:
-            throw new Error(`Unknown platform: ${platform}`);
+            throw new Error(`不支持的平台: ${platform}。当前支持: baidu, toutiao, indexnow, google`);
     }
 }

@@ -163,7 +163,7 @@ export default function EditorModeSelector({ pageId, onSelect }: EditorModeSelec
 
             {/* AI Prompt Modal */}
             {showAIPrompt && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-200">
                     <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 relative animate-in zoom-in-95 duration-200">
                         <button
                             onClick={() => setShowAIPrompt(false)}
@@ -186,7 +186,7 @@ export default function EditorModeSelector({ pageId, onSelect }: EditorModeSelec
                             value={aiPrompt}
                             onChange={(e) => setAiPrompt(e.target.value)}
                             placeholder="例如：创建一个现代化的产品落地页，包含 Hero 区域、特性列表、价格表和联系表单..."
-                            className="w-full h-32 p-4 rounded-xl border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-green-500 outline-none resize-none mb-6 text-sm"
+                            className="w-full h-32 p-4 rounded-xl border border-gray-300 bg-gray-50 focus:border-green-500 outline-none resize-none mb-6 text-sm"
                         />
 
                         <div className="flex justify-end gap-3">

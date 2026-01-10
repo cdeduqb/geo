@@ -27,7 +27,11 @@ export default function DeleteArticleButton({ articleId, articleTitle }: DeleteA
     return (
         <>
             <button
-                onClick={() => setIsDialogOpen(true)}
+                onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsDialogOpen(true);
+                }}
                 className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                 title="删除"
             >

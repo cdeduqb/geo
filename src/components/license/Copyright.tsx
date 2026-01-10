@@ -10,8 +10,10 @@ interface CopyrightProps {
 
 export default function Copyright({ overrideText, systemCopyright, className = "" }: CopyrightProps) {
     const [licenseInfo, setLicenseInfo] = useState<any>(null);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        setMounted(true);
         fetch('/api/license/info')
             .then(res => res.json())
             .then(data => setLicenseInfo(data))
@@ -41,7 +43,8 @@ export default function Copyright({ overrideText, systemCopyright, className = "
     }
 
     // 已授权状态：优先使用站点设置中的全局版权，其次是组件自身的版权设置
-    const copyrightText = systemCopyright || overrideText || `© ${new Date().getFullYear()} All rights reserved.`;
+    const currentYear = mounted ? new Date().getFullYear() : '';
+    const copyrightText = systemCopyright || overrideText || `© ${currentYear} All rights reserved.`;
 
     return (
         <span className={className}>

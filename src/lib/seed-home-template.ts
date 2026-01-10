@@ -17,7 +17,7 @@ async function main() {
 <section class="hero-section">
     <div class="container">
         <div class="hero-content">
-            <h1 class="hero-title">GeoCMS</h1>
+            <h1 class="hero-title">企业官网</h1>
             <h2 class="hero-subtitle">企业级内容管理系统</h2>
             <p class="hero-description">
                 强大、灵活、易用的CMS解决方案<br>
@@ -121,7 +121,7 @@ async function main() {
     <div class="container">
         <div class="cta-content">
             <h2 class="cta-title">准备好开始了吗？</h2>
-            <p class="cta-description">立即体验GeoCMS，开启您的数字化之旅</p>
+            <p class="cta-description">立即体验企业官网，开启您的数字化之旅</p>
             <a href="/contact" class="btn btn-primary btn-large">免费试用</a>
         </div>
     </div>

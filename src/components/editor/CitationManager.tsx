@@ -26,7 +26,10 @@ interface CitationManagerProps {
     lang?: string; // 文章语言
 }
 
-export default function CitationManager({ citations, onChange, onInsert, content, lang = 'zh' }: CitationManagerProps) {
+export default function CitationManager({ citations: rawCitations, onChange, onInsert, content, lang = 'zh' }: CitationManagerProps) {
+    // 防守性检查：确保 citations 始终是一个数组
+    const citations: Citation[] = Array.isArray(rawCitations) ? rawCitations : [];
+
     const [isEditing, setIsEditing] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [formData, setFormData] = useState<Partial<Citation>>({});

@@ -1,4 +1,5 @@
 import { registerSection, SectionProps } from '@/lib/sections/registry';
+import { CustomHTML } from '@/components/security/SafeHTML';
 
 export const CustomHtmlSection: React.FC<SectionProps> = ({ data, style = {} }) => {
     const { html } = data;
@@ -13,10 +14,9 @@ export const CustomHtmlSection: React.FC<SectionProps> = ({ data, style = {} }) 
     }
 
     return (
-        <div
-            className="custom-html-section w-full"
-            dangerouslySetInnerHTML={{ __html: html }}
-        />
+        <div className="custom-html-section w-full">
+            <CustomHTML html={html} />
+        </div>
     );
 };
 

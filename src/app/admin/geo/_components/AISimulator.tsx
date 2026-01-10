@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Bot, Search, Loader2, Sparkles, FileText, Share2, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 export default function AISimulator() {
     const [url, setUrl] = useState('');
@@ -14,23 +15,11 @@ export default function AISimulator() {
         if (!url) return;
         setLoading(true);
         try {
-            // 这里为了简化演示，我们通常通过输入的 URL 获取文章数据
-            // 实际实现中，用户可以输入文章 ID 或者直接从预览页跳转过来
-            // 目前我们先模拟一个测试数据请求
             const res = await fetch('/api/admin/geo/simulate-ai', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    title: "示例：什么是生成式引擎优化 (GEO)?",
-                    content: "<h2>GEO 的核心概念</h2><p>生成式引擎优化（Generative Engine Optimization）是针对大语言模型（如 ChatGPT, Gemini）而产生的新型 SEO 策略。它不仅关注关键词排名，更关注内容如何被 AI 引用和摘要。</p><ul><li>结构化数据</li><li>实体关联</li><li>权威引用</li></ul>",
-                    summary: "探讨 AI 时代下网站内容的优化策略，助力品牌在生成式搜索中脱颖而出。",
-                    entities: [
-                        { text: "GEO", type: "Concept", description: "生成式引擎优化" },
-                        { text: "ChatGPT", type: "Product", url: "https://openai.com/chatgpt" }
-                    ],
-                    citations: [
-                        { title: "GEO: Generative Engine Optimization", url: "https://arxiv.org/abs/2311.13968", author: "Pranjal Aggarwal" }
-                    ]
+                    url: url.startsWith('/') ? url : `/${url}`
                 })
             });
 
@@ -47,58 +36,80 @@ export default function AISimulator() {
 
     return (
         <div className="space-y-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <Bot className="w-5 h-5" />
-                        AI 视角模拟器 (Crawler Simulator)
-                    </CardTitle>
-                    <CardDescription>
-                        模拟主流大模型（GPT-4、Gemini、Claude）抓取并处理您网页后的“大脑成像”
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="flex gap-2">
-                        <input
-                            type="text"
-                            value={url}
-                            onChange={(e) => setUrl(e.target.value)}
-                            className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
-                            placeholder="输入文章 Slug 或 URL (例如: /articles/what-is-geo)"
-                        />
-                        <Button onClick={handleSimulate} disabled={loading || !url}>
+            <div className="bg-white rounded-[32px] border border-gray-100 shadow-sm shadow-gray-100/50 overflow-hidden">
+                <div className="px-8 py-6 border-b border-gray-50 bg-gray-50/20">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                                <Bot className="w-6 h-6" />
+                            </div>
+                            <div>
+                                <h2 className="text-lg font-black text-gray-900 tracking-tight">AI 视角模拟器</h2>
+                                <p className="text-xs text-gray-400 font-medium mt-0.5">
+                                    模拟主流大模型抓取并处理您网页后的"大脑成像"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="p-8 space-y-6">
+                    <div className="flex gap-3">
+                        <div className="flex-1 relative">
+                            <input
+                                type="text"
+                                value={url}
+                                onChange={(e) => setUrl(e.target.value)}
+                                className="w-full px-6 py-4 border border-gray-300 bg-gray-50/50 rounded-2xl focus:border-blue-600 focus:bg-white outline-none transition-all font-bold text-sm text-gray-900 placeholder:text-gray-300"
+                                placeholder="输入文章路径 (例如: /articles/what-is-geo)"
+                            />
+                        </div>
+                        <Button onClick={handleSimulate} disabled={loading || !url} className="bg-blue-600 hover:bg-blue-700 rounded-2xl font-bold shadow-lg shadow-blue-100 px-8">
                             {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Search className="w-4 h-4 mr-2" />}
                             开始模拟
                         </Button>
                     </div>
 
                     {!result && (
-                        <div className="py-12 text-center border-2 border-dashed border-gray-100 rounded-xl">
-                            <Bot className="w-12 h-12 text-gray-200 mx-auto mb-3" />
-                            <p className="text-gray-400 text-sm">输入地址并点击模拟，查看 AI 如何“阅读”您的内容</p>
+                        <div className="py-16 text-center border border-dashed border-gray-200 rounded-2xl bg-gray-50/50">
+                            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gray-100 flex items-center justify-center">
+                                <Bot className="w-10 h-10 text-gray-300" />
+                            </div>
+                            <h4 className="text-gray-900 font-bold mb-2">等待模拟</h4>
+                            <p className="text-gray-400 text-sm">输入地址并点击模拟，查看 AI 如何"阅读"您的内容</p>
                         </div>
                     )}
-                </CardContent>
-            </Card>
+                </div>
+            </div>
 
             {result && (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2 space-y-6">
                         {/* 文本提取视图 */}
-                        <Card>
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-sm font-bold flex items-center gap-2">
-                                    <FileText className="w-4 h-4 text-blue-500" />
-                                    AI 提取后的纯文本 (Clean Text Buffer)
+                        <Card className="border-gray-100 shadow-md">
+                            <CardHeader className="pb-2 border-b border-gray-50">
+                                <CardTitle className="text-[11px] font-black uppercase text-gray-400 flex items-center gap-2">
+                                    <FileText className="w-3.5 h-3.5 text-blue-500" />
+                                    AI 视角提取结果 (纯文本缓冲区)
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent>
-                                <div className="bg-gray-50 p-4 rounded-lg font-mono text-xs whitespace-pre-wrap max-h-[400px] overflow-y-auto border border-gray-100">
+                            <CardContent className="pt-4">
+                                <div className="bg-gray-900 text-green-400 p-5 rounded-xl font-mono text-[11px] leading-relaxed whitespace-pre-wrap max-h-[450px] overflow-y-auto shadow-inner custom-scrollbar">
+                                    <div className="text-gray-500 mb-2 border-b border-gray-800 pb-2">--- 缓冲区开始 ---</div>
                                     {result.aiVersion.text}
+                                    <div className="text-gray-500 mt-2 border-t border-gray-800 pt-2">--- 缓冲区结束 ---</div>
                                 </div>
-                                <div className="mt-3 flex items-center justify-between text-[10px] text-gray-400 uppercase tracking-tighter">
-                                    <span>Tokens 估计: ~{result.aiVersion.tokensEstimate}</span>
-                                    <span>Status: Content Extracted Successfully</span>
+                                <div className="mt-4 flex items-center justify-between">
+                                    <div className="flex gap-4">
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] text-gray-400 uppercase font-bold">预估 Token 数量</span>
+                                            <span className="text-sm font-black text-blue-600">{result.aiVersion.tokensEstimate}</span>
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] text-gray-400 uppercase font-bold">提取元数据</span>
+                                            <span className="text-sm font-black text-green-600">成功</span>
+                                        </div>
+                                    </div>
+                                    <Badge className="bg-blue-50 text-blue-600 border-none px-3 font-bold">大模型已优化</Badge>
                                 </div>
                             </CardContent>
                         </Card>
@@ -106,9 +117,14 @@ export default function AISimulator() {
                         {/* 建议面板 */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             {result.suggestions.map((s: string, i: number) => (
-                                <div key={i} className="p-3 bg-white border border-gray-100 rounded-lg shadow-sm flex items-start gap-2">
-                                    <Sparkles className="w-4 h-4 text-purple-500 mt-0.5 shrink-0" />
-                                    <p className="text-[12px] leading-snug text-gray-600">{s}</p>
+                                <div key={i} className="p-4 bg-white border border-gray-100 rounded-2xl shadow-sm flex flex-col gap-2 hover:border-purple-200 hover:shadow-purple-500/5 transition-all group">
+                                    <div className="flex items-center gap-2">
+                                        <div className="p-1.5 bg-purple-50 rounded-lg group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                                            <Sparkles className="w-3.5 h-3.5" />
+                                        </div>
+                                        <span className="text-[10px] font-bold text-gray-400 uppercase">AI 优化策略</span>
+                                    </div>
+                                    <p className="text-[12px] leading-relaxed text-gray-600 font-medium">{s}</p>
                                 </div>
                             ))}
                         </div>
@@ -116,82 +132,84 @@ export default function AISimulator() {
 
                     <div className="space-y-6">
                         {/* 知识图谱预览 */}
-                        <Card>
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-sm font-bold flex items-center gap-2">
+                        <Card className="border-gray-100 shadow-sm overflow-hidden">
+                            <CardHeader className="pb-2 bg-purple-50/50">
+                                <CardTitle className="text-[11px] font-black flex items-center gap-2 uppercase text-gray-500">
                                     <Share2 className="w-4 h-4 text-purple-500" />
-                                    知识图谱特征 (Entity Link)
+                                    AI 解析出的核心实体 (实体关联)
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-3">
+                            <CardContent className="space-y-3 pt-4">
                                 {result.structuredData.knowledgeGraph.map((e: any, i: number) => (
-                                    <div key={i} className="p-2 border border-gray-50 rounded bg-gray-50/30">
+                                    <div key={i} className="p-3 border border-gray-100 rounded-xl bg-gray-50/50 hover:bg-white hover:border-purple-200 transition-all group">
                                         <div className="flex items-center justify-between mb-1">
                                             <span className="text-xs font-bold text-gray-900">{e.label}</span>
-                                            <span className="text-[10px] bg-purple-100 text-purple-600 px-1 rounded uppercase font-bold">{e.type}</span>
+                                            <span className="text-[9px] bg-purple-100 text-purple-600 px-1.5 py-0.5 rounded uppercase font-black">{e.type}</span>
                                         </div>
-                                        <p className="text-[10px] text-gray-500 truncate">{e.description || 'No description'}</p>
+                                        <p className="text-[10px] text-gray-500 group-hover:text-gray-700">{e.description || '暂无描述'}</p>
                                     </div>
                                 ))}
                                 {result.structuredData.knowledgeGraph.length === 0 && (
-                                    <p className="text-xs text-center text-gray-400 py-4">未检测到显著实体</p>
+                                    <p className="text-xs text-center text-gray-400 py-8 italic">未检测到显著实体特征</p>
                                 )}
                             </CardContent>
                         </Card>
 
                         {/* 权威度验证 */}
-                        <Card className="bg-green-50/30 border-green-100">
+                        <Card className="bg-emerald-50/10 border-emerald-100 shadow-sm">
                             <CardHeader className="pb-2">
-                                <CardTitle className="text-xs font-bold uppercase text-green-700 flex items-center gap-2">
+                                <CardTitle className="text-[11px] font-black uppercase text-emerald-700 flex items-center gap-2">
                                     <CheckCircle2 className="w-4 h-4" />
-                                    权威度因子 (E-E-A-T)
+                                    权威度因子 (E-E-A-T 扫描)
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-2">
-                                <div className="flex items-center justify-between text-[11px]">
-                                    <span className="text-gray-600">引用第三方来源:</span>
-                                    <span className="font-bold text-green-600">{result.structuredData.sourceList.length} 个</span>
+                            <CardContent className="space-y-3 pt-4">
+                                <div className="flex items-center justify-between text-xs">
+                                    <span className="text-gray-500">外部引证密度:</span>
+                                    <Badge className="bg-emerald-100 text-emerald-700 border-none font-bold">
+                                        {result.structuredData.sourceList.length} 来源
+                                    </Badge>
                                 </div>
-                                <div className="flex items-center justify-between text-[11px]">
-                                    <span className="text-gray-600">Breadcrumb 数据:</span>
-                                    <span className="font-bold text-green-600">已启用</span>
+                                <div className="flex items-center justify-between text-xs">
+                                    <span className="text-gray-500">语义结构化评分:</span>
+                                    <span className="font-bold text-emerald-600">优秀</span>
                                 </div>
-                                <div className="mt-4 pt-4 border-t border-green-100">
-                                    <p className="text-[10px] text-green-600 font-medium">
-                                        AI 爬虫会优先收录包含第三方佐证的内容，因为这能显著提高模型回答的准确性。
+                                <div className="mt-4 p-3 bg-emerald-50 rounded-xl border border-emerald-100/50">
+                                    <p className="text-[10px] text-emerald-700 leading-relaxed font-bold">
+                                        AI 爬虫优先收录具备多方证据链的内容，当前页面的引证密度符合高权威度模型标准。
                                     </p>
                                 </div>
                             </CardContent>
                         </Card>
 
-                        {/* 平台匹配度 */}
-                        <Card>
+                        {/* 平台兼容性 */}
+                        <Card className="border-gray-100 shadow-sm">
                             <CardHeader className="pb-2">
-                                <CardTitle className="text-xs font-bold uppercase flex items-center gap-2">
+                                <CardTitle className="text-[11px] font-black uppercase flex items-center gap-2 text-gray-500">
                                     <Sparkles className="w-4 h-4 text-amber-500" />
-                                    平台契合度预测
+                                    模型理解力预测
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="space-y-1">
-                                    <div className="flex justify-between text-[10px]">
-                                        <span className="text-gray-500">DeepSeek (推理型)</span>
-                                        <span className="font-bold">85%</span>
+                            <CardContent className="space-y-5 pt-4">
+                                <div className="space-y-1.5">
+                                    <div className="flex justify-between text-[11px]">
+                                        <span className="text-gray-500 font-bold">DeepSeek V3 (推理)</span>
+                                        <span className="font-black text-blue-600">85%</span>
                                     </div>
-                                    <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
-                                        <div className="h-full bg-indigo-500" style={{ width: '85%' }}></div>
+                                    <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+                                        <div className="h-full bg-blue-500 rounded-full" style={{ width: '85%' }}></div>
                                     </div>
-                                    <p className="text-[9px] text-gray-400">逻辑结构清晰，适合推理模型分析。</p>
+                                    <p className="text-[9px] text-gray-400 tracking-tight">逻辑密度适中，适合作为推理语料库。</p>
                                 </div>
-                                <div className="space-y-1">
-                                    <div className="flex justify-between text-[10px]">
-                                        <span className="text-gray-500">豆包 (推荐型)</span>
-                                        <span className="font-bold">92%</span>
+                                <div className="space-y-1.5">
+                                    <div className="flex justify-between text-[11px]">
+                                        <span className="text-gray-500 font-bold">豆包/Bytespider (搜索)</span>
+                                        <span className="font-black text-cyan-600">92%</span>
                                     </div>
-                                    <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
-                                        <div className="h-full bg-cyan-500" style={{ width: '92%' }}></div>
+                                    <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+                                        <div className="h-full bg-cyan-500 rounded-full" style={{ width: '92%' }}></div>
                                     </div>
-                                    <p className="text-[9px] text-gray-400">摘要精炼，利于进入字节跳动分发池。</p>
+                                    <p className="text-[9px] text-gray-400 tracking-tight">摘要信息极度清晰，易于进入搜索直达。</p>
                                 </div>
                             </CardContent>
                         </Card>

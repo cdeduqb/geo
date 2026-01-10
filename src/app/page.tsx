@@ -3,21 +3,25 @@ import HeroSection from '@/components/public/HeroSection';
 import FeaturedArticles from '@/components/public/FeaturedArticles';
 import { Zap, Shield, Rocket } from 'lucide-react';
 import PageLayout from '@/components/PageLayout';
+import { CustomHTML } from '@/components/security/SafeHTML';
 
 import { getSEOSettings, getSystemSettings } from '@/lib/system-settings';
 import { getSiteSettings } from '@/lib/site-settings';
 import { getLocale } from '@/lib/locale-server';
 import { t } from '@/lib/i18n';
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 export async function generateMetadata() {
     try {
         const locale = await getLocale();
 
-        // 1. 尝试查找配置为“首页”类型的已发布页面
-        const homePage = await db.page.findFirst({
-            where: { type: 'HOME', status: 'PUBLISHED', lang: locale } as any,
+        // 1. 尝试查找配置为“首页”类型的已发布页面 (优先默认页)
+        const homePage = await (db.page as any).findFirst({
+            where: { type: 'HOME', status: 'PUBLISHED', lang: locale, isDefault: true },
+            include: { seo: true }
+        }) || await (db.page as any).findFirst({
+            where: { type: 'HOME', status: 'PUBLISHED', lang: locale },
             include: { seo: true }
         });
 
@@ -60,7 +64,7 @@ export async function generateMetadata() {
         // 数据库不可用时返回默认元数据
         console.warn('Database unavailable in home page metadata');
         return {
-            title: 'GeoCMS',
+            title: '企业官网',
             description: 'Enterprise Content Management System',
         };
     }
@@ -69,8 +73,20 @@ export async function generateMetadata() {
 export default async function HomePage() {
     const locale = await getLocale();
 
-    // 1. 尝试查找配置为“首页”类型的已发布页面
+    // 1. 尝试查找配置为“首页”类型且标记为默认的已发布页面
     const homePage = await (db.page as any).findFirst({
+        where: {
+            type: 'HOME',
+            status: 'PUBLISHED',
+            lang: locale,
+            isDefault: true,
+        },
+        include: {
+            headerTemplate: true,
+            footerTemplate: true,
+            template: true,
+        },
+    }) || await (db.page as any).findFirst({
         where: {
             type: 'HOME',
             status: 'PUBLISHED',
@@ -112,6 +128,7 @@ export default async function HomePage() {
                     footerTemplate={(homePage as any).footerTemplate}
                     headerSections={(siteSettings as any)?.headerSections as any[]}
                     footerSections={(siteSettings as any)?.footerSections as any[]}
+                    translationGroupId={(homePage as any).translationGroupId}
                 >
                     <PageRenderer sections={effectiveSections as any} systemSettings={systemSettings} />
                 </PageLayout>
@@ -125,9 +142,10 @@ export default async function HomePage() {
                 footerTemplate={(homePage as any).footerTemplate}
                 headerSections={(siteSettings as any)?.headerSections as any[]}
                 footerSections={(siteSettings as any)?.footerSections as any[]}
+                translationGroupId={(homePage as any).translationGroupId}
                 contentTemplate={(homePage as any).template}
             >
-                <div dangerouslySetInnerHTML={{ __html: homePage.content }} />
+                <CustomHTML html={homePage.content} />
             </PageLayout>
         );
     }

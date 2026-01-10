@@ -135,7 +135,7 @@ export class OpenAIService implements AIService {
 
     async generateContent(prompt: string, options?: { response_format?: { type: 'text' | 'json_object' } }): Promise<string> {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 120000); // 120s timeout
+        const timeoutId = setTimeout(() => controller.abort(), 300000); // 300s timeout
 
         try {
             logger.info(`[AIService] Calling ${this.model} at ${this.baseUrl} for generateContent`);
@@ -169,7 +169,7 @@ export class OpenAIService implements AIService {
             clearTimeout(timeoutId);
             console.error('AI Service Error:', error);
             if (error instanceof Error && error.name === 'AbortError') {
-                throw new Error('AI request timed out after 120s');
+                throw new Error('AI request timed out after 300s');
             }
             throw error;
         }
@@ -308,7 +308,7 @@ export class GeminiService implements AIService {
 
     async generateContent(prompt: string, options?: { response_format?: { type: 'text' | 'json_object' } }): Promise<string> {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 120000);
+        const timeoutId = setTimeout(() => controller.abort(), 300000);
 
         try {
             const response = await fetch(`${this.baseUrl}/models/${this.model}:generateContent?key=${this.apiKey}`, {
@@ -340,7 +340,7 @@ export class GeminiService implements AIService {
             clearTimeout(timeoutId);
             console.error('Gemini Service Error:', error);
             if (error instanceof Error && error.name === 'AbortError') {
-                throw new Error('Gemini request timed out after 120s');
+                throw new Error('Gemini request timed out after 300s');
             }
             throw error;
         }
@@ -512,7 +512,7 @@ export class BaiduAIService implements AIService {
 
     async generateContent(prompt: string): Promise<string> {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 120000);
+        const timeoutId = setTimeout(() => controller.abort(), 300000);
 
         try {
             const token = await this.getAccessToken();
@@ -551,7 +551,7 @@ export class BaiduAIService implements AIService {
             clearTimeout(timeoutId);
             console.error('Baidu Service Error:', error);
             if (error instanceof Error && error.name === 'AbortError') {
-                throw new Error('Baidu request timed out after 120s');
+                throw new Error('Baidu request timed out after 300s');
             }
             throw error;
         }

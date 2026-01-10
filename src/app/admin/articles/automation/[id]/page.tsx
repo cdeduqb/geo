@@ -7,6 +7,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/toast';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
 export default function AutomationProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const unwrappedParams = use(params);
@@ -14,6 +16,9 @@ export default function AutomationProjectDetailPage({ params }: { params: Promis
     const [project, setProject] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isActionLoading, setIsActionLoading] = useState(false);
+    const [confirmModal, setConfirmModal] = useState<{ open: boolean; taskId: string | null }>({ open: false, taskId: null });
+    const [deleteProjectModal, setDeleteProjectModal] = useState(false);
+    const { showToast } = useToast();
 
     const fetchProject = async () => {
         try {
@@ -54,25 +59,55 @@ export default function AutomationProjectDetailPage({ params }: { params: Promis
         }
     };
 
+    // 打开删除项目确认弹窗
+    const openDeleteProjectModal = () => {
+        setDeleteProjectModal(true);
+    };
+
+    // 关闭删除项目确认弹窗  
+    const closeDeleteProjectModal = () => {
+        setDeleteProjectModal(false);
+    };
+
+    // 确认删除项目
     const handleDelete = async () => {
-        if (!confirm('确定要删除此自动化项目及所有关联任务吗？此操作不可撤销。')) return;
+        closeDeleteProjectModal();
         setIsActionLoading(true);
         try {
             const res = await fetch(`/api/admin/articles/automation/${unwrappedParams.id}`, {
                 method: 'DELETE'
             });
             if (res.ok) {
+                showToast('项目已删除', 'success');
                 router.push('/admin/articles/automation');
+            } else {
+                showToast('删除失败', 'error');
             }
         } catch (error) {
             console.error('Failed to delete project', error);
+            showToast('删除失败，请重试', 'error');
         } finally {
             setIsActionLoading(false);
         }
     };
 
-    const handleForceRunTask = async (taskId: string) => {
-        if (!confirm('确认立即执行此任务吗？这会将任务排期调整为现在，并尝试触发流水线。')) return;
+    // 打开确认弹窗
+    const openForceRunConfirm = (taskId: string) => {
+        setConfirmModal({ open: true, taskId });
+    };
+
+    // 关闭确认弹窗
+    const closeForceRunConfirm = () => {
+        setConfirmModal({ open: false, taskId: null });
+    };
+
+    // 确认执行任务
+    const handleForceRunTask = async () => {
+        const taskId = confirmModal.taskId;
+        if (!taskId) return;
+
+        closeForceRunConfirm();
+
         try {
             // 1. Update schedule
             await fetch(`/api/admin/articles/automation/tasks/${taskId}`, {
@@ -81,21 +116,21 @@ export default function AutomationProjectDetailPage({ params }: { params: Promis
                 body: JSON.stringify({ action: 'run_now' })
             });
 
-            // 2. Trigger pipeline (fire and forget mostly, or wait)
-            setIsActionLoading(true); // Reuse loading state to show activity
+            // 2. Trigger pipeline
+            setIsActionLoading(true);
             const res = await fetch('/api/admin/articles/automation/process', { method: 'POST' });
             const data = await res.json();
 
             if (data.processed > 0) {
-                alert('已成功触发并开始处理任务！');
+                showToast('已成功触发并开始处理任务！', 'success');
             } else {
-                alert('任务已加入队列，请稍候刷新查看状态。');
+                showToast('任务已加入队列，请稍候刷新查看状态。', 'info');
             }
 
             fetchProject(); // Refresh UI
         } catch (e) {
             console.error(e);
-            alert('操作失败');
+            showToast('操作失败，请重试', 'error');
         } finally {
             setIsActionLoading(false);
         }
@@ -160,7 +195,7 @@ export default function AutomationProjectDetailPage({ params }: { params: Promis
                         {project.status === 'ACTIVE' ? '暂停项目' : '恢复项目'}
                     </button>
                     <button
-                        onClick={handleDelete}
+                        onClick={openDeleteProjectModal}
                         disabled={isActionLoading}
                         className="p-3.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-2xl transition-all"
                         title="删除项目"
@@ -279,7 +314,7 @@ export default function AutomationProjectDetailPage({ params }: { params: Promis
 
                                             {(task.status === 'PENDING' || task.status === 'FAILED') && (
                                                 <button
-                                                    onClick={() => handleForceRunTask(task.id)}
+                                                    onClick={() => openForceRunConfirm(task.id)}
                                                     disabled={isActionLoading}
                                                     title="立即强制执行"
                                                     className="ml-2 p-1 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
@@ -308,6 +343,28 @@ export default function AutomationProjectDetailPage({ params }: { params: Promis
                     </table>
                 </div>
             </div>
+
+            <ConfirmDialog
+                isOpen={confirmModal.open}
+                onCancel={closeForceRunConfirm}
+                onConfirm={handleForceRunTask}
+                title="确认立即执行"
+                message="确认立即执行此任务吗？这会将任务排期调整为现在，并尝试触发流水线。"
+                confirmText="确认执行"
+                confirmButtonClass="bg-blue-600 hover:bg-blue-700 text-white"
+                isLoading={isActionLoading}
+            />
+
+            <ConfirmDialog
+                isOpen={deleteProjectModal}
+                onCancel={closeDeleteProjectModal}
+                onConfirm={handleDelete}
+                title="确认删除项目"
+                message={`确定要删除项目 "${project?.name}" 吗？\n\n删除后，该项目及其所有关联任务将被永久移除，无法恢复。`}
+                confirmText="确认删除"
+                confirmButtonClass="bg-red-600 hover:bg-red-700 text-white"
+                isLoading={isActionLoading}
+            />
         </div>
     );
 }

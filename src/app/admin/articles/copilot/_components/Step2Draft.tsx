@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Loader2, PenTool, ArrowLeft, RefreshCw } from 'lucide-react';
 import { Outline, OutlineSection } from './CopilotWizard';
+import { useToast } from '@/components/ui/toast';
 
 interface Step2DraftProps {
     outline: Outline;
@@ -15,6 +16,7 @@ interface Step2DraftProps {
 
 export default function Step2Draft({ outline, topic, keywords, strategyId, onBack, onNext }: Step2DraftProps) {
     const [isLoading, setIsLoading] = useState(false);
+    const { showToast } = useToast();
     const [editableOutline, setEditableOutline] = useState<Outline>(outline);
 
     const handleGenerateDraft = async () => {
@@ -42,7 +44,7 @@ export default function Step2Draft({ outline, topic, keywords, strategyId, onBac
         } catch (error) {
             console.error('Draft generation error:', error);
             const errorMessage = error instanceof Error ? error.message : '生成初稿失败';
-            alert(`生成初稿失败: ${errorMessage}\n\n请检查AI配置是否正确，或稍后重试。`);
+            showToast(`生成初稿失败: ${errorMessage}`, 'error');
         } finally {
             setIsLoading(false);
         }

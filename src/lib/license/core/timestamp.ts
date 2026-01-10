@@ -91,7 +91,8 @@ export class TimestampProtection {
      * 获取服务器时间
      */
     private static async getServerTime(): Promise<number> {
-        const serverUrl = process.env.LICENSE_SERVER_URL || 'https://sq.moli123.com';
+        const { LICENSE_CONFIG } = require('../config');
+        const serverUrl = LICENSE_CONFIG.SERVER_URL;
 
         const response = await fetch(`${serverUrl}/api/time`, {
             method: 'GET',

@@ -18,7 +18,7 @@ interface SiteSettings {
  */
 const DEFAULT_SITE_SETTINGS: SiteSettings = {
     primaryColor: '#2563eb',
-    siteName: 'GeoCMS',
+    siteName: '企业官网',
     logo: null,
     favicon: null,
     headerSections: null,
@@ -35,7 +35,7 @@ const EN_HEADER_DEFAULT = {
     type: 'header',
     data: {
         logo: null,
-        logoText: 'GeoCMS',
+        logoText: '企业官网',
         navItems: [
             { label: 'Home', link: '/' },
             { label: 'Products', link: '/products' },
@@ -60,7 +60,7 @@ const EN_FOOTER_DEFAULT = {
     type: 'footer-14',
     data: {
         logo: null,
-        logoText: 'GeoCMS',
+        logoText: '企业官网',
         col1Title: 'Products',
         col1Links: [
             { label: 'Features', link: '/features' },
@@ -76,7 +76,7 @@ const EN_FOOTER_DEFAULT = {
             { label: 'About Us', link: '/about' },
             { label: 'Careers', link: '/careers' }
         ],
-        copyright: `© ${new Date().getFullYear()} GeoCMS. All rights reserved.`
+        copyright: `© ${new Date().getFullYear()} 企业官网. All rights reserved.`
     },
     style: {
         backgroundColor: '#ffffff',
@@ -124,25 +124,31 @@ export async function getSiteSettings(locale: string = 'zh'): Promise<SiteSettin
         if (localeUnifiedSetting?.value) {
             try {
                 const parsedLocale = JSON.parse(localeUnifiedSetting.value);
-                // 递归合并太复杂，这里做简单的浅层覆盖。
-                // 注意：如果 localized setting 只存了 headerSections，那么其他字段（如 siteName）将保持 base 的值，这是符合预期的继承逻辑。
                 settings = { ...settings, ...parsedLocale };
             } catch (e) {
                 console.error(`Failed to parse ${localeKey} JSON:`, e);
             }
-        } else {
-            // 如果只有基础设置，且基础设置有 header/footer，但当前是英文环境
-            // 我们不能简单地把中文菜单给英文用户（除非用户明确配置了）。
-            // 此时，如果用户没有配置 site_settings_en，我们应该根据 locale 清空 header/footer 
-            // 从而触发下方的“智能兜底”逻辑生成英文默认值。
-            // 策略：如果没找到 locale 设置，就把 settings 里继承来的 header/footer 视为无效（因为它们是中文的）
-            // 除非... 用户真的想展示中文？
-            // 假设：site_settings_en 不存在意味着“尚未配置英语”。我们应该提供 Defaults (En)。
+        }
+    }
 
-            // 下面的逻辑会检查 headerSections 是否存在。
-            // 我们在这里强制重置它们为 null，以便触发兜底
-            settings.headerSections = null;
-            settings.footerSections = null;
+    // 2.5 尝试从 Page 表中获取标记为 isDefault 的 HEADER/FOOTER 页面
+    if (!settings.headerSections || settings.headerSections.length === 0) {
+        const defaultHeaderPage = await (db.page as any).findFirst({
+            where: { type: 'HEADER', lang: locale, isDefault: true, status: 'PUBLISHED' },
+            select: { sections: true }
+        });
+        if (defaultHeaderPage?.sections) {
+            settings.headerSections = defaultHeaderPage.sections as any[];
+        }
+    }
+
+    if (!settings.footerSections || settings.footerSections.length === 0) {
+        const defaultFooterPage = await (db.page as any).findFirst({
+            where: { type: 'FOOTER', lang: locale, isDefault: true, status: 'PUBLISHED' },
+            select: { sections: true }
+        });
+        if (defaultFooterPage?.sections) {
+            settings.footerSections = defaultFooterPage.sections as any[];
         }
     }
 

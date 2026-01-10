@@ -1,5 +1,5 @@
 /**
- * GeoCMS 授权系统主入口
+ * 企业官网 授权系统主入口
  * 提供统一的授权管理接口
  */
 
@@ -65,8 +65,11 @@ export class LicenseManager {
             }
         };
 
+        const { LICENSE_CONFIG } = await import('./config');
+        const LICENSE_SERVER_URL = LICENSE_CONFIG.SERVER_URL;
+
         // 调用激活API
-        const response = await fetch(`${process.env.LICENSE_SERVER_URL}/api/license/activate`, {
+        const response = await fetch(`${LICENSE_SERVER_URL}/api/license/activate`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(activationData)
@@ -133,7 +136,10 @@ export class LicenseManager {
         const license = LicenseCache.getLicense();
         if (!license) return;
 
-        const response = await fetch(`${process.env.LICENSE_SERVER_URL}/api/license/verify`, {
+        const { LICENSE_CONFIG } = await import('./config');
+        const LICENSE_SERVER_URL = LICENSE_CONFIG.SERVER_URL;
+
+        const response = await fetch(`${LICENSE_SERVER_URL}/api/license/verify`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

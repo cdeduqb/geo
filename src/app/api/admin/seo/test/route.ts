@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { createPushService } from '@/lib/seo/push-service';
+import { fillApiTemplate } from '@/lib/seo/platform-config';
 
-/**
- * POST /api/admin/seo/test
- * 测试SEO推送配置
- */
+// POST /api/admin/seo/test - Test connection to search engine API
 export async function POST(request: NextRequest) {
     try {
         const user = await getCurrentUser();
@@ -17,70 +15,30 @@ export async function POST(request: NextRequest) {
         const { platform, apiUrl, token, siteId } = body;
 
         if (!platform || !apiUrl || !token) {
-            return NextResponse.json(
-                { error: '平台、API地址和Token都是必填项' },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
-        // 生成测试URL
-        const testUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com'}/test-connection-${Date.now()}`;
+        // 填充模板中的变量
+        const finalApiUrl = fillApiTemplate(apiUrl, siteId, token);
 
-        try {
-            const service = createPushService(platform, apiUrl, token, siteId);
-            const result = await service.push([testUrl]);
+        // 创建服务并进行测试推送（推送网站首页作为测试）
+        // 注意：有些平台可能不支持推送首页，或者已经推送过。
+        // 一个更好的办法是调用该平台的特定的查询余额或查询站点信息的 API（如果存在）。
+        // 目前我们简单地尝试推送首页。
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin;
+        const testUrl = [baseUrl];
 
-            return NextResponse.json({
-                success: result.success,
-                message: result.success
-                    ? '✅ 测试成功！配置有效，可以正常推送。'
-                    : `❌ 测试失败：${result.message}`,
-                details: {
-                    platform,
-                    testUrl,
-                    response: result.response,
-                    timestamp: new Date().toISOString()
-                }
-            });
-        } catch (error: any) {
-            // 详细的错误分析
-            let errorType = '未知错误';
-            let suggestion = '请检查配置';
+        const service = createPushService(platform, finalApiUrl, token, siteId);
 
-            if (error.message.includes('fetch') || error.message.includes('network')) {
-                errorType = '网络错误';
-                suggestion = '请检查API地址是否正确，或者网络连接是否正常';
-            } else if (error.message.includes('401') || error.message.includes('403')) {
-                errorType = '认证错误';
-                suggestion = '请检查Token是否正确，或者是否已过期';
-            } else if (error.message.includes('404')) {
-                errorType = 'API地址错误';
-                suggestion = '请检查API地址是否正确';
-            } else if (error.message.includes('timeout')) {
-                errorType = '超时错误';
-                suggestion = '请求超时，请稍后重试或检查网络连接';
-            }
+        // 我们尝试推送，捕获详情错误
+        const result = await service.push(testUrl);
 
-            return NextResponse.json({
-                success: false,
-                message: `❌ 测试失败：${errorType}`,
-                details: {
-                    error: error.message,
-                    suggestion,
-                    platform,
-                    apiUrl,
-                    timestamp: new Date().toISOString()
-                }
-            });
-        }
+        return NextResponse.json(result);
     } catch (error: any) {
-        console.error('Test SEO push error:', error);
-        return NextResponse.json(
-            {
-                error: '测试失败',
-                message: error.message
-            },
-            { status: 500 }
-        );
+        console.error('Error testing SEO push:', error);
+        return NextResponse.json({
+            success: false,
+            message: '测试失败: ' + (error.message || '未知错误')
+        }, { status: 500 });
     }
 }
