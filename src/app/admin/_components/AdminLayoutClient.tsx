@@ -211,7 +211,7 @@ export default function AdminLayoutClient({
                         `}
                     >
                         <div className="flex items-center">
-                            <item.icon className={`w-4.5 h-4.5 mr-3 transition-colors ${active ? 'text-indigo-600' : 'text-gray-600 group-hover:text-gray-600'}`} />
+                            <item.icon className={`w-4 h-4 mr-3 transition-colors ${active ? 'text-indigo-600' : 'text-gray-600 group-hover:text-gray-600'}`} />
                             <span className="tracking-tight">{item.label}</span>
                         </div>
                         <ChevronRight className={`w-3.5 h-3.5 text-gray-300 transition-transform duration-300 ${isExpanded ? 'rotate-90' : ''}`} />
@@ -259,7 +259,7 @@ export default function AdminLayoutClient({
                 {active && (
                     <div className="absolute left-0 w-1 h-4 rounded-full bg-indigo-600 animate-in fade-in slide-in-from-left-1 duration-300" />
                 )}
-                <item.icon className={`w-4.5 h-4.5 mr-3 transition-colors ${active ? 'text-indigo-600' : 'text-gray-600 group-hover:text-gray-600'}`} />
+                <item.icon className={`w-4 h-4 mr-3 transition-colors ${active ? 'text-indigo-600' : 'text-gray-600 group-hover:text-gray-600'}`} />
                 <span className="tracking-tight">{item.label}</span>
             </Link>
         );
