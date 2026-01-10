@@ -15,10 +15,6 @@ import {
     ChevronDown,
     ChevronRight,
     Menu,
-    Box,
-    Key,
-    AppWindow,
-    Wrench,
     Bot,
     Home,
     ShoppingBag
@@ -140,6 +136,7 @@ export default function AdminLayoutClient({
                 }
             } catch (error) {
                 console.error('Check update failed:', error);
+                // 静默失败，不打扰用户
             }
         };
 
@@ -362,7 +359,13 @@ export default function AdminLayoutClient({
                             <div className="h-4 w-px bg-gray-100"></div>
 
                             <button
-                                onClick={() => updateInfo?.hasUpdate && setShowUpdateModal(true)}
+                                onClick={() => {
+                                    if (updateInfo?.hasUpdate) {
+                                        setShowUpdateModal(true);
+                                    } else {
+                                        showToast('当前已是最新版本', 'success');
+                                    }
+                                }}
                                 className={`relative p-2 rounded-xl transition-all duration-300 group ${updateInfo?.hasUpdate ? 'text-indigo-600 bg-indigo-50 hover:bg-indigo-100 cursor-pointer' : 'text-gray-400 hover:text-indigo-600 hover:bg-indigo-50/50'}`}
                             >
                                 <Bell className={`w-5 h-5 ${updateInfo?.hasUpdate ? 'animate-pulse' : 'group-hover:rotate-12'} transition-transform`} />
