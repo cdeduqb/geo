@@ -338,7 +338,7 @@ export default async function DashboardPage() {
                 </div>
 
                 {/* 最新产品 */}
-                <div className="bg-white p-6 rounded-[24px] border border-gray-100 shadow-sm shadow-gray-100/50 flex flex-col">
+                {/* <div className="bg-white p-6 rounded-[24px] border border-gray-100 shadow-sm shadow-gray-100/50 flex flex-col">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-3">
                             <div className="w-1.5 h-6 bg-purple-600 rounded-full" />
@@ -382,7 +382,7 @@ export default async function DashboardPage() {
                             <p className="text-sm font-medium">暂无产品发布</p>
                         </div>
                     )}
-                </div>
+                </div> */}
             </div>
         </div>
     );
