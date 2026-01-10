@@ -32,6 +32,10 @@ fi
 
 # 2. Install Dependencies
 echo "[2/5] Installing dependencies..."
+
+# 清除缓存强制更新依赖
+rm -rf package-lock.json
+
 # 显式安装 typescript 和相关依赖，确保 build 时能正确解析 next.config.ts
 npm install
 # 强制安装 typescript 以解决 Module not found 问题 (防止生产环境 NODE_ENV=production 导致 dev依赖丢失)
