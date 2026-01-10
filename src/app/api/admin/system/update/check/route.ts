@@ -40,23 +40,37 @@ export async function GET() {
 
         const hasUpdate = localHash.trim() !== remoteHash.trim();
 
-        // 尝试读取 package.json 获取版本号
-        let appVersion = localHash.trim().substring(0, 7);
+        // 4. 获取本地版本号
+        let localVersion = localHash.trim().substring(0, 7);
         try {
             const packagePath = path.join(process.cwd(), 'package.json');
             const packageContent = fs.readFileSync(packagePath, 'utf-8');
             const pkg = JSON.parse(packageContent);
             if (pkg.version) {
-                appVersion = `v${pkg.version}`;
+                localVersion = `v${pkg.version}`;
             }
         } catch (e) {
-            console.error('Failed to read package.json version:', e);
+            console.error('Failed to read local package.json version:', e);
+        }
+
+        // 5. 获取远程版本号
+        let remoteVersion = remoteHash.trim().substring(0, 7);
+        try {
+            // 使用 git show 读取远程 package.json 内容
+            const { stdout: remotePkgContent } = await execAsync('git show origin/master:package.json');
+            const remotePkg = JSON.parse(remotePkgContent);
+            if (remotePkg.version) {
+                remoteVersion = `v${remotePkg.version}`;
+            }
+        } catch (e) {
+            // console.error('Failed to read remote package.json version:', e);
+            // 这里不抛出错误，而是保留 hash 作为 fallback
         }
 
         return NextResponse.json({
             hasUpdate,
-            localVersion: appVersion,
-            remoteVersion: remoteHash.trim().substring(0, 7) // 远程版本暂时仍显示 Hash，因无法直接读取远程 package.json
+            localVersion,
+            remoteVersion
         });
 
     } catch (error) {
