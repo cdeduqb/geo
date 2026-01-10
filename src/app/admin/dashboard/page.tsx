@@ -101,8 +101,6 @@ export default async function DashboardPage() {
     return (
         <div className="space-y-8 max-w-7xl mx-auto">
             {/* 顶部欢迎区域 */}
-            {/* 顶部欢迎区域 */}
-            {/* 顶部欢迎区域 */}
             <div className="relative overflow-hidden bg-[#0F172A] p-8 rounded-[32px] shadow-2xl shadow-gray-200/50 flex flex-col md:flex-row md:items-center justify-between gap-6 animate-in fade-in slide-in-from-top-4 duration-700 group">
                 {/* 背景装饰 */}
                 <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-600/20 to-purple-600/20 blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
@@ -133,7 +131,6 @@ export default async function DashboardPage() {
                 </div>
             </div>
 
-            {/* 统计卡片区域 */}
             {/* 统计卡片区域 */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 fill-mode-backwards">
                 {/* 文章统计 - Blue */}
@@ -340,52 +337,10 @@ export default async function DashboardPage() {
                     )}
                 </div>
 
-                {/* 最新产品 */}
-                <div className="bg-white p-6 rounded-[24px] border border-gray-100 shadow-sm shadow-gray-100/50 flex flex-col">
-                    <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center gap-3">
-                            <div className="w-1.5 h-6 bg-purple-600 rounded-full" />
-                            <h3 className="text-lg font-black text-gray-900 tracking-tight">最新产品</h3>
-                        </div>
-                        <Link href="/admin/products" className="text-sm text-purple-600 hover:text-purple-700 font-bold flex items-center gap-1 bg-purple-50 px-3 py-1.5 rounded-xl hover:bg-purple-100 transition-colors">
-                            查看全部 <ArrowRight className="w-4 h-4" />
-                        </Link>
-                    </div>
-                    {recent.products.length > 0 ? (
-                        <div className="space-y-3 flex-1">
-                            {recent.products.map(product => (
-                                <Link key={product.id} href={`/admin/products/${product.id}`} className="flex items-start gap-4 group hover:bg-gray-50 p-3 -mx-3 rounded-2xl transition-colors">
-                                    <div className="w-12 h-12 rounded-2xl bg-gray-100 flex-shrink-0 overflow-hidden border border-gray-200">
-                                        {product.coverImage ? (
-                                            <img src={product.coverImage} alt={product.name} className="w-full h-full object-cover" />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gradient-to-br from-purple-50 to-purple-100">
-                                                <ShoppingBag className="w-5 h-5 text-purple-400" />
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <div className="text-sm font-bold text-gray-900 truncate group-hover:text-purple-600 transition-colors">{product.name}</div>
-                                        <div className="flex items-center gap-2 mt-1">
-                                            <span className="text-xs text-orange-600 font-bold bg-orange-50 px-2 py-0.5 rounded-lg">{formatPrice(Number(product.price))}</span>
-                                            <span className="text-xs text-gray-400 font-medium">{formatDate(product.createdAt)}</span>
-                                        </div>
-                                    </div>
-                                    <div className="w-8 h-8 rounded-xl bg-white border border-gray-100 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
-                                        <ArrowRight className="w-4 h-4 text-gray-400" />
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="flex-1 flex flex-col items-center justify-center text-gray-400 py-12">
-                            <div className="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center mb-3">
-                                <ShoppingBag className="w-8 h-8 opacity-30" />
-                            </div>
-                            <p className="text-sm font-medium">暂无产品发布</p>
-                        </div>
-                    )}
-                </div>
+                {/* 最新产品 - Hidden by user request */}
+                {/* <div className="bg-white p-6 rounded-[24px] border border-gray-100 shadow-sm shadow-gray-100/50 flex flex-col">
+                   ... (hidden content) ...
+                </div> */}
             </div>
         </div>
     );
