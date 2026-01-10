@@ -69,9 +69,14 @@ if command -v pm2 &> /dev/null && pm2 list | grep -q "geocms"; then
     pm2 reload geocms || pm2 restart geocms
 elif pgrep -f "next-server" > /dev/null || pgrep -f "next-start" > /dev/null; then
     echo "Detected raw Node.js process."
+    # Kill process and wait for port release
     pkill -f "next-start" || pkill -f "next-server"
+    sleep 3
+    
     echo "Restarting with nohup..."
+    # 使用 nohup 启动并将输出重定向，同时使用 & 放入后台。
     nohup npm start > app.log 2>&1 &
+    # disown 可能会在部分 shell 报错，但标准 bash 支持。如果脚本是子进程执行，nohup 已足够。
 elif [ -f "docker-compose.yml" ] || [ -f "docker-compose.yaml" ]; then
     # Only try Docker if we didn't find a running Node process
     echo "No running Node process found. Detected Docker configuration."
