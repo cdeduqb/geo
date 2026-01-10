@@ -26,9 +26,12 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# 2. Install dependencies
+# 2. Install Dependencies
 echo "[2/5] Installing dependencies..."
+# 显式安装 typescript 和相关依赖，确保 build 时能正确解析 next.config.ts
 npm install
+# 强制安装 typescript 以解决 Module not found 问题
+npm install typescript @types/node ts-node --save-dev
 
 if [ $? -ne 0 ]; then
     echo "Error: Failed to install dependencies."
