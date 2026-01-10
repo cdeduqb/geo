@@ -363,7 +363,7 @@ export default function AdminLayoutClient({
                                     if (updateInfo?.hasUpdate) {
                                         setShowUpdateModal(true);
                                     } else {
-                                        showToast('当前已是最新版本', 'success');
+                                        showToast(`当前已是最新版本 (${updateInfo?.localVersion || 'unknown'})`, 'success');
                                     }
                                 }}
                                 className={`relative p-2 rounded-xl transition-all duration-300 group ${updateInfo?.hasUpdate ? 'text-indigo-600 bg-indigo-50 hover:bg-indigo-100 cursor-pointer' : 'text-gray-400 hover:text-indigo-600 hover:bg-indigo-50/50'}`}
