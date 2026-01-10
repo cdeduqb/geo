@@ -1,7 +1,7 @@
 import { db } from './db';
 import { User } from '@prisma/client';
 import { cookies } from 'next/headers';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 // bcrypt 配置
 const SALT_ROUNDS = 12;
