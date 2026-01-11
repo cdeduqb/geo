@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import {
     Save, Loader2, Layout, Eye, Plus, Trash2, ChevronDown, ChevronRight,
-    Image as ImageIcon, Palette, Phone, Mail, MapPin, Share2, X, Check, Globe, Building, FileText, Sparkles, Shield, ShieldCheck
+    Image as ImageIcon, Palette, Phone, Mail, MapPin, Share2, X, Check, Globe, Building, FileText, Sparkles, Shield, ShieldCheck, Upload
 } from 'lucide-react';
 import { PageRenderer } from '@/components/PageRenderer';
 import ImageUpload from '@/components/ui/ImageUpload';
@@ -561,7 +561,36 @@ export default function SiteSettingsClient({ initialData }: SiteSettingsClientPr
                                                     />
                                                 </div>
                                                 <div className="space-y-1">
-                                                    <label className="text-[11px] font-bold text-gray-500 uppercase">文件内容 (HTML/Text)</label>
+                                                    <div className="flex justify-between items-center">
+                                                        <label className="text-[11px] font-bold text-gray-500 uppercase">文件内容 (HTML/Text)</label>
+                                                        <div className="relative group cursor-pointer">
+                                                            <div className="flex items-center gap-1 text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded hover:bg-blue-100 transition-colors">
+                                                                <Upload className="w-3 h-3" /> 导入文件
+                                                            </div>
+                                                            <input
+                                                                type="file"
+                                                                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                                                                onChange={(e) => {
+                                                                    const uploadedFile = e.target.files?.[0];
+                                                                    if (uploadedFile) {
+                                                                        const reader = new FileReader();
+                                                                        reader.onload = (ev) => {
+                                                                            const content = ev.target?.result as string;
+                                                                            const newFiles = [...verificationFiles];
+                                                                            // 如果文件名为空，自动填充文件名
+                                                                            if (!newFiles[index].filename || newFiles[index].filename.trim() === '') {
+                                                                                newFiles[index].filename = uploadedFile.name;
+                                                                            }
+                                                                            newFiles[index].content = content;
+                                                                            setVerificationFiles(newFiles);
+                                                                        };
+                                                                        reader.readAsText(uploadedFile);
+                                                                        e.target.value = ''; // 重置以允许重复上传
+                                                                    }
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </div>
                                                     <input
                                                         type="text"
                                                         value={file.content}
