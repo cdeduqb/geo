@@ -2,7 +2,8 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Power, Trash2, Loader2 } from 'lucide-react';
+import Link from 'next/link';
+import { Power, Trash2, Loader2, Edit } from 'lucide-react';
 import { useToast } from '@/components/ui/toast';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
@@ -79,6 +80,13 @@ export default function StorageConfigActions({ config }: StorageConfigActionsPro
                     <Power className="w-4 h-4" />
                 </button>
             )}
+            <Link
+                href={`/admin/settings/storage/${config.id}`}
+                className="text-gray-400 hover:text-blue-600 transition-colors"
+                title="编辑"
+            >
+                <Edit className="w-4 h-4" />
+            </Link>
             <button
                 onClick={() => setIsDeleteDialogOpen(true)}
                 disabled={loading || config.isActive}

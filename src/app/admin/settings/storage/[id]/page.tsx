@@ -1,10 +1,18 @@
-'use client';
-
+import { db } from '@/lib/db';
+import { notFound } from 'next/navigation';
 import { ArrowLeft, HardDrive } from 'lucide-react';
 import Link from 'next/link';
 import StorageConfigForm from '../_components/StorageConfigForm';
 
-export default function CreateStorageConfigPage() {
+export default async function EditStorageConfigPage({ params }: { params: { id: string } }) {
+    const config = await db.storageConfig.findUnique({
+        where: { id: params.id },
+    });
+
+    if (!config) {
+        notFound();
+    }
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -20,14 +28,14 @@ export default function CreateStorageConfigPage() {
                         <HardDrive className="w-6 h-6" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-black text-gray-900 tracking-tight">新建存储配置</h1>
-                        <p className="text-[11px] text-gray-500 font-medium">配置高效、安全的文件底层存储设施</p>
+                        <h1 className="text-2xl font-black text-gray-900 tracking-tight">编辑存储配置</h1>
+                        <p className="text-[11px] text-gray-500 font-medium">修改现有的存储配置参数</p>
                     </div>
                 </div>
             </div>
 
             {/* Form */}
-            <StorageConfigForm />
+            <StorageConfigForm initialData={config} isEdit={true} />
         </div>
     );
 }
