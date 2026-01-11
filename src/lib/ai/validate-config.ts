@@ -54,6 +54,60 @@ async function validateOpenAICompatible(
 }
 
 /**
+ * Validate OpenAI-compatible Image Generation API
+ */
+async function validateImageGeneration(
+    baseUrl: string,
+    apiKey: string,
+    modelName?: string
+): Promise<ValidationResult> {
+    try {
+        const response = await fetch(`${baseUrl}/images/generations`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: modelName,
+                prompt: 'A simple test image',
+                n: 1,
+                size: '1024x1024'
+            })
+        });
+
+        if (response.ok) {
+            return {
+                success: true,
+                message: '图片生成配置验证成功！API 连接正常。'
+            };
+        }
+
+        const errorData = await response.json().catch(() => ({}));
+        const errorMsg = errorData.error?.message || '';
+        if (errorMsg.includes('quota') || errorMsg.includes('balance') || errorMsg.includes('exceeded')) {
+            return {
+                success: true,
+                message: '配置验证成功（账户可能余额不足）',
+                details: errorMsg
+            };
+        }
+
+        return {
+            success: false,
+            message: '图片生成配置验证失败',
+            details: errorData.error?.message || `HTTP ${response.status}`
+        };
+    } catch (error: any) {
+        return {
+            success: false,
+            message: '网络请求失败',
+            details: error.message
+        };
+    }
+}
+
+/**
  * Validate Gemini API
  */
 async function validateGemini(
@@ -150,13 +204,19 @@ export async function validateAIConfig(
     baseUrl: string,
     apiKey: string,
     modelName?: string,
-    secretKey?: string
+    secretKey?: string,
+    useCase?: string
 ): Promise<ValidationResult> {
     if (!baseUrl || !apiKey) {
         return {
             success: false,
             message: '请提供完整的 Base URL 和 API Key'
         };
+    }
+
+    // 如果用途是图片生成，使用图片 API 验证
+    if (useCase === 'IMAGE') {
+        return validateImageGeneration(baseUrl.replace(/\/$/, ''), apiKey, modelName);
     }
 
     // Remove trailing slashes

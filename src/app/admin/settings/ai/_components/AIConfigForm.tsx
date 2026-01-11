@@ -231,6 +231,7 @@ export default function AIConfigForm({ initialData, onSuccess }: AIConfigFormPro
                     secretKey={secretKey}
                     modelName={modelName || PROVIDER_DEFAULTS[selectedProvider]?.modelName}
                     configId={initialData?.id}
+                    useCase={useCase}
                 />
             </div>
 

@@ -87,9 +87,9 @@ export default function AIConfigContainer({ configs }: AIConfigContainerProps) {
                                         <div className="w-1 h-1 rounded-full bg-gray-300" />
                                         接入节点: <span className="font-mono lowercase">{config.baseUrl}</span>
                                     </div>
-                                    {config.useCase && config.useCase !== 'GENERAL' && (
-                                        <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${config.useCase === 'WRITING' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'}`}>
-                                            {config.useCase === 'WRITING' ? '系统属性: 内容写作' : '系统属性: 代码生成'}
+                                    {(
+                                        <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${config.useCase === 'WRITING' ? 'bg-blue-50 text-blue-600' : config.useCase === 'CODE' ? 'bg-purple-50 text-purple-600' : config.useCase === 'IMAGE' ? 'bg-green-50 text-green-600' : 'bg-gray-50 text-gray-600'}`}>
+                                            系统属性: {config.useCase === 'WRITING' ? '内容写作' : config.useCase === 'CODE' ? '代码生成' : config.useCase === 'IMAGE' ? '图片生成' : '通用'}
                                         </div>
                                     )}
                                 </div>

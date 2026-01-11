@@ -9,10 +9,11 @@ interface ValidateButtonProps {
     apiKey: string;
     secretKey?: string;
     modelName?: string;
-    configId?: string; // Add configId for edited configs
+    configId?: string;
+    useCase?: string; // Use case for validation (IMAGE uses different API)
 }
 
-export default function ValidateButton({ provider, baseUrl, apiKey, secretKey, modelName, configId }: ValidateButtonProps) {
+export default function ValidateButton({ provider, baseUrl, apiKey, secretKey, modelName, configId, useCase }: ValidateButtonProps) {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<{ success: boolean; message: string; details?: string } | null>(null);
 
@@ -47,7 +48,8 @@ export default function ValidateButton({ provider, baseUrl, apiKey, secretKey, m
                     apiKey,
                     secretKey,
                     modelName,
-                    configId // Include configId to allow fetching real API key from DB
+                    configId,
+                    useCase // Include useCase for IMAGE validation
                 })
             });
 

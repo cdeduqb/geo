@@ -969,34 +969,6 @@ function shouldFallback(error: any): boolean {
 /**
  * 获取所有可用的 AI 配置（按优先级排序）
  */
-async function getAllActiveConfigs(useCase: AIUseCaseType = 'GENERAL'): Promise<any[]> {
-    let configs = await db.aIConfig.findMany({
-        where: {
-            isActive: true,
-            useCase: useCase as any
-        },
-        orderBy: { priority: 'desc' }
-    });
-
-    if (configs.length === 0) {
-        configs = await db.aIConfig.findMany({
-            where: {
-                isActive: true,
-                useCase: 'GENERAL'
-            },
-            orderBy: { priority: 'desc' }
-        });
-    }
-
-    if (configs.length === 0) {
-        configs = await db.aIConfig.findMany({
-            where: { isActive: true },
-            orderBy: { priority: 'desc' }
-        });
-    }
-
-    return configs;
-}
 
 /**
  * 带自动降级的 AI 服务包装器
@@ -1140,4 +1112,46 @@ export async function getAIServiceWithFallback(useCase: AIUseCaseType = 'GENERAL
     }
 
     return new AIServiceWithFallback(orderedConfigs);
+}
+/**
+ * 获取所有可用的 AI 配置（按优先级排序）
+ * 策略：优先使用指定用途的配置，其次使用通用配置
+ */
+async function getAllActiveConfigs(useCase: AIUseCaseType = 'GENERAL'): Promise<any[]> {
+    // 1. 获取指定用途的配置
+    const specificConfigs = await db.aIConfig.findMany({
+        where: {
+            isActive: true,
+            useCase: useCase as any
+        },
+        orderBy: { priority: 'desc' }
+    });
+
+    // 如果用途本身就是 GENERAL，直接返回
+    if (useCase === 'GENERAL') {
+        return specificConfigs;
+    }
+
+    // 2. 获取通用配置
+    const generalConfigs = await db.aIConfig.findMany({
+        where: {
+            isActive: true,
+            useCase: 'GENERAL'
+        },
+        orderBy: { priority: 'desc' }
+    });
+
+    // 3. 合并配置：特定用途优先 -> 通用配置
+    // 由于是两个独立的查询，ID不会重复（除非数据库数据异常），直接连接即可
+    const allConfigs = [...specificConfigs, ...generalConfigs];
+
+    // 如果还是没有配置，尝试获取所有激活的配置作为最后兜底
+    if (allConfigs.length === 0) {
+        return await db.aIConfig.findMany({
+            where: { isActive: true },
+            orderBy: { priority: 'desc' }
+        });
+    }
+
+    return allConfigs;
 }

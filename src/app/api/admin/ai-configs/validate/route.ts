@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: '未授权' }, { status: 401 });
         }
 
-        const { provider, baseUrl, apiKey, modelName, secretKey, configId } = await req.json();
+        const { provider, baseUrl, apiKey, modelName, secretKey, configId, useCase } = await req.json();
 
         if (!provider || !baseUrl) {
             return NextResponse.json(
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const result = await validateAIConfig(provider, baseUrl, actualApiKey, modelName, actualSecretKey);
+        const result = await validateAIConfig(provider, baseUrl, actualApiKey, modelName, actualSecretKey, useCase);
 
         return NextResponse.json(result);
     } catch (error: any) {
