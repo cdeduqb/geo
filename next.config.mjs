@@ -138,8 +138,8 @@ const nextConfig = {
         buildActivity: false,
     },
     // 外部包配置（避免打包到 bundle 中）
-    serverExternalPackages: ['@prisma/client', 'ali-oss', 'cos-nodejs-sdk-v5'],
     experimental: {
+        serverComponentsExternalPackages: ['@prisma/client', 'ali-oss', 'cos-nodejs-sdk-v5', 'isomorphic-dompurify', 'jsdom'],
         serverActions: {
             allowedOrigins: (() => {
                 // 优先级 1: 从环境变量 ALLOWED_ORIGINS 读取
