@@ -70,6 +70,18 @@ export async function createPage(formData: FormData) {
     // 非 HOME 类型强制设置为 false
     validatedData.isDefault = shouldBeDefault;
 
+    // 检查 URL 路径是否已存在
+    const existingPage = await db.page.findFirst({
+        where: {
+            slug: validatedData.slug,
+            lang: validatedData.lang,
+        }
+    });
+
+    if (existingPage) {
+        throw new Error(`URL路径 "${validatedData.slug}" 在语言 "${validatedData.lang}" 下已存在，请更换。`);
+    }
+
     // Separate SEO data from Page data
     const { seoTitle, seoKeywords, seoDescription, ...pageData } = validatedData;
 
@@ -153,6 +165,19 @@ export async function updatePage(formData: FormData) {
 
     // 非 HOME 类型强制设置为 false
     validatedData.isDefault = shouldBeDefault;
+
+    // 检查 URL 路径是否冲突 (排除自己)
+    const existingPage = await db.page.findFirst({
+        where: {
+            slug: validatedData.slug,
+            lang: validatedData.lang,
+            id: { not: id }
+        }
+    });
+
+    if (existingPage) {
+        throw new Error(`URL路径 "${validatedData.slug}" 在语言 "${validatedData.lang}" 下已存在，请更换。`);
+    }
 
     // Separate SEO data from Page data
     const { seoTitle, seoKeywords, seoDescription, ...pageData } = validatedData;
