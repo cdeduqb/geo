@@ -237,14 +237,14 @@ export default function ArticleListTable({ articles, total, page, limit }: Artic
                                                 className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-white hover:shadow-sm rounded-xl transition-all"
                                                 title="预览"
                                             >
-                                                <Eye className="w-4.5 h-4.5" />
+                                                <Eye className="w-4 h-4" />
                                             </Link>
                                             <Link
                                                 href={`/admin/articles/${article.id}`}
                                                 className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-white hover:shadow-sm rounded-xl transition-all"
                                                 title="编辑"
                                             >
-                                                <Edit className="w-4.5 h-4.5" />
+                                                <Edit className="w-4 h-4" />
                                             </Link>
                                             <DeleteArticleButton
                                                 articleId={article.id}
