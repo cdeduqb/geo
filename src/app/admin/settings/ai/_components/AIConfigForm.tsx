@@ -92,7 +92,7 @@ export default function AIConfigForm({ initialData, onSuccess }: AIConfigFormPro
                     <select
                         name="provider"
                         value={selectedProvider}
-                        onChange={(e) => setSelectedProvider(e.target.value)}
+                        onChange={(e) => { const newProvider = e.target.value; setSelectedProvider(newProvider); setBaseUrl(PROVIDER_DEFAULTS[newProvider]?.baseUrl || ''); setModelName(PROVIDER_DEFAULTS[newProvider]?.modelName || '' ); }}
                         className="w-full p-2 border border-gray-100 rounded-lg"
                         required
                     >
@@ -113,8 +113,8 @@ export default function AIConfigForm({ initialData, onSuccess }: AIConfigFormPro
                     <input
                         type="text"
                         name="modelName"
-                        defaultValue={initialData?.modelName || PROVIDER_DEFAULTS[selectedProvider]?.modelName}
-                        key={`model-${selectedProvider}`}
+                        value={modelName}
+                        onChange={(e) => setModelName(e.target.value)}
                         placeholder={PROVIDER_DEFAULTS[selectedProvider]?.modelName || 'e.g. gpt-4o-mini'}
                         className="w-full p-2 border border-gray-100 rounded-lg"
                     />
@@ -153,9 +153,8 @@ export default function AIConfigForm({ initialData, onSuccess }: AIConfigFormPro
                     <input
                         type="url"
                         name="baseUrl"
-                        value={baseUrl || PROVIDER_DEFAULTS[selectedProvider]?.baseUrl}
+                        value={baseUrl}
                         onChange={(e) => setBaseUrl(e.target.value)}
-                        key={`baseurl-${selectedProvider}`}
                         placeholder={PROVIDER_DEFAULTS[selectedProvider]?.baseUrl || 'https://api.example.com'}
                         className="w-full p-2 border border-gray-100 rounded-lg"
                     />
