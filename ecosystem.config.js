@@ -18,7 +18,8 @@ module.exports = {
         {
             name: 'geocms',
             // 使用 standalone 输出
-            script: '.next/standalone/server.js',
+            script: 'npm',
+            args: 'start',
             // 单实例模式（低内存推荐）
             instances: 1,
             // 如果服务器内存充足可以改为 'cluster' 模式
