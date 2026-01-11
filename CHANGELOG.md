@@ -1,5 +1,16 @@
 # 更新日志 (Changelog)
 
+## v0.3.19 (2026-01-11)
+
+### 关键修复
+- **服务器启动问题**：
+    - 修复了 `output: standalone` 配置与 `npm start` 不兼容的问题
+    - 现在使用 `node .next/standalone/server.js` 正确启动
+    - 自动复制静态资源到 standalone 目录
+- **配置警告修复**：
+    - 修复 `devIndicators` 配置格式
+    - 将 `serverExternalPackages` 移入 `experimental` 配置
+
 ## v0.3.18 (2026-01-11)
 
 ### 核心修复

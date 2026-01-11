@@ -76,9 +76,16 @@ echo "[5/5] Restarting service..."
 # 接收父进程 PID (可选参数，由 API 传入)
 PARENT_PID=$1
 
+# 复制必要的静态资源到 standalone 目录
+echo "Copying static assets to standalone directory..."
+cp -r public .next/standalone/ 2>/dev/null || true
+cp -r .next/static .next/standalone/.next/ 2>/dev/null || true
+
 if command -v pm2 &> /dev/null && pm2 list | grep -q "geocms"; then
     echo "Detected PM2 environment (geocms process found)."
-    pm2 reload geocms || pm2 restart geocms
+    # 使用 standalone 模式启动
+    pm2 delete geocms 2>/dev/null || true
+    pm2 start .next/standalone/server.js --name "geocms"
 else
     # 非 PM2 环境，尝试通过 PID 或进程名终止
     echo "Stopping existing process..."
@@ -89,19 +96,11 @@ else
     fi
 
     # 兜底：杀掉可能存在的其他同名进程
-    pkill -f "next-start" || pkill -f "next-server"
+    pkill -f "server.js" || pkill -f "next-server" || true
     sleep 3
-    
-    # 再次检查是否有 Docker 配置且无 Node 进程，作为最后的兜底
-    if [ -f "docker-compose.yml" ] || [ -f "docker-compose.yaml" ]; then
-         # 检查是否还有残留 Node 进程
-         if ! pgrep -f "next-server" > /dev/null && ! pgrep -f "next-start" > /dev/null; then
-             : # Pass
-         fi
-    fi
 
-    echo "Restarting with nohup..."
-    nohup npm start > app.log 2>&1 &
+    echo "Restarting with nohup (standalone mode)..."
+    nohup node .next/standalone/server.js > app.log 2>&1 &
 fi
 
 echo "============================================"

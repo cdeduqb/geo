@@ -133,9 +133,12 @@ const nextConfig = {
     poweredByHeader: false,
 
     // 禁用开发模式下的状态指示器
-    devIndicators: false,
-    serverExternalPackages: ['@prisma/client', 'ali-oss', 'cos-nodejs-sdk-v5'],
+    devIndicators: {
+        appIsrStatus: false,
+        buildActivity: false,
+    },
     experimental: {
+        serverExternalPackages: ['@prisma/client', 'ali-oss', 'cos-nodejs-sdk-v5'],
         serverActions: {
             allowedOrigins: (() => {
                 // 优先级 1: 从环境变量 ALLOWED_ORIGINS 读取
