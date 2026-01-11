@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { PageRenderer } from '@/components/PageRenderer';
 import ImageUpload from '@/components/ui/ImageUpload';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getI18nSettings } from '@/lib/system-settings';
 
@@ -38,6 +38,7 @@ interface SiteSettingsClientProps {
 
 export default function SiteSettingsClient({ initialData }: SiteSettingsClientProps) {
     const searchParams = useSearchParams();
+    const router = useRouter();
     const [activeTab, setActiveTab] = useState<'header' | 'footer' | 'brand' | 'contact' | 'languages'>('header');
 
     useEffect(() => {
@@ -189,6 +190,7 @@ export default function SiteSettingsClient({ initialData }: SiteSettingsClientPr
             });
 
             setSaveSuccess(true);
+            router.refresh(); // Refresh client cache
             setTimeout(() => setSaveSuccess(false), 3000);
         } catch (error) {
             console.error('保存失败:', error);
