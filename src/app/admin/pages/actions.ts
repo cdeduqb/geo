@@ -79,7 +79,7 @@ export async function createPage(formData: FormData) {
     });
 
     if (existingPage) {
-        throw new Error(`URL路径 "${validatedData.slug}" 在语言 "${validatedData.lang}" 下已存在，请更换。`);
+        return { error: `URL路径 "${validatedData.slug}" 在语言 "${validatedData.lang}" 下已存在，请更换。` };
     }
 
     // Separate SEO data from Page data
@@ -101,7 +101,7 @@ export async function createPage(formData: FormData) {
         console.log('Page created successfully:', newPage.id);
     } catch (error: any) {
         console.error(' [CRITICAL] 创建页面失败:', error);
-        throw new Error(`创建页面失败: ${error.message || '未知错误'}`);
+        return { error: `创建页面失败: ${error.message || '未知错误'}` };
     }
 
     revalidatePath('/admin/pages');
@@ -113,13 +113,13 @@ export async function updatePage(formData: FormData) {
     const user = await getCurrentUser();
 
     if (!user) {
-        throw new Error('未授权');
+        return { error: '未授权' };
     }
 
     const id = formData.get('id') as string;
 
     if (!id) {
-        throw new Error('页面 ID 不能为空');
+        return { error: '页面 ID 不能为空' };
     }
 
     const type = formData.get('type')?.toString() || 'CUSTOM';
@@ -143,7 +143,13 @@ export async function updatePage(formData: FormData) {
         isDefault: isDefault,
     };
 
-    const validatedData = PageSchema.parse(rawData);
+    let validatedData;
+    try {
+        validatedData = PageSchema.parse(rawData);
+    } catch (e: any) {
+        return { error: e.errors?.[0]?.message || '表单验证失败' };
+    }
+
     console.log(`Updating Page ${id} with data:`, JSON.stringify(validatedData, null, 2));
 
     // 只有首页类型(HOME)才处理 isDefault
@@ -176,7 +182,7 @@ export async function updatePage(formData: FormData) {
     });
 
     if (existingPage) {
-        throw new Error(`URL路径 "${validatedData.slug}" 在语言 "${validatedData.lang}" 下已存在，请更换。`);
+        return { error: `URL路径 "${validatedData.slug}" 在语言 "${validatedData.lang}" 下已存在，请更换。` };
     }
 
     // Separate SEO data from Page data
@@ -206,7 +212,7 @@ export async function updatePage(formData: FormData) {
         console.log(`Page ${id} updated successfully.`);
     } catch (error: any) {
         console.error(' [CRITICAL] 更新页面失败:', error);
-        throw new Error(`更新页面失败: ${error.message || '未知错误'}`);
+        return { error: `更新页面失败: ${error.message || '未知错误'}` };
     }
 
     revalidatePath('/admin/pages');

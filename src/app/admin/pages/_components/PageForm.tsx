@@ -4,11 +4,12 @@ import { useState } from 'react';
 import { Page, PageTemplate } from '@prisma/client';
 import { Save, Loader2 } from 'lucide-react';
 import { useFormStatus } from 'react-dom';
+import { useToast } from '@/components/ui/toast';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
 interface PageFormProps {
     page?: any;
-    action: (formData: FormData) => void;
+    action: (formData: FormData) => Promise<any>;
     headerTemplates?: any[];
     footerTemplates?: any[];
     contentTemplates?: any[];
@@ -48,6 +49,7 @@ export default function PageForm({
     const [lang, setLang] = useState(page?.lang || 'zh');
     const [pageType, setPageType] = useState(page?.type || 'CUSTOM');
     const [templateConfirmModal, setTemplateConfirmModal] = useState<{ open: boolean; templateId: string; templateContent: string; event: any }>({ open: false, templateId: '', templateContent: '', event: null });
+    const { showToast } = useToast();
 
     // 统一的样式变量
     const inputClass = "w-full rounded-2xl border border-gray-300 bg-gray-50/50 px-6 py-4 text-sm font-bold text-gray-900 focus:border-blue-600 focus:bg-white transition-all outline-none placeholder:text-gray-300";
@@ -97,9 +99,16 @@ export default function PageForm({
 
     const isCustomContent = !selectedTemplateId;
 
+    const handleFormSubmit = async (formData: FormData) => {
+        const result = await action(formData);
+        if (result && result.error) {
+            showToast(result.error, 'error');
+        }
+    };
+
     return (
         <>
-            <form action={action} className="space-y-6">
+            <form action={handleFormSubmit} className="space-y-6">
                 {page && <input type="hidden" name="id" value={page.id} />}
                 <input type="hidden" name="content" value={content} />
 
