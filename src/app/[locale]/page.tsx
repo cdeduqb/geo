@@ -4,6 +4,9 @@ import HomePage, { generateMetadata as generateHomeMetadata } from '@/app/page';
 import { DynamicPageContent, generateDynamicMetadata } from '@/app/DynamicPageHandler';
 import { Metadata } from 'next';
 
+// 强制动态渲染
+export const dynamic = 'force-dynamic';
+
 interface ParamsProps {
     params: Promise<{ locale: string }>;
 }

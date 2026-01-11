@@ -10,7 +10,8 @@ import { getSiteSettings } from '@/lib/site-settings';
 import { getLocale } from '@/lib/locale-server';
 import { t } from '@/lib/i18n';
 
-// export const dynamic = 'force-dynamic';
+// 强制动态渲染，确保每次请求都能获取最新数据
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata() {
     try {
