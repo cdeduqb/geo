@@ -38,11 +38,15 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
+        console.log('[Settings Update] Received body keys:', Object.keys(body));
 
         // 特殊处理：站点验证文件物理同步到 public 目录
         if (body.site_verification_files) {
+            console.log('[Settings Update] Processing verification files...');
             try {
                 const publicDir = path.join(process.cwd(), 'public');
+                console.log('[Settings Update] Resolved public directory:', publicDir);
+
                 let verificationFiles: any[] = [];
                 try {
                     verificationFiles = JSON.parse(body.site_verification_files);
