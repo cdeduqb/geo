@@ -41,6 +41,8 @@ export async function createTemplate(formData: FormData) {
     }
 
     revalidatePath('/admin/templates');
+    revalidatePath('/', 'layout');
+    revalidatePath('/');
     return { success: true };
 }
 
@@ -80,6 +82,8 @@ export async function updateTemplate(formData: FormData) {
     }
 
     revalidatePath('/admin/templates');
+    revalidatePath('/', 'layout');
+    revalidatePath('/');
     return { success: true };
 }
 
@@ -117,6 +121,8 @@ export async function toggleTemplateStatus(templateId: string, moduleType: strin
     }
 
     revalidatePath('/admin/templates');
+    revalidatePath('/', 'layout');
+    revalidatePath('/');
 }
 
 export async function deleteTemplate(id: string) {
@@ -136,6 +142,8 @@ export async function deleteTemplate(id: string) {
     }
 
     revalidatePath('/admin/templates');
+    revalidatePath('/', 'layout');
+    revalidatePath('/');
 }
 
 export async function activateTemplate(templateId: string, moduleType: string) {
