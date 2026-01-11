@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
             return new NextResponse(file.content, {
                 headers: {
                     'Content-Type': 'text/html; charset=utf-8',
-                    'Cache-Control': 'public, max-age=3600' // 适当缓存
+                    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
                 }
             });
         }
