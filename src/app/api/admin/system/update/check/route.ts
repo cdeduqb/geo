@@ -34,11 +34,11 @@ export async function GET() {
         // 2. Fetch
         await execAsync('git fetch origin master');
 
-        // 3. Compare
+        // 3. Compare (Check if hash is different)
         const { stdout: localHash } = await execAsync('git rev-parse HEAD');
         const { stdout: remoteHash } = await execAsync('git rev-parse origin/master');
-
-        const hasUpdate = localHash.trim() !== remoteHash.trim();
+        
+        let hasUpdate = localHash.trim() !== remoteHash.trim();
 
         // 4. 获取本地版本号
         let localVersion = localHash.trim().substring(0, 7);
@@ -66,11 +66,44 @@ export async function GET() {
             // console.error('Failed to read remote package.json version:', e);
             // 这里不抛出错误，而是保留 hash 作为 fallback
         }
+        
+        // 额外检查：如果版本号相同，认为没有更新（忽略 commit hash 的差异，针对开发环境）
+        // 但在生产环境，如果用户手动修改了文件但没提交，这可能也会触发更新提示。
+        // 这里主要信任 version 字段作为主要判断依据，hash 作为辅助。
+        if (localVersion === remoteVersion) {
+             hasUpdate = false;
+        } else {
+             // 如果版本不同，肯定有更新
+             hasUpdate = true;
+        }
+
+        // 6. 获取更新内容（提交日志）
+        let updateLogs: Array<{ hash: string, message: string, date: string }> = [];
+        if (hasUpdate) {
+            try {
+                // 格式: hash [tab] message [tab] date
+                const { stdout: logOutput } = await execAsync('git log --pretty=format:"%h%x09%s%x09%cd" --date=format:"%Y-%m-%d" HEAD..origin/master');
+                
+                updateLogs = logOutput.split('\n')
+                    .filter(line => line.trim())
+                    .map(line => {
+                        const parts = line.split('\t');
+                        if (parts.length >= 3) {
+                            return { hash: parts[0], message: parts[1], date: parts[2] };
+                        }
+                        return null;
+                    })
+                    .filter(item => item !== null) as any;
+            } catch (e) {
+                console.error('Failed to fetch update logs:', e);
+            }
+        }
 
         return NextResponse.json({
             hasUpdate,
             localVersion,
-            remoteVersion
+            remoteVersion,
+            updateLogs
         });
 
     } catch (error) {

@@ -21,6 +21,17 @@ import {
 } from 'lucide-react';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import { useToast } from '@/components/ui/toast';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { GitCommit, Tag } from 'lucide-react';
 
 interface User {
     name?: string | null;
@@ -124,7 +135,13 @@ export default function AdminLayoutClient({
     const { showToast } = useToast();
 
     // 更新相关状态
-    const [updateInfo, setUpdateInfo] = useState<{ hasUpdate: boolean, localVersion: string, remoteVersion: string } | null>(null);
+    // 更新相关状态
+    const [updateInfo, setUpdateInfo] = useState<{
+        hasUpdate: boolean,
+        localVersion: string,
+        remoteVersion: string,
+        updateLogs?: Array<{ hash: string, message: string, date: string }>
+    } | null>(null);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
 
@@ -396,17 +413,82 @@ export default function AdminLayoutClient({
             </div>
 
             {/* Update Confirmation Modal */}
-            <ConfirmDialog
-                isOpen={showUpdateModal}
-                title="系统更新可用"
-                message={`发现新版本！系统将自动获取最新代码并重启服务。\n\n当前版本: ${updateInfo?.localVersion}\n最新版本: ${updateInfo?.remoteVersion}\n\n更新过程可能需要几分钟，期间服务将暂时中断，是否立即更新？`}
-                confirmText={isUpdating ? "更新中..." : "立即更新"}
-                cancelText="暂不更新"
-                confirmButtonClass="bg-indigo-600 hover:bg-indigo-700"
-                onConfirm={handleUpdate}
-                onCancel={() => setShowUpdateModal(false)}
-                isLoading={isUpdating}
-            />
+            <Dialog open={showUpdateModal} onOpenChange={(open) => !isUpdating && setShowUpdateModal(open)}>
+                <DialogContent className="sm:max-w-[600px] max-h-[80vh] flex flex-col overflow-hidden">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2 text-xl">
+                            <Sparkles className="w-5 h-5 text-indigo-600" />
+                            发现新版本
+                        </DialogTitle>
+                        <DialogDescription>
+                            系统将自动获取最新代码并重启服务。更新过程可能需要几分钟。
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="flex-1 overflow-y-auto py-4 pr-2 -mr-2">
+                        <div className="flex items-center justify-between bg-gray-50 p-4 rounded-xl mb-6">
+                            <div className="flex flex-col gap-1">
+                                <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">当前版本</span>
+                                <span className="font-mono font-bold text-gray-700">{updateInfo?.localVersion}</span>
+                            </div>
+                            <div className="h-8 w-px bg-gray-200"></div>
+                            <div className="flex flex-col gap-1 text-right">
+                                <span className="text-xs text-indigo-500 font-medium uppercase tracking-wider">最新版本</span>
+                                <span className="font-mono font-bold text-indigo-600 flex items-center gap-2 justify-end">
+                                    {updateInfo?.remoteVersion}
+                                    <Badge className="bg-indigo-100 text-indigo-600 hover:bg-indigo-200 border-0">New</Badge>
+                                </span>
+                            </div>
+                        </div>
+
+                        {updateInfo?.updateLogs && updateInfo.updateLogs.length > 0 && (
+                            <div className="space-y-3">
+                                <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                                    <GitCommit className="w-4 h-4 text-gray-500" />
+                                    更新内容
+                                </h4>
+                                <div className="space-y-2">
+                                    {updateInfo.updateLogs.map((log) => (
+                                        <div key={log.hash} className="text-sm border-l-2 border-indigo-100 pl-3 py-1 hover:border-indigo-500 hover:bg-gray-50 transition-all rounded-r-lg">
+                                            <div className="flex items-start justify-between gap-4">
+                                                <p className="text-gray-700 font-medium leading-relaxed">{log.message}</p>
+                                                <span className="text-xs text-gray-400 whitespace-nowrap font-mono">{log.date}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <DialogFooter className="gap-2 sm:gap-0 mt-2 border-t pt-4">
+                        <Button
+                            variant="ghost"
+                            onClick={() => setShowUpdateModal(false)}
+                            disabled={isUpdating}
+                        >
+                            暂不更新
+                        </Button>
+                        <Button
+                            onClick={handleUpdate}
+                            disabled={isUpdating}
+                            className="bg-indigo-600 hover:bg-indigo-700 pl-3"
+                        >
+                            {isUpdating ? (
+                                <>
+                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                                    正在更新...
+                                </>
+                            ) : (
+                                <>
+                                    <Sparkles className="w-4 h-4 mr-2" />
+                                    立即更新
+                                </>
+                            )}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
