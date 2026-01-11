@@ -937,7 +937,207 @@ function createAIServiceFromConfig(config: {
 /**
  * 获取 AI 服务（优化版：支持用途过滤和自动降级）
  */
+// 旧版 getAIService 已被 getAIServiceWithFallback 替代
 export async function getAIService(): Promise<AIService> {
-    return getAIServiceForUseCase('GENERAL');
+    return getAIServiceWithFallback('GENERAL');
 }
 
+
+/**
+ * 检查错误是否应该触发自动降级
+ * 包括：账户欠费、API限流、认证失败等
+ */
+function shouldFallback(error: any): boolean {
+    const errorMessage = error?.message || '';
+    
+    // 403 错误（欠费、权限不足）
+    if (errorMessage.includes('403') || errorMessage.includes('Forbidden')) return true;
+    // 429 错误（限流）
+    if (errorMessage.includes('429') || errorMessage.includes('rate limit') || errorMessage.includes('Too Many Requests')) return true;
+    // 401 错误（认证失败）
+    if (errorMessage.includes('401') || errorMessage.includes('Unauthorized')) return true;
+    // 账户欠费
+    if (errorMessage.includes('AccountOverdueError') || errorMessage.includes('overdue')) return true;
+    // 余额不足
+    if (errorMessage.includes('insufficient') || errorMessage.includes('balance')) return true;
+    // 配额超限
+    if (errorMessage.includes('quota') || errorMessage.includes('exceeded')) return true;
+    
+    return false;
+}
+
+/**
+ * 获取所有可用的 AI 配置（按优先级排序）
+ */
+async function getAllActiveConfigs(useCase: AIUseCaseType = 'GENERAL'): Promise<any[]> {
+    let configs = await db.aIConfig.findMany({
+        where: {
+            isActive: true,
+            useCase: useCase as any
+        },
+        orderBy: { priority: 'desc' }
+    });
+
+    if (configs.length === 0) {
+        configs = await db.aIConfig.findMany({
+            where: {
+                isActive: true,
+                useCase: 'GENERAL'
+            },
+            orderBy: { priority: 'desc' }
+        });
+    }
+
+    if (configs.length === 0) {
+        configs = await db.aIConfig.findMany({
+            where: { isActive: true },
+            orderBy: { priority: 'desc' }
+        });
+    }
+
+    return configs;
+}
+
+/**
+ * 带自动降级的 AI 服务包装器
+ * 当某个平台返回错误（欠费、限流等）时，自动尝试下一个优先级的平台
+ */
+export class AIServiceWithFallback implements AIService {
+    private configs: any[];
+    private currentIndex: number = 0;
+    public configId: string = '';
+
+    constructor(configs: any[]) {
+        this.configs = configs;
+        if (configs.length > 0) {
+            this.configId = configs[0].id;
+        }
+    }
+
+    private getCurrentService(): AIService {
+        if (this.currentIndex >= this.configs.length) {
+            throw new Error('All AI providers have failed');
+        }
+        return createAIServiceFromConfig(this.configs[this.currentIndex]);
+    }
+
+    private moveToNextProvider(): boolean {
+        this.currentIndex++;
+        if (this.currentIndex < this.configs.length) {
+            this.configId = this.configs[this.currentIndex].id;
+            logger.warn(`[AIService] ⚠️ Falling back to next provider: ${this.configs[this.currentIndex].provider} (Priority: ${this.configs[this.currentIndex].priority})`);
+            return true;
+        }
+        return false;
+    }
+
+    async generateContent(prompt: string, options?: { response_format?: { type: 'text' | 'json_object' } }): Promise<string> {
+        while (this.currentIndex < this.configs.length) {
+            try {
+                const service = this.getCurrentService();
+                const currentProvider = this.configs[this.currentIndex].provider;
+                logger.info(`[AIService] Trying ${currentProvider} for generateContent`);
+                return await service.generateContent(prompt, options);
+            } catch (error: any) {
+                const currentProvider = this.configs[this.currentIndex].provider;
+                logger.error(`[AIService] ${currentProvider} failed: ${error.message}`);
+                
+                if (shouldFallback(error)) {
+                    if (!this.moveToNextProvider()) {
+                        throw new Error(`All AI providers failed. Last error from ${currentProvider}: ${error.message}`);
+                    }
+                } else {
+                    throw error;
+                }
+            }
+        }
+        throw new Error('All AI providers have been exhausted');
+    }
+
+    async generateArticle(request: AICompletionRequest): Promise<AICompletionResponse> {
+        while (this.currentIndex < this.configs.length) {
+            try {
+                const service = this.getCurrentService();
+                const currentProvider = this.configs[this.currentIndex].provider;
+                logger.info(`[AIService] Trying ${currentProvider} for generateArticle`);
+                return await service.generateArticle(request);
+            } catch (error: any) {
+                const currentProvider = this.configs[this.currentIndex].provider;
+                logger.error(`[AIService] ${currentProvider} failed: ${error.message}`);
+                
+                if (shouldFallback(error)) {
+                    if (!this.moveToNextProvider()) {
+                        throw new Error(`All AI providers failed. Last error from ${currentProvider}: ${error.message}`);
+                    }
+                } else {
+                    throw error;
+                }
+            }
+        }
+        throw new Error('All AI providers have been exhausted');
+    }
+
+    async generateImage(prompt: string, size?: string): Promise<{ url: string; alt: string; description: string }> {
+        while (this.currentIndex < this.configs.length) {
+            try {
+                const service = this.getCurrentService();
+                const currentProvider = this.configs[this.currentIndex].provider;
+                logger.info(`[AIService] Trying ${currentProvider} for generateImage`);
+                return await service.generateImage(prompt, size);
+            } catch (error: any) {
+                const currentProvider = this.configs[this.currentIndex].provider;
+                logger.error(`[AIService] ${currentProvider} failed: ${error.message}`);
+                
+                if (shouldFallback(error)) {
+                    if (!this.moveToNextProvider()) {
+                        throw new Error(`All AI providers failed. Last error from ${currentProvider}: ${error.message}`);
+                    }
+                } else {
+                    throw error;
+                }
+            }
+        }
+        throw new Error('All AI providers have been exhausted');
+    }
+}
+
+/**
+ * 获取带自动降级功能的 AI 服务
+ * 当某个平台欠费/限流时，自动切换到下一个优先级的平台
+ */
+export async function getAIServiceWithFallback(useCase: AIUseCaseType = 'GENERAL'): Promise<AIServiceWithFallback> {
+    const configs = await getAllActiveConfigs(useCase);
+    
+    if (configs.length === 0) {
+        logger.warn('[AIService] No active configs found, using Mock service');
+        return new AIServiceWithFallback([{
+            id: 'mock',
+            provider: 'mock',
+            apiKey: '',
+            baseUrl: null,
+            modelName: null,
+            secretKey: null
+        }]);
+    }
+
+    // 过滤掉超过 Token 限额的配置（但保留它们作为最后的备选）
+    const withinLimitConfigs: any[] = [];
+    const overLimitConfigs: any[] = [];
+
+    for (const config of configs) {
+        const overLimit = await isOverLimit(config);
+        if (overLimit) {
+            overLimitConfigs.push(config);
+        } else {
+            withinLimitConfigs.push(config);
+        }
+    }
+
+    const orderedConfigs = [...withinLimitConfigs, ...overLimitConfigs];
+    
+    if (orderedConfigs.length > 0) {
+        logger.info(`[AIService] Initialized fallback chain: ${orderedConfigs.map(c => c.provider + '(P' + c.priority + ')').join(' -> ')}`);
+    }
+
+    return new AIServiceWithFallback(orderedConfigs);
+}
