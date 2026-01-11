@@ -4,6 +4,47 @@ import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
 
+// 全面刷新模板相关的所有缓存
+async function revalidateAllTemplateRelatedPaths(templateId?: string) {
+    // 1. 刷新管理后台
+    revalidatePath('/admin/templates');
+    revalidatePath('/admin/pages');
+    revalidatePath('/admin/settings/site');
+
+    // 2. 刷新首页（所有类型）
+    revalidatePath('/', 'page');
+    revalidatePath('/', 'layout');
+
+    // 3. 刷新所有语言版本的首页
+    const locales = ['zh', 'en', 'ja', 'ko', 'fr', 'de', 'es', 'ru', 'pt', 'ar'];
+    for (const locale of locales) {
+        revalidatePath(`/${locale}`, 'page');
+        revalidatePath(`/${locale}`, 'layout');
+    }
+
+    // 4. 如果提供了模板ID，查找并刷新所有使用该模板的页面
+    if (templateId) {
+        try {
+            const pagesUsingTemplate = await db.page.findMany({
+                where: {
+                    OR: [
+                        { headerTemplateId: templateId },
+                        { footerTemplateId: templateId },
+                        { templateId: templateId },
+                    ],
+                },
+                select: { slug: true, lang: true },
+            });
+
+            for (const page of pagesUsingTemplate) {
+                revalidatePath(`/${page.lang}/${page.slug}`, 'page');
+            }
+        } catch (e) {
+            console.error('Failed to revalidate pages using template:', e);
+        }
+    }
+}
+
 
 export async function createTemplate(formData: FormData) {
     const user = await getCurrentUser();
@@ -40,9 +81,7 @@ export async function createTemplate(formData: FormData) {
         return { success: false, error: '创建模板失败' };
     }
 
-    revalidatePath('/admin/templates');
-    revalidatePath('/', 'layout');
-    revalidatePath('/');
+    await revalidateAllTemplateRelatedPaths();
     return { success: true };
 }
 
@@ -81,9 +120,7 @@ export async function updateTemplate(formData: FormData) {
         return { success: false, error: '更新模板失败' };
     }
 
-    revalidatePath('/admin/templates');
-    revalidatePath('/', 'layout');
-    revalidatePath('/');
+    await revalidateAllTemplateRelatedPaths(id);
     return { success: true };
 }
 
@@ -120,9 +157,7 @@ export async function toggleTemplateStatus(templateId: string, moduleType: strin
         return { error: '更新模板状态失败' };
     }
 
-    revalidatePath('/admin/templates');
-    revalidatePath('/', 'layout');
-    revalidatePath('/');
+    await revalidateAllTemplateRelatedPaths(templateId);
 }
 
 export async function deleteTemplate(id: string) {
@@ -141,9 +176,7 @@ export async function deleteTemplate(id: string) {
         return { error: '删除模板失败' };
     }
 
-    revalidatePath('/admin/templates');
-    revalidatePath('/', 'layout');
-    revalidatePath('/');
+    await revalidateAllTemplateRelatedPaths(id);
 }
 
 export async function activateTemplate(templateId: string, moduleType: string) {
