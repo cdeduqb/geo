@@ -35,6 +35,7 @@ module.exports = {
             env: {
                 NODE_ENV: 'production',
                 PORT: 3000,
+                HOSTNAME: '0.0.0.0',
                 // 限制 Node.js 堆内存（根据服务器内存调整）
                 NODE_OPTIONS: '--max-old-space-size=384',
             },
