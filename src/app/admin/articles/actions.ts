@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { createPushService } from '@/lib/seo/push-service';
+import { getSiteUrl } from '@/lib/system-settings';
 
 const ArticleSchema = z.object({
     title: z.string().min(1, '标题不能为空'),
@@ -27,7 +28,12 @@ const ArticleSchema = z.object({
 
 export async function autoPushToSEO(articleSlug: string, lang: string = 'zh') {
     try {
-        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+        const baseUrl = await getSiteUrl();
+
+        // 验证 URL 是否合法（非 localhost，除非确实想推 localhost）
+        if (baseUrl.includes('localhost') || baseUrl.includes('127.0.0.1')) {
+            console.warn('[SEO Push] 检测到 Base URL 为 localhost，搜索引擎可能会拒绝推送:', baseUrl);
+        }
 
         // 构建多版本 URL（默认语言和多语言路径）
         const urls: string[] = [];

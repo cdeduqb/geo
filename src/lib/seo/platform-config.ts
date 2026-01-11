@@ -12,6 +12,7 @@ export interface PlatformConfig {
         fast?: string;
     };
     documentUrl: string;
+    keyGenerationUrl?: string; // 密钥获取/生成的 URL
     tokenGuide?: string;
     scriptGuide?: string; // JS脚本获取指引
     requiresSiteId: boolean;
@@ -65,6 +66,7 @@ export const SEO_PLATFORMS: Record<string, PlatformConfig> = {
             normal: 'https://api.indexnow.org/indexnow'
         },
         documentUrl: 'https://www.indexnow.org/documentation',
+        keyGenerationUrl: 'https://www.indexnow.org/documentation',
         tokenGuide: '1. 访问 indexnow.org 生成 Key → 2. 将 Key 填入 Token 字段 → 3. 站点ID 填写完整域名（如 https://www.example.com）',
         requiresSiteId: true,
         requiresToken: true,
@@ -81,7 +83,7 @@ export const SEO_PLATFORMS: Record<string, PlatformConfig> = {
             normal: 'https://indexing.googleapis.com/v3/urlNotifications:publish'
         },
         documentUrl: 'https://developers.google.com/search/apis/indexing-api/v3/quickstart',
-        tokenGuide: '1. Google Cloud Console 创建项目并启用 Indexing API → 2. 创建服务账号 → 3. 在 Search Console 添加服务账号权限 → 4. 运行 gcloud auth print-access-token 获取 Token',
+        tokenGuide: '⚠️ 需要 OAuth Access Token (非 API Key)。运行 `gcloud auth print-access-token` 获取。注意：Token 有效期仅 1 小时，适合临时测试。长期使用请寻找支持 Service Account 的自动化方案。',
         requiresSiteId: false,
         requiresToken: true,
         rateLimit: {

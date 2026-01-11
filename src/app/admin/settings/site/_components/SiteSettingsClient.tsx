@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import {
     Save, Loader2, Layout, Eye, Plus, Trash2, ChevronDown, ChevronRight,
-    Image as ImageIcon, Palette, Phone, Mail, MapPin, Share2, X, Check, Globe, Building, FileText, Sparkles, Shield
+    Image as ImageIcon, Palette, Phone, Mail, MapPin, Share2, X, Check, Globe, Building, FileText, Sparkles, Shield, ShieldCheck
 } from 'lucide-react';
 import { PageRenderer } from '@/components/PageRenderer';
 import ImageUpload from '@/components/ui/ImageUpload';
@@ -81,6 +81,16 @@ export default function SiteSettingsClient({ initialData }: SiteSettingsClientPr
         contact_address: initialData.systemSettings.contact_address || initialData.siteSettings?.address || '',
     });
 
+    const [verificationFiles, setVerificationFiles] = useState<any[]>(() => {
+        try {
+            return initialData.systemSettings.site_verification_files
+                ? JSON.parse(initialData.systemSettings.site_verification_files)
+                : [];
+        } catch {
+            return [];
+        }
+    });
+
     // 语言设置状态
     const [supportedLocales, setSupportedLocales] = useState<string[]>(() => {
         try {
@@ -155,6 +165,7 @@ export default function SiteSettingsClient({ initialData }: SiteSettingsClientPr
                         supportedLocales: supportedLocales
                     }),
                     ...contactSettings,
+                    site_verification_files: JSON.stringify(verificationFiles),
                 }),
             });
 
@@ -516,6 +527,75 @@ export default function SiteSettingsClient({ initialData }: SiteSettingsClientPr
                                             </p>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+
+                            {/* 站点验证文件 */}
+                            <div className="bg-white rounded-[32px] p-10 border border-gray-100 shadow-sm ring-1 ring-gray-100/50">
+                                <div className="flex items-start gap-5 mb-10">
+                                    <div className="w-14 h-14 rounded-2xl bg-teal-50 flex items-center justify-center text-teal-600 shadow-inner">
+                                        <ShieldCheck className="w-7 h-7" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-black text-gray-900 tracking-tight">站点所有权验证</h3>
+                                        <p className="text-sm text-gray-500 mt-1 font-medium">配置百度、谷歌等搜索引擎验证文件 (.html)</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    {verificationFiles.map((file, index) => (
+                                        <div key={index} className="p-5 bg-gray-50/50 rounded-2xl border border-gray-200/50 space-y-3 group hover:bg-white hover:shadow-lg transition-all duration-300">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div className="space-y-1">
+                                                    <label className="text-[11px] font-bold text-gray-500 uppercase">验证文件名 (带后缀)</label>
+                                                    <input
+                                                        type="text"
+                                                        value={file.filename}
+                                                        onChange={(e) => {
+                                                            const newFiles = [...verificationFiles];
+                                                            newFiles[index].filename = e.target.value;
+                                                            setVerificationFiles(newFiles);
+                                                        }}
+                                                        placeholder="baidu_verify_code.html"
+                                                        className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm font-bold text-gray-900 focus:border-blue-500 outline-none"
+                                                    />
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <label className="text-[11px] font-bold text-gray-500 uppercase">文件内容 (HTML/Text)</label>
+                                                    <input
+                                                        type="text"
+                                                        value={file.content}
+                                                        onChange={(e) => {
+                                                            const newFiles = [...verificationFiles];
+                                                            newFiles[index].content = e.target.value;
+                                                            setVerificationFiles(newFiles);
+                                                        }}
+                                                        placeholder="直接粘贴验证代码内容"
+                                                        className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm font-bold text-gray-900 focus:border-blue-500 outline-none"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-end pt-2">
+                                                <button
+                                                    onClick={() => {
+                                                        const newFiles = verificationFiles.filter((_, i) => i !== index);
+                                                        setVerificationFiles(newFiles);
+                                                    }}
+                                                    className="text-xs text-red-500 hover:text-red-600 font-bold flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors"
+                                                >
+                                                    <Trash2 className="w-3.5 h-3.5" /> 移除此验证
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+
+                                    <button
+                                        onClick={() => setVerificationFiles([...verificationFiles, { filename: '', content: '' }])}
+                                        className="w-full py-4 rounded-2xl border-2 border-dashed border-gray-200 text-gray-400 font-bold hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50/50 transition-all flex items-center justify-center gap-2"
+                                    >
+                                        <Plus className="w-5 h-5" />
+                                        添加新验证文件
+                                    </button>
                                 </div>
                             </div>
                         </div>

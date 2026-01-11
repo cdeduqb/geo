@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { createPushService } from '@/lib/seo/push-service';
+
 import { fillApiTemplate } from '@/lib/seo/platform-config';
+import { getSiteUrl } from '@/lib/system-settings';
 
 // POST /api/admin/seo/test - Test connection to search engine API
 export async function POST(request: NextRequest) {
@@ -25,7 +27,8 @@ export async function POST(request: NextRequest) {
         // 注意：有些平台可能不支持推送首页，或者已经推送过。
         // 一个更好的办法是调用该平台的特定的查询余额或查询站点信息的 API（如果存在）。
         // 目前我们简单地尝试推送首页。
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin;
+        // 使用配置的站点 URL 进行测试，这比 request.nextUrl.origin 更准确
+        const baseUrl = await getSiteUrl();
         const testUrl = [baseUrl];
 
         const service = createPushService(platform, finalApiUrl, token, siteId);

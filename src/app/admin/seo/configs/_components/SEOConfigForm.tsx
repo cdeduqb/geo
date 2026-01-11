@@ -294,6 +294,18 @@ export default function SEOConfigForm({ initialData, onSuccess }: SEOConfigFormP
                             <div className="space-y-3">
                                 <label className={labelClass}>
                                     安全密钥 (Token / Proxy Key) {platformConfig?.requiresToken && '*'}
+                                    {platformConfig?.keyGenerationUrl && (
+                                        <a
+                                            href="#"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                window.open(platformConfig.keyGenerationUrl, '_blank');
+                                            }}
+                                            className="float-right text-[10px] text-blue-600 hover:underline flex items-center gap-1 font-normal cursor-pointer"
+                                        >
+                                            去获取密钥 <ExternalLink className="w-3 h-3" />
+                                        </a>
+                                    )}
                                 </label>
                                 <input
                                     type="text"
