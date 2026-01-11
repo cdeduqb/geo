@@ -51,11 +51,16 @@ export default function AIConfigList({ configs }: AIConfigListProps) {
                                 <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
                                     {config.modelName}
                                 </span>
-                                {config.useCase && config.useCase !== 'GENERAL' && (
-                                    <span className={`text-xs px-2 py-0.5 rounded-full ${config.useCase === 'WRITING' ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600'}`}>
-                                        {config.useCase === 'WRITING' ? '写作' : '代码'}
-                                    </span>
-                                )}
+                                <span className={`text-xs px-2 py-0.5 rounded-full ${config.useCase === 'WRITING' ? 'bg-blue-100 text-blue-600' :
+                                        config.useCase === 'CODE' ? 'bg-purple-100 text-purple-600' :
+                                            config.useCase === 'IMAGE' ? 'bg-green-100 text-green-600' :
+                                                'bg-gray-100 text-gray-600'
+                                    }`}>
+                                    {config.useCase === 'WRITING' ? '写作' :
+                                        config.useCase === 'CODE' ? '代码生成' :
+                                            config.useCase === 'IMAGE' ? '图片生成' :
+                                                '通用'}
+                                </span>
                             </h4>
                             <p className="text-sm text-gray-500 mt-0.5">
                                 Base URL: {config.baseUrl}

@@ -10,62 +10,32 @@ interface AIConfigFormProps {
     onSuccess?: () => void;
 }
 
+// Provider default configurations - moved outside component for proper initialization
+const PROVIDER_DEFAULTS: Record<string, { baseUrl: string; modelName: string }> = {
+    deepseek: { baseUrl: 'https://api.deepseek.com', modelName: 'deepseek-chat' },
+    openai: { baseUrl: 'https://api.openai.com/v1', modelName: 'gpt-4o-mini' },
+    volcengine: { baseUrl: 'https://ark.cn-beijing.volces.com/api/v3', modelName: 'ep-xxxxx-xxxxx' },
+    qwen: { baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1', modelName: 'qwen-turbo' },
+    minimax: { baseUrl: 'https://api.minimax.chat/v1', modelName: 'abab6.5-chat' },
+    gemini: { baseUrl: 'https://generativelanguage.googleapis.com/v1beta', modelName: 'gemini-pro' },
+    kimi: { baseUrl: 'https://api.moonshot.cn/v1', modelName: 'moonshot-v1-8k' },
+    zhipu: { baseUrl: 'https://open.bigmodel.cn/api/paas/v4', modelName: 'glm-4' },
+    baidu: { baseUrl: 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat', modelName: 'completions_pro' },
+    custom: { baseUrl: '', modelName: '' }
+};
 export default function AIConfigForm({ initialData, onSuccess }: AIConfigFormProps) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [selectedProvider, setSelectedProvider] = useState(initialData?.provider || 'deepseek');
     const [apiKey, setApiKey] = useState(initialData?.apiKey || '');
-    const [baseUrl, setBaseUrl] = useState(initialData?.baseUrl || '');
-    const [modelName, setModelName] = useState(initialData?.modelName || '');
+    const [baseUrl, setBaseUrl] = useState(initialData?.baseUrl || PROVIDER_DEFAULTS[initialData?.provider || 'deepseek']?.baseUrl || '');
+    const [modelName, setModelName] = useState(initialData?.modelName || PROVIDER_DEFAULTS[initialData?.provider || 'deepseek']?.modelName || '');
     const [secretKey, setSecretKey] = useState(initialData?.secretKey || '');
     const [dailyTokenLimit, setDailyTokenLimit] = useState<string>(initialData?.dailyTokenLimit?.toString() || '');
     const [monthlyTokenLimit, setMonthlyTokenLimit] = useState<string>(initialData?.monthlyTokenLimit?.toString() || '');
     const [useCase, setUseCase] = useState<string>(initialData?.useCase || 'GENERAL');
 
-    // Provider default configurations
-    const providerDefaults: Record<string, { baseUrl: string; modelName: string }> = {
-        deepseek: {
-            baseUrl: 'https://api.deepseek.com',
-            modelName: 'deepseek-chat'
-        },
-        openai: {
-            baseUrl: 'https://api.openai.com/v1',
-            modelName: 'gpt-4o-mini'
-        },
-        volcengine: {
-            baseUrl: 'https://ark.cn-beijing.volces.com/api/v3',
-            modelName: 'ep-xxxxx-xxxxx'
-        },
-        qwen: {
-            baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
-            modelName: 'qwen-turbo'
-        },
-        minimax: {
-            baseUrl: 'https://api.minimax.chat/v1',
-            modelName: 'abab6.5-chat'
-        },
-        gemini: {
-            baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
-            modelName: 'gemini-pro'
-        },
-        kimi: {
-            baseUrl: 'https://api.moonshot.cn/v1',
-            modelName: 'moonshot-v1-8k'
-        },
-        zhipu: {
-            baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
-            modelName: 'glm-4'
-        },
-        baidu: {
-            baseUrl: 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat',
-            modelName: 'completions_pro'
-        },
-        custom: {
-            baseUrl: '',
-            modelName: ''
-        }
-    };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -143,9 +113,9 @@ export default function AIConfigForm({ initialData, onSuccess }: AIConfigFormPro
                     <input
                         type="text"
                         name="modelName"
-                        defaultValue={initialData?.modelName || providerDefaults[selectedProvider]?.modelName}
+                        defaultValue={initialData?.modelName || PROVIDER_DEFAULTS[selectedProvider]?.modelName}
                         key={`model-${selectedProvider}`}
-                        placeholder={providerDefaults[selectedProvider]?.modelName || 'e.g. gpt-4o-mini'}
+                        placeholder={PROVIDER_DEFAULTS[selectedProvider]?.modelName || 'e.g. gpt-4o-mini'}
                         className="w-full p-2 border border-gray-100 rounded-lg"
                     />
                 </div>
@@ -183,10 +153,10 @@ export default function AIConfigForm({ initialData, onSuccess }: AIConfigFormPro
                     <input
                         type="url"
                         name="baseUrl"
-                        value={baseUrl || providerDefaults[selectedProvider]?.baseUrl}
+                        value={baseUrl || PROVIDER_DEFAULTS[selectedProvider]?.baseUrl}
                         onChange={(e) => setBaseUrl(e.target.value)}
                         key={`baseurl-${selectedProvider}`}
-                        placeholder={providerDefaults[selectedProvider]?.baseUrl || 'https://api.example.com'}
+                        placeholder={PROVIDER_DEFAULTS[selectedProvider]?.baseUrl || 'https://api.example.com'}
                         className="w-full p-2 border border-gray-100 rounded-lg"
                     />
                 </div>
@@ -257,10 +227,10 @@ export default function AIConfigForm({ initialData, onSuccess }: AIConfigFormPro
             <div className="pt-4">
                 <ValidateButton
                     provider={selectedProvider}
-                    baseUrl={baseUrl || providerDefaults[selectedProvider]?.baseUrl}
+                    baseUrl={baseUrl || PROVIDER_DEFAULTS[selectedProvider]?.baseUrl}
                     apiKey={apiKey}
                     secretKey={secretKey}
-                    modelName={modelName || providerDefaults[selectedProvider]?.modelName}
+                    modelName={modelName || PROVIDER_DEFAULTS[selectedProvider]?.modelName}
                     configId={initialData?.id}
                 />
             </div>
