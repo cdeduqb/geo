@@ -57,6 +57,12 @@ npx prisma db push
 
 # 4. Build
 echo "[4/5] Building application..."
+
+# 重要：清除 Next.js 构建缓存，确保完全重新构建
+echo "Clearing Next.js cache..."
+rm -rf .next
+rm -rf node_modules/.cache
+
 npm run build
 
 if [ $? -ne 0 ]; then

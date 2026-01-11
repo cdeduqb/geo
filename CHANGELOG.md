@@ -1,5 +1,13 @@
 # 更新日志 (Changelog)
 
+## v0.3.18 (2026-01-11)
+
+### 核心修复
+- **服务器缓存问题**：
+    - 更新脚本现在会强制清除 `.next` 和 `node_modules/.cache` 目录
+    - 为所有页面添加了 `Cache-Control: no-store` 响应头，防止 Nginx/CDN 缓存
+    - 添加 `Pragma: no-cache` 和 `Expires: 0` 头部作为兜底
+
 ## v0.3.17 (2026-01-11)
 
 ### 核心修复
