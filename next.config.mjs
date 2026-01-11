@@ -20,12 +20,12 @@ const nextConfig = {
         // 🔒 CSP 配置 - 防止注入攻击
         const ContentSecurityPolicy = `
       default-src 'self';
-      script-src 'self' 'unsafe-eval' 'unsafe-inline' blob:;
+      script-src 'self' 'unsafe-eval' 'unsafe-inline' blob: https://*.bytegoofy.com https://*.bytecdn.cn https://*.toutiao.com https://*.baidu.com https://*.bdstatic.com https://*.google-analytics.com https://*.googletagmanager.com;
       worker-src 'self' blob:;
       style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
       img-src 'self' data: https: blob:;
       font-src 'self' https://fonts.gstatic.com;
-      connect-src 'self' https://api.openai.com https://generativelanguage.googleapis.com;
+      connect-src 'self' https: wss:;
       frame-ancestors 'self';
       base-uri 'self';
       form-action 'self';
