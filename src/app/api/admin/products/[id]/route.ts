@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { getCurrentUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 
@@ -82,8 +83,12 @@ export async function PUT(
 
         // 如果修改了slug，检查新slug是否已被使用
         if (slug && slug !== existingProduct.slug) {
-            const slugExists = await db.product.findUnique({
-                where: { slug },
+            const slugExists = await db.product.findFirst({
+                where: {
+                    slug,
+                    lang: existingProduct.lang,
+                    id: { not: id }
+                },
             });
 
             if (slugExists) {
@@ -136,6 +141,16 @@ export async function PUT(
             },
         });
 
+        // 刷新缓存
+        revalidatePath('/admin/products');
+        revalidatePath('/', 'layout');
+        revalidatePath('/');
+        if (product.lang) {
+            revalidatePath(`/${product.lang}`);
+            revalidatePath(`/${product.lang}/products`);
+            revalidatePath(`/${product.lang}/products/${product.slug}`);
+        }
+
         return NextResponse.json({ product });
     } catch (error) {
         console.error('Update product error:', error);
@@ -169,6 +184,16 @@ export async function DELETE(
         await db.product.delete({
             where: { id },
         });
+
+        // 刷新缓存
+        revalidatePath('/admin/products');
+        revalidatePath('/', 'layout');
+        revalidatePath('/');
+        if (product.lang) {
+            revalidatePath(`/${product.lang}`);
+            revalidatePath(`/${product.lang}/products`);
+            revalidatePath(`/${product.lang}/products/${product.slug}`);
+        }
 
         return NextResponse.json({ success: true });
     } catch (error) {

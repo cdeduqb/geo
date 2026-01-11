@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { getCurrentUser } from '@/lib/auth';
 import { db } from '@/lib/db';
 
@@ -124,8 +125,11 @@ export async function POST(request: NextRequest) {
         }
 
         // 检查slug是否已存在
-        const existingProduct = await db.product.findUnique({
-            where: { slug },
+        const existingProduct = await db.product.findFirst({
+            where: {
+                slug,
+                lang: lang || 'zh'
+            },
         });
 
         if (existingProduct) {
@@ -176,6 +180,15 @@ export async function POST(request: NextRequest) {
                 category: true,
             },
         });
+
+        // 刷新缓存
+        revalidatePath('/admin/products');
+        revalidatePath('/', 'layout');
+        revalidatePath('/');
+        if (lang) {
+            revalidatePath(`/${lang}`);
+            revalidatePath(`/${lang}/products`);
+        }
 
         return NextResponse.json({ product });
     } catch (error) {
