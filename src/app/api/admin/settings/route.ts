@@ -3,8 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 
 import { getCurrentUser } from '@/lib/auth';
-import fs from 'fs';
-import path from 'path';
+
 
 // GET /api/admin/settings - Get all settings
 export async function GET() {
@@ -38,68 +37,7 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
-        console.log('[Settings Update] Received body keys:', Object.keys(body));
 
-        // 特殊处理：站点验证文件物理同步到 public 目录
-        if (body.site_verification_files) {
-            console.log('[Settings Update] Processing verification files...');
-            try {
-                const publicDir = path.join(process.cwd(), 'public');
-                console.log('[Settings Update] Resolved public directory:', publicDir);
-
-                let verificationFiles: any[] = [];
-                try {
-                    verificationFiles = JSON.parse(body.site_verification_files);
-                } catch (e) {
-                    console.error('Json parse error', e);
-                }
-
-                if (Array.isArray(verificationFiles)) {
-                    // 1. 获取旧配置以处理删除
-                    const oldSetting = await db.systemSetting.findUnique({
-                        where: { key: 'site_verification_files' }
-                    });
-
-                    if (oldSetting?.value) {
-                        try {
-                            const oldFiles = JSON.parse(oldSetting.value);
-                            if (Array.isArray(oldFiles)) {
-                                for (const oldFile of oldFiles) {
-                                    // 如果旧文件不在新列表中，删除它
-                                    const exists = verificationFiles.find((f: any) => f.filename === oldFile.filename);
-                                    if (!exists && oldFile.filename) {
-                                        const filePath = path.join(publicDir, oldFile.filename);
-                                        // 简单安全检查：只允许当前目录
-                                        if (!oldFile.filename.includes('/') && !oldFile.filename.includes('\\') && fs.existsSync(filePath)) {
-                                            fs.unlinkSync(filePath);
-                                        }
-                                    }
-                                }
-                            }
-                        } catch (e) {
-                            console.error('Error cleaning up old files', e);
-                        }
-                    }
-
-                    // 2. 写入新文件
-                    for (const file of verificationFiles) {
-                        if (file.filename && file.content) {
-                            // 安全检查：防止路径遍历
-                            const safeFilename = path.basename(file.filename);
-                            if (safeFilename !== file.filename) {
-                                console.warn('Skipping unsafe filename:', file.filename);
-                                continue;
-                            }
-                            const filePath = path.join(publicDir, safeFilename);
-                            fs.writeFileSync(filePath, file.content, 'utf-8');
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error('Failed to sync verification files to disk:', error);
-                // 不阻塞数据库保存，只记录错误
-            }
-        }
 
         // Batch upsert settings
         const updatePromises = Object.entries(body).map(([key, value]) => {

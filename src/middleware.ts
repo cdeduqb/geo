@@ -13,6 +13,16 @@ const AI_CRAWLER_KEYWORDS = [
 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
+
+    // 0. 站点验证文件拦截 (Site Verification)
+    // 如果是 .html 结尾的请求，尝试从数据库读取验证文件
+    if (pathname.endsWith('.html') && !pathname.startsWith('/admin') && !pathname.startsWith('/api')) {
+        const url = request.nextUrl.clone();
+        url.pathname = '/api/seo/verify';
+        url.searchParams.set('filename', pathname.substring(1)); // 去掉开头的 /
+        return NextResponse.rewrite(url);
+    }
+
     const userAgent = request.headers.get('user-agent') || '';
 
     // 0. 语言检测
