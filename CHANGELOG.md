@@ -1,5 +1,10 @@
 # 更新日志 (Changelog)
 
+## v0.3.20 (2026-01-11)
+
+### 修复
+- 修复 `next.config.mjs` 中 `serverExternalPackages` 配置位置，消除构建警告。
+
 ## v0.3.19 (2026-01-11)
 
 ### 关键修复
