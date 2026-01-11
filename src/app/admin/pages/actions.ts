@@ -106,6 +106,10 @@ export async function createPage(formData: FormData) {
 
     revalidatePath('/admin/pages');
     revalidatePath('/');
+    if (validatedData.lang) {
+        revalidatePath(`/${validatedData.lang}`);
+        revalidatePath(`/${validatedData.lang}/${validatedData.slug}`);
+    } // Ensure localized path is revalidated
     redirect('/admin/pages');
 }
 
@@ -217,6 +221,10 @@ export async function updatePage(formData: FormData) {
 
     revalidatePath('/admin/pages');
     revalidatePath('/');
+    if (validatedData.lang) {
+        revalidatePath(`/${validatedData.lang}`);
+        revalidatePath(`/${validatedData.lang}/${validatedData.slug}`);
+    } // Ensure localized path is revalidated
     redirect('/admin/pages');
 }
 
@@ -228,13 +236,27 @@ export async function deletePage(id: string) {
     }
 
     try {
+        // 先获取页面信息以便刷新缓存
+        const page = await db.page.findUnique({
+            where: { id },
+            select: { slug: true, lang: true, type: true }
+        });
+
         await db.page.delete({
             where: { id },
         });
+
+        if (page) {
+            revalidatePath(`/${page.lang}/${page.slug}`);
+            if (page.type === 'HOME') {
+                revalidatePath(`/${page.lang}`);
+            }
+        }
     } catch (error) {
         console.error('删除页面失败:', error);
         return { error: '删除页面失败' };
     }
 
     revalidatePath('/admin/pages');
+    revalidatePath('/'); // Always revalidate root as deletion might affect nav
 }
