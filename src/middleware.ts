@@ -19,8 +19,17 @@ export async function middleware(request: NextRequest) {
     if (pathname.endsWith('.html') && !pathname.startsWith('/admin') && !pathname.startsWith('/api')) {
         const url = request.nextUrl.clone();
         url.pathname = '/api/seo/verify';
-        url.searchParams.set('filename', pathname.substring(1)); // 去掉开头的 /
-        return NextResponse.rewrite(url);
+        const filename = pathname.substring(1); // 去掉开头的 /
+        url.searchParams.set('filename', filename);
+
+        const requestHeaders = new Headers(request.headers);
+        requestHeaders.set('x-verify-filename', filename);
+
+        return NextResponse.rewrite(url, {
+            request: {
+                headers: requestHeaders
+            }
+        });
     }
 
     const userAgent = request.headers.get('user-agent') || '';

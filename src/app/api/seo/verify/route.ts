@@ -4,7 +4,20 @@ import { db } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
-    const filename = request.nextUrl.searchParams.get('filename');
+    console.log('[Verify API] Request URL:', request.url);
+    const searchParams = Object.fromEntries(request.nextUrl.searchParams);
+    console.log('[Verify API] Search Params:', searchParams);
+
+    let filename = request.nextUrl.searchParams.get('filename');
+
+    // Fallback: Process header from middleware
+    if (!filename) {
+        const headerFilename = request.headers.get('x-verify-filename');
+        if (headerFilename) {
+            console.log('[Verify API] Using filename from header:', headerFilename);
+            filename = headerFilename;
+        }
+    }
 
     if (!filename) {
         return new NextResponse('File Not Found', { status: 404 });
