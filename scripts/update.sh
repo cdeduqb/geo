@@ -58,6 +58,12 @@ npx prisma db push
 # 4. Build
 echo "[4/5] Building application..."
 
+# ⚠️ 关键优化：构建前停止服务以释放内存 (防止 Heap OOM)
+echo "Stopping service to free up memory..."
+if command -v pm2 &> /dev/null; then
+    pm2 stop geocms >/dev/null 2>&1 || true
+fi
+
 # 重要：清除 Next.js 构建缓存，确保完全重新构建
 echo "Clearing Next.js cache..."
 rm -rf .next

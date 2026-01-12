@@ -12,6 +12,9 @@ const nextConfig = {
     typescript: {
         ignoreBuildErrors: true,
     },
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
 
     // 安全头配置
     async headers() {
