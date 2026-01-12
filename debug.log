@@ -420,3 +420,63 @@
 [2026-01-09T13:19:14.884Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
 [2026-01-09T13:29:13.283Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
 [2026-01-09T13:29:13.286Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-11T16:04:04.879Z] WARN: [AIService] No active configs found, using Mock service
+[2026-01-11T16:04:04.881Z] INFO: [Automation] Processing Task 9012e871-3e2d-40ce-81bc-4aeeb6a6b068: Initial Writing
+[2026-01-11T16:04:04.882Z] INFO: [AIService] Trying mock for generateArticle
+[2026-01-11T16:04:06.883Z] INFO: [Automation] Task 9012e871-3e2d-40ce-81bc-4aeeb6a6b068: GEO Optimization starting...
+[2026-01-11T16:04:07.297Z] INFO: [Pipeline] GEO optimizing for: 专家视角：成都GEO优化公司 (zh)
+[2026-01-11T16:04:07.298Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-11T16:04:48.600Z] INFO: [Pipeline] GEO optimization received length: 1307
+[2026-01-11T16:04:48.601Z] INFO: [Automation] Task 9012e871-3e2d-40ce-81bc-4aeeb6a6b068: GEO Optimization completed.
+[2026-01-11T16:04:48.601Z] INFO: [Automation] Task 9012e871-3e2d-40ce-81bc-4aeeb6a6b068: Smart Illustration starting...
+[2026-01-11T16:04:48.996Z] INFO: [Pipeline] Analyzing illustration points for: 专家视角：成都GEO优化公司 (zh)
+[2026-01-11T16:04:48.996Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-11T16:05:50.323Z] INFO: [Pipeline] Analysis result: {
+  "illustrations": [
+    {
+      "afterText": "更多曝光的成都企业。",
+      "prompt": "Modern office workspa...
+[2026-01-11T16:05:51.044Z] INFO: [Automation] Task 9012e871-3e2d-40ce-81bc-4aeeb6a6b068: Smart Illustration completed.
+[2026-01-11T16:05:51.327Z] INFO: [Automation] Task 9012e871-3e2d-40ce-81bc-4aeeb6a6b068: Generating Metadata (SEO, Entities, Citations)
+[2026-01-11T16:05:51.694Z] INFO: [Pipeline] Generating SEO for: 专家视角：成都GEO优化公司
+[2026-01-11T16:05:51.695Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-11T16:05:51.697Z] INFO: [Pipeline] Generating citations
+[2026-01-11T16:05:51.697Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-11T16:05:51.744Z] INFO: [Pipeline] Extracting entities
+[2026-01-11T16:05:51.744Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-11T16:06:42.736Z] INFO: [Automation] Task 9012e871-3e2d-40ce-81bc-4aeeb6a6b068: Finalizing Article
+[2026-01-11T16:06:42.909Z] WARN: [Automation] Slug collision detected: chengdu-geo-optimization-company. New slug: chengdu-geo-optimization-company-vg8r
+[2026-01-11T16:06:43.711Z] INFO: [Pipeline] Auto-linking for: 成都GEO优化公司：全域魔力GEO提升AI搜索可见度 with 50 candidates
+[2026-01-11T16:06:43.711Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-11T16:07:22.061Z] INFO: [Pipeline] Auto-linking completed, length: 1490
+[2026-01-11T16:07:22.476Z] INFO: [Automation] Task 9012e871-3e2d-40ce-81bc-4aeeb6a6b068: Triggering SEO Auto-push
+[2026-01-11T16:07:26.178Z] WARN: [AIService] No active configs found, using Mock service
+[2026-01-11T16:07:26.179Z] INFO: [Automation] Processing Task ae2409e4-cb97-4cec-b7ed-f6d28f79e3f8: Initial Writing
+[2026-01-11T16:07:26.180Z] INFO: [AIService] Trying mock for generateArticle
+[2026-01-11T16:07:28.181Z] INFO: [Automation] Task ae2409e4-cb97-4cec-b7ed-f6d28f79e3f8: GEO Optimization starting...
+[2026-01-11T16:07:28.527Z] INFO: [Pipeline] GEO optimizing for: 成都GEO优化公司 (zh)
+[2026-01-11T16:07:28.527Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-11T16:08:33.853Z] INFO: [Pipeline] GEO optimization received length: 1499
+[2026-01-11T16:08:33.866Z] INFO: [Automation] Task ae2409e4-cb97-4cec-b7ed-f6d28f79e3f8: GEO Optimization completed.
+[2026-01-11T16:08:33.866Z] INFO: [Automation] Task ae2409e4-cb97-4cec-b7ed-f6d28f79e3f8: Smart Illustration starting...
+[2026-01-11T16:08:34.291Z] INFO: [Pipeline] Analyzing illustration points for: 成都GEO优化公司 (zh)
+[2026-01-11T16:08:34.291Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-11T16:10:09.266Z] INFO: [Pipeline] Analysis result: {
+  "illustrations": [
+    {
+      "afterText": "ChatGPT等AI引擎抓取和优先展示。",
+      "prompt": "Chengdu bus...
+[2026-01-11T16:10:10.430Z] INFO: [Automation] Task ae2409e4-cb97-4cec-b7ed-f6d28f79e3f8: Smart Illustration completed.
+[2026-01-11T16:10:11.011Z] INFO: [Automation] Task ae2409e4-cb97-4cec-b7ed-f6d28f79e3f8: Generating Metadata (SEO, Entities, Citations)
+[2026-01-11T16:10:11.301Z] INFO: [Pipeline] Generating citations
+[2026-01-11T16:10:11.302Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-11T16:10:11.317Z] INFO: [Pipeline] Generating SEO for: 成都GEO优化公司
+[2026-01-11T16:10:11.317Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-11T16:10:11.343Z] INFO: [Pipeline] Extracting entities
+[2026-01-11T16:10:11.344Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-11T16:11:25.151Z] INFO: [Automation] Task ae2409e4-cb97-4cec-b7ed-f6d28f79e3f8: Finalizing Article
+[2026-01-11T16:11:25.323Z] WARN: [Automation] Slug collision detected: chengdu-geo-optimization-company. New slug: chengdu-geo-optimization-company-zp26
+[2026-01-11T16:11:26.136Z] INFO: [Pipeline] Auto-linking for: 成都GEO优化公司：全域魔力GEO提升AI引擎可见度 with 50 candidates
+[2026-01-11T16:11:26.137Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-11T16:12:20.452Z] INFO: [Pipeline] Auto-linking completed, length: 1692
+[2026-01-11T16:12:20.757Z] INFO: [Automation] Task ae2409e4-cb97-4cec-b7ed-f6d28f79e3f8: Triggering SEO Auto-push
