@@ -87,7 +87,8 @@ if command -v pm2 &> /dev/null; then
     pm2 delete geocms 2>/dev/null || true
     
     # 设置环境变量并启动 (使用 npm start 确保 Host 绑定生效)
-    pm2 start npm --name "geocms" -- run start --update-env
+    # 使用生态文件启动，更加规范
+    pm2 start ecosystem.config.js --update-env
 else
     # 非 PM2 环境，尝试通过 PID 或进程名终止
     echo "Stopping existing process..."
