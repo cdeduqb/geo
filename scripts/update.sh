@@ -64,27 +64,24 @@ fi
 # 解锁 V8 内存限制，防止构建 OOM
 export NODE_OPTIONS="--max-old-space-size=4096"
 
-# 3.5 Stop & Delete service (完全复刻手动成功步骤)
-echo "[3.5/5] Stopping and deleting service to free up memory..."
-# 不再隐藏输出，以便调试
-pm2 delete geocms || echo "Service not running or delete failed (ignoring)"
-
 # 重要：清除 Next.js 构建缓存
 echo "Clearing Next.js cache..."
 rm -rf .next
 
 # 4. Build
 echo "[4/5] Building application..."
+# 此时服务仍在运行，构建可能会占用大量内存。
+# 如果此处再次 OOM，唯一的办法是增加物理内存或Swap，因为停止服务会杀掉本脚本。
 npm run build
 if [ $? -ne 0 ]; then
-    echo "Error: Build failed."
+    echo "Error: Build failed! Service was NOT stopped, so site is still online."
     exit 1
 fi
 
-
-# 5. Start Service (全新启动)
-echo "[5/5] Starting service..."
-pm2 start ecosystem.config.js
+# 5. Reload Service (平滑重载)
+echo "[5/5] Reloading service..."
+# 尝试重载，如果不存在则启动
+pm2 reload ecosystem.config.js --update-env || pm2 start ecosystem.config.js --update-env
 pm2 save
 
 echo "Update completed successfully!"
