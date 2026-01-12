@@ -55,61 +55,39 @@ echo "[3/5] Updating database schema..."
 npx prisma generate
 npx prisma db push
 
-# 4. Build
-echo "[4/5] Building application..."
-
-# ⚠️ 关键优化：构建前停止服务以释放内存 (防止 Heap OOM)
-echo "Stopping service to free up memory..."
-if command -v pm2 &> /dev/null; then
-    pm2 stop geocms >/dev/null 2>&1 || true
+# ⚠️ 0. 环境准备：强制设置 PATH 和内存限制
+export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+# 尝试查找并添加 npm/node 路径（兼容 nmm/nvm）
+if [ -d "/www/server/nodejs" ]; then
+    export PATH=$PATH:$(find /www/server/nodejs -name bin -type d | head -n 1)
 fi
+# 解锁 V8 内存限制，防止构建 OOM
+export NODE_OPTIONS="--max-old-space-size=4096"
 
-# 重要：清除 Next.js 构建缓存，确保完全重新构建
+# 3.5 Stop & Delete service (完全复刻手动成功步骤)
+echo "[3.5/5] Stopping and deleting service to free up memory..."
+# 不再隐藏输出，以便调试
+pm2 delete geocms || echo "Service not running or delete failed (ignoring)"
+
+# 重要：清除 Next.js 构建缓存
 echo "Clearing Next.js cache..."
 rm -rf .next
-rm -rf node_modules/.cache
 
+# 4. Build
+echo "[4/5] Building application..."
 npm run build
-
 if [ $? -ne 0 ]; then
     echo "Error: Build failed."
     exit 1
 fi
 
 
+# 5. Start Service (全新启动)
+echo "[5/5] Starting service..."
+pm2 start ecosystem.config.js
+pm2 save
 
-
-# 5. Restart Service
-echo "[5/5] Restarting service..."
-
-# 接收父进程 PID (可选参数，由 API 传入)
-PARENT_PID=$1
-
-
-if command -v pm2 &> /dev/null; then
-    echo "Detected PM2 environment."
-    # 使用 standalone 模式启动，需要设置环境变量
-    pm2 delete geocms 2>/dev/null || true
-    
-    # 设置环境变量并启动 (使用 npm start 确保 Host 绑定生效)
-    # 使用生态文件启动，更加规范
-    pm2 start ecosystem.config.js --update-env
-else
-    # 非 PM2 环境，尝试通过 PID 或进程名终止
-    echo "Stopping existing process..."
-    
-    if [ ! -z "$PARENT_PID" ]; then
-        echo "Killing parent process PID: $PARENT_PID"
-        kill -9 "$PARENT_PID" 2>/dev/null
-    fi
-
-    # 兜底：杀掉可能存在的其他同名进程
-    pkill -f "server.js" || pkill -f "next-server" || true
-    sleep 3
-
-    echo "Restarting with nohup (standalone mode)..."
-    PORT=3000 HOSTNAME=0.0.0.0 nohup node .next/standalone/server.js > app.log 2>&1 &
-fi
+echo "Update completed successfully!"
 
 echo "============================================"
 echo "Update completed successfully at $(date)"
