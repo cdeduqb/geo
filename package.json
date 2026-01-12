@@ -1,10 +1,10 @@
 {
   "name": "geocms",
-  "version": "0.3.25",
+  "version": "0.3.26",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && mkdir -p .next/standalone/.next && cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/",
+    "build": "next build",
     "deploy": "bash scripts/deploy.sh",
     "start": "next start -H 0.0.0.0",
     "lint": "next lint",
