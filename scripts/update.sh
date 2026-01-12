@@ -86,8 +86,8 @@ if command -v pm2 &> /dev/null; then
     # 使用 standalone 模式启动，需要设置环境变量
     pm2 delete geocms 2>/dev/null || true
     
-    # 设置环境变量并启动
-    PORT=3000 HOSTNAME=0.0.0.0 pm2 start .next/standalone/server.js --name "geocms" --update-env
+    # 设置环境变量并启动 (使用 npm start 确保 Host 绑定生效)
+    pm2 start npm --name "geocms" -- run start --update-env
 else
     # 非 PM2 环境，尝试通过 PID 或进程名终止
     echo "Stopping existing process..."
