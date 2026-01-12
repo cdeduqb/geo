@@ -10,22 +10,30 @@ import { getSiteSettings } from '@/lib/site-settings';
 import { getLocale } from '@/lib/locale-server';
 import { t } from '@/lib/i18n';
 
-// 使用 ISR (增量静态再生) 提高 SEO 兼容性和访问速度
-// 每 60 秒重新生成一次页面，确保爬虫获取到的是完整的静态 HTML
-export const revalidate = 60;
+import { cache } from 'react';
+
+// 强制动态渲染，确保每次请求都能获取最新数据
+export const dynamic = 'force-dynamic';
+
+// 使用 React Cache 复用数据库查询请求
+// 这确保了 generateMetadata 和 HomePage 组件即便调用同样的逻辑，在一个请求周期内也只查一次数据库
+const getHomePageData = cache(async (locale: string) => {
+    // 1. 尝试查找配置为“首页”类型的已发布页面 (优先默认页)
+    return await (db.page as any).findFirst({
+        where: { type: 'HOME', status: 'PUBLISHED', lang: locale, isDefault: true },
+        include: { seo: true, headerTemplate: true, footerTemplate: true, template: true }
+    }) || await (db.page as any).findFirst({
+        where: { type: 'HOME', status: 'PUBLISHED', lang: locale },
+        include: { seo: true, headerTemplate: true, footerTemplate: true, template: true }
+    });
+});
 
 export async function generateMetadata() {
     try {
         const locale = await getLocale();
 
-        // 1. 尝试查找配置为“首页”类型的已发布页面 (优先默认页)
-        const homePage = await (db.page as any).findFirst({
-            where: { type: 'HOME', status: 'PUBLISHED', lang: locale, isDefault: true },
-            include: { seo: true }
-        }) || await (db.page as any).findFirst({
-            where: { type: 'HOME', status: 'PUBLISHED', lang: locale },
-            include: { seo: true }
-        });
+        // 1. 获取首页数据 (使用缓存)
+        const homePage = await getHomePageData(locale);
 
         const globalSEO = await getSEOSettings();
 
@@ -75,31 +83,8 @@ export async function generateMetadata() {
 export default async function HomePage() {
     const locale = await getLocale();
 
-    // 1. 尝试查找配置为“首页”类型且标记为默认的已发布页面
-    const homePage = await (db.page as any).findFirst({
-        where: {
-            type: 'HOME',
-            status: 'PUBLISHED',
-            lang: locale,
-            isDefault: true,
-        },
-        include: {
-            headerTemplate: true,
-            footerTemplate: true,
-            template: true,
-        },
-    }) || await (db.page as any).findFirst({
-        where: {
-            type: 'HOME',
-            status: 'PUBLISHED',
-            lang: locale,
-        },
-        include: {
-            headerTemplate: true,
-            footerTemplate: true,
-            template: true,
-        },
-    });
+    // 1. 获取首页数据 (使用缓存)
+    const homePage = await getHomePageData(locale);
 
     // 获取站点设置 (全局页眉页脚)
     const siteSettings = await getSiteSettings(locale);
