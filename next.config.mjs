@@ -4,7 +4,7 @@
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
 const nextConfig = {
-    output: 'standalone',
+
 
     // 启用 React Strict Mode 以便更好地检测问题
     reactStrictMode: true,

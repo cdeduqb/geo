@@ -17,7 +17,7 @@ module.exports = {
     apps: [
         {
             name: 'geocms',
-            // 使用 standalone 输出
+            // 标准生产模式启动
             script: 'npm',
             args: 'start',
             // 单实例模式（低内存推荐）

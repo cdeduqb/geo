@@ -71,18 +71,7 @@ if [ $? -ne 0 ]; then
 fi
 
 
-# 复制必要的静态资源到 standalone 目录 (显式执行以确保成功)
-echo "Copying static assets to standalone directory..."
-mkdir -p .next/standalone/.next
-mkdir -p .next/standalone/public
-# 使用 -R 递归拷贝
-cp -R .next/static .next/standalone/.next/
-cp -R public/* .next/standalone/public/
 
-if [ ! -d ".next/standalone/.next/static" ]; then
-    echo "Error: Static assets copy failed!"
-    exit 1
-fi
 
 # 5. Restart Service
 echo "[5/5] Restarting service..."
