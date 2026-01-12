@@ -759,7 +759,8 @@ export async function getAIServiceForUseCase(useCase: AIUseCaseType = 'GENERAL')
             const imageConfigs = await db.aIConfig.findMany({
                 where: {
                     isActive: true,
-                    provider: { in: ['openai', 'dall-e-3', 'volcengine'] } // Removed deepseek/zhipu as they might not support /images/generations checks
+                    // 移除对 provider 名称的严格限制，允许兼容 OpenAI 协议的自定义模型尝试绘图
+                    // provider: { in: ['openai', 'dall-e-3', 'volcengine'] } 
                 },
                 orderBy: { priority: 'desc' }
             });
@@ -949,7 +950,7 @@ export async function getAIService(): Promise<AIService> {
  */
 function shouldFallback(error: any): boolean {
     const errorMessage = error?.message || '';
-    
+
     // 403 错误（欠费、权限不足）
     if (errorMessage.includes('403') || errorMessage.includes('Forbidden')) return true;
     // 429 错误（限流）
@@ -962,7 +963,7 @@ function shouldFallback(error: any): boolean {
     if (errorMessage.includes('insufficient') || errorMessage.includes('balance')) return true;
     // 配额超限
     if (errorMessage.includes('quota') || errorMessage.includes('exceeded')) return true;
-    
+
     return false;
 }
 
@@ -1013,7 +1014,7 @@ export class AIServiceWithFallback implements AIService {
             } catch (error: any) {
                 const currentProvider = this.configs[this.currentIndex].provider;
                 logger.error(`[AIService] ${currentProvider} failed: ${error.message}`);
-                
+
                 if (shouldFallback(error)) {
                     if (!this.moveToNextProvider()) {
                         throw new Error(`All AI providers failed. Last error from ${currentProvider}: ${error.message}`);
@@ -1036,7 +1037,7 @@ export class AIServiceWithFallback implements AIService {
             } catch (error: any) {
                 const currentProvider = this.configs[this.currentIndex].provider;
                 logger.error(`[AIService] ${currentProvider} failed: ${error.message}`);
-                
+
                 if (shouldFallback(error)) {
                     if (!this.moveToNextProvider()) {
                         throw new Error(`All AI providers failed. Last error from ${currentProvider}: ${error.message}`);
@@ -1059,7 +1060,7 @@ export class AIServiceWithFallback implements AIService {
             } catch (error: any) {
                 const currentProvider = this.configs[this.currentIndex].provider;
                 logger.error(`[AIService] ${currentProvider} failed: ${error.message}`);
-                
+
                 if (shouldFallback(error)) {
                     if (!this.moveToNextProvider()) {
                         throw new Error(`All AI providers failed. Last error from ${currentProvider}: ${error.message}`);
@@ -1079,7 +1080,7 @@ export class AIServiceWithFallback implements AIService {
  */
 export async function getAIServiceWithFallback(useCase: AIUseCaseType = 'GENERAL'): Promise<AIServiceWithFallback> {
     const configs = await getAllActiveConfigs(useCase);
-    
+
     if (configs.length === 0) {
         logger.warn('[AIService] No active configs found, using Mock service');
         return new AIServiceWithFallback([{
@@ -1106,7 +1107,7 @@ export async function getAIServiceWithFallback(useCase: AIUseCaseType = 'GENERAL
     }
 
     const orderedConfigs = [...withinLimitConfigs, ...overLimitConfigs];
-    
+
     if (orderedConfigs.length > 0) {
         logger.info(`[AIService] Initialized fallback chain: ${orderedConfigs.map(c => c.provider + '(P' + c.priority + ')').join(' -> ')}`);
     }
