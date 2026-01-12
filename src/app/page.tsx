@@ -10,8 +10,9 @@ import { getSiteSettings } from '@/lib/site-settings';
 import { getLocale } from '@/lib/locale-server';
 import { t } from '@/lib/i18n';
 
-// 强制动态渲染，确保每次请求都能获取最新数据
-export const dynamic = 'force-dynamic';
+// 使用 ISR (增量静态再生) 提高 SEO 兼容性和访问速度
+// 每 60 秒重新生成一次页面，确保爬虫获取到的是完整的静态 HTML
+export const revalidate = 60;
 
 export async function generateMetadata() {
     try {
