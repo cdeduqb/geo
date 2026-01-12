@@ -86,3 +86,37 @@
   "updatedAt": "2026-01-07T09:47:56.713Z",
   "type": "WRITING"
 }
+[2026-01-12T13:13:57.532Z] [POST] Creating strategy {
+  "name": "写实风格",
+  "prompt": "一张写实风格的照片，准确描绘以下场景：{selection}。光影自然，细节丰富，类似国家地理杂志的摄影风格。",
+  "targetType": "article",
+  "type": "IMAGE"
+}
+[2026-01-12T13:13:57.772Z] [POST] Strategy created {
+  "id": "4682c45e-1fa1-4a1e-95e5-132b4dc18867",
+  "name": "写实风格",
+  "prompt": "一张写实风格的照片，准确描绘以下场景：{selection}。光影自然，细节丰富，类似国家地理杂志的摄影风格。",
+  "temperature": 0.7,
+  "maxTokens": null,
+  "targetType": "article",
+  "createdAt": "2026-01-12T13:13:57.535Z",
+  "updatedAt": "2026-01-12T13:13:57.535Z",
+  "type": "IMAGE"
+}
+[2026-01-12T13:16:15.204Z] [POST] Creating strategy {
+  "name": "抽象艺术图片",
+  "prompt": "一张富有创意的抽象艺术图片，灵感来源于：{title}。使用大胆的色彩对比和流动的线条，表现摘要中的核心概念：{summary}。风格类似现代数字艺术，视觉冲击力强。",
+  "targetType": "IMAGE_COVER",
+  "type": "IMAGE"
+}
+[2026-01-12T13:16:15.436Z] [POST] Strategy created {
+  "id": "7a836b2c-12b8-49bf-9d45-68773e20e112",
+  "name": "抽象艺术图片",
+  "prompt": "一张富有创意的抽象艺术图片，灵感来源于：{title}。使用大胆的色彩对比和流动的线条，表现摘要中的核心概念：{summary}。风格类似现代数字艺术，视觉冲击力强。",
+  "temperature": 0.7,
+  "maxTokens": null,
+  "targetType": "IMAGE_COVER",
+  "createdAt": "2026-01-12T13:16:15.207Z",
+  "updatedAt": "2026-01-12T13:16:15.207Z",
+  "type": "IMAGE"
+}
