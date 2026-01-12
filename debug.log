@@ -480,3 +480,4 @@
 [2026-01-11T16:11:26.137Z] INFO: [AIService] Calling ep-20250903083051-7j8d2 at https://ark.cn-beijing.volces.com/api/v3 for generateContent
 [2026-01-11T16:12:20.452Z] INFO: [Pipeline] Auto-linking completed, length: 1692
 [2026-01-11T16:12:20.757Z] INFO: [Automation] Task ae2409e4-cb97-4cec-b7ed-f6d28f79e3f8: Triggering SEO Auto-push
+[2026-01-12T13:22:53.394Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
