@@ -239,15 +239,27 @@ function generateProductSchema(props: ProductSchemaProps): object {
 }
 
 function generateBreadcrumbSchema(props: BreadcrumbSchemaProps): object {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+
     return {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
-        itemListElement: props.items.map((item, index) => ({
-            '@type': 'ListItem',
-            position: index + 1,
-            name: item.name,
-            item: item.url
-        }))
+        itemListElement: props.items
+            .filter(item => item.name && item.url) // 过滤掉无效项
+            .map((item, index) => {
+                let url = item.url;
+                // 尝试将相对路径转换为绝对路径
+                if (url && url.startsWith('/') && siteUrl) {
+                    url = `${siteUrl.replace(/\/$/, '')}${url}`;
+                }
+
+                return {
+                    '@type': 'ListItem',
+                    position: index + 1,
+                    name: item.name,
+                    item: url
+                };
+            })
     };
 }
 
