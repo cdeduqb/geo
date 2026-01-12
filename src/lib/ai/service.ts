@@ -759,8 +759,7 @@ export async function getAIServiceForUseCase(useCase: AIUseCaseType = 'GENERAL')
             const imageConfigs = await db.aIConfig.findMany({
                 where: {
                     isActive: true,
-                    // 移除对 provider 名称的严格限制，允许兼容 OpenAI 协议的自定义模型尝试绘图
-                    // provider: { in: ['openai', 'dall-e-3', 'volcengine'] } 
+                    provider: { in: ['openai', 'dall-e-3', 'volcengine'] } // Removed deepseek/zhipu as they might not support /images/generations checks
                 },
                 orderBy: { priority: 'desc' }
             });
@@ -784,6 +783,11 @@ export async function getAIServiceForUseCase(useCase: AIUseCaseType = 'GENERAL')
                     configId: 'mock'
                 };
             }
+
+            console.error('[AIService] FAILED to find image provider. Checked active configs with provider in [openai, dall-e-3, volcengine].');
+            // 尝试查找一次所有活跃配置并打印，以便调试
+            const allConfigs = await db.aIConfig.findMany({ where: { isActive: true }, select: { id: true, provider: true, useCase: true } });
+            console.error('[AIService] Available active configs in DB:', JSON.stringify(allConfigs));
 
             throw new Error('No active AI provider found that supports Image Generation (e.g., OpenAI)');
         }
