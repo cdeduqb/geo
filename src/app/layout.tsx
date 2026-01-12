@@ -22,7 +22,12 @@ export async function generateMetadata(): Promise<Metadata> {
       metadataBase: new URL(seo.siteUrl),
       verification: {
         google: geo.googleOptimization?.verificationId,
-      }
+      },
+      formatDetection: {
+        email: false,
+        address: false,
+        telephone: false,
+      },
     };
   } catch (error) {
     return {

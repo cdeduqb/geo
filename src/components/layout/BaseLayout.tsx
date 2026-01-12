@@ -26,10 +26,7 @@ export default async function BaseLayout({
 
     return (
         <html lang={locale} suppressHydrationWarning>
-            <head>
-                <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
-                {/* SEO 脚本通过客户端组件动态注入，避免水合不匹配 */}
-            </head>
+            {/* <head> 由 Next.js 自动管理 */}
             <body className={`${inter.className} bg-gray-50 text-gray-900 antialiased`} suppressHydrationWarning>
                 {/* 客户端动态注入 SEO 脚本 */}
                 <SEOScripts />
