@@ -26,9 +26,13 @@ export default function AISimulator() {
             if (res.ok) {
                 const data = await res.json();
                 setResult(data);
+            } else {
+                const data = await res.json();
+                setResult({ error: data.error || '模拟失败，请检查文章路径' });
             }
         } catch (error) {
             console.error(error);
+            setResult({ error: '请求失败，请稍后重试' });
         } finally {
             setLoading(false);
         }
@@ -78,10 +82,20 @@ export default function AISimulator() {
                             <p className="text-gray-400 text-sm">输入地址并点击模拟，查看 AI 如何"阅读"您的内容</p>
                         </div>
                     )}
+
+                    {result?.error && (
+                        <div className="py-16 text-center border border-dashed border-red-200 rounded-2xl bg-red-50/50">
+                            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-red-100 flex items-center justify-center">
+                                <AlertCircle className="w-10 h-10 text-red-400" />
+                            </div>
+                            <h4 className="text-red-600 font-bold mb-2">模拟失败</h4>
+                            <p className="text-red-500 text-sm">{result.error}</p>
+                        </div>
+                    )}
                 </div>
             </div>
 
-            {result && (
+            {result && result.aiVersion && (
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2 space-y-6">
                         {/* 文本提取视图 */}

@@ -14,10 +14,41 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { title, content, summary, entities, citations } = await request.json();
+        const body = await request.json();
+        let { title, content, summary, entities, citations, url } = body;
+
+        // 如果提供了 URL，从数据库获取文章内容
+        if (url && !content) {
+            // 从 URL 提取 slug（去除开头斜杠和 /articles/ 前缀）
+            const slug = url.replace(/^\/?(articles\/)?/, '').replace(/\/$/, '');
+
+            const article = await db.article.findFirst({
+                where: {
+                    slug: slug,
+                    status: 'PUBLISHED'
+                },
+                select: {
+                    title: true,
+                    content: true,
+                    summary: true,
+                    entities: true,
+                    citations: true
+                }
+            });
+
+            if (!article) {
+                return NextResponse.json({ error: `未找到已发布的文章: ${slug}。请确认文章已发布。` }, { status: 422 });
+            }
+
+            title = article.title;
+            content = article.content;
+            summary = article.summary;
+            entities = article.entities;
+            citations = article.citations;
+        }
 
         if (!content) {
-            return NextResponse.json({ error: 'Content is required' }, { status: 400 });
+            return NextResponse.json({ error: '请提供 URL 或 content 参数' }, { status: 400 });
         }
 
         const baseUrl = await getSiteUrl();

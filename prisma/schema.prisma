@@ -606,6 +606,19 @@ model ContentRecommendation {
   @@index([createdAt])
 }
 
+model CompetitorAnalysis {
+  id              String   @id @default(uuid())
+  keyword         String
+  competitors     Json     // 竞品域名列表
+  ourStats        Json     // 本站统计数据
+  competitorData  Json     // 竞品抓取数据
+  analysis        Json     // AI 分析结果
+  createdAt       DateTime @default(now())
+  
+  @@index([keyword])
+  @@index([createdAt])
+}
+
 enum Role {
   USER
   ADMIN
