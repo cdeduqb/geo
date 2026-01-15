@@ -84,13 +84,22 @@ echo "[5/5] Reloading service..."
 pm2 reload ecosystem.config.js --update-env || pm2 start ecosystem.config.js --update-env
 pm2 save
 
-# 6. 自动检查并修复 Nginx 配置（可选）
+# 6. 自动检查并修复 Nginx 配置（需要 root 权限）
 echo "[6/6] Checking Nginx configuration..."
 if [ -f "scripts/fix-nginx.sh" ]; then
     chmod +x scripts/fix-nginx.sh
-    bash scripts/fix-nginx.sh
+    # 尝试以 root 权限运行（如果当前用户是 root 或可以 sudo）
+    if [ "$EUID" -eq 0 ]; then
+        bash scripts/fix-nginx.sh
+    elif command -v sudo &> /dev/null; then
+        echo "尝试以 sudo 权限修复 Nginx 配置..."
+        sudo bash scripts/fix-nginx.sh
+    else
+        echo "⚠️ 需要 root 权限配置 Nginx，请手动运行："
+        echo "   sudo bash scripts/fix-nginx.sh"
+    fi
 else
-    echo "⚠️ Nginx 修复脚本不存在，跳过自动配置"
+    echo "⚠️ Nginx 修复脚本不存在，跳过"
 fi
 
 echo "Update completed successfully!"
