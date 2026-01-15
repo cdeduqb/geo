@@ -171,8 +171,9 @@ export default function SiteSettingsClient({ initialData }: SiteSettingsClientPr
             });
 
             // 2. 保存 SiteSettings (页眉页脚配置)
-            await fetch('/api/admin/site-settings', {
-                method: 'PUT',
+            // 使用 POST /save 接口以避开可能的 405 PUT 错误
+            await fetch('/api/admin/site-settings/save', {
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     id: initialData.siteSettings?.id,
