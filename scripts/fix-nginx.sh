@@ -147,12 +147,31 @@ fi
 echo -e "${GREEN}✓ 找到配置文件：$NGINX_CONF${NC}"
 
 # ============================================
-# 3. 检查是否已配置
+# 3. 检查配置状态
 # ============================================
-if grep -q "location /uploads/" "$NGINX_CONF"; then
-    echo -e "${GREEN}✅ /uploads/ 配置已存在，无需修复${NC}"
-    exit 0
+NEED_UPLOADS=false
+NEED_PROXY_TIMEOUT=false
+
+# 检查 uploads 配置
+if ! grep -q "location /uploads/" "$NGINX_CONF"; then
+    NEED_UPLOADS=true
+    echo -e "${YELLOW}⚠️  缺少 /uploads/ 静态文件配置${NC}"
+else
+    echo -e "${GREEN}✓ /uploads/ 配置已存在${NC}"
 fi
+
+# 检查代理超时配置（防止 AI 操作 504 超时）
+if ! grep -q "proxy_read_timeout 300" "$NGINX_CONF" && ! grep -q "proxy_read_timeout 300s" "$NGINX_CONF"; then
+    NEED_PROXY_TIMEOUT=true
+    echo -e "${YELLOW}⚠️  缺少代理超时配置（可能导致 AI 操作 504 超时）${NC}"
+else
+    echo -e "${GREEN}✓ 代理超时配置已存在${NC}"
+fi
+
+# 如果都已配置，退出
+if [ "$NEED_UPLOADS" = false ] && [ "$NEED_PROXY_TIMEOUT" = false ]; then
+    echo -e "${GREEN}✅ Nginx 配置完整，无需修复${NC}"
+    exit 0
 
 # ============================================
 # 4. 检查权限
@@ -166,16 +185,17 @@ fi
 # ============================================
 # 5. 备份并修改配置
 # ============================================
-echo -e "${YELLOW}⚠️  检测到 /uploads/ 配置缺失，正在添加...${NC}"
+echo -e "${BLUE}🔧 正在修复 Nginx 配置...${NC}"
 
 # 备份
 BACKUP_FILE="${NGINX_CONF}.bak.$(date +%Y%m%d%H%M%S)"
 cp "$NGINX_CONF" "$BACKUP_FILE"
 echo -e "   📦 已备份：$BACKUP_FILE"
 
-# 生成配置块（使用 cat 避免特殊字符问题）
-TEMP_CONFIG=$(mktemp)
-cat > "$TEMP_CONFIG" << EOF
+# 生成 uploads 配置块
+TEMP_UPLOADS=$(mktemp)
+if [ "$NEED_UPLOADS" = true ]; then
+    cat > "$TEMP_UPLOADS" << EOF
 
     # >>> GeoCMS 静态文件配置 (自动添加于 $(date +%Y-%m-%d)) <<<
     location /uploads/ {
@@ -185,57 +205,109 @@ cat > "$TEMP_CONFIG" << EOF
         add_header Access-Control-Allow-Origin *;
         autoindex off;
     }
-    # <<< GeoCMS 配置结束 <<<
+    # <<< GeoCMS 静态文件配置结束 <<<
 
 EOF
+fi
 
-# 找到插入点并插入
-INSERTED=false
+# 生成代理超时配置块
+TEMP_PROXY=$(mktemp)
+if [ "$NEED_PROXY_TIMEOUT" = true ]; then
+    cat > "$TEMP_PROXY" << 'EOF'
 
-# 方法1: 在 #PHP-INFO-START 之前插入
-if grep -q "#PHP-INFO-START" "$NGINX_CONF"; then
-    # 获取行号
-    LINE_NUM=$(grep -n "#PHP-INFO-START" "$NGINX_CONF" | head -1 | cut -d: -f1)
-    if [ -n "$LINE_NUM" ]; then
-        head -n $((LINE_NUM - 1)) "$NGINX_CONF" > "${NGINX_CONF}.new"
-        cat "$TEMP_CONFIG" >> "${NGINX_CONF}.new"
-        tail -n +$LINE_NUM "$NGINX_CONF" >> "${NGINX_CONF}.new"
-        mv "${NGINX_CONF}.new" "$NGINX_CONF"
-        INSERTED=true
-        echo -e "   ${GREEN}✓ 配置已插入（在 #PHP-INFO-START 之前）${NC}"
+    # >>> GeoCMS 代理超时配置 (防止 AI 操作 504 超时) <<<
+    proxy_connect_timeout 300;
+    proxy_send_timeout 300;
+    proxy_read_timeout 300;
+    send_timeout 300;
+    proxy_buffer_size 128k;
+    proxy_buffers 4 256k;
+    proxy_busy_buffers_size 256k;
+    # <<< GeoCMS 代理超时配置结束 <<<
+
+EOF
+fi
+
+# 找到插入点并插入 uploads 配置
+UPLOADS_INSERTED=false
+
+if [ "$NEED_UPLOADS" = true ]; then
+    # 方法1: 在 #PHP-INFO-START 之前插入
+    if grep -q "#PHP-INFO-START" "$NGINX_CONF"; then
+        LINE_NUM=$(grep -n "#PHP-INFO-START" "$NGINX_CONF" | head -1 | cut -d: -f1)
+        if [ -n "$LINE_NUM" ]; then
+            head -n $((LINE_NUM - 1)) "$NGINX_CONF" > "${NGINX_CONF}.new"
+            cat "$TEMP_UPLOADS" >> "${NGINX_CONF}.new"
+            tail -n +$LINE_NUM "$NGINX_CONF" >> "${NGINX_CONF}.new"
+            mv "${NGINX_CONF}.new" "$NGINX_CONF"
+            UPLOADS_INSERTED=true
+            echo -e "   ${GREEN}✓ uploads 配置已插入（在 #PHP-INFO-START 之前）${NC}"
+        fi
+    fi
+
+    # 方法2: 在 #ERROR-PAGE-END 之后插入
+    if [ "$UPLOADS_INSERTED" = false ] && grep -q "#ERROR-PAGE-END" "$NGINX_CONF"; then
+        LINE_NUM=$(grep -n "#ERROR-PAGE-END" "$NGINX_CONF" | head -1 | cut -d: -f1)
+        if [ -n "$LINE_NUM" ]; then
+            head -n $LINE_NUM "$NGINX_CONF" > "${NGINX_CONF}.new"
+            cat "$TEMP_UPLOADS" >> "${NGINX_CONF}.new"
+            tail -n +$((LINE_NUM + 1)) "$NGINX_CONF" >> "${NGINX_CONF}.new"
+            mv "${NGINX_CONF}.new" "$NGINX_CONF"
+            UPLOADS_INSERTED=true
+            echo -e "   ${GREEN}✓ uploads 配置已插入（在 #ERROR-PAGE-END 之后）${NC}"
+        fi
+    fi
+
+    # 方法3: 在第一个 location 之前插入
+    if [ "$UPLOADS_INSERTED" = false ]; then
+        LINE_NUM=$(grep -n "location" "$NGINX_CONF" | head -1 | cut -d: -f1)
+        if [ -n "$LINE_NUM" ]; then
+            head -n $((LINE_NUM - 1)) "$NGINX_CONF" > "${NGINX_CONF}.new"
+            cat "$TEMP_UPLOADS" >> "${NGINX_CONF}.new"
+            tail -n +$LINE_NUM "$NGINX_CONF" >> "${NGINX_CONF}.new"
+            mv "${NGINX_CONF}.new" "$NGINX_CONF"
+            UPLOADS_INSERTED=true
+            echo -e "   ${GREEN}✓ uploads 配置已插入（在第一个 location 之前）${NC}"
+        fi
     fi
 fi
 
-# 方法2: 在 #ERROR-PAGE-END 之后插入
-if [ "$INSERTED" = false ] && grep -q "#ERROR-PAGE-END" "$NGINX_CONF"; then
-    LINE_NUM=$(grep -n "#ERROR-PAGE-END" "$NGINX_CONF" | head -1 | cut -d: -f1)
-    if [ -n "$LINE_NUM" ]; then
-        head -n $LINE_NUM "$NGINX_CONF" > "${NGINX_CONF}.new"
-        cat "$TEMP_CONFIG" >> "${NGINX_CONF}.new"
-        tail -n +$((LINE_NUM + 1)) "$NGINX_CONF" >> "${NGINX_CONF}.new"
-        mv "${NGINX_CONF}.new" "$NGINX_CONF"
-        INSERTED=true
-        echo -e "   ${GREEN}✓ 配置已插入（在 #ERROR-PAGE-END 之后）${NC}"
+# 插入代理超时配置（在 server 块开头，通常在 ssl 配置之后）
+PROXY_INSERTED=false
+
+if [ "$NEED_PROXY_TIMEOUT" = true ]; then
+    # 方法1: 在 #SSL-END 之后插入
+    if grep -q "#SSL-END" "$NGINX_CONF"; then
+        LINE_NUM=$(grep -n "#SSL-END" "$NGINX_CONF" | head -1 | cut -d: -f1)
+        if [ -n "$LINE_NUM" ]; then
+            head -n $LINE_NUM "$NGINX_CONF" > "${NGINX_CONF}.new"
+            cat "$TEMP_PROXY" >> "${NGINX_CONF}.new"
+            tail -n +$((LINE_NUM + 1)) "$NGINX_CONF" >> "${NGINX_CONF}.new"
+            mv "${NGINX_CONF}.new" "$NGINX_CONF"
+            PROXY_INSERTED=true
+            echo -e "   ${GREEN}✓ 代理超时配置已插入（在 #SSL-END 之后）${NC}"
+        fi
+    fi
+
+    # 方法2: 在 server_name 之后插入
+    if [ "$PROXY_INSERTED" = false ] && grep -q "server_name" "$NGINX_CONF"; then
+        LINE_NUM=$(grep -n "server_name" "$NGINX_CONF" | head -1 | cut -d: -f1)
+        if [ -n "$LINE_NUM" ]; then
+            head -n $LINE_NUM "$NGINX_CONF" > "${NGINX_CONF}.new"
+            cat "$TEMP_PROXY" >> "${NGINX_CONF}.new"
+            tail -n +$((LINE_NUM + 1)) "$NGINX_CONF" >> "${NGINX_CONF}.new"
+            mv "${NGINX_CONF}.new" "$NGINX_CONF"
+            PROXY_INSERTED=true
+            echo -e "   ${GREEN}✓ 代理超时配置已插入（在 server_name 之后）${NC}"
+        fi
     fi
 fi
 
-# 方法3: 在第一个 location 之前插入
-if [ "$INSERTED" = false ]; then
-    LINE_NUM=$(grep -n "location" "$NGINX_CONF" | head -1 | cut -d: -f1)
-    if [ -n "$LINE_NUM" ]; then
-        head -n $((LINE_NUM - 1)) "$NGINX_CONF" > "${NGINX_CONF}.new"
-        cat "$TEMP_CONFIG" >> "${NGINX_CONF}.new"
-        tail -n +$LINE_NUM "$NGINX_CONF" >> "${NGINX_CONF}.new"
-        mv "${NGINX_CONF}.new" "$NGINX_CONF"
-        INSERTED=true
-        echo -e "   ${GREEN}✓ 配置已插入（在第一个 location 之前）${NC}"
-    fi
-fi
+rm -f "$TEMP_UPLOADS" "$TEMP_PROXY"
 
-rm -f "$TEMP_CONFIG"
-
-if [ "$INSERTED" = false ]; then
-    echo -e "${RED}❌ 无法自动插入配置${NC}"
+# 检查是否有配置失败
+if [ "$NEED_UPLOADS" = true ] && [ "$UPLOADS_INSERTED" = false ]; then
+    echo -e "${RED}❌ 无法自动插入 uploads 配置${NC}"
     cp "$BACKUP_FILE" "$NGINX_CONF"
     exit 1
 fi
