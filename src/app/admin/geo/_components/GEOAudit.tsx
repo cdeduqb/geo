@@ -151,7 +151,7 @@ export default function GEOAudit({ onNavigate }: GEOAuditProps) {
                                             'GEO 状态堪忧，急需进行内容和结构优化。'}
                                 </h3>
                                 <p className="text-sm text-gray-500">
-                                    我们检测了 24 个关键指标，涉及到爬虫可访问性、实体关联、内容质量及引证数据等维度。
+                                    检测了 {items.length} 个关键指标，涵盖内容质量、引用来源、结构化数据、关键词覆盖等核心维度。
                                 </p>
                                 <div className="flex gap-4 pt-1">
                                     <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-green-100 text-green-700">

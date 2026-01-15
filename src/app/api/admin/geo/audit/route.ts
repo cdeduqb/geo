@@ -109,15 +109,252 @@ export async function GET() {
         }
 
         // --- 6. 移动端与生成式交互 (Mobile/Interaction) ---
-        // 假设通过检测 meta 或默认配置
         results.push({ id: 'mobile_interactive', title: '响应式与 AI 交互', status: 'pass', message: '页面结构完全兼容移动端，且无遮挡 AI 爬虫的 JS 阻碍。', impact: 'low' });
 
+        // ========== 新增诊断维度 ==========
+
+        // --- 7. 内容质量评分统计 ---
+        const contentScores = await db.contentAIScore.findMany({
+            select: { overallScore: true }
+        });
+
+        if (contentScores.length > 0) {
+            const avgScore = Math.round(contentScores.reduce((sum, s) => sum + s.overallScore, 0) / contentScores.length);
+            const lowScoreCount = contentScores.filter(s => s.overallScore < 60).length;
+            const highScoreCount = contentScores.filter(s => s.overallScore >= 80).length;
+
+            if (avgScore < 60) {
+                results.push({
+                    id: 'content_quality_low',
+                    title: '内容质量评分',
+                    status: 'fail',
+                    message: `平均 GEO 分数仅 ${avgScore} 分，${lowScoreCount} 篇内容低于及格线，急需优化。`,
+                    impact: 'high'
+                });
+                score -= 15;
+            } else if (avgScore < 75) {
+                results.push({
+                    id: 'content_quality_medium',
+                    title: '内容质量评分',
+                    status: 'warning',
+                    message: `平均 GEO 分数 ${avgScore} 分，${lowScoreCount} 篇低分内容待优化，${highScoreCount} 篇优质内容。`,
+                    impact: 'medium'
+                });
+                score -= 8;
+            } else {
+                results.push({
+                    id: 'content_quality_high',
+                    title: '内容质量评分',
+                    status: 'pass',
+                    message: `平均 GEO 分数 ${avgScore} 分，${highScoreCount} 篇文章达到优秀标准，内容质量领先。`,
+                    impact: 'high'
+                });
+            }
+        } else {
+            results.push({
+                id: 'content_quality_none',
+                title: '内容质量评分',
+                status: 'warning',
+                message: '尚未对内容进行 GEO 评分，建议使用「GEO 分数评估」功能扫描全站内容。',
+                impact: 'medium'
+            });
+            score -= 5;
+        }
+
+        // --- 8. 引用来源检测 ---
+        const articlesWithCitations = await db.article.findMany({
+            where: { status: 'PUBLISHED' },
+            select: { id: true, title: true, citations: true }
+        });
+
+        let totalCitations = 0;
+        let articlesWithGoodCitations = 0;
+        let articlesNoCitations = 0;
+
+        for (const article of articlesWithCitations) {
+            const citations = Array.isArray(article.citations) ? article.citations : [];
+            if (citations.length === 0) {
+                articlesNoCitations++;
+            } else if (citations.length >= 3) {
+                articlesWithGoodCitations++;
+            }
+            totalCitations += citations.length;
+        }
+
+        const avgCitations = articlesWithCitations.length > 0
+            ? Math.round(totalCitations / articlesWithCitations.length * 10) / 10
+            : 0;
+
+        if (articlesNoCitations > articlesWithCitations.length * 0.5) {
+            results.push({
+                id: 'citations_missing',
+                title: '引用来源覆盖',
+                status: 'fail',
+                message: `${articlesNoCitations} 篇文章无引用来源，超过 50%，AI 难以验证内容可信度。`,
+                impact: 'high'
+            });
+            score -= 12;
+        } else if (avgCitations < 2) {
+            results.push({
+                id: 'citations_low',
+                title: '引用来源密度',
+                status: 'warning',
+                message: `平均每篇文章引用 ${avgCitations} 条，建议增加权威来源引用以提升可信度。`,
+                impact: 'medium'
+            });
+            score -= 6;
+        } else {
+            results.push({
+                id: 'citations_good',
+                title: '引用来源体系',
+                status: 'pass',
+                message: `平均每篇引用 ${avgCitations} 条，${articlesWithGoodCitations} 篇文章达到优质引用标准。`,
+                impact: 'high'
+            });
+        }
+
+        // --- 9. 结构化数据检测 (Schema/JSON-LD) ---
+        const articlesWithEntities = await db.article.findMany({
+            where: { status: 'PUBLISHED' },
+            select: { id: true, entities: true, content: true }
+        });
+
+        let entitiesCount = 0;
+        let articlesWithSchema = 0;
+
+        for (const article of articlesWithEntities) {
+            const entities = Array.isArray(article.entities) ? article.entities : [];
+            entitiesCount += entities.length;
+            // 检查是否有结构化数据标记
+            if (article.content.includes('itemtype') ||
+                article.content.includes('schema.org') ||
+                entities.length >= 5) {
+                articlesWithSchema++;
+            }
+        }
+
+        const schemaCoverage = articlesWithEntities.length > 0
+            ? Math.round(articlesWithSchema / articlesWithEntities.length * 100)
+            : 0;
+        const avgEntities = articlesWithEntities.length > 0
+            ? Math.round(entitiesCount / articlesWithEntities.length)
+            : 0;
+
+        if (schemaCoverage < 30) {
+            results.push({
+                id: 'schema_low',
+                title: '结构化数据覆盖',
+                status: 'fail',
+                message: `仅 ${schemaCoverage}% 的内容具备结构化标记，AI 模型难以提取精准信息。`,
+                impact: 'high'
+            });
+            score -= 10;
+        } else if (schemaCoverage < 70) {
+            results.push({
+                id: 'schema_medium',
+                title: '结构化数据覆盖',
+                status: 'warning',
+                message: `${schemaCoverage}% 的内容有结构化数据，平均 ${avgEntities} 个实体标注，仍有提升空间。`,
+                impact: 'medium'
+            });
+            score -= 5;
+        } else {
+            results.push({
+                id: 'schema_good',
+                title: '结构化数据覆盖',
+                status: 'pass',
+                message: `${schemaCoverage}% 的内容实现结构化标记，平均 ${avgEntities} 个实体，Schema 覆盖完善。`,
+                impact: 'high'
+            });
+        }
+
+        // --- 10. 关键词覆盖检测 ---
+        // 获取热门关键词（从 AI 排名追踪中）
+        const topKeywords = await db.aISearchRanking.groupBy({
+            by: ['keyword'],
+            _count: { keyword: true },
+            orderBy: { _count: { keyword: 'desc' } },
+            take: 10
+        });
+
+        // 检查每个关键词是否有对应的已发布文章
+        let coveredKeywords = 0;
+        let uncoveredKeywords: string[] = [];
+
+        for (const kw of topKeywords) {
+            const hasArticle = await db.article.findFirst({
+                where: {
+                    status: 'PUBLISHED',
+                    OR: [
+                        { title: { contains: kw.keyword } },
+                        { content: { contains: kw.keyword } }
+                    ]
+                }
+            });
+            if (hasArticle) {
+                coveredKeywords++;
+            } else {
+                uncoveredKeywords.push(kw.keyword);
+            }
+        }
+
+        if (topKeywords.length > 0) {
+            const coverageRate = Math.round(coveredKeywords / topKeywords.length * 100);
+
+            if (coverageRate < 50) {
+                results.push({
+                    id: 'keyword_coverage_low',
+                    title: '关键词内容覆盖',
+                    status: 'fail',
+                    message: `仅覆盖 ${coverageRate}% 的追踪关键词，${uncoveredKeywords.slice(0, 3).join('、')} 等缺少针对性内容。`,
+                    impact: 'high'
+                });
+                score -= 10;
+            } else if (coverageRate < 80) {
+                results.push({
+                    id: 'keyword_coverage_medium',
+                    title: '关键词内容覆盖',
+                    status: 'warning',
+                    message: `覆盖 ${coverageRate}% 的追踪关键词，建议补充「${uncoveredKeywords[0] || ''}」相关内容。`,
+                    impact: 'medium'
+                });
+                score -= 5;
+            } else {
+                results.push({
+                    id: 'keyword_coverage_good',
+                    title: '关键词内容覆盖',
+                    status: 'pass',
+                    message: `${coveredKeywords}/${topKeywords.length} 个追踪关键词已有对应内容，覆盖率 ${coverageRate}%。`,
+                    impact: 'high'
+                });
+            }
+        } else {
+            results.push({
+                id: 'keyword_no_tracking',
+                title: '关键词追踪',
+                status: 'warning',
+                message: '尚未设置关键词追踪，建议使用「AI 排名追踪」功能监控核心关键词表现。',
+                impact: 'medium'
+            });
+        }
+
+        // --- 汇总统计 ---
+        const passCount = results.filter(i => i.status === 'pass').length;
+        const warningCount = results.filter(i => i.status === 'warning').length;
+        const failCount = results.filter(i => i.status === 'fail').length;
+
         return NextResponse.json({
-            score: Math.max(0, score),
+            score: Math.max(0, Math.min(100, score)),
             items: results.sort((a, b) => {
                 const order: { [key: string]: number } = { 'fail': 0, 'warning': 1, 'pass': 2 };
                 return order[a.status] - order[b.status];
-            })
+            }),
+            summary: {
+                total: results.length,
+                pass: passCount,
+                warning: warningCount,
+                fail: failCount
+            }
         });
 
     } catch (error) {
