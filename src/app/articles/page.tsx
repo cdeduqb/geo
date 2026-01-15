@@ -23,7 +23,7 @@ export default async function ArticlesPage({
     searchParams: Promise<{ page?: string; category?: string }>;
 }) {
     const locale = await getLocale();
-    const siteSettings = await getSiteSettings();
+    const siteSettings = await getSiteSettings(locale);
     const resolvedSearchParams = await searchParams;
     const currentPage = parseInt(resolvedSearchParams.page || '1');
     const categoryId = resolvedSearchParams.category;

@@ -95,7 +95,7 @@ export async function DynamicPageContent({ params }: PageProps) {
     }
 
     // 获取站点设置 (全局页眉页脚)
-    const siteSettings = await getSiteSettings();
+    const siteSettings = await getSiteSettings(locale);
 
     // @ts-ignore
     const templateSections = (page as any).template?.sections;

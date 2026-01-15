@@ -94,7 +94,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     }
 
     // 获取站点设置 (全局页眉页脚)
-    const siteSettings = await getSiteSettings();
+    const siteSettings = await getSiteSettings(locale);
 
     // 增加浏览量
     await db.product.update({

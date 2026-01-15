@@ -50,7 +50,7 @@ export default async function ProductListPage({
     const locale = paramLocale || await getLocale();
 
     // 获取站点设置 (全局页眉页脚)
-    const siteSettings = await getSiteSettings();
+    const siteSettings = await getSiteSettings(locale);
 
     return (
         <PageLayout
