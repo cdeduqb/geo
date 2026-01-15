@@ -161,11 +161,12 @@ else
 fi
 
 # 检查代理超时配置（防止 AI 操作 504 超时）
-if ! grep -q "proxy_read_timeout 300" "$NGINX_CONF" && ! grep -q "proxy_read_timeout 300s" "$NGINX_CONF"; then
+# 检查是否存在 300 或 600 秒的超时配置
+if grep -qE "proxy_read_timeout (300|600)" "$NGINX_CONF"; then
+    echo -e "${GREEN}✓ 代理超时配置已存在${NC}"
+else
     NEED_PROXY_TIMEOUT=true
     echo -e "${YELLOW}⚠️  缺少代理超时配置（可能导致 AI 操作 504 超时）${NC}"
-else
-    echo -e "${GREEN}✓ 代理超时配置已存在${NC}"
 fi
 
 # 如果都已配置，退出
@@ -216,10 +217,10 @@ if [ "$NEED_PROXY_TIMEOUT" = true ]; then
     cat > "$TEMP_PROXY" << 'EOF'
 
     # >>> GeoCMS 代理超时配置 (防止 AI 操作 504 超时) <<<
-    proxy_connect_timeout 300;
-    proxy_send_timeout 300;
-    proxy_read_timeout 300;
-    send_timeout 300;
+    proxy_connect_timeout 600;
+    proxy_send_timeout 600;
+    proxy_read_timeout 600;
+    send_timeout 600;
     proxy_buffer_size 128k;
     proxy_buffers 4 256k;
     proxy_busy_buffers_size 256k;
