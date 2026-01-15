@@ -104,7 +104,8 @@ echo "💾 正在同步数据库架构（使用 root 权限执行）..."
 sleep 5
 echo "1. 同步主数据库..."
 docker-compose exec -T -u root app npx prisma@5 db push --accept-data-loss
-
+echo "2. 同步授权数据库..."
+docker-compose exec -T -u root app npx prisma@5 db push --schema=prisma/schema.license.prisma --accept-data-loss
 echo "3. 填充种子数据 (可能需要下载 ts-node)..."
 docker-compose exec -T -u root app npx -p ts-node -p typescript ts-node --compiler-options '{"module":"CommonJS"}' prisma/seed.ts
 
