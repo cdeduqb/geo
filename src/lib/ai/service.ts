@@ -654,6 +654,42 @@ export class VolcengineService implements AIService {
 }
 
 // ============================================================================
+// Image Model Detection (to prevent using image models for text generation)
+// ============================================================================
+
+/**
+ * 图像生成模型关键词列表（这些模型不支持文本对话 API）
+ */
+const IMAGE_MODEL_KEYWORDS = [
+    'seedream',      // 豆包图像模型
+    'dall-e',        // OpenAI 图像模型
+    'midjourney',    // Midjourney
+    'stable-diffusion', // Stable Diffusion
+    'cogview',       // 智谱图像模型
+    'wanx',          // 阿里万象图像模型
+    'flux',          // Flux 图像模型
+    'sd-',           // Stable Diffusion 变体
+    'sdxl',          // SDXL
+    'imagen'         // Google Imagen
+];
+
+/**
+ * 检查模型是否为图像生成模型
+ */
+export function isImageGenerationModel(modelName: string | null): boolean {
+    if (!modelName) return false;
+    const lowerName = modelName.toLowerCase();
+    return IMAGE_MODEL_KEYWORDS.some(keyword => lowerName.includes(keyword));
+}
+
+/**
+ * 从配置列表中过滤出文本模型（排除图像模型）
+ */
+export function filterTextModels<T extends { modelName: string | null }>(configs: T[]): T[] {
+    return configs.filter(config => !isImageGenerationModel(config.modelName));
+}
+
+// ============================================================================
 // Token Usage Tracking and Use-Case Based Service Selection
 // ============================================================================
 
@@ -821,7 +857,23 @@ export async function getAIServiceForUseCase(useCase: AIUseCaseType = 'GENERAL')
             });
         }
 
-        if (candidateConfigs.length === 0) {
+        // 🔧 过滤掉图像生成模型（它们不支持文本对话 API）
+        const textOnlyConfigs = filterTextModels(candidateConfigs);
+        const skippedImageModels = candidateConfigs
+            .filter(c => isImageGenerationModel(c.modelName))
+            .map(c => c.modelName);
+
+        if (skippedImageModels.length > 0) {
+            console.log(`[AIService] 已跳过图像模型: ${skippedImageModels.join(', ')}`);
+        }
+
+        if (textOnlyConfigs.length === 0) {
+            if (candidateConfigs.length > 0) {
+                // 有配置但都是图像模型
+                console.error(`[AIService] 没有可用的文本模型，所有配置都是图像模型: ${skippedImageModels.join(', ')}`);
+                throw new Error(`没有可用的文本对话模型。已配置的模型都是图像生成模型 (${skippedImageModels.join(', ')})，请添加文本模型如 doubao-pro-32k, deepseek-chat, gpt-3.5-turbo`);
+            }
+
             console.log('[AIService] No active configs found, using Mock');
             const mockService = new MockAIService();
             return {
@@ -832,21 +884,21 @@ export async function getAIServiceForUseCase(useCase: AIUseCaseType = 'GENERAL')
             };
         }
 
-        // 遍历候选模型，找到第一个未超限的
-        let selectedConfig = candidateConfigs[0]; // 默认使用优先级最高的
+        // 遍历候选模型（仅文本模型），找到第一个未超限的
+        let selectedConfig = textOnlyConfigs[0]; // 默认使用优先级最高的
 
-        for (const config of candidateConfigs) {
+        for (const config of textOnlyConfigs) {
             const overLimit = await isOverLimit(config);
             if (!overLimit) {
                 selectedConfig = config;
-                console.log(`[AIService] Selected ${config.provider} for ${useCase} (within limits)`);
+                console.log(`[AIService] Selected ${config.provider}/${config.modelName} for ${useCase} (within limits)`);
                 break;
             }
         }
 
         // 如果所有模型都超限，使用优先级最高的（已经是 selectedConfig）
-        if (selectedConfig === candidateConfigs[0]) {
-            const allOverLimit = await Promise.all(candidateConfigs.map(c => isOverLimit(c)));
+        if (selectedConfig === textOnlyConfigs[0]) {
+            const allOverLimit = await Promise.all(textOnlyConfigs.map(c => isOverLimit(c)));
             if (allOverLimit.every(Boolean)) {
                 console.warn(`[AIService] All models for ${useCase} are over limit, using highest priority: ${selectedConfig.provider}`);
             }
