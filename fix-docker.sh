@@ -52,7 +52,7 @@ echo ""
 # 初始化数据库
 echo "7️⃣ 初始化数据库..."
 docker-compose exec -T app npx prisma db push --accept-data-loss 2>/dev/null
-docker-compose exec -T app npx prisma db push --schema=prisma/schema.license.prisma --accept-data-loss 2>/dev/null
+
 echo "✅ 数据库已初始化"
 echo ""
 

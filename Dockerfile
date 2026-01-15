@@ -20,9 +20,7 @@ RUN npm config set registry https://registry.npmmirror.com && \
     npm install --production=false
 
 # 生成Prisma Client
-RUN npx prisma generate && \
-    npx prisma generate --schema=prisma/schema.license.prisma
-
+RUN npx prisma generate
 # 构建阶段
 FROM base AS builder
 WORKDIR /app
