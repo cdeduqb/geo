@@ -849,10 +849,13 @@ export async function getAIServiceForUseCase(useCase: AIUseCaseType = 'GENERAL')
             orderBy: { priority: 'desc' }
         });
 
-        // 如果仍然没有，获取所有活跃模型
+        // 如果仍然没有，获取所有活跃模型（排除图像模型）
         if (candidateConfigs.length === 0) {
             candidateConfigs = await db.aIConfig.findMany({
-                where: { isActive: true },
+                where: {
+                    isActive: true,
+                    NOT: { useCase: 'IMAGE' }
+                },
                 orderBy: { priority: 'desc' }
             });
         }
@@ -1202,10 +1205,13 @@ async function getAllActiveConfigs(useCase: AIUseCaseType = 'GENERAL'): Promise<
     // 由于是两个独立的查询，ID不会重复（除非数据库数据异常），直接连接即可
     const allConfigs = [...specificConfigs, ...generalConfigs];
 
-    // 如果还是没有配置，尝试获取所有激活的配置作为最后兜底
+    // 如果还是没有配置，尝试获取所有激活的配置作为最后兜底（排除图像模型）
     if (allConfigs.length === 0) {
         return await db.aIConfig.findMany({
-            where: { isActive: true },
+            where: {
+                isActive: true,
+                NOT: { useCase: 'IMAGE' }
+            },
             orderBy: { priority: 'desc' }
         });
     }

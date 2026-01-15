@@ -17,25 +17,29 @@ const LANG_NAMES: Record<string, string> = {
     'ar': '阿拉伯语',
 };
 
-// 获取AI配置
+// 获取AI配置（排除图像生成模型）
 async function getAIConfig() {
     let aiConfig = await prisma.aIConfig.findFirst({
         where: {
             isActive: true,
-            provider: { in: ['openai', 'deepseek', 'zhipu', 'minimax'] }
+            NOT: { useCase: 'IMAGE' },
+            provider: { in: ['openai', 'deepseek', 'zhipu', 'minimax', 'qwen', 'kimi'] }
         },
         orderBy: { updatedAt: 'desc' },
     });
 
     if (!aiConfig) {
         aiConfig = await prisma.aIConfig.findFirst({
-            where: { isActive: true },
+            where: {
+                isActive: true,
+                NOT: { useCase: 'IMAGE' }
+            },
             orderBy: { updatedAt: 'desc' },
         });
     }
 
     if (!aiConfig) {
-        throw new Error('没有可用的AI配置');
+        throw new Error('没有可用的文本AI配置，请添加非图像生成用途的AI配置');
     }
 
     return aiConfig;

@@ -53,9 +53,13 @@ async function scoreWithAI(title: string, content: string): Promise<any> {
             return imageModelKeywords.some(keyword => lowerName.includes(keyword));
         };
 
-        // 获取所有激活的 AI 配置
+        // 获取所有激活的 AI 配置，排除 useCase 为 IMAGE 的配置
         const allConfigs = await prisma.aIConfig.findMany({
-            where: { isActive: true },
+            where: {
+                isActive: true,
+                // 排除图像生成用途的配置
+                NOT: { useCase: 'IMAGE' }
+            },
             orderBy: { updatedAt: 'desc' },
         });
 
