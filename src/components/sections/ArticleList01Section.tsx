@@ -47,6 +47,7 @@ export const ArticleList01Section: React.FC<SectionProps> = ({ data, style = {} 
                 params.append('page', String(currentPage));
                 params.append('limit', String(pageSize));
                 params.append('status', 'published');
+                params.append('lang', locale); // 添加语言参数
 
                 const res = await fetch(`/api/articles?${params}`);
                 if (res.ok) {
@@ -101,7 +102,7 @@ export const ArticleList01Section: React.FC<SectionProps> = ({ data, style = {} 
                             >
                                 <meta itemProp="position" content={String(index + 1)} />
                                 {showImage && article.coverImage && (
-                                    <Link href={`/articles/${article.slug}`} itemProp="url">
+                                    <Link href={getLocalePath(`/articles/${article.slug}`)} itemProp="url">
                                         <div className="overflow-hidden" style={{ aspectRatio: imageRatio }}>
                                             <img
                                                 src={article.coverImage}
@@ -125,7 +126,7 @@ export const ArticleList01Section: React.FC<SectionProps> = ({ data, style = {} 
                                             </span>
                                         )}
                                     </div>
-                                    <Link href={`/articles/${article.slug}`}>
+                                    <Link href={getLocalePath(`/articles/${article.slug}`)}>
                                         <h3
                                             itemProp="headline"
                                             className="text-xl font-bold mb-2 hover:opacity-80 transition-opacity cursor-pointer line-clamp-2"
@@ -143,7 +144,7 @@ export const ArticleList01Section: React.FC<SectionProps> = ({ data, style = {} 
                                             {article.summary}
                                         </p>
                                     )}
-                                    <Link href={`/articles/${article.slug}`} className="inline-flex items-center gap-2 font-semibold hover:gap-3 transition-all" style={{ color: accentColor }}>
+                                    <Link href={getLocalePath(`/articles/${article.slug}`)} className="inline-flex items-center gap-2 font-semibold hover:gap-3 transition-all" style={{ color: accentColor }}>
                                         {buttonText}
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                                     </Link>
