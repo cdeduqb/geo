@@ -481,3 +481,5 @@
 [2026-01-11T16:12:20.452Z] INFO: [Pipeline] Auto-linking completed, length: 1692
 [2026-01-11T16:12:20.757Z] INFO: [Automation] Task ae2409e4-cb97-4cec-b7ed-f6d28f79e3f8: Triggering SEO Auto-push
 [2026-01-12T13:22:53.394Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-14T06:37:33.618Z] INFO: [AIService] Created OpenAIService for openai (Model: ep-20260111142811-9fsft)
+[2026-01-15T01:41:55.157Z] INFO: [AIService] Created OpenAIService for openai (Model: ep-20260111142811-9fsft)

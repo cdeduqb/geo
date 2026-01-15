@@ -108,8 +108,18 @@ async function processPendingTasks() {
 
         // ===== 首先处理自动化工厂任务 (使用完整管线) =====
         try {
-            const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-            const factoryRes = await fetch(`${baseUrl}/api/admin/articles/automation/process`, {
+            // 使用数据库配置的 site_url，确保与系统设置一致
+            const { getSiteUrl } = await import('@/lib/system-settings');
+            const baseUrl = await getSiteUrl();
+
+            // 如果是 localhost，尝试使用内部地址直接调用
+            const apiUrl = baseUrl.includes('localhost') || baseUrl.includes('127.0.0.1')
+                ? 'http://localhost:3000/api/admin/articles/automation/process'
+                : `${baseUrl}/api/admin/articles/automation/process`;
+
+            console.log(`[Cron] Calling automation API: ${apiUrl}`);
+
+            const factoryRes = await fetch(apiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
             });
@@ -119,10 +129,13 @@ async function processPendingTasks() {
                 if (factoryResult.processed > 0) {
                     console.log(`[Cron] Factory pipeline processed ${factoryResult.processed} tasks`);
                 }
+            } else {
+                console.error(`[Cron] Factory API returned status: ${factoryRes.status}`);
             }
         } catch (factoryErr) {
             console.error('[Cron] Factory pipeline call failed:', factoryErr);
         }
+
 
         // ===== 然后处理独立任务 (没有关联项目的任务) =====
         // Get the first admin user (fallback for authorId)

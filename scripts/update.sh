@@ -84,9 +84,19 @@ echo "[5/5] Reloading service..."
 pm2 reload ecosystem.config.js --update-env || pm2 start ecosystem.config.js --update-env
 pm2 save
 
+# 6. 自动检查并修复 Nginx 配置（可选）
+echo "[6/6] Checking Nginx configuration..."
+if [ -f "scripts/fix-nginx.sh" ]; then
+    chmod +x scripts/fix-nginx.sh
+    bash scripts/fix-nginx.sh
+else
+    echo "⚠️ Nginx 修复脚本不存在，跳过自动配置"
+fi
+
 echo "Update completed successfully!"
 
 echo "============================================"
 echo "Update completed successfully at $(date)"
 echo "============================================"
 exit 0
+

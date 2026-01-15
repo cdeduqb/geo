@@ -112,7 +112,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
     matcher: [
-        // 匹配所有路径
-        '/((?!api|_next/static|_next/image|favicon.ico).*)',
+        // 匹配所有路径，但排除静态资源
+        '/((?!api|_next/static|_next/image|favicon.ico|uploads).*)',
     ],
 };

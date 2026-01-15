@@ -58,12 +58,27 @@ export default function BatchPushForm({ articles, platforms }: BatchPushFormProp
         setPushResult(null);
 
         try {
+            // 从服务器获取配置的站点 URL，确保与系统设置一致
+            let baseUrl = window.location.origin;
+            try {
+                const siteUrlRes = await fetch('/api/public/site-url');
+                if (siteUrlRes.ok) {
+                    const data = await siteUrlRes.json();
+                    if (data.siteUrl && !data.siteUrl.includes('localhost')) {
+                        baseUrl = data.siteUrl;
+                    }
+                }
+            } catch (e) {
+                console.warn('[SEO Push] 无法获取系统配置的站点 URL，使用当前浏览器地址');
+            }
+
             // 构建 URL 列表
-            const baseUrl = window.location.origin;
             const urls = selectedArticles.map(id => {
                 const article = articles.find(a => a.id === id);
                 return `${baseUrl}/articles/${article?.slug}`;
             });
+
+            console.log('[SEO Push] 推送 URL:', urls);
 
             const res = await fetch('/api/admin/seo/push', {
                 method: 'POST',
@@ -78,19 +93,22 @@ export default function BatchPushForm({ articles, platforms }: BatchPushFormProp
 
             if (res.ok) {
                 setPushResult(data.results);
-                alert(`推送完成！成功: ${data.results.filter((r: any) => r.success).length}, 失败: ${data.results.filter((r: any) => !r.success).length}`);
+                const successCount = data.results.filter((r: any) => r.success).length;
+                const failCount = data.results.filter((r: any) => !r.success).length;
+                alert(`推送完成！成功: ${successCount}, 失败: ${failCount}`);
                 // 清空选择
                 setSelectedArticles([]);
             } else {
-                alert('推送失败：' + data.error);
+                alert('推送失败：' + (data.error || '未知错误'));
             }
         } catch (error) {
             console.error('Push error:', error);
-            alert('推送失败，请重试');
+            alert('推送失败，请检查网络连接后重试');
         } finally {
             setIsPushing(false);
         }
     };
+
 
     return (
         <div className="space-y-6">

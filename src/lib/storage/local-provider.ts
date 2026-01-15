@@ -41,9 +41,15 @@ export class LocalStorageProvider implements StorageProvider {
         // 写入文件
         await fs.writeFile(filePath, buffer);
 
+        // 调试日志：显示文件实际保存位置
+        console.log(`[LocalStorage] File saved: ${filePath}`);
+        console.log(`[LocalStorage] Upload dir: ${this.uploadDir}`);
+        console.log(`[LocalStorage] process.cwd(): ${process.cwd()}`);
+
         const url = `${this.baseUrl}/${key}`;
         return { url, key };
     }
+
 
     async delete(key: string): Promise<void> {
         const filePath = path.join(this.uploadDir, key);
