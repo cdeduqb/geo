@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+// Force rebuild: v0.1.26 fix sync
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 
