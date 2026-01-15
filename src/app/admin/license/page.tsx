@@ -232,6 +232,7 @@ function ActivationModal({ onClose, onSuccess }: any) {
     const [domain, setDomain] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState(false);
 
     const handleActivate = async () => {
         if (!licenseCode) {
@@ -252,13 +253,15 @@ function ActivationModal({ onClose, onSuccess }: any) {
             const data = await res.json();
 
             if (res.ok && data.success) {
+                setSuccess(true);
                 onSuccess();
-                setTimeout(onClose, 800);
+                // 显示成功提示 2 秒后关闭
+                setTimeout(onClose, 2000);
             } else {
-                setError(data.error || '激活验证失败，请核对后重试');
+                setError(data.error || data.message || '激活验证失败，请核对后重试');
             }
         } catch (err) {
-            setError('网络请求失败');
+            setError('网络请求失败，请检查网络连接');
         } finally {
             setLoading(false);
         }
@@ -266,59 +269,79 @@ function ActivationModal({ onClose, onSuccess }: any) {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-[100] p-4 animate-in fade-in duration-300">
-            {/* 点击空白处关闭 */}
-            <div className="absolute inset-0 bg-transparent" onClick={onClose} />
+            {/* 背景遮罩 */}
+            <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={onClose} />
             <div className="bg-white rounded-[32px] shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-500 relative">
-                <button
-                    onClick={onClose}
-                    className="absolute top-6 right-6 w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-gray-900 transition-colors border border-gray-100"
-                >
-                    <X className="w-4 h-4" />
-                </button>
+                {!success && (
+                    <button
+                        onClick={onClose}
+                        className="absolute top-6 right-6 w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:text-gray-900 transition-colors border border-gray-100"
+                    >
+                        <X className="w-4 h-4" />
+                    </button>
+                )}
 
                 <div className="p-10">
-                    <div className="flex items-center gap-4 mb-8">
-                        <div className="w-12 h-12 bg-gray-900 rounded-xl flex items-center justify-center text-white">
-                            <Key className="w-6 h-6" />
+                    {success ? (
+                        /* 激活成功状态 */
+                        <div className="text-center py-6 animate-in zoom-in-95 duration-500">
+                            <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <CheckCircle className="w-10 h-10 text-emerald-600" />
+                            </div>
+                            <h2 className="text-2xl font-black text-gray-900 tracking-tight mb-2">激活成功！</h2>
+                            <p className="text-gray-500 text-sm font-medium">
+                                授权已激活，正在刷新页面...
+                            </p>
                         </div>
-                        <h2 className="text-xl font-black text-gray-900 tracking-tight">激活商业授权</h2>
-                    </div>
+                    ) : (
+                        /* 激活表单 */
+                        <>
+                            <div className="flex items-center gap-4 mb-8">
+                                <div className="w-12 h-12 bg-gray-900 rounded-xl flex items-center justify-center text-white">
+                                    <Key className="w-6 h-6" />
+                                </div>
+                                <h2 className="text-xl font-black text-gray-900 tracking-tight">激活商业授权</h2>
+                            </div>
 
-                    <div className="space-y-6">
-                        <div className="space-y-2">
-                            <label className="text-xs font-black text-gray-600 ml-1">激活码</label>
-                            <input
-                                type="text"
-                                value={licenseCode}
-                                onChange={(e) => setLicenseCode(e.target.value)}
-                                className="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-4 py-3 text-sm font-bold text-gray-900 focus:border-blue-600 outline-none placeholder:text-gray-300 font-mono"
-                                placeholder="LIC-XXXX-XXXX-XXXX"
-                            />
-                        </div>
+                            <div className="space-y-6">
+                                <div className="space-y-2">
+                                    <label className="text-xs font-black text-gray-600 ml-1">激活码</label>
+                                    <input
+                                        type="text"
+                                        value={licenseCode}
+                                        onChange={(e) => setLicenseCode(e.target.value)}
+                                        className="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-4 py-3 text-sm font-bold text-gray-900 focus:border-blue-600 outline-none placeholder:text-gray-300 font-mono"
+                                        placeholder="LIC-XXXX-XXXX-XXXX"
+                                    />
+                                </div>
 
-                        <div className="space-y-2">
-                            <label className="text-xs font-black text-gray-600 ml-1">绑定域名 (可选)</label>
-                            <input
-                                type="text"
-                                value={domain}
-                                onChange={(e) => setDomain(e.target.value)}
-                                className="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-4 py-3 text-sm font-bold text-gray-900 focus:border-blue-600 outline-none"
-                                placeholder="example.com"
-                            />
-                        </div>
+                                <div className="space-y-2">
+                                    <label className="text-xs font-black text-gray-600 ml-1">绑定域名 (可选)</label>
+                                    <input
+                                        type="text"
+                                        value={domain}
+                                        onChange={(e) => setDomain(e.target.value)}
+                                        className="w-full rounded-xl border border-gray-300 bg-gray-50/50 px-4 py-3 text-sm font-bold text-gray-900 focus:border-blue-600 outline-none"
+                                        placeholder="example.com"
+                                    />
+                                </div>
 
-                        {error && (
-                            <p className="text-xs font-bold text-red-500 bg-red-50 p-3 rounded-lg border border-red-100">{error}</p>
-                        )}
+                                {error && (
+                                    <p className="text-xs font-bold text-red-500 bg-red-50 p-3 rounded-lg border border-red-100">
+                                        ❌ {error}
+                                    </p>
+                                )}
 
-                        <button
-                            onClick={handleActivate}
-                            disabled={loading}
-                            className="w-full py-4 bg-gray-900 text-white rounded-xl font-black text-sm hover:bg-black shadow-xl shadow-gray-100 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
-                        >
-                            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <>立即激活 <Sparkles className="w-4 h-4" /></>}
-                        </button>
-                    </div>
+                                <button
+                                    onClick={handleActivate}
+                                    disabled={loading}
+                                    className="w-full py-4 bg-gray-900 text-white rounded-xl font-black text-sm hover:bg-black shadow-xl shadow-gray-100 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+                                >
+                                    {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <>立即激活 <Sparkles className="w-4 h-4" /></>}
+                                </button>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </div>
