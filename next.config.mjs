@@ -142,6 +142,7 @@ const nextConfig = {
     },
     // 外部包配置（避免打包到 bundle 中）
     experimental: {
+        instrumentationHook: true, // 启用 instrumentation.ts，用于初始化 Cron 定时任务
         serverComponentsExternalPackages: ['@prisma/client', 'ali-oss', 'cos-nodejs-sdk-v5', 'isomorphic-dompurify', 'jsdom'],
         serverActions: {
             allowedOrigins: (() => {
