@@ -150,7 +150,7 @@ Article Content: ${content.substring(0, 4000)}
         for (const item of items) {
             try {
                 // Modified prompt to match Cover Image style (Cinematic/High Quality) and remove strict text rendering requirements
-                const strictPrompt = `PROMPT: ${item.prompt}. STYLE: Cinematic, High Resolution, Photorealistic, 8k, Detailed texture, Depth of field.`;
+                const strictPrompt = `PROMPT: ${item.prompt}. STYLE: Cinematic, High Resolution, Photorealistic, 8k, Detailed texture, Depth of field, no watermark.`;
                 const genResult = await imageService.generateImage(strictPrompt);
 
                 if (genResult.url) {

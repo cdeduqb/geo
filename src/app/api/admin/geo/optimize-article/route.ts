@@ -56,7 +56,7 @@ async function optimizeWithAI(title: string, content: string, suggestions: strin
         const suggestionsText = suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n');
         const prompt = OPTIMIZE_PROMPT
             .replace('{title}', title)
-            .replace('{content}', content.substring(0, 6000))
+            .replace('{content}', content.substring(0, 4000))
             .replace('{suggestions}', suggestionsText);
 
         const apiKey = aiConfig.apiKey;
@@ -82,7 +82,7 @@ async function optimizeWithAI(title: string, content: string, suggestions: strin
                         { role: 'user', content: prompt }
                     ],
                     temperature: 0.7,
-                    max_tokens: 4000,
+                    max_tokens: 3000,
                 }),
             });
         } else if (aiConfig.provider === 'deepseek') {
@@ -99,7 +99,7 @@ async function optimizeWithAI(title: string, content: string, suggestions: strin
                         { role: 'user', content: prompt }
                     ],
                     temperature: 0.7,
-                    max_tokens: 4000,
+                    max_tokens: 3000,
                 }),
             });
         } else if (aiConfig.provider === 'volcengine') {
@@ -158,6 +158,7 @@ async function optimizeWithAI(title: string, content: string, suggestions: strin
 }
 
 // POST - 一键优化文章
+// POST - 一键优化文章
 export async function POST(request: NextRequest) {
     try {
         await requireAdmin();
@@ -196,36 +197,79 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // 调用AI优化
-        const optimizedContent = await optimizeWithAI(article.title, article.content, suggestions);
+        // 使用流式响应来绕过 Nginx/CDN 的超时限制
+        const encoder = new TextEncoder();
+        const stream = new ReadableStream({
+            async start(controller) {
+                // 启动心跳 (每 5 秒发一个空格)
+                // 这样 Nginx 就会认为连接活跃并重置超时计时器
+                const heartbeat = setInterval(() => {
+                    try {
+                        controller.enqueue(encoder.encode(' '));
+                    } catch (e) {
+                        clearInterval(heartbeat);
+                    }
+                }, 5000);
 
-        // 更新文章内容
-        const updatedArticle = await prisma.article.update({
-            where: { id: articleId },
-            data: {
-                content: optimizedContent,
-                updatedAt: new Date(),
-            },
-            select: {
-                id: true,
-                title: true,
-                slug: true,
-                content: true,
-            },
+                try {
+                    // 1. 立即发送一个空格建立连接
+                    controller.enqueue(encoder.encode(' '));
+
+                    // 2. 执行繁重的 AI 任务
+                    const optimizedContent = await optimizeWithAI(article.title, article.content, suggestions);
+
+                    // 3. 更新文章内容
+                    const updatedArticle = await prisma.article.update({
+                        where: { id: articleId },
+                        data: {
+                            content: optimizedContent,
+                            updatedAt: new Date(),
+                        },
+                        select: {
+                            id: true,
+                            title: true,
+                            slug: true,
+                            content: true,
+                        },
+                    });
+
+                    // 4. 删除旧的评分记录
+                    await prisma.contentAIScore.deleteMany({
+                        where: { articleId },
+                    });
+
+                    clearInterval(heartbeat);
+
+                    // 5. 发送真正的结果
+                    //由于前面发送了空格，这里直接发送 JSON 字符串，客户端 JSON.parse 会自动忽略前置空白
+                    const result = {
+                        success: true,
+                        message: '文章优化成功',
+                        article: updatedArticle,
+                    };
+                    controller.enqueue(encoder.encode(JSON.stringify(result)));
+                    controller.close();
+
+                } catch (error: any) {
+                    clearInterval(heartbeat);
+                    console.error('优化失败:', error);
+                    const errorRes = { error: error.message || '优化失败' };
+                    controller.enqueue(encoder.encode(JSON.stringify(errorRes)));
+                    controller.close();
+                }
+            }
         });
 
-        // 删除旧的评分记录，以便重新评分
-        await prisma.contentAIScore.deleteMany({
-            where: { articleId },
+        return new NextResponse(stream, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Cache-Control': 'no-cache, no-transform',
+                'Connection': 'keep-alive',
+            }
         });
 
-        return NextResponse.json({
-            success: true,
-            message: '文章优化成功',
-            article: updatedArticle,
-        });
     } catch (error: any) {
-        console.error('优化失败:', error);
+        console.error('优化请求失败:', error);
         return NextResponse.json(
             { error: error.message || '优化失败' },
             { status: 500 }
