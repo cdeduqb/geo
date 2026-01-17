@@ -79,14 +79,12 @@ export async function middleware(request: NextRequest) {
 
             // 直接调用内部 API (Edge compatible approach if needed, but for now simple fetch)
             // 注意：生产环境可能需要鉴权保护此内部 API
-            // ⚠️ 暂时注释掉日志记录，防止站长工具或服务器回环请求导致超时
-            /* 
+            // 异步记录日志
             fetch(`${request.nextUrl.origin}/api/internal/log-crawler`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(logData)
-            }).catch(e => console.error('Log error:', e));
-            */
+            }).catch(e => console.error('Crawler Log Error:', e.message));
         }
     }
 

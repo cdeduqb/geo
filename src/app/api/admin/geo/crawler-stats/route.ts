@@ -20,7 +20,8 @@ export async function GET() {
             crawlerDistribution,
             dailyTrend,
             pathDistribution,
-            abnormalCount
+            abnormalCount,
+            uniqueCrawlers
         ] = await Promise.all([
             // 今日抓取量
             db.crawlerLog.count({
@@ -30,25 +31,24 @@ export async function GET() {
             db.crawlerLog.count({
                 where: { createdAt: { gte: weekAgo } }
             }),
-            // 爬虫分布 (Top 5)
+            // 爬虫分布 (Top 10)
             db.crawlerLog.groupBy({
                 by: ['crawler'],
                 _count: { crawler: true },
                 orderBy: { _count: { crawler: 'desc' } },
-                take: 5
+                take: 10
             }),
-            // 每日趋势 (最近 7 天) - 由于 Prisma groupby date 不方便，这里用原生查询或 JS 处理
-            // 为简化，这里获取最近 7 天所有数据然后在内存聚合（如果数据量很大建议手写 SQL）
+            // 每日趋势 (最近 7 天)
             db.crawlerLog.findMany({
                 where: { createdAt: { gte: weekAgo } },
                 select: { createdAt: true }
             }),
-            // 热门页面 (Top 5)
+            // 热门页面 (Top 10)
             db.crawlerLog.groupBy({
                 by: ['path'],
                 _count: { path: true },
                 orderBy: { _count: { path: 'desc' } },
-                take: 5
+                take: 10
             }),
             // 今日异常抓取
             db.crawlerLog.count({
@@ -56,6 +56,10 @@ export async function GET() {
                     createdAt: { gte: today },
                     isAbnormal: true
                 }
+            }),
+            // 活跃爬虫总数 (去重)
+            db.crawlerLog.groupBy({
+                by: ['crawler'],
             })
         ]);
 
@@ -67,7 +71,7 @@ export async function GET() {
             trendMap.set(d.toISOString().split('T')[0], 0);
         }
 
-        dailyTrend.forEach(log => {
+        dailyTrend.forEach((log: any) => {
             const date = log.createdAt.toISOString().split('T')[0];
             if (trendMap.has(date)) {
                 trendMap.set(date, (trendMap.get(date) || 0) + 1);
@@ -84,7 +88,8 @@ export async function GET() {
             abnormalCount,
             crawlers: crawlerDistribution.map(c => ({ name: c.crawler, value: c._count.crawler })),
             trend,
-            topPaths: pathDistribution.map(p => ({ path: p.path, count: p._count.path }))
+            topPaths: pathDistribution.map(p => ({ path: p.path, count: p._count.path })),
+            crawlerCount: uniqueCrawlers.length // 返回真实总数
         });
 
     } catch (error) {

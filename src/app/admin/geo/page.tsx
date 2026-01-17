@@ -75,6 +75,7 @@ interface CrawlerStats {
     crawlers: { name: string; value: number }[];
     trend: { date: string; count: number }[];
     topPaths: { path: string; count: number }[];
+    crawlerCount?: number;
 }
 
 interface CrawlerLog {
@@ -576,7 +577,7 @@ export default function GEOSettingsPage() {
                                         <CardTitle className="text-sm font-medium text-gray-500">活跃 AI 平台</CardTitle>
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="text-3xl font-bold text-blue-600">{stats.crawlers.length}</div>
+                                        <div className="text-3xl font-bold text-blue-600">{stats.crawlerCount || stats.crawlers.length}</div>
                                         <p className="text-xs text-gray-500 mt-1">
                                             {stats.crawlers.length > 0 ? stats.crawlers[0].name + ' 最为活跃' : '等待爬虫访问'}
                                         </p>
