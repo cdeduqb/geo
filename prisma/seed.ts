@@ -8,7 +8,7 @@ function hashPassword(password: string): string {
 }
 
 async function main() {
-    const hashedPassword = hashPassword('admin23');
+    const hashedPassword = hashPassword('admin123');
 
     const admin = await prisma.user.upsert({
         where: { email: 'admin@example.com' },
@@ -25,31 +25,6 @@ async function main() {
         },
     })
     console.log({ admin })
-
-    // 创建一些示例分类
-    const techCategory = await prisma.category.upsert({
-        where: { id: '550e8400-e29b-41d4-a716-446655440001' },
-        update: {},
-        create: {
-            id: '550e8400-e29b-41d4-a716-446655440001', // Fixed UUID
-            name: '科技',
-            slug: 'technology',
-            description: '科技相关文章',
-        }
-    })
-
-    const newsCategory = await prisma.category.upsert({
-        where: { id: '550e8400-e29b-41d4-a716-446655440002' },
-        update: {},
-        create: {
-            id: '550e8400-e29b-41d4-a716-446655440002', // Fixed UUID
-            name: '新闻',
-            slug: 'news',
-            description: '公司新闻',
-        }
-    })
-
-    console.log({ techCategory, newsCategory })
 
     // 创建示例页眉模板
     const headerTemplate1 = await prisma.pageTemplate.upsert({
