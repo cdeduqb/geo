@@ -1,6 +1,6 @@
 {
   "name": "geocms",
-  "version": "0.1.31",
+  "version": "0.1.32",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -101,5 +101,8 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "prisma": "^5.17.0"
+  },
+  "prisma": {
+    "seed": "npx tsx prisma/seed.ts"
   }
 }
