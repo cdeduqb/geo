@@ -159,6 +159,10 @@ export class LicenseVerifier {
      */
     private static verifyExpiration(licenseData: LicenseData): boolean {
         const now = Date.now();
+        // 处理永久授权 (expiresAt = -1 或 0)
+        if (licenseData.expiresAt === -1 || licenseData.expiresAt === 0) {
+            return now >= licenseData.issuedAt;
+        }
         return now >= licenseData.issuedAt && now < licenseData.expiresAt;
     }
 

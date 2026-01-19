@@ -255,8 +255,10 @@ function ActivationModal({ onClose, onSuccess }: any) {
             if (res.ok && data.success) {
                 setSuccess(true);
                 onSuccess();
-                // 显示成功提示 2 秒后关闭
-                setTimeout(onClose, 2000);
+                // 显示成功提示并刷新页面
+                setTimeout(() => {
+                    window.location.href = '/admin';
+                }, 1500);
             } else {
                 setError(data.error || data.message || '激活验证失败，请核对后重试');
             }

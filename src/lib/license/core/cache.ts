@@ -97,7 +97,7 @@ export class LicenseCache {
         }
 
         // 检查授权本身是否过期
-        if (now > cached.license.expiresAt) {
+        if (cached.license.expiresAt > 0 && now > cached.license.expiresAt) {
             return false;
         }
 
