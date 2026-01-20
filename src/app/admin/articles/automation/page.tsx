@@ -186,6 +186,23 @@ export default function AutomationProjectsListPage() {
                                         <div className="flex items-center gap-2 mb-2">
                                             {getStatusIcon(project.status)}
                                             {getStatusLabel(project.status)}
+                                            {project.mode === 'titles' ? (
+                                                <span className="text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md text-[10px] font-black border border-indigo-100 uppercase tracking-tighter">
+                                                    标题列表
+                                                </span>
+                                            ) : (
+                                                <span className="text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md text-[10px] font-black border border-blue-100 uppercase tracking-tighter">
+                                                    主题批量
+                                                </span>
+                                            )}
+                                            {/* @ts-ignore */}
+                                            {project.preferredLength && (
+                                                <span className="text-gray-600 bg-gray-50 px-2 py-0.5 rounded-md text-[10px] font-black border border-gray-100 uppercase tracking-tighter">
+                                                    {project.preferredLength === 'short' ? '简约' : project.preferredLength === 'long' ? '深度' : '高级'}
+                                                </span>
+                                            )}
+
+
                                         </div>
                                         <h3 className="text-lg font-black text-gray-900 line-clamp-1 group-hover:text-blue-600 transition-colors tracking-tight">
                                             {project.name}
@@ -195,6 +212,7 @@ export default function AutomationProjectsListPage() {
                                             创建于 {new Date(project.createdAt).toLocaleDateString()}
                                         </p>
                                     </div>
+
                                 </div>
 
                                 {/* Progress Bar Mini */}

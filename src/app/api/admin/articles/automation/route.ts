@@ -129,48 +129,82 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const {
             name,
+            mode = 'topic', // 'topic' 或 'titles'
             topic,
+            titlesList, // 标题列表模式时使用
             keywords,
             totalCount,
             dailyLimit,
+            preferredLength = 'medium',
             categoryId,
             strategyId,
             features
         } = body;
 
-        if (!name || !topic || !totalCount || !strategyId) {
-            return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+
+        // 验证必填字段
+        if (!name || !strategyId) {
+            return NextResponse.json({ error: 'Missing required fields: name, strategyId' }, { status: 400 });
         }
 
-        // 1. 创建自动化项目
-        const project = await db.articleAutomationProject.create({
-            data: {
-                name,
-                topic,
-                keywords,
-                totalCount: parseInt(totalCount.toString()),
-                dailyLimit: parseInt(dailyLimit.toString()),
-                categoryId: categoryId || null,
-                authorId: user.id,
-                strategyId,
-                enableGeo: !!features.geo,
-                enableIllustrate: !!features.illustrate,
-                enableAutoLink: !!features.autoLink,
-                enableCover: !!features.cover,
-                enableSEO: !!features.seo,
-                enableCitations: !!features.citations,
-                enableEntities: !!features.entities,
-                status: 'ACTIVE'
+        // 根据模式验证不同的必填字段
+        if (mode === 'topic') {
+            if (!topic || !totalCount) {
+                return NextResponse.json({ error: 'Missing required fields for topic mode: topic, totalCount' }, { status: 400 });
             }
-        });
+        } else if (mode === 'titles') {
+            if (!titlesList || !Array.isArray(titlesList) || titlesList.length === 0) {
+                return NextResponse.json({ error: 'Missing required fields for titles mode: titlesList (non-empty array)' }, { status: 400 });
+            }
+        } else {
+            return NextResponse.json({ error: 'Invalid mode. Must be "topic" or "titles"' }, { status: 400 });
+        }
+
+        // 计算实际的文章总数
+        const actualTotalCount = mode === 'titles' ? titlesList.length : parseInt(totalCount.toString());
+        const actualDailyLimit = parseInt(dailyLimit?.toString() || '2');
+
+        // 1. 创建自动化项目
+        console.log('--- Creating Automation Project ---');
+        console.log('Mode:', mode);
+        console.log('Total Count:', actualTotalCount);
+
+        let project;
+        try {
+            project = await db.articleAutomationProject.create({
+                data: {
+                    name,
+                    mode,
+                    topic: mode === 'topic' ? topic : `标题列表模式 (${titlesList.length} 篇)`,
+                    keywords,
+                    totalCount: actualTotalCount,
+                    dailyLimit: actualDailyLimit,
+                    preferredLength: preferredLength,
+                    categoryId: categoryId || null,
+
+                    authorId: user.id,
+                    strategyId,
+                    enableGeo: !!features?.geo,
+                    enableIllustrate: !!features?.illustrate,
+                    enableAutoLink: !!features?.autoLink,
+                    enableCover: !!features?.cover,
+                    enableSEO: !!features?.seo,
+                    enableCitations: !!features?.citations,
+                    enableEntities: !!features?.entities,
+                    status: 'ACTIVE'
+                }
+            });
+            console.log('Project created:', project.id);
+        } catch (dbError) {
+            console.error('Database Error (Project Create):', dbError);
+            throw dbError;
+        }
 
         // 2. 生成初始任务 (AICreationTask)
-        // 这里的逻辑可以比较复杂：比如直接根据 totalCount 生成任务，或者只生成第一批
-        // 为了演示，我们先生成所有任务，并将 scheduledAt 分散在未来几天
         const tasksData = [];
-        for (let i = 0; i < project.totalCount; i++) {
+        for (let i = 0; i < actualTotalCount; i++) {
             // 计算发布日期
-            const dayOffset = Math.floor(i / project.dailyLimit);
+            const dayOffset = Math.floor(i / actualDailyLimit);
             let scheduledAt = new Date();
             scheduledAt.setDate(scheduledAt.getDate() + dayOffset);
             if (i === 0) {
@@ -181,24 +215,49 @@ export async function POST(request: NextRequest) {
                 scheduledAt.setHours(9 + Math.floor(Math.random() * 8), Math.floor(Math.random() * 60));
             }
 
+            // 根据模式决定任务的 topic
+            let taskTopic: string;
+            if (mode === 'titles') {
+                // 标题列表模式：直接使用用户提供的标题
+                taskTopic = titlesList[i].trim();
+            } else {
+                // 主题批量模式：使用变体生成器
+                taskTopic = generateUniqueTitle(topic, i, actualTotalCount);
+            }
+
             tasksData.push({
                 projectId: project.id,
                 strategyId: project.strategyId,
-                topic: generateUniqueTitle(project.topic, i, project.totalCount),
+                topic: taskTopic,
                 keywords: project.keywords,
                 status: 'PENDING' as const,
                 scheduledAt
             });
         }
 
+        console.log(`Attempting to create ${tasksData.length} tasks...`);
+
         // 批量创建任务
-        await db.aICreationTask.createMany({
-            data: tasksData
-        });
+        try {
+            await db.aICreationTask.createMany({
+                data: tasksData
+            });
+            console.log('Tasks created successfully');
+        } catch (dbError) {
+            console.error('Database Error (Tasks Create):', dbError);
+            throw dbError;
+        }
 
         return NextResponse.json(project);
     } catch (error) {
-        console.error('Error creating automation project:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        console.error('CRITICAL ERROR in automation project creation:', error);
+        return NextResponse.json({
+            error: 'Internal Server Error',
+            details: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined
+        }, { status: 500 });
     }
 }
+
+
+

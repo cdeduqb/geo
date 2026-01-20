@@ -292,10 +292,13 @@ model AICreationTask {
 model ArticleAutomationProject {
   id               String           @id @default(uuid())
   name             String
+  mode             String           @default("topic") // 'topic' = 主题批量模式, 'titles' = 标题列表模式
   topic            String           @db.Text
   keywords         String?          @db.Text
   totalCount       Int              @default(1)
   dailyLimit       Int              @default(1)
+  preferredLength  String           @default("medium") // 'short', 'medium', 'long'
+
   status           ProjectStatus    @default(ACTIVE)
   enableGeo        Boolean          @default(true)
   enableIllustrate Boolean          @default(true)
@@ -319,6 +322,7 @@ model ArticleAutomationProject {
   @@index([categoryId], map: "ArticleAutomationProject_categoryId_fkey")
   @@index([strategyId], map: "ArticleAutomationProject_strategyId_fkey")
 }
+
 
 model StorageConfig {
   id        String   @id @default(uuid())

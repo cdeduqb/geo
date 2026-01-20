@@ -1187,10 +1187,11 @@ async function getAllActiveConfigs(useCase: AIUseCaseType = 'GENERAL'): Promise<
         orderBy: { priority: 'desc' }
     });
 
-    // 如果用途本身就是 GENERAL，直接返回
-    if (useCase === 'GENERAL') {
+    // 如果用途本身就是 GENERAL 且找到了配置，直接返回
+    if (useCase === 'GENERAL' && specificConfigs.length > 0) {
         return specificConfigs;
     }
+
 
     // 2. 获取通用配置
     const generalConfigs = await db.aIConfig.findMany({

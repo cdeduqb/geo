@@ -1,0 +1,591 @@
+
+> geocms@0.1.35 dev
+> next dev
+
+  ▲ Next.js 14.2.5
+  - Local:        http://localhost:3000
+  - Environments: .env
+  - Experiments (use with caution):
+    · instrumentationHook
+
+ ✓ Starting...
+ ✓ Compiled /instrumentation in 245ms (63 modules)
+[Instrumentation] Starting AI task cron job...
+[Cron] Initializing AI task processor with schedule: */10 * * * *
+[Cron] AI task processor initialized
+ ✓ Ready in 2.7s
+ ✓ Compiled /src/middleware in 127ms (78 modules)
+ ○ Compiling /admin/articles/automation/[id] ...
+The user aborted a request.
+
+Retrying [Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+ ✓ Compiled in 891ms (51 modules)
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 3307ms
+ GET /api/admin/system/update/check 200 in 2499ms
+ GET /api/admin/system/update/check 200 in 674ms
+ GET /admin/articles/automation/00ac0b81-9c0f-4f80-abe9-b788c45f87e4 200 in 311ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 227ms
+ GET /uploads/%E6%88%AA%E5%B1%8F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 282ms
+ GET /api/seo/scripts 200 in 53ms
+ GET /api/seo/scripts 200 in 44ms
+ GET /api/admin/articles/automation/00ac0b81-9c0f-4f80-abe9-b788c45f87e4 200 in 400ms
+ GET /api/admin/system/update/check 200 in 596ms
+ GET /api/admin/system/update/check 200 in 656ms
+ ○ Compiling /admin/articles ...
+ ✓ Compiled /admin/articles in 530ms (1689 modules)
+ ✓ Compiled /articles/[slug] in 434ms (1715 modules)
+ GET /articles/ai-search-impact-website-traffic-seo-strategy 200 in 1821ms
+ ✓ Compiled /api/i18n/settings in 92ms (1007 modules)
+ GET /api/seo/scripts 200 in 112ms
+ ✓ Compiled in 0ms (1009 modules)
+ ✓ Compiled in 0ms (1009 modules)
+ ✓ Compiled in 1ms (1009 modules)
+ GET /api/license/info 200 in 366ms
+ ✓ Compiled in 0ms (1009 modules)
+ GET /api/seo/scripts 200 in 382ms
+ GET /api/license/info 200 in 150ms
+ GET /api/i18n/settings 200 in 518ms
+ GET /api/i18n/settings 200 in 43ms
+ ✓ Compiled /api/articles/[slug]/view in 203ms (1011 modules)
+ POST /api/articles/ai-search-impact-website-traffic-seo-strategy/view 200 in 804ms
+ ✓ Compiled /admin/articles/automation in 325ms (1717 modules)
+ ✓ Compiled /api/admin/articles/automation in 100ms (1006 modules)
+ GET /api/admin/articles/automation 200 in 468ms
+ GET /api/admin/articles/automation 200 in 206ms
+ ✓ Compiled /admin/articles/automation/new in 211ms (1731 modules)
+ ✓ Compiled /api/admin/ai-strategies in 87ms (1015 modules)
+ ✓ Compiled (1028 modules)
+ GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 379ms
+ GET /api/admin/categories 200 in 427ms
+ GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 87ms
+ GET /api/admin/categories 200 in 91ms
+--- Creating Automation Project ---
+Mode: titles
+Total Count: 5
+Project created: bec1b662-37bf-4c44-afe7-ad03b8fc3ce1
+Attempting to create 5 tasks...
+Tasks created successfully
+ POST /api/admin/articles/automation 200 in 615ms
+ GET /api/admin/articles/automation 200 in 420ms
+ GET /api/admin/articles/automation 200 in 236ms
+ ✓ Compiled /api/admin/articles/automation/[id] in 122ms (1022 modules)
+ GET /api/admin/articles/automation/bec1b662-37bf-4c44-afe7-ad03b8fc3ce1 200 in 450ms
+ ✓ Compiled /api/admin/articles/automation/tasks/[taskId] in 103ms (1024 modules)
+ PATCH /api/admin/articles/automation/tasks/9b0095d4-7131-4f9e-864c-570a7e6d8464 200 in 683ms
+ ✓ Compiled /api/admin/articles/automation/process in 269ms (1050 modules)
+[AIService] No active configs found, using Mock service
+[Automation] Processing Task 9b0095d4-7131-4f9e-864c-570a7e6d8464: Initial Writing
+[AIService] Trying mock for generateArticle
+[Automation] Task 9b0095d4-7131-4f9e-864c-570a7e6d8464: GEO Optimization starting...
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] GEO optimizing for: 网站搜索流量变化，可能与AI搜索发展有关 (zh)
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+ ✓ Compiled /admin/ai/tasks in 453ms (1789 modules)
+ GET /api/admin/articles/automation 200 in 451ms
+ GET /api/admin/articles/automation 200 in 217ms
+ GET /api/admin/articles/automation/bec1b662-37bf-4c44-afe7-ad03b8fc3ce1 200 in 265ms
+[Pipeline] GEO optimization received length: 2307
+[Automation] Task 9b0095d4-7131-4f9e-864c-570a7e6d8464: GEO Optimization completed.
+[Automation] Task 9b0095d4-7131-4f9e-864c-570a7e6d8464: Smart Illustration starting...
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] Analyzing illustration points for: 网站搜索流量变化，可能与AI搜索发展有关 (zh)
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[Pipeline] Analysis result: {
+    "illustrations": [
+        {
+            "afterText": "这直接影响了传统搜索引擎的结果点击率。",
+            "prom...
+[AIService] Selected volcengine for IMAGE generation
+[LocalStorage] File saved: /Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/public/uploads/illustrations/illustration-1768932561955-1768932561955-7r7wn9.png
+[LocalStorage] Upload dir: /Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/public/uploads
+[LocalStorage] process.cwd(): /Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms
+[LocalStorage] File saved: /Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/public/uploads/illustrations/illustration-1768932569686-1768932569686-jk9kfz.png
+[LocalStorage] Upload dir: /Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/public/uploads
+[LocalStorage] process.cwd(): /Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms
+[LocalStorage] File saved: /Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/public/uploads/illustrations/illustration-1768932578106-1768932578106-3sc47t.png
+[LocalStorage] Upload dir: /Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/public/uploads
+[LocalStorage] process.cwd(): /Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms
+[Automation] Task 9b0095d4-7131-4f9e-864c-570a7e6d8464: Smart Illustration completed.
+[Automation] Task 9b0095d4-7131-4f9e-864c-570a7e6d8464: Cover Generation
+[AIService] Selected volcengine for IMAGE generation
+ GET /admin/ai/tasks 200 in 469ms
+ POST /api/admin/articles/automation/process 200 in 73908ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 669ms (1671 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 883ms
+ GET /uploads/%E6%88%AA%E5%B1%8F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 1059ms
+ ✓ Compiled /api/admin/system/update/check in 89ms (942 modules)
+ ✓ Compiled (945 modules)
+ GET /api/seo/scripts 200 in 320ms
+ GET /api/seo/scripts 200 in 49ms
+ GET /api/admin/system/update/check 200 in 967ms
+ GET /api/admin/system/update/check 200 in 579ms
+ ✓ Compiled /admin/articles in 291ms (1035 modules)
+[LocalStorage] File saved: /Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/public/uploads/covers/cover-1768932595757-1768932595757-5p6y2m.png
+[LocalStorage] Upload dir: /Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/public/uploads
+[LocalStorage] process.cwd(): /Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms
+[Automation] Task 9b0095d4-7131-4f9e-864c-570a7e6d8464: Generating Metadata (SEO, Entities, Citations)
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] Extracting entities
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] Generating citations
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] Generating SEO for: 网站搜索流量变化，可能与AI搜索发展有关
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Automation] Task 9b0095d4-7131-4f9e-864c-570a7e6d8464: Finalizing Article
+[Automation] Task 9b0095d4-7131-4f9e-864c-570a7e6d8464: Auto Linking
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] Auto-linking for: AI搜索发展如何影响网站搜索流量变化 with 50 candidates
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+ ○ Compiling /admin/geo ...
+ ✓ Compiled /admin/geo in 962ms (1844 modules)
+ ✓ Compiled /api/admin/settings in 118ms (1072 modules)
+ ✓ Compiled (1087 modules)
+ GET /api/admin/settings 200 in 423ms
+ GET /api/admin/geo/settings 200 in 460ms
+ GET /api/admin/geo/crawler-stats 200 in 464ms
+ GET /api/admin/settings 200 in 92ms
+ GET /api/admin/geo/settings 200 in 99ms
+ GET /api/admin/geo/crawler-stats 200 in 180ms
+[Pipeline] Auto-linking completed, length: 3621
+[Automation] Task 9b0095d4-7131-4f9e-864c-570a7e6d8464: Triggering SEO Auto-push
+[SEO Push] baidu: 成功推送 2 条URL，今日剩余配额：未知
+[SEO Push] indexnow: IndexNow 推送成功：2 条URL (HTTP 202)
+ ✓ Compiled /api/admin/geo/ranking in 224ms (1063 modules)
+ GET /api/admin/geo/ranking 200 in 632ms
+ GET /api/admin/geo/ranking 200 in 217ms
+ ✓ Compiled /api/admin/geo/crawler-logs in 111ms (1065 modules)
+ GET /api/admin/geo/crawler-logs?limit=100&page=1 200 in 430ms
+ ✓ Compiled /admin/seo/configs in 285ms (1860 modules)
+ ✓ Compiled /api/admin/articles/automation in 131ms (1081 modules)
+ GET /api/admin/articles/automation 200 in 491ms
+ GET /api/admin/articles/automation 200 in 219ms
+ ✓ Compiled /api/admin/articles/automation/[id] in 103ms (1083 modules)
+ GET /api/admin/articles/automation/bec1b662-37bf-4c44-afe7-ad03b8fc3ce1 200 in 429ms
+ GET /articles/ai-search-impact-on-website-traffic-changes 200 in 858ms
+ ✓ Compiled /api/license/info in 101ms (1085 modules)
+ ✓ Compiled (1089 modules)
+ GET /api/license/info 200 in 285ms
+ GET /api/license/info 200 in 4ms
+ GET /api/i18n/settings 200 in 334ms
+ GET /api/seo/scripts 200 in 337ms
+ GET /api/i18n/settings 200 in 92ms
+ GET /api/seo/scripts 200 in 94ms
+ ✓ Compiled /api/articles/[slug]/view in 131ms (1091 modules)
+ POST /api/articles/ai-search-impact-on-website-traffic-changes/view 200 in 583ms
+ POST /admin/articles 200 in 1004ms
+ POST /admin/articles 200 in 852ms
+ GET /api/admin/articles/automation 200 in 401ms
+ GET /api/admin/articles/automation 200 in 240ms
+ ✓ Compiled /admin/articles/automation/new in 351ms (1059 modules)
+ ✓ Compiled /api/admin/ai-strategies in 88ms (1061 modules)
+ ✓ Compiled (1074 modules)
+ GET /api/admin/categories 200 in 385ms
+ GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 392ms
+ GET /api/admin/categories 200 in 143ms
+ GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 145ms
+ GET /api/admin/articles/automation 200 in 235ms
+ GET /api/admin/articles/automation 200 in 238ms
+ ✓ Compiled /api/admin/articles/automation/[id] in 139ms (1076 modules)
+ DELETE /api/admin/articles/automation/bec1b662-37bf-4c44-afe7-ad03b8fc3ce1 200 in 486ms
+ DELETE /api/admin/articles/automation/00ac0b81-9c0f-4f80-abe9-b788c45f87e4 200 in 287ms
+ DELETE /api/admin/articles/automation/3221d2cc-c6d4-4ca9-b6b5-0a388be0f44a 200 in 236ms
+ GET /api/admin/categories 200 in 104ms
+ GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 151ms
+ GET /api/admin/categories 200 in 99ms
+ GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 98ms
+--- Creating Automation Project ---
+Mode: titles
+Total Count: 5
+Project created: 9f75b17c-e70c-423f-a6ef-1237cf000668
+Attempting to create 5 tasks...
+Tasks created successfully
+ POST /api/admin/articles/automation 200 in 557ms
+ GET /api/admin/articles/automation 200 in 321ms
+ GET /api/admin/articles/automation 200 in 239ms
+ ✓ Compiled /admin/articles/automation/[id] in 309ms (993 modules)
+ ✓ Compiled /api/admin/articles/automation/[id] in 95ms (995 modules)
+ GET /api/admin/articles/automation/9f75b17c-e70c-423f-a6ef-1237cf000668 200 in 351ms
+ ✓ Compiled /api/admin/articles/automation/tasks/[taskId] in 173ms (997 modules)
+ PATCH /api/admin/articles/automation/tasks/745d9842-a907-4af9-94ba-26c21fbdd185 200 in 589ms
+ ✓ Compiled /api/admin/articles/automation/process in 232ms (1023 modules)
+[AIService] No active configs found, using Mock service
+[Automation] Processing Task 745d9842-a907-4af9-94ba-26c21fbdd185: Initial Writing
+[AIService] Trying mock for generateArticle
+[Automation] Task 745d9842-a907-4af9-94ba-26c21fbdd185: Generating Metadata (SEO, Entities, Citations)
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] Generating citations
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] Generating SEO for: 网站搜索流量变化，可能与AI搜索发展有关
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] Extracting entities
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+ GET /admin/articles/automation/9f75b17c-e70c-423f-a6ef-1237cf000668 200 in 200ms
+ POST /api/admin/articles/automation/process 200 in 6979ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 535ms (1811 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 737ms
+ GET /uploads/%E6%88%AA%E5%B1%8F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 979ms
+ ✓ Compiled /api/admin/system/update/check in 97ms (1030 modules)
+ ✓ Compiled (1033 modules)
+ GET /api/seo/scripts 200 in 334ms
+ GET /api/seo/scripts 200 in 48ms
+ GET /api/admin/articles/automation/9f75b17c-e70c-423f-a6ef-1237cf000668 200 in 506ms
+ GET /api/admin/system/update/check 200 in 1013ms
+ GET /api/admin/system/update/check 200 in 602ms
+[Automation] Task 745d9842-a907-4af9-94ba-26c21fbdd185: Finalizing Article
+[Automation] Task 745d9842-a907-4af9-94ba-26c21fbdd185: Auto Linking
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] Auto-linking for: AI搜索发展如何影响网站搜索流量变化 with 50 candidates
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[Pipeline] Auto-linking completed, length: 1191
+[Automation] Task 745d9842-a907-4af9-94ba-26c21fbdd185: Triggering SEO Auto-push
+[SEO Push] baidu: 推送失败 (HTTP 400)
+[SEO Push] indexnow: IndexNow 推送成功：2 条URL (HTTP 202)
+ GET /admin/articles/automation/9f75b17c-e70c-423f-a6ef-1237cf000668 200 in 244ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 270ms
+ GET /uploads/%E6%88%AA%E5%B1%8F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 483ms
+ GET /api/seo/scripts 200 in 55ms
+ GET /api/seo/scripts 200 in 95ms
+ GET /api/admin/articles/automation/9f75b17c-e70c-423f-a6ef-1237cf000668 200 in 316ms
+ GET /api/admin/system/update/check 200 in 631ms
+ GET /api/admin/system/update/check 200 in 598ms
+ ✓ Compiled /admin/articles in 233ms (1075 modules)
+ GET /articles/ai-search-impact-on-website-traffic-changes 200 in 752ms
+ GET /api/seo/scripts 200 in 67ms
+ ✓ Compiled /api/i18n/settings in 104ms (1077 modules)
+ ✓ Compiled (1079 modules)
+ GET /api/license/info 200 in 242ms
+ GET /api/license/info 200 in 4ms
+ GET /api/seo/scripts 200 in 217ms
+ GET /api/i18n/settings 200 in 286ms
+ GET /api/i18n/settings 200 in 47ms
+ ✓ Compiled /api/articles/[slug]/view in 100ms (1025 modules)
+ POST /api/articles/ai-search-impact-on-website-traffic-changes/view 200 in 509ms
+ ✓ Compiled in 710ms (977 modules)
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+ ○ Compiling /admin/articles/[id] ...
+ ✓ Compiled /admin/articles/[id] in 1434ms (1894 modules)
+ ✓ Compiled /api/admin/articles/automation in 137ms (1093 modules)
+ GET /api/admin/articles/automation 200 in 632ms
+ GET /api/admin/articles/automation 200 in 229ms
+ ✓ Compiled /api/admin/articles/automation/[id] in 102ms (1095 modules)
+ GET /api/admin/articles/automation/9f75b17c-e70c-423f-a6ef-1237cf000668 200 in 503ms
+ ✓ Compiled /api/admin/articles/automation/tasks/[taskId] in 283ms (1097 modules)
+ PATCH /api/admin/articles/automation/tasks/e38c525a-56a1-492c-b0f3-a2a3c7c2c84b 200 in 698ms
+ ✓ Compiled /api/admin/articles/automation/process in 190ms (1109 modules)
+[AIService] Initialized fallback chain: deepseek(P1) -> qwen(P0) -> kimi(P0)
+[Automation] Processing Task e38c525a-56a1-492c-b0f3-a2a3c7c2c84b: Initial Writing
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[AIService] Trying deepseek for generateArticle
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateArticle
+ GET /admin/articles/automation/9f75b17c-e70c-423f-a6ef-1237cf000668 200 in 211ms
+ POST /api/admin/articles/automation/process 200 in 4679ms
+ ✓ Compiled /_not-found in 391ms (1949 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 582ms
+ GET /uploads/%E6%88%AA%E5%B1%8F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 846ms
+ ✓ Compiled /api/admin/system/update/check in 123ms (1120 modules)
+ ✓ Compiled (1123 modules)
+ GET /api/seo/scripts 200 in 349ms
+ GET /api/seo/scripts 200 in 54ms
+ GET /api/admin/articles/automation/9f75b17c-e70c-423f-a6ef-1237cf000668 200 in 689ms
+ GET /api/admin/system/update/check 200 in 1030ms
+ GET /api/admin/system/update/check 200 in 649ms
+ GET /articles/ai-search-impact-on-website-traffic-changes 200 in 692ms
+ ✓ Compiled /api/i18n/settings in 127ms (1125 modules)
+ ✓ Compiled (1127 modules)
+ GET /api/license/info 200 in 337ms
+ GET /api/license/info 200 in 6ms
+ GET /api/seo/scripts 200 in 390ms
+ GET /api/i18n/settings 200 in 404ms
+ GET /api/seo/scripts 200 in 42ms
+ GET /api/i18n/settings 200 in 47ms
+ ✓ Compiled /api/articles/[slug]/view in 109ms (1129 modules)
+ POST /api/articles/ai-search-impact-on-website-traffic-changes/view 200 in 520ms
+ GET /admin/articles 200 in 708ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 249ms
+ GET /uploads/%E6%88%AA%E5%B1%8F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 388ms
+ GET /api/seo/scripts 200 in 57ms
+ GET /api/seo/scripts 200 in 92ms
+ GET /api/admin/system/update/check 200 in 677ms
+ GET /api/admin/system/update/check 200 in 620ms
+ GET /api/admin/articles/automation 200 in 364ms
+ GET /api/admin/articles/automation 200 in 241ms
+ GET /api/admin/articles/automation/9f75b17c-e70c-423f-a6ef-1237cf000668 200 in 393ms
+[Automation] Task e38c525a-56a1-492c-b0f3-a2a3c7c2c84b: Generating Metadata (SEO, Entities, Citations)
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] Generating SEO for: 当AI生成结果中出现竞争对手，可以关注的几个方面
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] Generating citations
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] Extracting entities
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+ GET /admin/articles/automation/9f75b17c-e70c-423f-a6ef-1237cf000668 200 in 208ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 152ms
+ GET /uploads/%E6%88%AA%E5%B1%8F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 247ms
+ GET /api/seo/scripts 200 in 88ms
+ GET /api/seo/scripts 200 in 57ms
+ GET /api/admin/articles/automation/9f75b17c-e70c-423f-a6ef-1237cf000668 200 in 480ms
+ GET /api/admin/system/update/check 200 in 837ms
+ GET /api/admin/system/update/check 200 in 646ms
+[Automation] Task e38c525a-56a1-492c-b0f3-a2a3c7c2c84b: Finalizing Article
+[Automation] Task e38c525a-56a1-492c-b0f3-a2a3c7c2c84b: Auto Linking
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] Auto-linking for: AI生成内容出现竞争对手？关注这几点优化策略 with 50 candidates
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+ GET /admin/articles/automation/9f75b17c-e70c-423f-a6ef-1237cf000668 200 in 206ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 177ms
+ GET /uploads/%E6%88%AA%E5%B1%8F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 314ms
+ GET /api/seo/scripts 200 in 95ms
+ GET /api/seo/scripts 200 in 46ms
+ GET /api/admin/articles/automation/9f75b17c-e70c-423f-a6ef-1237cf000668 200 in 439ms
+ GET /api/admin/system/update/check 200 in 617ms
+ GET /api/admin/system/update/check 200 in 570ms
+[Pipeline] Auto-linking completed, length: 5251
+[Automation] Task e38c525a-56a1-492c-b0f3-a2a3c7c2c84b: Triggering SEO Auto-push
+[SEO Push] baidu: 推送失败 (HTTP 400)
+[SEO Push] indexnow: IndexNow 推送成功：2 条URL (HTTP 202)
+ GET /admin/articles/automation/9f75b17c-e70c-423f-a6ef-1237cf000668 200 in 206ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 182ms
+ GET /uploads/%E6%88%AA%E5%B1%8F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 327ms
+ GET /api/seo/scripts 200 in 65ms
+ GET /api/seo/scripts 200 in 50ms
+ GET /api/admin/articles/automation/9f75b17c-e70c-423f-a6ef-1237cf000668 200 in 455ms
+ GET /api/admin/system/update/check 200 in 779ms
+ GET /api/admin/system/update/check 200 in 650ms
+ GET /articles/ai-competitor-mentions-seo-strategies 200 in 813ms
+ GET /api/license/info 200 in 18ms
+ GET /api/license/info 200 in 6ms
+ GET /api/seo/scripts 200 in 60ms
+ GET /api/i18n/settings 200 in 98ms
+ GET /api/seo/scripts 200 in 46ms
+ GET /api/i18n/settings 200 in 46ms
+ POST /api/articles/ai-competitor-mentions-seo-strategies/view 200 in 428ms
+ POST /admin/articles 200 in 981ms
+ POST /admin/articles 200 in 649ms
+ GET /api/admin/articles/automation 200 in 318ms
+ GET /api/admin/articles/automation 200 in 203ms
+ DELETE /api/admin/articles/automation/9f75b17c-e70c-423f-a6ef-1237cf000668 200 in 291ms
+ ✓ Compiled /api/admin/ai-strategies in 336ms (1009 modules)
+ ✓ Compiled (1022 modules)
+ GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 588ms
+ GET /api/admin/categories 200 in 606ms
+ GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 83ms
+ GET /api/admin/categories 200 in 106ms
+--- Creating Automation Project ---
+Mode: topic
+Total Count: 10
+Project created: 798a8b6b-11e7-470d-87cf-b02799d1e430
+Attempting to create 10 tasks...
+Tasks created successfully
+ POST /api/admin/articles/automation 200 in 625ms
+ GET /api/admin/articles/automation 200 in 192ms
+ GET /api/admin/articles/automation 200 in 202ms
+ GET /api/admin/articles/automation/798a8b6b-11e7-470d-87cf-b02799d1e430 200 in 225ms
+ DELETE /api/admin/articles/automation/798a8b6b-11e7-470d-87cf-b02799d1e430 200 in 254ms
+ GET /api/admin/articles/automation 200 in 227ms
+ GET /api/admin/articles/automation 200 in 201ms
+ GET /api/admin/categories 200 in 126ms
+ GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 173ms
+ GET /api/admin/categories 200 in 88ms
+ GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 90ms
+--- Creating Automation Project ---
+Mode: titles
+Total Count: 5
+Project created: 67c22b59-ca09-4822-b47d-421099ffe15e
+Attempting to create 5 tasks...
+Tasks created successfully
+ POST /api/admin/articles/automation 200 in 542ms
+ GET /api/admin/articles/automation 200 in 424ms
+ GET /api/admin/articles/automation 200 in 238ms
+ GET /api/admin/articles/automation/67c22b59-ca09-4822-b47d-421099ffe15e 200 in 315ms
+ ✓ Compiled /api/admin/articles/automation/tasks/[taskId] in 265ms (1024 modules)
+ PATCH /api/admin/articles/automation/tasks/0b903756-bc7d-4b78-b2dd-4e9f4692df2c 200 in 711ms
+ ✓ Compiled /api/admin/articles/automation/process in 221ms (1050 modules)
+[AIService] Initialized fallback chain: deepseek(P1) -> qwen(P0) -> kimi(P0)
+[Automation] Processing Task 0b903756-bc7d-4b78-b2dd-4e9f4692df2c: Initial Writing
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[AIService] Trying deepseek for generateArticle
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateArticle
+ GET /admin/articles/automation/67c22b59-ca09-4822-b47d-421099ffe15e 200 in 189ms
+ POST /api/admin/articles/automation/process 200 in 2785ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 507ms (1890 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 667ms
+ GET /uploads/%E6%88%AA%E5%B1%8F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 923ms
+ ✓ Compiled /api/seo/scripts in 315ms (1062 modules)
+ ✓ Compiled (1064 modules)
+ GET /api/seo/scripts 200 in 488ms
+ GET /api/seo/scripts 200 in 51ms
+ GET /api/admin/articles/automation/67c22b59-ca09-4822-b47d-421099ffe15e 200 in 647ms
+ GET /api/admin/system/update/check 200 in 1202ms
+ GET /api/admin/system/update/check 200 in 620ms
+ ✓ Compiled /admin/ai/strategies in 486ms (1913 modules)
+[Automation] Task 0b903756-bc7d-4b78-b2dd-4e9f4692df2c: GEO Optimization starting...
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] GEO optimizing for: 网站搜索流量变化，可能与AI搜索发展有关 (zh)
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+ GET /api/admin/articles/automation 200 in 304ms
+ GET /api/admin/articles/automation 200 in 215ms
+ GET /api/admin/articles/automation/67c22b59-ca09-4822-b47d-421099ffe15e 200 in 209ms
+[Pipeline] GEO optimization received length: 3427
+[Automation] Task 0b903756-bc7d-4b78-b2dd-4e9f4692df2c: GEO Optimization completed.
+[Automation] Task 0b903756-bc7d-4b78-b2dd-4e9f4692df2c: Generating Metadata (SEO, Entities, Citations)
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] Generating citations
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] Generating SEO for: 网站搜索流量变化，可能与AI搜索发展有关
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] Extracting entities
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[Automation] Task 0b903756-bc7d-4b78-b2dd-4e9f4692df2c: Finalizing Article
+[Automation] Task 0b903756-bc7d-4b78-b2dd-4e9f4692df2c: Auto Linking
+[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[Pipeline] Auto-linking for: AI搜索冲击传统流量？全域魔力GEO应对策略 with 50 candidates
+[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[Pipeline] Auto-linking completed, length: 3757
+[Automation] Task 0b903756-bc7d-4b78-b2dd-4e9f4692df2c: Triggering SEO Auto-push
+[SEO Push] baidu: 推送失败 (HTTP 400)
+[SEO Push] indexnow: IndexNow 推送成功：2 条URL (HTTP 202)
+ GET /admin/articles/automation/67c22b59-ca09-4822-b47d-421099ffe15e 200 in 281ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 258ms
+ GET /uploads/%E6%88%AA%E5%B1%8F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 390ms
+ GET /api/seo/scripts 200 in 70ms
+ GET /api/seo/scripts 200 in 45ms
+ GET /api/admin/articles/automation/67c22b59-ca09-4822-b47d-421099ffe15e 200 in 492ms
+ GET /api/admin/system/update/check 200 in 766ms
+ GET /api/admin/system/update/check 200 in 594ms
+ GET /articles/ai-search-traffic-change-geo-strategy 200 in 777ms
+ GET /api/seo/scripts 200 in 84ms
+ ✓ Compiled /api/license/info in 307ms (1026 modules)
+ ✓ Compiled (1028 modules)
+ GET /api/license/info 200 in 462ms
+ GET /api/license/info 200 in 5ms
+ GET /api/i18n/settings 200 in 499ms
+ GET /api/seo/scripts 200 in 414ms
+ GET /api/i18n/settings 200 in 42ms
+ ✓ Compiled /api/articles/[slug]/view in 112ms (1030 modules)
+ POST /api/articles/ai-search-traffic-change-geo-strategy/view 200 in 529ms
+ ✓ Compiled /admin/geo in 499ms (1028 modules)
+ ✓ Compiled /api/admin/settings in 108ms (1056 modules)
+ ✓ Compiled (1071 modules)
+ GET /api/admin/settings 200 in 480ms
+ GET /api/admin/geo/settings 200 in 481ms
+ GET /api/admin/geo/settings 200 in 99ms
+ GET /api/admin/settings 200 in 106ms
+ GET /api/admin/geo/crawler-stats 200 in 842ms
+ GET /api/admin/geo/crawler-stats 200 in 178ms
+ ✓ Compiled /api/admin/geo/score in 122ms (1073 modules)
+ ✓ Compiled (1075 modules)
+ GET /api/articles?limit=100 200 in 572ms
+ GET /api/admin/geo/score 200 in 588ms
+ GET /api/articles?limit=100 200 in 135ms
+ GET /api/admin/geo/score 200 in 299ms
+[AI评分] 选择的模型配置: {
+  provider: 'deepseek',
+  model: 'deepseek-chat',
+  skippedImageModels: []
+}
+[AI评分] 配置信息: {
+  provider: 'deepseek',
+  baseUrl: 'https://api.deepseek.com',
+  model: 'deepseek-chat',
+  hasApiKey: true,
+  apiKeyPrefix: 'sk-5476e0c...'
+}
+[AI评分] API响应状态: 200 OK
+[AI评分] AI返回数据: {
+  id: '751caac3-9b95-4812-8012-5971f1eff969',
+  object: 'chat.completion',
+  created: 1768934054,
+  model: 'deepseek-chat',
+  choices: [
+    {
+      index: 0,
+      message: [Object],
+      logprobs: null,
+      finish_reason: 'stop'
+    }
+  ],
+  usage: {
+    prompt_tokens: 2233,
+    completion_tokens: 498,
+    total_tokens: 2731,
+    prompt_tokens_details: { cached_tokens: 0 },
+    prompt_cache_hit_tokens: 0,
+    prompt_cache_miss_tokens: 2233
+  },
+  system_fingerprint: 'fp_eaab8d114b_prod0820_fp8_kvcache'
+}
+[AI评分] AI返回内容: ```json
+{
+  "structureScore": 88,
+  "factualScore": 65,
+  "citationScore": 70,
+  "entityScore": 60,
+  "semanticScore": 75,
+  "overallScore": 71.6,
+  "suggestions": [
+    "增加具体数据支撑：例如，在提及‘自2022年底以来，提供‘答案型’内容的网站，搜索流量确实受到了影响’时，可以引用来自SimilarWeb、Ahrefs或谷歌Analytics的具体流量下降百分比数据，或引用相关行业报告（如Gartner、Forrester）的预测，以增强事实密度和权威性。",
+    "丰富命名实体并建立关联：文章提到了‘ChatGPT’、‘Perplexity’、‘Claude’、‘New Bing’、‘Schema.org’等实体，但多为列举。建议增加对这些实体在AI搜索生态中具体角色、市场份额或技术特点的简要说明，并阐述它们与‘全域魔力GEO’策略之间的具体互动关系，例如‘Perplexity的引用功能如何与结构化数据优化相
+ POST /api/admin/geo/score 200 in 16401ms
+ GET /api/admin/geo/score 200 in 264ms
+ ○ Compiling /admin/seo/configs ...
+ ✓ Compiled /admin/seo/configs in 506ms (1063 modules)
+ ✓ Compiled /admin/articles/automation in 268ms (1063 modules)
+ ✓ Compiled /api/admin/articles/automation in 93ms (1065 modules)
+ GET /api/admin/articles/automation 200 in 398ms
+ GET /api/admin/articles/automation 200 in 211ms
+ ✓ Compiled /admin/articles/automation/new in 133ms (1070 modules)
+ ✓ Compiled /api/admin/ai-strategies in 124ms (1072 modules)
+ ✓ Compiled (1085 modules)
+ GET /api/admin/categories 200 in 531ms
+ GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 537ms
+ GET /api/admin/categories 200 in 126ms
+ GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 126ms
+ ✓ Compiled in 1124ms (1795 modules)
+ ✓ Compiled in 532ms (850 modules)
+ ✓ Compiled in 814ms (1795 modules)
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+ ✓ Compiled in 1163ms (1795 modules)
+ ✓ Compiled in 185ms (850 modules)

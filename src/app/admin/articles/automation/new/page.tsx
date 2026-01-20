@@ -13,11 +13,15 @@ export default function NewAutomationProject() {
 
     const [formData, setFormData] = useState({
         name: '',
+        mode: 'topic' as 'topic' | 'titles',
         topic: '',
+        titlesInput: '',
         keywords: '',
         totalCount: 10,
         dailyLimit: 2,
+        preferredLength: 'medium' as 'short' | 'medium' | 'long',
         categoryId: '',
+
         strategyId: '',
         features: {
             geo: true,
@@ -30,6 +34,17 @@ export default function NewAutomationProject() {
         },
         executionMode: 'manual' as 'manual' | 'auto'
     });
+
+    // 当标题列表变化时，自动更新总数
+    useEffect(() => {
+        if (formData.mode === 'titles') {
+            const titles = formData.titlesInput
+                .split('\n')
+                .map(t => t.trim())
+                .filter(t => t.length > 0);
+            setFormData(prev => ({ ...prev, totalCount: titles.length || 0 }));
+        }
+    }, [formData.titlesInput, formData.mode]);
 
     useEffect(() => {
         // Fetch categories and strategies
@@ -63,18 +78,37 @@ export default function NewAutomationProject() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // 验证标题列表
+        let finalTitlesList: string[] = [];
+        if (formData.mode === 'titles') {
+            finalTitlesList = formData.titlesInput
+                .split('\n')
+                .map(t => t.trim())
+                .filter(t => t.length > 0);
+
+            if (finalTitlesList.length === 0) {
+                alert('请输入至少一个标题');
+                return;
+            }
+        }
+
         setIsLoading(true);
 
         try {
             const res = await fetch('/api/admin/articles/automation', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify({
+                    ...formData,
+                    titlesList: formData.mode === 'titles' ? finalTitlesList : undefined
+                })
             });
 
-            if (!res.ok) throw new Error('创建失败');
-
-            const result = await res.json();
+            if (!res.ok) {
+                const errData = await res.json();
+                throw new Error(errData.error || '创建失败');
+            }
 
             // 如果是自动执行模式，立即触发一次处理
             if (formData.executionMode === 'auto') {
@@ -92,11 +126,15 @@ export default function NewAutomationProject() {
             router.push('/admin/articles/automation');
             router.refresh();
         } catch (error: any) {
-            alert(error.message);
+            console.error('Submit Error:', error);
+            // 尝试显示详情，如果有的话
+            const detailMsg = error.message;
+            alert(`创建失败: ${detailMsg}`);
         } finally {
             setIsLoading(false);
         }
     };
+
 
     const toggleFeature = (feature: keyof typeof formData.features) => {
         setFormData(prev => ({
@@ -136,9 +174,9 @@ export default function NewAutomationProject() {
                             基础配置
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-6">
                             <div className="space-y-2">
-                                <label className="text-sm font-bold text-gray-700">项目名称</label>
+                                <label className="text-sm font-bold text-gray-700 font-mono tracking-wider uppercase">项目名称</label>
                                 <input
                                     type="text"
                                     required
@@ -149,29 +187,134 @@ export default function NewAutomationProject() {
                                 />
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-gray-700">内容核心主题 (Topic)</label>
-                                <textarea
-                                    required
-                                    value={formData.topic}
-                                    onChange={e => setFormData(prev => ({ ...prev, topic: e.target.value }))}
-                                    className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none min-h-[120px] resize-none"
-                                    placeholder="描述您希望 AI 创作的核心方向..."
-                                />
+                            <div className="space-y-3 p-1.5 bg-gray-50/50 rounded-2xl border border-gray-100">
+                                <label className="text-xs font-black text-gray-400 px-3 uppercase tracking-widest">创作模式</label>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => setFormData(prev => ({ ...prev, mode: 'topic' }))}
+                                        className={`flex flex-col items-center gap-1.5 p-4 rounded-xl transition-all border-2 ${formData.mode === 'topic'
+                                            ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-100 scale-[1.02]'
+                                            : 'bg-white border-transparent text-gray-600 hover:border-blue-100'
+                                            }`}
+                                    >
+                                        <Sparkles className={`w-5 h-5 ${formData.mode === 'topic' ? 'text-blue-100' : 'text-blue-500'}`} />
+                                        <div className="font-black text-sm">主题批量模式</div>
+                                        <div className={`text-[10px] text-center leading-relaxed ${formData.mode === 'topic' ? 'text-blue-100/70' : 'text-gray-400'}`}>基于一个主题关键词<br />由 AI 衍生多个标题</div>
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setFormData(prev => ({ ...prev, mode: 'titles' }))}
+                                        className={`flex flex-col items-center gap-1.5 p-4 rounded-xl transition-all border-2 ${formData.mode === 'titles'
+                                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-100 scale-[1.02]'
+                                            : 'bg-white border-transparent text-gray-600 hover:border-indigo-100'
+                                            }`}
+                                    >
+                                        <Target className={`w-5 h-5 ${formData.mode === 'titles' ? 'text-indigo-100' : 'text-indigo-500'}`} />
+                                        <div className="font-black text-sm">标题列表模式</div>
+                                        <div className={`text-[10px] text-center leading-relaxed ${formData.mode === 'titles' ? 'text-indigo-100/70' : 'text-gray-400'}`}>一次性输入多个标题<br />精准控制创作方向</div>
+                                    </button>
+                                </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-gray-700">优化词</label>
-                                <input
-                                    type="text"
-                                    value={formData.keywords}
-                                    onChange={e => setFormData(prev => ({ ...prev, keywords: e.target.value }))}
-                                    className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none"
-                                    placeholder="例如:全域魔力GEOCMS系统"
-                                />
+                            {formData.mode === 'topic' ? (
+                                <div className="space-y-4 animate-in slide-in-from-top-2 duration-300">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-bold text-gray-700">内容核心主题 (Topic)</label>
+                                        <textarea
+                                            required={formData.mode === 'topic'}
+                                            value={formData.topic}
+                                            onChange={e => setFormData(prev => ({ ...prev, topic: e.target.value }))}
+                                            className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none min-h-[120px] resize-none"
+                                            placeholder="描述您希望 AI 创作的核心方向..."
+                                        />
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-bold text-gray-700">优化词</label>
+                                        <input
+                                            type="text"
+                                            value={formData.keywords}
+                                            onChange={e => setFormData(prev => ({ ...prev, keywords: e.target.value }))}
+                                            className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none"
+                                            placeholder="例如:全域魔力GEOCMS系统"
+                                        />
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="space-y-4 animate-in slide-in-from-top-2 duration-300">
+                                    <div className="space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <label className="text-sm font-bold text-gray-700">标题列表</label>
+                                            <span className="text-[10px] font-black text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-full uppercase">每行一个标题</span>
+                                        </div>
+                                        <textarea
+                                            required={formData.mode === 'titles'}
+                                            value={formData.titlesInput}
+                                            onChange={e => setFormData(prev => ({ ...prev, titlesInput: e.target.value }))}
+                                            className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm font-mono focus:bg-white focus:border-indigo-500 transition-all outline-none min-h-[300px] leading-relaxed"
+                                            placeholder="标题 1&#10;标题 2&#10;标题 3..."
+                                        />
+                                        <div className="flex items-center gap-2 text-[10px] text-gray-400 mt-1">
+                                            <div className="w-1 h-1 rounded-full bg-indigo-400" />
+                                            <span>当前已识别出 <strong className="text-indigo-600 text-xs">{formData.totalCount}</strong> 个标题</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-bold text-gray-700">通用优化词 (可选)</label>
+                                        <input
+                                            type="text"
+                                            value={formData.keywords}
+                                            onChange={e => setFormData(prev => ({ ...prev, keywords: e.target.value }))}
+                                            className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-indigo-500 transition-all outline-none"
+                                            placeholder="所有文章共用的 SEO 关键词"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* 文章篇幅控制 */}
+                            <div className="space-y-4 pt-4 border-t border-gray-50">
+                                <label className="text-sm font-bold text-gray-700 font-mono tracking-wider uppercase flex items-center gap-2">
+                                    <Target className="w-4 h-4 text-blue-500" />
+                                    文章预期篇幅
+                                </label>
+                                <div className="grid grid-cols-3 gap-3">
+                                    {[
+                                        { id: 'short', label: '简约型', desc: '约 800 字', color: 'blue' },
+                                        { id: 'medium', label: '高级型', desc: '约 1500 字', color: 'blue' },
+                                        { id: 'long', label: '深度型', desc: '3000 字以上', color: 'blue' },
+
+                                    ].map((item) => (
+
+                                        <button
+                                            key={item.id}
+                                            type="button"
+                                            onClick={() => setFormData(prev => ({ ...prev, preferredLength: item.id as any }))}
+                                            className={`relative p-3 rounded-xl border-2 transition-all text-left ${formData.preferredLength === item.id
+                                                ? 'border-blue-600 bg-blue-50'
+                                                : 'border-gray-100 bg-gray-50/50 hover:border-blue-200'
+                                                }`}
+                                        >
+                                            <div className={`text-sm font-black ${formData.preferredLength === item.id ? 'text-blue-700' : 'text-gray-700'}`}>
+                                                {item.label}
+                                            </div>
+                                            <div className="text-[10px] text-gray-400 font-medium">{item.desc}</div>
+                                            {formData.preferredLength === item.id && (
+                                                <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-blue-600" />
+                                            )}
+                                        </button>
+                                    ))}
+                                </div>
+                                <p className="text-[10px] text-gray-400 leading-relaxed italic">
+                                    * 篇幅由 AI 自动控制。深度型文章会包含更详尽的章节、数据支撑及深度案例分析。
+                                </p>
                             </div>
                         </div>
                     </div>
+
 
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
                         <div className="flex items-center gap-2 text-lg font-bold text-gray-800 mb-6">
@@ -215,20 +358,27 @@ export default function NewAutomationProject() {
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-6">
                         <div className="flex items-center gap-2 text-lg font-bold text-gray-800 mb-2">
                             <Calendar className="w-5 h-5 text-green-500" />
-                            发布计划
+                            发布计划 {formData.mode === 'titles' && <span className="text-[10px] text-indigo-500 font-black ml-auto bg-indigo-50 px-2 py-0.5 rounded-full">自动计算</span>}
                         </div>
 
                         <div className="space-y-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-gray-700">生成文章总数</label>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    max="500"
-                                    value={formData.totalCount}
-                                    onChange={e => setFormData(prev => ({ ...prev, totalCount: parseInt(e.target.value) || 1 }))}
-                                    className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none"
-                                />
+                                {formData.mode === 'topic' ? (
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max="500"
+                                        value={formData.totalCount}
+                                        onChange={e => setFormData(prev => ({ ...prev, totalCount: parseInt(e.target.value) || 1 }))}
+                                        className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none"
+                                    />
+                                ) : (
+                                    <div className="w-full rounded-xl border border-indigo-100 bg-indigo-50/30 px-4 py-3 text-sm font-black text-indigo-600 flex items-center justify-between">
+                                        <span>共识别到</span>
+                                        <span className="text-lg">{formData.totalCount} 篇</span>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="space-y-2">
@@ -236,7 +386,7 @@ export default function NewAutomationProject() {
                                 <input
                                     type="number"
                                     min="1"
-                                    max="50"
+                                    max="100"
                                     value={formData.dailyLimit}
                                     onChange={e => setFormData(prev => ({ ...prev, dailyLimit: parseInt(e.target.value) || 1 }))}
                                     className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none"
@@ -321,7 +471,7 @@ export default function NewAutomationProject() {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl shadow-lg shadow-blue-100 transition-all flex items-center justify-center gap-3 text-base font-bold disabled:opacity-50 mt-4 active:scale-[0.98]"
+                        className={`w-full py-4 text-white rounded-2xl shadow-lg transition-all flex items-center justify-center gap-3 text-base font-bold disabled:opacity-50 mt-4 active:scale-[0.98] ${formData.mode === 'titles' ? 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-100' : 'bg-blue-600 hover:bg-blue-700 shadow-blue-100'}`}
                     >
                         {isLoading ? (
                             <>
@@ -337,29 +487,29 @@ export default function NewAutomationProject() {
                     </button>
                 </div>
 
-                <div className="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-2xl p-6 text-white shadow-xl shadow-blue-200 border border-white/20 relative overflow-hidden group">
+                <div className={`rounded-2xl p-6 text-white shadow-xl border border-white/20 relative overflow-hidden group transition-colors duration-500 ${formData.mode === 'titles' ? 'bg-gradient-to-br from-indigo-700 to-violet-800 shadow-indigo-200' : 'bg-gradient-to-br from-indigo-600 to-blue-700 shadow-blue-200'}`}>
                     <div className="relative z-10">
-                        <h4 className="font-bold flex items-center gap-2 mb-2">
+                        <h4 className="font-bold flex items-center gap-2 mb-2 uppercase tracking-widest text-xs opacity-80">
                             <Target className="w-4 h-4" />
-                            任务预估
+                            任务预估 / Estimation
                         </h4>
-                        <div className="space-y-2 text-sm text-blue-50">
-                            <div className="flex justify-between">
-                                <span>预计总耗时:</span>
-                                <span className="font-mono">{Math.ceil(formData.totalCount / formData.dailyLimit)} 天</span>
+                        <div className="space-y-4 mt-6">
+                            <div className="flex items-end justify-between border-b border-white/10 pb-2">
+                                <span className="text-xs opacity-60">预计总耗时</span>
+                                <span className="font-black text-xl">{Math.ceil(formData.totalCount / formData.dailyLimit)} <small className="text-[10px] font-normal opacity-60">天</small></span>
                             </div>
-                            <div className="flex justify-between">
-                                <span>每日产出:</span>
-                                <span className="font-mono">{formData.dailyLimit} 篇</span>
+                            <div className="flex items-end justify-between border-b border-white/10 pb-2">
+                                <span className="text-xs opacity-60">每日平均产出</span>
+                                <span className="font-black text-xl">{formData.dailyLimit} <small className="text-[10px] font-normal opacity-60">篇 / 日</small></span>
                             </div>
-                            <div className="flex justify-between">
-                                <span>自动处理项:</span>
-                                <span className="font-mono">{Object.values(formData.features).filter(Boolean).length} 项</span>
+                            <div className="flex items-end justify-between border-b border-white/10 pb-2">
+                                <span className="text-xs opacity-60">激活功能项</span>
+                                <span className="font-black text-xl">{Object.values(formData.features).filter(Boolean).length} <small className="text-[10px] font-normal opacity-60">项模块</small></span>
                             </div>
                         </div>
                     </div>
                     <div className="absolute -right-8 -bottom-8 opacity-10 group-hover:scale-110 transition-transform duration-700">
-                        <Sparkles className="w-32 h-32" />
+                        {formData.mode === 'topic' ? <Sparkles className="w-32 h-32" /> : <Target className="w-32 h-32" />}
                     </div>
                 </div>
             </form>

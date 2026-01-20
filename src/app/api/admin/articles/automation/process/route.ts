@@ -48,15 +48,30 @@ export async function POST(request: NextRequest) {
 
                 // --- STEP 1: 核心创作 ---
                 logger.info(`[Automation] Processing Task ${task.id}: Initial Writing`);
+
+                const lengthMap: Record<string, string> = {
+                    short: '800字左右',
+                    medium: '1500字左右',
+                    long: '3000字以上'
+
+                };
+                const lengthText = lengthMap[project.preferredLength] || '1500字左右';
+
+
                 const fullPrompt = project.strategy.prompt
                     .replace(/{topic}/g, task.topic)
-                    .replace(/{keywords}/g, task.keywords || '');
+                    .replace(/{keywords}/g, task.keywords || '')
+                    .replace(/{length}/g, lengthText)
+                    .replace(/{{length}}/g, lengthText);
+
 
                 const writeResult = await aiService.generateArticle({
                     topic: task.topic,
                     keywords: task.keywords || undefined,
+                    length: project.preferredLength as any,
                     customPrompt: fullPrompt
                 });
+
                 let currentContent = writeResult.content;
 
                 // --- STEP 2: GEO 深度优化 ---
