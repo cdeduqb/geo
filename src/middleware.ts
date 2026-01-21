@@ -2,14 +2,19 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { locales, defaultLocale } from './lib/i18n';
 
-// AI 爬虫特征字符串（小写）
+// AI 爬虫特征字符串（小写，用于 User-Agent 匹配）
 const AI_CRAWLER_KEYWORDS = [
-    'gptbot', 'oai-searchbot', 'google-extended', 'anthropic-ai',
-    'perplexitybot', 'ccbot', 'amazonbot', 'facebookbot',
-    'bytespider', 'baiduspider', 'sogou-spider', '360spider',
-    'yisouspider', 'alibaba-agent', 'tencentbot', 'moonshot-bot',
-    'deepseek-bot', 'zhipu-bot', 'baichuan-bot', 'minimax-bot'
+    // 国际主流
+    'gptbot', 'chatgpt-user', 'oai-searchbot', 'claudebot', 'claude-web', 'anthropic-ai',
+    'google-extended', 'googlebot', 'perplexitybot', 'meta-externalagent', 'facebookexternalhit',
+    'applebot', 'bingbot', 'amazonbot', 'ccbot',
+    // 国内主流
+    'bytespider', 'baiduspider', 'deepseekbot', 'moonshotbot', 'qwenbot', 'tongyibot',
+    'tencentbot', 'zhipubot', '360spider', 'sogou-spider', 'yisouspider',
+    'baichuanbot', 'minimaxbot', 'petalbot'
 ];
+
+
 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
@@ -37,7 +42,8 @@ export async function middleware(request: NextRequest) {
     // 0. 语言检测
     let locale = defaultLocale;
     const segments = pathname.split('/');
-    if (segments.length > 1 && (locales as string[]).includes(segments[1])) {
+    if (segments.length > 1 && (locales as unknown as string[]).includes(segments[1])) {
+
         locale = segments[1] as any;
     }
 

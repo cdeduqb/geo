@@ -32,7 +32,7 @@ export default function NewAutomationProject() {
             citations: true,
             entities: true
         },
-        executionMode: 'manual' as 'manual' | 'auto'
+        executionMode: 'auto' as 'manual' | 'auto'
     });
 
     // 当标题列表变化时，自动更新总数
@@ -254,7 +254,7 @@ export default function NewAutomationProject() {
                                             value={formData.titlesInput}
                                             onChange={e => setFormData(prev => ({ ...prev, titlesInput: e.target.value }))}
                                             className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm font-mono focus:bg-white focus:border-indigo-500 transition-all outline-none min-h-[300px] leading-relaxed"
-                                            placeholder="标题 1&#10;标题 2&#10;标题 3..."
+                                            placeholder="每行输入一个标题"
                                         />
                                         <div className="flex items-center gap-2 text-[10px] text-gray-400 mt-1">
                                             <div className="w-1 h-1 rounded-full bg-indigo-400" />

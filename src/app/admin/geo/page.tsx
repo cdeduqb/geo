@@ -16,33 +16,39 @@ import CompetitorAnalysis from './_components/CompetitorAnalysis';
 import GEOAudit from './_components/GEOAudit';
 import BulkOptimizer from './_components/BulkOptimizer';
 
-// AI 爬虫配置 (与之前保持一致)
 const AI_CRAWLERS = [
-    // 国际 AI 平台
-    { id: 'GPTBot', name: 'OpenAI (GPTBot)', description: 'ChatGPT 训练数据爬虫' },
-    { id: 'OAI-SearchBot', name: 'OpenAI SearchBot', description: 'ChatGPT 搜索功能' },
-    { id: 'Google-Extended', name: 'Google Gemini', description: 'Bard/Gemini AI 训练' },
-    { id: 'anthropic-ai', name: 'Anthropic Claude', description: 'Claude AI 训练' },
-    { id: 'PerplexityBot', name: 'Perplexity', description: 'Perplexity AI 搜索' },
-    { id: 'CCBot', name: 'Common Crawl', description: '开源数据集（被多个 AI 使用）' },
-    { id: 'Amazonbot', name: 'Amazon', description: 'Alexa/Amazon AI' },
-    { id: 'FacebookBot', name: 'Meta AI', description: 'Meta/Facebook AI' },
-    { id: 'Bingbot', name: 'Microsoft Bing', description: '必应搜索引擎/IndexNow 核心爬虫' },
-    { id: 'Applebot-Extended', name: 'Apple Intelligence', description: '苹果 AI 训练/抓取' },
-    // 中国 AI 平台
-    { id: 'Bytespider', name: '豆包 (Bytespider)', description: '字节跳动 AI 爬虫' },
-    { id: 'Baiduspider', name: '百度文心一言', description: '百度 AI 爬虫' },
-    { id: 'Sogou-spider', name: '搜狗 AI', description: '搜狗搜索 AI' },
-    { id: '360Spider', name: '360 AI', description: '360 搜索 AI' },
-    { id: 'YisouSpider', name: '神马搜索', description: '神马搜索 AI' },
-    { id: 'Alibaba-Agent', name: '通义千问', description: '阿里巴巴 Qwen AI' },
-    { id: 'TencentBot', name: '腾讯元宝', description: '腾讯混元 AI' },
-    { id: 'Moonshot-Bot', name: 'Kimi (Moonshot)', description: '月之暗面 Kimi AI' },
-    { id: 'DeepSeek-Bot', name: 'DeepSeek', description: 'DeepSeek AI' },
-    { id: 'Zhipu-Bot', name: '智谱 AI', description: '智谱 GLM 大模型' },
-    { id: 'BaiChuan-Bot', name: '百川大模型', description: '百川智能 AI' },
-    { id: 'MiniMax-Bot', name: 'MiniMax', description: 'MiniMax AI' },
+    // --- 国际主流 AI 平台 ---
+    { id: 'GPTBot', name: 'OpenAI (GPTBot)', description: 'ChatGPT 基础训练数据抓取' },
+    { id: 'ChatGPT-User', name: 'ChatGPT-User', description: 'ChatGPT 用户实时联网搜索' },
+    { id: 'OAI-SearchBot', name: 'OpenAI SearchBot', description: 'SearchGPT 搜索功能抓取' },
+    { id: 'ClaudeBot', name: 'Anthropic Claude', description: 'Claude AI 模型训练与网页浏览' },
+    { id: 'Google-Extended', name: 'Google Gemini', description: '谷歌 Gemini/Bard AI 模型训练' },
+    { id: 'Googlebot', name: 'Google Search/AI', description: '谷歌搜索索引及 AI 搜索预览数据源' },
+    { id: 'PerplexityBot', name: 'Perplexity AI', description: 'Perplexity 实时 AI 搜索与引用' },
+    { id: 'Meta-ExternalAgent', name: 'Meta AI', description: 'Meta AI (Llama) 模型训练与抓取' },
+    { id: 'Applebot', name: 'Apple Intelligence', description: '苹果 Siri 与 Apple AI 抓取' },
+    { id: 'Bingbot', name: 'Microsoft Bing/AI', description: '必应搜索及 Copilot AI 数据源' },
+    { id: 'Amazonbot', name: 'Amazon AI', description: '亚马逊 Alexa 与 AWS AI 服务' },
+
+    // --- 中国主流 AI 平台 ---
+    { id: 'Bytespider', name: '豆包 (Bytespider)', description: '字节跳动/火山引擎 AI 模型抓取' },
+    { id: 'Baiduspider', name: '文心一言 (Baidu)', description: '百度文心一言模型与搜索索引' },
+    { id: 'DeepSeekBot', name: 'DeepSeek', description: '深度求索 (DeepSeek) 模型训练抓取' },
+    { id: 'MoonshotBot', name: 'Kimi (Moonshot)', description: '月之暗面 Kimi AI 实时联网站' },
+    { id: 'QwenBot', name: '通义千问 (Qwen)', description: '阿里巴巴通义千问模型抓取' },
+    { id: 'TencentBot', name: '腾讯混元/元宝', description: '腾讯混元大模型与元宝 AI 搜索' },
+    { id: 'ZhipuBot', name: '智谱 AI (GLM)', description: '智谱 GLM 大模型训练抓取' },
+    { id: '360Spider', name: '360 智脑', description: '360 搜索与 AI 智脑模型抓取' },
+    { id: 'Sogou-spider', name: '搜狗 AI', description: '搜狗搜索及腾讯 AI 辅助抓取' },
+    { id: 'YisouSpider', name: '神马搜索', description: '阿里巴巴/神马移动搜索 AI 抓取' },
+    { id: 'BaiChuanBot', name: '百川智能', description: '王小川百川大模型训练抓取' },
+    { id: 'MiniMaxBot', name: 'MiniMax', description: 'MiniMax 海螺 AI 模型训练抓取' },
+    { id: 'PetalBot', name: '华为花瓣/盘古', description: '华为搜索与盘古大模型抓取' },
+
+    // --- 数据集与基础架构 ---
+    { id: 'CCBot', name: 'Common Crawl', description: '全球开源 AI 语料库（被多数 LLM 使用）' },
 ];
+
 
 interface GEOSettings {
     crawlerConfig: { [key: string]: 'allow' | 'disallow' };
@@ -742,35 +748,35 @@ export default function GEOSettingsPage() {
                                     <div className="space-y-1">
                                         <div className="flex items-center gap-2">
                                             <span className="font-bold text-gray-900">DeepSeek (深度求索) 策略</span>
-                                            <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-bold uppercase">推理能力适配</span>
+                                            <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-bold uppercase">国产推理大模型</span>
                                         </div>
                                         <p className="text-xs text-gray-500">
-                                            针对 <code className="bg-gray-100 px-1 rounded">DeepSeek-Bot</code>。
-                                            允许它可以让您的深度内容被 DeepSeek 引用，提升技术/权威类抓取权重。
+                                            针对 <code className="bg-gray-100 px-1 rounded">DeepSeekBot</code>。
+                                            允许它可以让您的深度内容被 DeepSeek 引用，提升在国产最强推理引擎中的权重。
                                         </p>
                                     </div>
                                     <div className="flex gap-2">
                                         <Button
-                                            variant={settings.crawlerConfig['DeepSeek-Bot'] === 'allow' ? 'default' : 'secondary'}
+                                            variant={settings.crawlerConfig['DeepSeekBot'] === 'allow' ? 'default' : 'secondary'}
                                             size="sm"
-                                            className={settings.crawlerConfig['DeepSeek-Bot'] === 'allow'
+                                            className={settings.crawlerConfig['DeepSeekBot'] === 'allow'
                                                 ? 'h-8 bg-green-500 hover:bg-green-600 text-white border-none shadow-sm'
                                                 : 'h-8 bg-gray-200 text-gray-600 hover:bg-gray-300'}
-                                            onClick={() => toggleCrawler('DeepSeek-Bot')}
+                                            onClick={() => toggleCrawler('DeepSeekBot')}
                                         >
-                                            {settings.crawlerConfig['DeepSeek-Bot'] === 'allow' ? '状态：已允许' : '状态：已禁止'}
+                                            {settings.crawlerConfig['DeepSeekBot'] === 'allow' ? '状态：已允许' : '状态：已禁止'}
                                         </Button>
                                     </div>
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
                                     <div className="space-y-1">
                                         <div className="flex items-center gap-2">
-                                            <span className="font-bold text-gray-900">豆包 (ByteDance/Bytespider) 策略</span>
-                                            <span className="text-[10px] bg-cyan-100 text-cyan-700 px-1.5 py-0.5 rounded font-bold uppercase">流量导向</span>
+                                            <span className="font-bold text-gray-900">豆包 (ByteDance / Bytespider) 策略</span>
+                                            <span className="text-[10px] bg-cyan-100 text-cyan-700 px-1.5 py-0.5 rounded font-bold uppercase">字节跳动 AI 生态</span>
                                         </div>
                                         <p className="text-xs text-gray-500">
                                             针对 <code className="bg-gray-100 px-1 rounded">Bytespider</code>。
-                                            允许它可以让内容进入字节跳动大模型语料库，并同步到今日头条 AI。
+                                            允许它可以让内容进入字节跳动大模型语料库，并同步到豆包及今日头条 AI。
                                         </p>
                                     </div>
                                     <div className="flex gap-2">
@@ -789,36 +795,36 @@ export default function GEOSettingsPage() {
                                 <div className="p-4 flex items-center justify-between">
                                     <div className="space-y-1">
                                         <div className="flex items-center gap-2">
-                                            <span className="font-bold text-gray-900">Anthropic (Claude-bot) 策略</span>
-                                            <span className="text-[10px] bg-stone-100 text-stone-700 px-1.5 py-0.5 rounded font-bold uppercase">Safe & Precise</span>
+                                            <span className="font-bold text-gray-900">Anthropic (ClaudeBot) 策略</span>
+                                            <span className="text-[10px] bg-stone-100 text-stone-700 px-1.5 py-0.5 rounded font-bold uppercase">安全与精准检索</span>
                                         </div>
                                         <p className="text-xs text-gray-500">
-                                            针对 <code className="bg-gray-100 px-1 rounded">anthropic-ai</code>。
-                                            Claude 极其重视版权和结构化内容。允许它抓取可提升您的品牌在 Claude 企业版中的可信度。
+                                            针对 <code className="bg-gray-100 px-1 rounded">ClaudeBot</code>。
+                                            Claude 极其重视版权和结构化内容。允许它抓取可提升您的品牌在 Claude 企业版及 Artifacts 中的展示。
                                         </p>
                                     </div>
                                     <div className="flex gap-2">
                                         <Button
-                                            variant={settings.crawlerConfig['anthropic-ai'] === 'allow' ? 'default' : 'secondary'}
+                                            variant={settings.crawlerConfig['ClaudeBot'] === 'allow' ? 'default' : 'secondary'}
                                             size="sm"
-                                            className={settings.crawlerConfig['anthropic-ai'] === 'allow'
+                                            className={settings.crawlerConfig['ClaudeBot'] === 'allow'
                                                 ? 'h-8 bg-green-500 hover:bg-green-600 text-white border-none shadow-sm'
                                                 : 'h-8 bg-gray-200 text-gray-600 hover:bg-gray-300'}
-                                            onClick={() => toggleCrawler('anthropic-ai')}
+                                            onClick={() => toggleCrawler('ClaudeBot')}
                                         >
-                                            {settings.crawlerConfig['anthropic-ai'] === 'allow' ? '状态：已允许' : '状态：已禁止'}
+                                            {settings.crawlerConfig['ClaudeBot'] === 'allow' ? '状态：已允许' : '状态：已禁止'}
                                         </Button>
                                     </div>
                                 </div>
                                 <div className="p-4 flex items-center justify-between">
                                     <div className="space-y-1">
                                         <div className="flex items-center gap-2">
-                                            <span className="font-bold text-gray-900">Microsoft Bing / IndexNow 策略</span>
-                                            <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase">Bing Search Ready</span>
+                                            <span className="font-bold text-gray-900">Microsoft Bing / Copilot 策略</span>
+                                            <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded font-bold uppercase">Copilot 核心引用</span>
                                         </div>
                                         <p className="text-xs text-gray-500">
                                             针对 <code className="bg-gray-100 px-1 rounded">Bingbot</code>。
-                                            允许它可以让您的网站在 Bing 搜索结果中展示更丰富的 AI 回答。
+                                            允许它可以让您的网站在微软 Copilot 和 Bing 引用结果中占据一席之地。
                                         </p>
                                     </div>
                                     <div className="flex gap-2">
@@ -834,6 +840,7 @@ export default function GEOSettingsPage() {
                                         </Button>
                                     </div>
                                 </div>
+
                                 {settings.bingOptimization?.enabled !== false && (
                                     <div className="px-4 py-3 bg-blue-50/50 border-b border-blue-100">
                                         <div className="flex items-center gap-4">

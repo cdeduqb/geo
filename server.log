@@ -27,52 +27,42 @@ Retrying [Cron] Starting batch task processing...
 [Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
 [Cron] Starting batch task processing...
 [Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
-F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 3307ms
- GET /api/admin/system/update/check 200 in 2499ms
- GET /api/admin/system/update/check 200 in 674ms
- GET /admin/articles/automation/00ac0b81-9c0f-4f80-abe9-b788c45f87e4 200 in 311ms
- GET /.well-known/appspecific/com.chrome.devtools.json 404 in 227ms
- GET /uploads/%E6%88%AA%E5%B1%8F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 282ms
- GET /api/seo/scripts 200 in 53ms
- GET /api/seo/scripts 200 in 44ms
- GET /api/admin/articles/automation/00ac0b81-9c0f-4f80-abe9-b788c45f87e4 200 in 400ms
- GET /api/admin/system/update/check 200 in 596ms
- GET /api/admin/system/update/check 200 in 656ms
- ○ Compiling /admin/articles ...
- ✓ Compiled /admin/articles in 530ms (1689 modules)
- ✓ Compiled /articles/[slug] in 434ms (1715 modules)
- GET /articles/ai-search-impact-website-traffic-seo-strategy 200 in 1821ms
- ✓ Compiled /api/i18n/settings in 92ms (1007 modules)
- GET /api/seo/scripts 200 in 112ms
- ✓ Compiled in 0ms (1009 modules)
- ✓ Compiled in 0ms (1009 modules)
- ✓ Compiled in 1ms (1009 modules)
- GET /api/license/info 200 in 366ms
- ✓ Compiled in 0ms (1009 modules)
- GET /api/seo/scripts 200 in 382ms
- GET /api/license/info 200 in 150ms
- GET /api/i18n/settings 200 in 518ms
- GET /api/i18n/settings 200 in 43ms
- ✓ Compiled /api/articles/[slug]/view in 203ms (1011 modules)
- POST /api/articles/ai-search-impact-website-traffic-seo-strategy/view 200 in 804ms
- ✓ Compiled /admin/articles/automation in 325ms (1717 modules)
- ✓ Compiled /api/admin/articles/automation in 100ms (1006 modules)
- GET /api/admin/articles/automation 200 in 468ms
- GET /api/admin/articles/automation 200 in 206ms
- ✓ Compiled /admin/articles/automation/new in 211ms (1731 modules)
- ✓ Compiled /api/admin/ai-strategies in 87ms (1015 modules)
- ✓ Compiled (1028 modules)
- GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 379ms
- GET /api/admin/categories 200 in 427ms
- GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 87ms
- GET /api/admin/categories 200 in 91ms
---- Creating Automation Project ---
-Mode: titles
-Total Count: 5
-Project created: bec1b662-37bf-4c44-afe7-ad03b8fc3ce1
-Attempting to create 5 tasks...
-Tasks created successfully
- POST /api/admin/articles/automation 200 in 615ms
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+prisma:error 
+Invalid `prisma.systemSetting.findUnique()` invocation:
+
+
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 17)
+[DB Shield] Connectivity issue on systemSetting.findUnique. Bypassing with fallback data.
+[Cron] Calling automation API: http://localhost:3000/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
  GET /api/admin/articles/automation 200 in 420ms
  GET /api/admin/articles/automation 200 in 236ms
  ✓ Compiled /api/admin/articles/automation/[id] in 122ms (1022 modules)
@@ -589,3 +579,238 @@ Tasks created successfully
 [Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
  ✓ Compiled in 1163ms (1795 modules)
  ✓ Compiled in 185ms (850 modules)
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+ ✓ Compiled /admin/ai/strategies in 356ms (957 modules)
+ ✓ Compiled /api/admin/articles/automation in 349ms (985 modules)
+ GET /api/admin/articles/automation 200 in 799ms
+ GET /api/admin/articles/automation 200 in 207ms
+ ✓ Compiled /admin/articles/automation/[id] in 184ms (990 modules)
+ ✓ Compiled /api/admin/articles/automation/[id] in 94ms (992 modules)
+ GET /api/admin/articles/automation/93ae8531-95f8-4a32-94dd-a6226cd79322 200 in 380ms
+ ✓ Compiled /admin/articles in 324ms (1035 modules)
+ POST /admin/articles 200 in 1055ms
+ ✓ Compiled /admin/geo in 166ms (1063 modules)
+ ✓ Compiled /api/admin/settings in 260ms (1065 modules)
+ ✓ Compiled (1080 modules)
+ GET /api/admin/settings 200 in 560ms
+ GET /api/admin/settings 200 in 92ms
+ GET /api/admin/geo/settings 200 in 744ms
+ GET /api/admin/geo/crawler-stats 200 in 762ms
+ GET /api/admin/geo/settings 200 in 140ms
+ GET /api/admin/geo/crawler-stats 200 in 169ms
+ ✓ Compiled /api/admin/geo/crawler-logs in 189ms (1082 modules)
+ GET /api/admin/geo/crawler-logs?limit=100&page=1 200 in 498ms
+ GET /api/admin/articles/automation 200 in 413ms
+ GET /api/admin/articles/automation 200 in 236ms
+ GET /api/admin/articles/automation/93ae8531-95f8-4a32-94dd-a6226cd79322 200 in 334ms
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Factory pipeline call failed: TypeError: fetch failed
+    at node:internal/deps/undici/undici:15845:13
+    at async Task.processPendingTasks [as _execution] (webpack-internal:///(instrument)/./src/lib/cron/ai-tasks.ts:113:32) {
+  [cause]: SocketError: other side closed
+      at TLSSocket.onHttpSocketEnd (node:internal/deps/undici/undici:7147:26)
+      at TLSSocket.emit (node:events:520:35)
+      at endReadableNT (node:internal/streams/readable:1701:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'UND_ERR_SOCKET',
+    socket: {
+      localAddress: '198.18.0.1',
+      localPort: 60338,
+      remoteAddress: '198.18.0.74',
+      remotePort: 443,
+      remoteFamily: 'IPv4',
+      timeout: undefined,
+      bytesWritten: 259,
+      bytesRead: 0
+    }
+  }
+}
+[Cron] Starting batch task processing...
+prisma:error 
+Invalid `prisma.systemSetting.findUnique()` invocation:
+
+
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 17)
+[DB Shield] Connectivity issue on systemSetting.findUnique. Bypassing with fallback data.
+[Cron] Calling automation API: http://localhost:3000/api/admin/articles/automation/process
+ ○ Compiling /api/admin/articles/automation/process ...
+ ✓ Compiled /api/admin/articles/automation/process in 597ms (1079 modules)
+ POST /api/admin/articles/automation/process 200 in 931ms
+ POST /api/admin/articles/automation/process 200 in 868ms
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+prisma:error 
+Invalid `prisma.systemSetting.findUnique()` invocation:
+
+
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 17)
+[DB Shield] Connectivity issue on systemSetting.findUnique. Bypassing with fallback data.
+[Cron] Calling automation API: http://localhost:3000/api/admin/articles/automation/process
+ POST /api/admin/articles/automation/process 200 in 246ms
+ POST /api/admin/articles/automation/process 200 in 366ms
+ POST /api/admin/articles/automation/process 200 in 357ms
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+ ✓ Compiled /api/admin/articles/automation in 304ms (1044 modules)
+ GET /api/admin/articles/automation 200 in 832ms
+ GET /api/admin/articles/automation 200 in 211ms
+ ✓ Compiled /admin/articles/automation/new in 207ms (1050 modules)
+ ✓ Compiled /api/admin/ai-strategies in 186ms (1052 modules)
+ ✓ Compiled (1065 modules)
+ GET /api/admin/categories 200 in 520ms
+ GET /api/admin/categories 200 in 90ms
+ GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 747ms
+ GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 97ms
+ ○ Compiling /admin/ai/tasks ...
+ ✓ Compiled /admin/ai/tasks in 635ms (1030 modules)
+ ✓ Compiled in 594ms (850 modules)
+ ✓ Compiled in 1020ms (1866 modules)
+ ✓ Compiled /api/admin/articles/automation in 245ms (1044 modules)
+ GET /api/admin/articles/automation 200 in 902ms
+ GET /api/admin/articles/automation 200 in 202ms
+ GET /admin/articles/automation 200 in 502ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1044ms (1891 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 1298ms
+ ✓ Compiled /api/admin/system/update/check in 151ms (1055 modules)
+ ✓ Compiled (1058 modules)
+ GET /api/seo/scripts 200 in 484ms
+ GET /uploads/%E6%88%AA%E5%B1%8F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 1770ms
+ GET /api/seo/scripts 200 in 97ms
+ GET /api/admin/articles/automation 200 in 796ms
+ GET /api/admin/articles/automation 200 in 208ms
+ GET /api/admin/system/update/check 200 in 1259ms
+ GET /api/admin/system/update/check 200 in 586ms
+ ✓ Compiled /admin/ai/tasks in 408ms (1072 modules)
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+ GET /api/admin/articles/automation 200 in 403ms
+ GET /api/admin/articles/automation 200 in 224ms
+ ✓ Compiled in 1349ms (1529 modules)
+ ✓ Compiled in 531ms (850 modules)
+ ✓ Compiled /api/admin/articles/automation in 292ms (707 modules)
+ GET /api/admin/articles/automation 200 in 674ms
+ GET /api/admin/articles/automation 200 in 206ms
+ GET /api/admin/articles/automation 200 in 219ms
+ GET /api/admin/articles/automation 200 in 214ms
+ ✓ Compiled in 542ms (850 modules)
+ ✓ Compiled in 853ms (1529 modules)
+ ✓ Compiled /api/admin/articles/automation in 167ms (707 modules)
+ GET /api/admin/articles/automation 200 in 428ms
+ GET /api/admin/articles/automation 200 in 231ms
+ GET /api/admin/articles/automation 200 in 416ms
+ GET /api/admin/articles/automation 200 in 238ms
+ ✓ Compiled /api/admin/articles/automation/[id] in 307ms (709 modules)
+ GET /api/admin/articles/automation/93ae8531-95f8-4a32-94dd-a6226cd79322 200 in 735ms
+ ○ Compiling /articles/[slug] ...
+ ✓ Compiled /articles/[slug] in 722ms (1060 modules)
+ GET /articles/improve-content-visibility-generative-ai-geo-framework 200 in 1588ms
+ ✓ Compiled /_not-found in 450ms (1899 modules)
+ GET /uploads/covers/cover-1768959182954-1768959182954-pm42n5.png 404 in 603ms
+ ✓ Compiled /api/license/info in 81ms (1063 modules)
+ ✓ Compiled (1067 modules)
+ GET /api/license/info 200 in 315ms
+ GET /api/license/info 200 in 6ms
+ GET /api/i18n/settings 200 in 337ms
+ GET /api/seo/scripts 200 in 375ms
+ GET /api/i18n/settings 200 in 43ms
+ GET /api/seo/scripts 200 in 78ms
+ ✓ Compiled /api/articles/[slug]/view in 127ms (1069 modules)
+ POST /api/articles/improve-content-visibility-generative-ai-geo-framework/view 200 in 538ms
+ ✓ Compiled /admin/dashboard in 399ms (1918 modules)
+ GET /uploads/covers/cover-1768959182954-1768959182954-pm42n5.png 404 in 158ms
+ GET /uploads/covers/cover-1768935919064-1768935919064-197vhy.png 404 in 164ms
+ GET /uploads/covers/cover-1768935735211-1768935735211-fb1juw.png 404 in 164ms
+ GET /uploads/covers/cover-1768935728819-1768935728819-e8w2ws.png 404 in 201ms
+ GET /uploads/covers/cover-1768746015712-1768746015712-n480bw.png 404 in 201ms
+ ✓ Compiled /admin/seo/configs in 284ms (1093 modules)
+ ✓ Compiled /api/admin/articles/automation in 118ms (1093 modules)
+ GET /api/admin/articles/automation 200 in 334ms
+ GET /api/admin/articles/automation 200 in 203ms
+ ✓ Compiled /admin/articles/automation/new in 307ms (1099 modules)
+ ✓ Compiled /api/admin/ai-strategies in 221ms (1101 modules)
+ ✓ Compiled (1114 modules)
+ GET /api/admin/categories 200 in 592ms
+ GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 601ms
+ GET /api/admin/categories 200 in 126ms
+ GET /api/admin/ai-strategies?targetType=article&type=WRITING 200 in 159ms
+ ✓ Compiled /admin/ai/strategies in 424ms (923 modules)
+ ✓ Compiled /admin/geo in 149ms (963 modules)
+ ✓ Compiled /api/admin/settings in 236ms (991 modules)
+ ✓ Compiled (1006 modules)
+ GET /api/admin/geo/settings 200 in 523ms
+ GET /api/admin/settings 200 in 529ms
+ GET /api/admin/geo/crawler-stats 200 in 581ms
+ GET /api/admin/geo/settings 200 in 100ms
+ GET /api/admin/settings 200 in 91ms
+ GET /api/admin/geo/crawler-stats 200 in 133ms
+ ✓ Compiled /admin/seo/configs in 383ms (1007 modules)
+ GET /api/admin/geo/settings 200 in 133ms
+ GET /api/admin/settings 200 in 172ms
+ GET /api/admin/geo/crawler-stats 200 in 209ms
+ GET /api/admin/geo/settings 200 in 92ms
+ GET /api/admin/settings 200 in 92ms
+ GET /api/admin/geo/crawler-stats 200 in 180ms
+ POST /api/admin/geo/settings 200 in 446ms
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Factory API returned status: 504
+ ✓ Compiled in 298ms (78 modules)
+ ✓ Compiled in 984ms (1801 modules)
+ ✓ Compiled in 639ms (1801 modules)
+ GET /admin/geo 200 in 276ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 812ms (1798 modules)
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 1024ms
+ GET /uploads/%E6%88%AA%E5%B1%8F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 1268ms
+ ✓ Compiled /api/admin/system/update/check in 320ms (987 modules)
+ ✓ Compiled (1007 modules)
+ GET /api/admin/geo/settings 200 in 710ms
+ GET /api/seo/scripts 200 in 732ms
+ GET /api/seo/scripts 200 in 44ms
+ GET /api/admin/geo/settings 200 in 94ms
+ GET /api/admin/settings 200 in 910ms
+ GET /api/admin/geo/crawler-stats 200 in 931ms
+ GET /api/admin/settings 200 in 154ms
+ GET /api/admin/geo/crawler-stats 200 in 174ms
+ GET /api/admin/system/update/check 200 in 1380ms
+ GET /api/admin/system/update/check 200 in 624ms
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+ GET /admin/geo 200 in 503ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 456ms
+ GET /uploads/%E6%88%AA%E5%B1%8F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 605ms
+ GET /api/seo/scripts 200 in 105ms
+ GET /api/admin/settings 200 in 110ms
+ GET /api/admin/geo/settings 200 in 144ms
+ GET /api/admin/settings 200 in 88ms
+ GET /api/seo/scripts 200 in 96ms
+ GET /api/admin/geo/settings 200 in 124ms
+ GET /api/admin/geo/crawler-stats 200 in 326ms
+ GET /api/admin/geo/crawler-stats 200 in 177ms
+ GET /api/admin/system/update/check 200 in 839ms
+ GET /api/admin/system/update/check 200 in 611ms
+ ✓ Compiled /api/admin/geo/crawler-logs in 371ms (1009 modules)
+ GET /api/admin/geo/crawler-logs?limit=100&page=1 200 in 675ms
+ ✓ Compiled /api/admin/geo/ranking in 353ms (1013 modules)
+ GET /api/admin/geo/ranking 200 in 820ms
+ GET /api/admin/geo/ranking 200 in 222ms
+ GET /api/admin/geo/crawler-logs?limit=100&page=1 200 in 289ms
+ ✓ Compiled in 428ms (78 modules)
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process

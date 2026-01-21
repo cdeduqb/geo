@@ -95,14 +95,8 @@ export default function AITaskContainer({ tasks, strategies, stats, pagination }
                         {isRunning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
                         立即运行
                     </button>
-                    <button
-                        onClick={() => setOpen(true)}
-                        className="flex items-center gap-2.5 px-6 py-2.5 rounded-2xl text-sm font-bold transition-all duration-300 shadow-lg bg-blue-600 text-white hover:bg-blue-700 shadow-blue-100 hover:shadow-blue-200 active:scale-95"
-                    >
-                        <Plus className="w-4 h-4" />
-                        创建新任务
-                    </button>
                 </div>
+
             </div>
 
             {/* Stats */}
