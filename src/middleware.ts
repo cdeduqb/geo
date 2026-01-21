@@ -20,8 +20,11 @@ export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // 0. 站点验证文件拦截 (Site Verification)
-    // 如果是 .html 结尾的请求，尝试从数据库读取验证文件
-    if (pathname.endsWith('.html') && !pathname.startsWith('/admin') && !pathname.startsWith('/api')) {
+    // 拦截 .html 和特定 .txt (IndexNow/搜索引擎验证) 结尾的请求
+    const isStaticTxt = ['/robots.txt', '/ads.txt', '/humans.txt', '/sitemap.txt'].includes(pathname);
+    if ((pathname.endsWith('.html') || (pathname.endsWith('.txt') && !isStaticTxt)) &&
+        !pathname.startsWith('/admin') &&
+        !pathname.startsWith('/api')) {
         const url = request.nextUrl.clone();
         url.pathname = '/api/seo/verify';
         const filename = pathname.substring(1); // 去掉开头的 /
@@ -36,6 +39,7 @@ export async function middleware(request: NextRequest) {
             }
         });
     }
+
 
     const userAgent = request.headers.get('user-agent') || '';
 

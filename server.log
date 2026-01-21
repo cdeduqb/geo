@@ -63,29 +63,31 @@ Timed out fetching a new connection from the connection pool. More info: http://
 [Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
 [Cron] Starting batch task processing...
 [Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
- GET /api/admin/articles/automation 200 in 420ms
- GET /api/admin/articles/automation 200 in 236ms
- ✓ Compiled /api/admin/articles/automation/[id] in 122ms (1022 modules)
- GET /api/admin/articles/automation/bec1b662-37bf-4c44-afe7-ad03b8fc3ce1 200 in 450ms
- ✓ Compiled /api/admin/articles/automation/tasks/[taskId] in 103ms (1024 modules)
- PATCH /api/admin/articles/automation/tasks/9b0095d4-7131-4f9e-864c-570a7e6d8464 200 in 683ms
- ✓ Compiled /api/admin/articles/automation/process in 269ms (1050 modules)
-[AIService] No active configs found, using Mock service
-[Automation] Processing Task 9b0095d4-7131-4f9e-864c-570a7e6d8464: Initial Writing
-[AIService] Trying mock for generateArticle
-[Automation] Task 9b0095d4-7131-4f9e-864c-570a7e6d8464: GEO Optimization starting...
-[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
-[AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
-[Pipeline] GEO optimizing for: 网站搜索流量变化，可能与AI搜索发展有关 (zh)
-[AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
- ✓ Compiled /admin/ai/tasks in 453ms (1789 modules)
- GET /api/admin/articles/automation 200 in 451ms
- GET /api/admin/articles/automation 200 in 217ms
- GET /api/admin/articles/automation/bec1b662-37bf-4c44-afe7-ad03b8fc3ce1 200 in 265ms
-[Pipeline] GEO optimization received length: 2307
-[Automation] Task 9b0095d4-7131-4f9e-864c-570a7e6d8464: GEO Optimization completed.
-[Automation] Task 9b0095d4-7131-4f9e-864c-570a7e6d8464: Smart Illustration starting...
-[AIService] Selected deepseek/deepseek-chat for WRITING (within limits)
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+Service] Selected deepseek/deepseek-chat for WRITING (within limits)
 [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
 [Pipeline] Analyzing illustration points for: 网站搜索流量变化，可能与AI搜索发展有关 (zh)
 [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
@@ -812,5 +814,55 @@ Timed out fetching a new connection from the connection pool. More info: http://
  GET /api/admin/geo/ranking 200 in 222ms
  GET /api/admin/geo/crawler-logs?limit=100&page=1 200 in 289ms
  ✓ Compiled in 428ms (78 modules)
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Factory API returned status: 504
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+ ✓ Compiled in 423ms (78 modules)
+ ✓ Compiled in 702ms (851 modules)
+ GET /admin/seo/configs 200 in 476ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 735ms (1798 modules)
+ GET /uploads/%E6%88%AA%E5%B1%8F2025-09-16-20-51-57-1766969622065-ttn41v.png 404 in 879ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 966ms
+ ✓ Compiled /api/admin/system/update/check in 128ms (987 modules)
+ ✓ Compiled (990 modules)
+ GET /api/seo/scripts 200 in 393ms
+ GET /api/seo/scripts 200 in 86ms
+ GET /api/admin/system/update/check 200 in 1247ms
+ GET /api/admin/system/update/check 200 in 632ms
+ ○ Compiling /[locale] ...
+ ✓ Compiled /[locale] in 603ms (1844 modules)
+ GET /d55a3ef1a3624bbd93524997f6af0a39 404 in 1339ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 128ms
+ GET /api/seo/scripts 200 in 101ms
+ GET /api/seo/scripts 200 in 47ms
+ ✓ Compiled /api/seo/verify in 132ms (999 modules)
+[Verify API] Request URL: http://localhost:3000/d55a3ef1a3624bbd93524997f6af0a39.txt
+[Verify API] Search Params: {}
+[Verify API] Using filename from header: d55a3ef1a3624bbd93524997f6af0a39.txt
+ GET /d55a3ef1a3624bbd93524997f6af0a39.txt 200 in 251ms
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 181ms
 [Cron] Starting batch task processing...
 [Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process

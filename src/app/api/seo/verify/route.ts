@@ -43,19 +43,41 @@ export async function GET(request: NextRequest) {
             return new NextResponse('Invalid Configuration', { status: 500 });
         }
 
-        // 精确匹配文件名
+        // 1. 在通用验证文件中查找
         const file = files.find((f: any) => f.filename === filename);
 
         if (file) {
             return new NextResponse(file.content, {
                 headers: {
-                    'Content-Type': 'text/html; charset=utf-8',
+                    'Content-Type': filename.endsWith('.txt') ? 'text/plain; charset=utf-8' : 'text/html; charset=utf-8',
                     'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
                 }
             });
         }
+
+        // 2. 如果是 .txt 文件，在搜索引擎推送配置中查找 (IndexNow 验证)
+        if (filename.endsWith('.txt')) {
+            const token = filename.replace('.txt', '');
+            const pushConfig = await db.sEOPushConfig.findFirst({
+                where: {
+                    platform: 'indexnow',
+                    token: token,
+                    isActive: true
+                }
+            });
+
+            if (pushConfig) {
+                return new NextResponse(token, {
+                    headers: {
+                        'Content-Type': 'text/plain; charset=utf-8',
+                        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
+                    }
+                });
+            }
+        }
     } catch (e) {
         console.error('Verify API Error', e);
+
         return new NextResponse('Internal Server Error', { status: 500 });
     }
 
