@@ -224,10 +224,10 @@ model SiteSettings {
   phone          String?
   email          String?
   address        String?  @db.Text
-  copyright      String?
   socialLinks    Json?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  copyright      String?
 }
 
 model ComponentModule {
@@ -248,11 +248,11 @@ model SEOPushConfig {
   apiUrl     String?      @db.Text
   token      String?      @db.Text
   siteId     String?
-  script     String?      @db.Text
   isActive   Boolean      @default(true)
   lastPushAt DateTime?
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
+  script     String?      @db.Text
   pushLogs   SEOPushLog[]
 }
 
@@ -292,13 +292,10 @@ model AICreationTask {
 model ArticleAutomationProject {
   id               String           @id @default(uuid())
   name             String
-  mode             String           @default("topic") // 'topic' = 主题批量模式, 'titles' = 标题列表模式
   topic            String           @db.Text
   keywords         String?          @db.Text
   totalCount       Int              @default(1)
   dailyLimit       Int              @default(1)
-  preferredLength  String           @default("medium") // 'short', 'medium', 'long'
-
   status           ProjectStatus    @default(ACTIVE)
   enableGeo        Boolean          @default(true)
   enableIllustrate Boolean          @default(true)
@@ -312,6 +309,8 @@ model ArticleAutomationProject {
   strategyId       String
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
+  mode             String           @default("topic")
+  preferredLength  String           @default("medium")
   tasks            AICreationTask[]
   articles         Article[]
   author           User             @relation(fields: [authorId], references: [id])
@@ -322,7 +321,6 @@ model ArticleAutomationProject {
   @@index([categoryId], map: "ArticleAutomationProject_categoryId_fkey")
   @@index([strategyId], map: "ArticleAutomationProject_strategyId_fkey")
 }
-
 
 model StorageConfig {
   id        String   @id @default(uuid())
@@ -611,16 +609,46 @@ model ContentRecommendation {
 }
 
 model CompetitorAnalysis {
-  id              String   @id @default(uuid())
-  keyword         String
-  competitors     Json     // 竞品域名列表
-  ourStats        Json     // 本站统计数据
-  competitorData  Json     // 竞品抓取数据
-  analysis        Json     // AI 分析结果
-  createdAt       DateTime @default(now())
-  
+  id             String   @id @default(uuid())
+  keyword        String
+  competitors    Json
+  ourStats       Json
+  competitorData Json
+  analysis       Json
+  createdAt      DateTime @default(now())
+
   @@index([keyword])
   @@index([createdAt])
+}
+
+model GEOAuthoritySource {
+  id          String   @id @default(uuid())
+  name        String
+  domain      String?
+  category    String
+  trustLevel  Int      @default(3)
+  description String?
+  isDomestic  Boolean  @default(true)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([trustLevel])
+  @@index([isActive])
+}
+
+model GEOIndustryEntity {
+  id          String   @id @default(uuid())
+  name        String
+  keywords    String
+  industry    String
+  relatedUrls String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([industry])
+  @@index([name])
 }
 
 enum Role {

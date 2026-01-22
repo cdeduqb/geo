@@ -18,12 +18,18 @@ export async function GET() {
         const results = [];
         let score = 100;
 
+        // 获取样本文章用于后续语义分析
+        const sampleArticles = await db.article.findMany({
+            take: 10,
+            orderBy: { createdAt: 'desc' },
+            select: { content: true }
+        });
+
         // --- 1. 爬虫治理与可访问性 (Crawler Governance) ---
         let robotsExists = false;
         let hasSitemap = false;
         if (geoSettings) {
             robotsExists = true;
-            hasSitemap = true;
         }
 
         try {
@@ -47,7 +53,7 @@ export async function GET() {
             }
         }
 
-        // --- 2. 内容权威度与 E-E-A-T (Author Authority) ---
+        // --- 2. 作者权威性与 E-E-A-T ---
         const totalArticles = await db.article.count();
         const articlesWithAuthor = await db.article.count({
             where: { author: { name: { not: '' } } }
@@ -60,7 +66,7 @@ export async function GET() {
             results.push({ id: 'eeat_ok', title: '作者信誉体系', status: 'pass', message: '内容均关联至具备专业背景的作者实体。', impact: 'medium' });
         }
 
-        // --- 3. 内容新鲜度与更新频率 (Freshness) ---
+        // --- 3. 内容新鲜度与更新频率 ---
         const sevenDaysAgo = new Date();
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
         const recentArticles = await db.article.count({
@@ -74,287 +80,95 @@ export async function GET() {
             results.push({ id: 'freshness_ok', title: '内容活跃度', status: 'pass', message: `本周有 ${recentArticles} 篇内容更新，保持了良好的动态时效。`, impact: 'medium' });
         }
 
-        // --- 4. 语义标记与结构化覆盖 (Semantic Structure) ---
-        const sampleArticles = await db.article.findMany({
-            take: 10,
-            orderBy: { createdAt: 'desc' },
-            select: { content: true }
-        });
-
-        const hasAltTags = sampleArticles.every(a => a.content.includes('alt='));
+        // --- 4. 语义标记与结构化覆盖 (RAG/FAQ) ---
         const hasSemanticHeadings = sampleArticles.some(a => a.content.includes('<h2') || a.content.includes('<h3'));
         const hasFAQ = sampleArticles.some(a => a.content.includes('FAQ') || a.content.includes('常见问题'));
+        const hasKeyTakeaways = sampleArticles.some(a =>
+            /核心要点|Key Takeaways|摘要|summary/i.test(a.content)
+        );
 
         if (!hasSemanticHeadings) {
             results.push({ id: 'semantic_structure', title: '语义化层级 (Headings)', status: 'fail', message: '内容缺乏标题级联逻辑，大语言模型难以解析文档大纲。', impact: 'high' });
             score -= 10;
-        } else if (!hasFAQ) {
-            results.push({ id: 'faq_missing', title: '直达摘要优化 (FAQ)', status: 'warning', message: '核心页面缺失 FAQ 标记，建议增加以提升 AI Search 展示概率。', impact: 'medium' });
+        } else if (!hasKeyTakeaways) {
+            results.push({ id: 'rag_summary', title: 'RAG 检索优化', status: 'warning', message: '内容缺失“核心要点”或“摘要”模块，不利于 AI 在 RAG 检索时快速提取结论。', impact: 'medium' });
             score -= 5;
         } else {
-            results.push({ id: 'semantic_ok', title: '语义结构优化', status: 'pass', message: '内容层级分明且包含丰富的交互式问答标记。', impact: 'medium' });
+            results.push({ id: 'semantic_ok', title: '语义与 RAG 优化', status: 'pass', message: '内容层级分明且包含丰富的 RAG 摘要与问答标记。', impact: 'medium' });
         }
 
-        // --- 5. 品牌知识图谱实体 (Entity Association) ---
-        let hasEntities = false;
-        if (geoSettings?.entityInfo?.alternateName && geoSettings?.entityInfo?.sameAs?.length > 0) {
-            hasEntities = true;
+        // --- 5. 事实数据与表格化 (Table & Data Density - 中外兼容) ---
+        const hasTables = sampleArticles.some(a => /<table/i.test(a.content));
+        const hasDataStats = sampleArticles.some(a =>
+            /\d+%/.test(a.content) ||
+            /\d+(\.\d+)?\s*(个|位|项|次|元|美金|点)/.test(a.content)
+        );
+
+        if (!hasTables) {
+            results.push({ id: 'data_table_missing', title: '数据表格化 (Tables)', status: 'warning', message: '缺失 HTML 表格。国内爬虫（如字节跳动）极度依赖表格提取事实。', impact: 'medium' });
+            score -= 5;
+        } else if (!hasDataStats) {
+            results.push({ id: 'data_density', title: '数据丰富度', status: 'warning', message: '文章缺乏具体数字支撑，AI 引用概率较低。', impact: 'medium' });
+            score -= 5;
+        } else {
+            results.push({ id: 'data_ok', title: '事实数据支撑', status: 'pass', message: '包含表格与具体事实数据，完美匹配深度推理模型与国内爬虫偏好。', impact: 'medium' });
         }
+
+        // --- 6. 品牌实体与权威信源 ---
+        const hasEntities = !!(geoSettings?.entityInfo?.alternateName && geoSettings?.entityInfo?.sameAs?.length > 0);
+        const hasDomesticAuthority = sampleArticles.some(a =>
+            /知乎|小红书|微信公众号|国家统计局|百度百科|维基百科|官方白皮书/.test(a.content)
+        );
 
         if (!hasEntities) {
-            results.push({ id: 'entity_association', title: '品牌实体关联', status: 'fail', message: '未配置品牌别名或社交链接，无法在知识图谱中建立唯一品牌指纹。', impact: 'high' });
+            results.push({ id: 'entity_association', title: '品牌实体关联', status: 'fail', message: '未配置品牌别名或社交链接，无法在知识图谱中建立指纹。', impact: 'high' });
             score -= 20;
+        } else if (!hasDomesticAuthority) {
+            results.push({ id: 'authority_refs', title: '权威信源背书', status: 'warning', message: '未检测到国内主流权威平台引用，可能影响推理模型的信任分。', impact: 'medium' });
+            score -= 5;
         } else {
-            results.push({ id: 'entity_ok', title: '实体指纹状态', status: 'pass', message: '已建立跨平台的品牌实体关联，增强了 AI 回答的确定性。', impact: 'high' });
+            results.push({ id: 'entity_ok', title: '实体与信源信任', status: 'pass', message: '已建立品牌实体关联并引用权威信源，增强了 AI 回答的确定性。', impact: 'high' });
         }
 
-        // --- 6. 移动端与生成式交互 (Mobile/Interaction) ---
-        results.push({ id: 'mobile_interactive', title: '响应式与 AI 交互', status: 'pass', message: '页面结构完全兼容移动端，且无遮挡 AI 爬虫的 JS 阻碍。', impact: 'low' });
-
-        // ========== 新增诊断维度 ==========
-
-        // --- 7. 内容质量评分统计 ---
-        const contentScores = await db.contentAIScore.findMany({
-            select: { overallScore: true }
-        });
-
-        if (contentScores.length > 0) {
-            const avgScore = Math.round(contentScores.reduce((sum, s) => sum + s.overallScore, 0) / contentScores.length);
-            const lowScoreCount = contentScores.filter(s => s.overallScore < 60).length;
-            const highScoreCount = contentScores.filter(s => s.overallScore >= 80).length;
-
-            if (avgScore < 60) {
-                results.push({
-                    id: 'content_quality_low',
-                    title: '内容质量评分',
-                    status: 'fail',
-                    message: `平均 GEO 分数仅 ${avgScore} 分，${lowScoreCount} 篇内容低于及格线，急需优化。`,
-                    impact: 'high'
-                });
-                score -= 15;
-            } else if (avgScore < 75) {
-                results.push({
-                    id: 'content_quality_medium',
-                    title: '内容质量评分',
-                    status: 'warning',
-                    message: `平均 GEO 分数 ${avgScore} 分，${lowScoreCount} 篇低分内容待优化，${highScoreCount} 篇优质内容。`,
-                    impact: 'medium'
-                });
+        // --- 7. 内容质量统计 ---
+        const contentAIScores = await db.contentAIScore.findMany({ select: { overallScore: true } });
+        if (contentAIScores.length > 0) {
+            const avgQuality = contentAIScores.reduce((sum, s) => sum + s.overallScore, 0) / contentAIScores.length;
+            if (avgQuality < 70) {
+                results.push({ id: 'quality_score', title: '内容质量均分', status: 'warning', message: `全站 GEO 质量均分较低 (${Math.round(avgQuality)})，建议对核心文章重新评分并优化。`, impact: 'medium' });
                 score -= 8;
             } else {
-                results.push({
-                    id: 'content_quality_high',
-                    title: '内容质量评分',
-                    status: 'pass',
-                    message: `平均 GEO 分数 ${avgScore} 分，${highScoreCount} 篇文章达到优秀标准，内容质量领先。`,
-                    impact: 'high'
-                });
+                results.push({ id: 'quality_ok', title: '内容质量水平', status: 'pass', message: `全站 GEO 质量表现优秀 (均分 ${Math.round(avgQuality)})。`, impact: 'medium' });
             }
-        } else {
-            results.push({
-                id: 'content_quality_none',
-                title: '内容质量评分',
-                status: 'warning',
-                message: '尚未对内容进行 GEO 评分，建议使用「GEO 分数评估」功能扫描全站内容。',
-                impact: 'medium'
-            });
-            score -= 5;
         }
 
-        // --- 8. 引用来源检测 ---
-        const articlesWithCitations = await db.article.findMany({
+        // --- 8. 引用来源覆盖 ---
+        const publishedArticles = await db.article.findMany({
             where: { status: 'PUBLISHED' },
-            select: { id: true, title: true, citations: true }
+            select: { citations: true }
         });
-
-        let totalCitations = 0;
-        let articlesWithGoodCitations = 0;
-        let articlesNoCitations = 0;
-
-        for (const article of articlesWithCitations) {
-            const citations = Array.isArray(article.citations) ? article.citations : [];
-            if (citations.length === 0) {
-                articlesNoCitations++;
-            } else if (citations.length >= 3) {
-                articlesWithGoodCitations++;
-            }
-            totalCitations += citations.length;
-        }
-
-        const avgCitations = articlesWithCitations.length > 0
-            ? Math.round(totalCitations / articlesWithCitations.length * 10) / 10
-            : 0;
-
-        if (articlesNoCitations > articlesWithCitations.length * 0.5) {
-            results.push({
-                id: 'citations_missing',
-                title: '引用来源覆盖',
-                status: 'fail',
-                message: `${articlesNoCitations} 篇文章无引用来源，超过 50%，AI 难以验证内容可信度。`,
-                impact: 'high'
-            });
-            score -= 12;
-        } else if (avgCitations < 2) {
-            results.push({
-                id: 'citations_low',
-                title: '引用来源密度',
-                status: 'warning',
-                message: `平均每篇文章引用 ${avgCitations} 条，建议增加权威来源引用以提升可信度。`,
-                impact: 'medium'
-            });
-            score -= 6;
-        } else {
-            results.push({
-                id: 'citations_good',
-                title: '引用来源体系',
-                status: 'pass',
-                message: `平均每篇引用 ${avgCitations} 条，${articlesWithGoodCitations} 篇文章达到优质引用标准。`,
-                impact: 'high'
-            });
-        }
-
-        // --- 9. 结构化数据检测 (Schema/JSON-LD) ---
-        const articlesWithEntities = await db.article.findMany({
-            where: { status: 'PUBLISHED' },
-            select: { id: true, entities: true, content: true }
-        });
-
-        let entitiesCount = 0;
-        let articlesWithSchema = 0;
-
-        for (const article of articlesWithEntities) {
-            const entities = Array.isArray(article.entities) ? article.entities : [];
-            entitiesCount += entities.length;
-            // 检查是否有结构化数据标记
-            if (article.content.includes('itemtype') ||
-                article.content.includes('schema.org') ||
-                entities.length >= 5) {
-                articlesWithSchema++;
-            }
-        }
-
-        const schemaCoverage = articlesWithEntities.length > 0
-            ? Math.round(articlesWithSchema / articlesWithEntities.length * 100)
-            : 0;
-        const avgEntities = articlesWithEntities.length > 0
-            ? Math.round(entitiesCount / articlesWithEntities.length)
-            : 0;
-
-        if (schemaCoverage < 30) {
-            results.push({
-                id: 'schema_low',
-                title: '结构化数据覆盖',
-                status: 'fail',
-                message: `仅 ${schemaCoverage}% 的内容具备结构化标记，AI 模型难以提取精准信息。`,
-                impact: 'high'
-            });
+        const articlesWithoutCitations = publishedArticles.filter(a => !Array.isArray(a.citations) || a.citations.length === 0).length;
+        if (publishedArticles.length > 0 && articlesWithoutCitations / publishedArticles.length > 0.4) {
+            results.push({ id: 'citations_coverage', title: '引用来源覆盖', status: 'fail', message: '超过 40% 的已发布内容缺失引用来源，建议补充可验证的链接。', impact: 'high' });
             score -= 10;
-        } else if (schemaCoverage < 70) {
-            results.push({
-                id: 'schema_medium',
-                title: '结构化数据覆盖',
-                status: 'warning',
-                message: `${schemaCoverage}% 的内容有结构化数据，平均 ${avgEntities} 个实体标注，仍有提升空间。`,
-                impact: 'medium'
-            });
+        }
+
+        // --- 9. 结构化数据/Schema ---
+        const schemaCoverage = publishedArticles.filter(a => (a as any).content?.includes('schema.org') || (a as any).content?.includes('itemtype')).length;
+        if (publishedArticles.length > 0 && schemaCoverage / publishedArticles.length < 0.5) {
+            results.push({ id: 'schema_coverage', title: '结构化数据覆盖', status: 'warning', message: '结构化数据标记覆盖不足，不利于模型精确提取实体信息。', impact: 'medium' });
             score -= 5;
-        } else {
-            results.push({
-                id: 'schema_good',
-                title: '结构化数据覆盖',
-                status: 'pass',
-                message: `${schemaCoverage}% 的内容实现结构化标记，平均 ${avgEntities} 个实体，Schema 覆盖完善。`,
-                impact: 'high'
-            });
         }
 
-        // --- 10. 关键词覆盖检测 ---
-        // 获取热门关键词（从 AI 排名追踪中）
-        const topKeywords = await db.aISearchRanking.groupBy({
-            by: ['keyword'],
-            _count: { keyword: true },
-            orderBy: { _count: { keyword: 'desc' } },
-            take: 10
-        });
-
-        // 检查每个关键词是否有对应的已发布文章
-        let coveredKeywords = 0;
-        let uncoveredKeywords: string[] = [];
-
-        for (const kw of topKeywords) {
-            const hasArticle = await db.article.findFirst({
-                where: {
-                    status: 'PUBLISHED',
-                    OR: [
-                        { title: { contains: kw.keyword } },
-                        { content: { contains: kw.keyword } }
-                    ]
-                }
-            });
-            if (hasArticle) {
-                coveredKeywords++;
-            } else {
-                uncoveredKeywords.push(kw.keyword);
-            }
-        }
-
-        if (topKeywords.length > 0) {
-            const coverageRate = Math.round(coveredKeywords / topKeywords.length * 100);
-
-            if (coverageRate < 50) {
-                results.push({
-                    id: 'keyword_coverage_low',
-                    title: '关键词内容覆盖',
-                    status: 'fail',
-                    message: `仅覆盖 ${coverageRate}% 的追踪关键词，${uncoveredKeywords.slice(0, 3).join('、')} 等缺少针对性内容。`,
-                    impact: 'high'
-                });
-                score -= 10;
-            } else if (coverageRate < 80) {
-                results.push({
-                    id: 'keyword_coverage_medium',
-                    title: '关键词内容覆盖',
-                    status: 'warning',
-                    message: `覆盖 ${coverageRate}% 的追踪关键词，建议补充「${uncoveredKeywords[0] || ''}」相关内容。`,
-                    impact: 'medium'
-                });
-                score -= 5;
-            } else {
-                results.push({
-                    id: 'keyword_coverage_good',
-                    title: '关键词内容覆盖',
-                    status: 'pass',
-                    message: `${coveredKeywords}/${topKeywords.length} 个追踪关键词已有对应内容，覆盖率 ${coverageRate}%。`,
-                    impact: 'high'
-                });
-            }
-        } else {
-            results.push({
-                id: 'keyword_no_tracking',
-                title: '关键词追踪',
-                status: 'warning',
-                message: '尚未设置关键词追踪，建议使用「AI 排名追踪」功能监控核心关键词表现。',
-                impact: 'medium'
-            });
-        }
-
-        // --- 汇总统计 ---
-        const passCount = results.filter(i => i.status === 'pass').length;
-        const warningCount = results.filter(i => i.status === 'warning').length;
-        const failCount = results.filter(i => i.status === 'fail').length;
+        // --- 10. 移动端兼容性 ---
+        results.push({ id: 'mobile_interactive', title: '移动端与交互', status: 'pass', message: '结构完全兼容移动端，无遮挡 AI 爬虫的交互障碍。', impact: 'low' });
 
         return NextResponse.json({
             score: Math.max(0, Math.min(100, score)),
             items: results.sort((a, b) => {
                 const order: { [key: string]: number } = { 'fail': 0, 'warning': 1, 'pass': 2 };
                 return order[a.status] - order[b.status];
-            }),
-            summary: {
-                total: results.length,
-                pass: passCount,
-                warning: warningCount,
-                fail: failCount
-            }
+            })
         });
 
     } catch (error) {

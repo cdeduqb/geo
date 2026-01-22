@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
+import { db } from '@/lib/db';
 
 // POST /api/admin/articles/audit - 审计文章质量
 export async function POST(request: NextRequest) {
@@ -16,8 +17,14 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Title and content are required' }, { status: 400 });
         }
 
+        // 获取高权重国内信源用于审计
+        const authoritySources = await (db as any).gEOAuthoritySource.findMany({
+            where: { isActive: true },
+            select: { name: true, trustLevel: true }
+        });
+
         // 执行内容审计
-        const audit = performContentAudit(title, content, citations, entities);
+        const audit = performContentAudit(title, content, citations, entities, authoritySources);
 
         return NextResponse.json({ audit });
     } catch (error) {
@@ -51,7 +58,7 @@ interface AuditIssue {
     impact: number; // 1-10, 影响程度
 }
 
-function performContentAudit(title: string, content: string, citations: any[] = [], entities: any[] = []): AuditResult {
+function performContentAudit(title: string, content: string, citations: any[] = [], entities: any[] = [], authoritySources: any[] = []): AuditResult {
     const issues: AuditIssue[] = [];
     const suggestions: string[] = [];
 
@@ -227,21 +234,20 @@ function performContentAudit(title: string, content: string, citations: any[] = 
     }
 
     // --- GEO 评分逻辑 (MAX 100, 独立于 Overall Score) ---
-    let geoScore = 60; // 基础分
+    let geoScore = 50; // 基础分
     const citationCount = citations.length;
     const entityCount = entities.length;
 
-    // 1. 权威性 (Citations)
+    // 1. 权威性与引证 (Citations)
     if (citationCount > 0) {
         geoScore += 10;
     } else {
         issues.push({
             type: 'info',
             category: 'GEO/权威性',
-            message: '文章未包含引用来源，建议添加参考资料以提升 AI 信任度',
+            message: '建议添加具体的参考资料或数据来源，提升 AI 信任度',
             impact: 5
         });
-        suggestions.push('添加至少1个权威引用来源 (Citations)');
     }
 
     // 2. 知识图谱 (Entities)
@@ -251,52 +257,49 @@ function performContentAudit(title: string, content: string, citations: any[] = 
         issues.push({
             type: 'info',
             category: 'GEO/实体',
-            message: '未标记关键实体，建议标记品牌、人物或地名',
+            message: '建议标记关键实体（人名、产品、机构），便于 AI 建立关联',
             impact: 5
         });
-        suggestions.push('使用实体管理工具标记关键实体');
     }
 
-    // 3. 数据密度 (Data Density)
-    const dataDensityMatch = content.match(/\d+(\.\d+)?%?|第[一二三四五六七八九十]/g);
-    const dataCount = dataDensityMatch ? dataDensityMatch.length : 0;
-    if (dataCount > 3) {
+    // 3. 逻辑推导 (Reasoning - 针对 DeepSeek)
+    const reasoningMatch = content.match(/因为|所以|由于|从而|因此|因此可见|综上所述/g);
+    if (reasoningMatch && reasoningMatch.length >= 3) {
         geoScore += 10;
     } else {
-        suggestions.push('增加具体数据、统计数字或百分比，AI 偏好事实性内容');
+        suggestions.push('增加逻辑推导过程（如使用“因为...所以...”），以适配 DeepSeek 等推理型 AI 的抓取偏好');
     }
 
-    // 4. 结构化特征 (Lists/Tables)
+    // 4. 数据密度与表格 (Data Density & Tables - 针对国内爬虫)
     const hasTable = content.includes('<table');
-    const hasList = content.includes('<ul') || content.includes('<ol');
-    if (hasTable || hasList) {
-        geoScore += 5;
-    } else {
-        suggestions.push('使用列表或表格展示信息，利于 AI 提取结构化数据');
-    }
-
-    // 5. FAQ 模块检测
-    const hasFAQ = content.includes('FAQ') || content.includes('常见问题') || content.includes('问答');
-    if (hasFAQ) {
-        geoScore += 5;
-    } else {
-        suggestions.push('增加 FAQ 章节，直接解答用户高频疑问，提升 AI 引用率');
-    }
-
-    // 6. 直接回答 (Direct Answer) 检查
-    const headSection = content.substring(0, 800);
-    const hasStrongInHead = headSection.includes('<strong>') || headSection.includes('<b>');
-    if (hasStrongInHead && headSection.length > 100) {
+    const dataDensityMatch = content.match(/\d+(\.\d+)?%?|第[一二三四五六七八九十]/g);
+    if (hasTable) {
         geoScore += 10;
     } else {
-        issues.push({
-            type: 'info',
-            category: 'GEO/直接回答',
-            message: '文章开头未检测到加粗的直接回答段落',
-            impact: 4
-        });
-        suggestions.push('在文章开头增加 50-100 字的摘要，并加粗核心结论');
+        suggestions.push('将核心对比数据转化为 HTML 表格，国内 AI 爬虫对表格提取权重极高');
     }
+    if (dataDensityMatch && dataDensityMatch.length > 3) geoScore += 5;
+
+    // 5. 权威背书 (Local Authority - 动态库命中)
+    const hitSources = authoritySources.filter(s => content.includes(s.name));
+    if (hitSources.length > 0) {
+        const bonus = Math.min(15, hitSources.length * 5); // 每个信源+5分，最高15分
+        geoScore += bonus;
+        suggestions.push(`√ 已识别到权威信源引用: ${hitSources.map(s => s.name).join('、')}`);
+    } else {
+        suggestions.push('尝试在文中提及国内权威平台（如 36氪、知乎报告、统计局数据等）作为信源背书');
+    }
+
+    // 6. 开篇摘要与 FAQ
+    const hasFAQ = content.includes('FAQ') || content.includes('常见问题') || content.includes('问答');
+    const headSection = content.substring(0, 800);
+    const hasDirectAnswer = headSection.includes('<strong>') || headSection.includes('<b>');
+
+    if (hasFAQ) geoScore += 5;
+    else suggestions.push('在结尾增加 FAQ 问答模块，直接命中 AI 搜索的摘要窗口');
+
+    if (hasDirectAnswer) geoScore += 5;
+    else suggestions.push('在文章开头 100 字内加粗核心结论，作为 AI 抓取的“直接回答”');
 
     geoScore = Math.min(100, geoScore);
 

@@ -15,6 +15,8 @@ import BehaviorAnalysis from './_components/BehaviorAnalysis';
 import CompetitorAnalysis from './_components/CompetitorAnalysis';
 import GEOAudit from './_components/GEOAudit';
 import BulkOptimizer from './_components/BulkOptimizer';
+import AuthoritySourceManager from './_components/AuthoritySourceManager';
+import IndustryEntityManager from './_components/IndustryEntityManager';
 
 const AI_CRAWLERS = [
     // --- 国际主流 AI 平台 ---
@@ -398,6 +400,13 @@ export default function GEOSettingsPage() {
                                 <Database className="w-4 h-4" />
                                 访问日志
                             </TabsTrigger>
+                            <TabsTrigger
+                                value="authority-graph"
+                                className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-indigo-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-indigo-600"
+                            >
+                                <Shield className="w-4 h-4" />
+                                权威信源图谱
+                            </TabsTrigger>
                         </TabsList>
                         <div className="flex items-center gap-2 px-1">
                             <button
@@ -439,6 +448,14 @@ export default function GEOSettingsPage() {
                 {/* 排名追踪面板 */}
                 <TabsContent value="ranking">
                     <RankingTracker />
+                </TabsContent>
+
+                {/* 权威信源图谱面板 */}
+                <TabsContent value="authority-graph">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-20">
+                        <AuthoritySourceManager />
+                        <IndustryEntityManager />
+                    </div>
                 </TabsContent>
 
                 {/* 行为分析面板 */}

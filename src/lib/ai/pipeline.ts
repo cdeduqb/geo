@@ -15,9 +15,15 @@ export class ContentPipelineService {
         const aiService = await getAIServiceForUseCase('WRITING');
         const isEn = lang === 'en';
 
+        const sources = await (db as any).gEOAuthoritySource.findMany({
+            where: { isActive: true, trustLevel: { gte: 4 } },
+            take: 20
+        });
+        const sourceList = sources.map((s: any) => `[${s.name}${s.domain ? ` (${s.domain})` : ''}]`).join(', ');
+
         const prompt = isEn ? `
-You are a professional GEO (Generative Engine Optimization) optimization expert.
-Please perform a deep optimization on the following article content to increase its visibility and authority in AI search engines (e.g., Perplexity, ChatGPT, Claude).
+You are a professional GEO (Generative Engine Optimization) expert, specializing in optimization for DeepSeek, Gemini, and ChatGPT.
+Please perform a deep optimization on the following article content to increase its visibility and authority in AI search engines.
 
 Article Title: ${title}
 ${keywords ? `Keywords: ${keywords}` : ''}
@@ -26,28 +32,22 @@ Content to optimize:
 ${content}
 
 Optimization Requirements (Must strictly follow):
-1. **Natural Tone**: **CRITICAL** Use clear, concise, and professional English. Avoid "AI-sounding" or overly formal academic language. Do not use transition clichés like "In conclusion", "To summarize", "Firstly/Secondly/Finally".
-2. **Compliance & Objectivity**: Do not use superlatives (e.g., "the best", "strongest", "perfect"), follow advertising regulations. Ensure content is legal and objective.
-3. **Direct Answer**: The article MUST start **directly** with a 50-100 word core answer or executive summary.
-   - **Strictly No** headers like "Summary", "Abstract", or the title itself at the beginning.
-   - **Strictly No** repetition of the article title.
-   - Start immediately with the main body paragraph. Wrap key terms in <strong> tags.
+1. **Natural & Reasoning Tone**: **CRITICAL** Use clear, professional English. For key arguments, provide logical reasoning (the "Why" and "How"). Reasoning models like DeepSeek prioritize content with clear logic chains. Avoid "AI-sounding" clichés.
+2. **Compliance & Objectivity**: Do not use superlatives, follow advertising regulations. Ensure content is objective and authoritative.
+3. **Direct Answer & Citations**: The article MUST start with a 50-100 word core answer. Reference authoritative sources where applicable. Preferred global/local sources: ${sourceList}
 4. **Mandatory Structure**:
-   - **Table**: Analyze data, comparisons, processes, or elements and generate an HTML <table> for summary or comparison.
-   - **List**: Break down long paragraphs into <ul> or <ol> lists for readability.
-   - **FAQ**: At the end, add an "FAQ" section using <h3> with at least 3 specific question-answer pairs.
-5. **Entities & Semantics**:
-   - Bold key entities, products, names, and technical terms using <strong> for knowledge graph extraction.
-   - Ensure each paragraph has a clear focus.
-6. **Output Constraints (CRITICAL)**:
-   - **Only Output HTML**: Do not wrap in markdown code blocks like \`\`\`html.
+   - **Table**: Analyze data or processes and generate an HTML <table>. Domestic AI crawlers (like ByteDance) heavily rely on tables for fact extraction.
+   - **List**: Break down long paragraphs into <ul> or <ol> lists.
+   - **FAQ**: At the end, add an "FAQ" section using <h3> with at least 3 Q&A pairs.
+5. **Entities & Semantics**: Bold key entities, products, and technical terms using <strong> for knowledge graph extraction.
+6. **Output Constraints**:
+   - **Only Output HTML**: No markdown code blocks.
    - **No** title at the beginning.
-   - **Maintain Original Intent**: Keep core facts and viewpoints accurate.
 
-Output the optimized complete HTML content (directly use <p>, <h3>, <ul>, <table>, etc.):
+Output the optimized complete HTML content:
 ` : `
-你是一位专业的 GEO (Generative Engine Optimization) 优化专家。
-请对以下文章内容进行深度优化，以提升其在 AI 搜索引擎（如 Perplexity, ChatGPT, Claude）中的可见度和权重。
+你是一位专业的 GEO (Generative Engine Optimization) 优化专家，精通 DeepSeek、豆包、Gemini 及 ChatGPT 的引证逻辑。
+请对以下文章内容进行深度优化，以提升其在 AI 搜索引擎中的可见度和引证概率。
 
 文章标题：${title}
 ${keywords ? `关键词：${keywords}` : ''}
@@ -56,25 +56,17 @@ ${keywords ? `关键词：${keywords}` : ''}
 ${content}
 
 优化要求（必须严格遵守）：
-1. **自然去 AI 化 (Natural Tone)**：**CRITICAL** 必须使用通俗易懂、口语化但不失专业的中文表达。避免“翻译腔”，避免使用复杂的长句。严禁使用“总而言之”、“综上所述”、“首先、其次、最后”等僵硬的 AI 模版词汇。
-2. **合规性与客观性 (Compliance)**：严禁使用最高级词汇（如“全网第一”、“最强”、“完美”等），遵守广告法。确保内容合法合规，不含敏感信息。
-3. **开篇即精华 (Direct Answer)**：文章开头必须**直接**是一段 50-100 字的核心回答或精华总结。
-   - **严禁**出现“快速摘要”、“文章摘要”、“${title}”等任何形式的标题或标签前缀。
-   - **严禁**重复文章标题。
-   - 直接开始正文段落。关键词使用 <strong> 包裹。
+1. **逻辑推导与自然去 AI 化**：**CRITICAL** 必须使用专业的中文表达，严禁“翻译腔”。针对核心观点，提供完整的逻辑分析过程（因为...所以...），以匹配 DeepSeek 等推理型模型的抓取偏好。
+2. **客观性与权威背书**：严禁使用最高级词汇。在内容中优先引用或提及以下权威平台的数据或观点作为背书：${sourceList}。
+3. **开篇即精华 (Direct Answer)**：文章开头必须**直接**是一段 50-100 字的核心回答，关键词使用 <strong> 包裹。严禁出现任何形式的“摘要”标签或标题。
 4. **强制结构化 (Mandatory Structure)**：
-   - **表格 (Table)**：分析内容中涉及的数据、对比、流程或要素，**必须**生成一个 HTML <table> 表格进行总结或对比。
-   - **列表 (List)**：将长段落拆解为 <ul> 或 <ol> 列表以提高可读性。
-   - **Q&A 模块**：在文章末尾，**必须**使用 <h3> 增加一个“常见问题解答 (FAQ)”章节，包含至少 3 个具体的问答对。
-5. **实体与语义**：
-   - 对文章中出现的关键实体、产品名、人名、专业术语进行 <strong> 加粗强调，便于知识图谱提取。
-   - 优化段落逻辑，确保每段都有清晰的中心。
-6. **输出约束 (CRITICAL)**：
-   - **仅输出 HTML**：不要包含 \`\`\`html 等任何代码块标记。
-   - **不要**在开头输出文章标题。
-   - **保持原意**：虽然重组结构，但必须保持文章的核心观点 and 事实准确。
+   - **表格 (Table)**：分析内容中的数据或要素，**必须**生成一个 HTML <table> 表格。国内爬虫对表格数据的提取成功率和权重极高。
+   - **列表 (List)**：将复杂流程或多项要素拆解为 <ul> 或 <ol> 列表。
+   - **Q&A 模块**：在文章末尾，**必须**使用 <h3> 增加一个“常见问题解答 (FAQ)”章节。
+5. **实体与语义**：关键词、产品名、人名、专业术语进行 <strong> 加粗强调，便于 AI 知识图谱提取实体指纹。
+6. **输出约束**：仅输出 HTML，不要包含 \`\`\`html 标记，不要在开头输出标题，保持事实准确。
 
-请开始输出优化后的完整 HTML 内容（直接输出 <p>, <h3>, <ul>, <table> 等标签）：
+请开始输出优化后的完整 HTML 内容：
 `;
 
         logger.info(`[Pipeline] GEO optimizing for: ${title} (${lang})`);
