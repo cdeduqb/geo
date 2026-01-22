@@ -32,236 +32,268 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ message: 'No pending tasks to process.' });
         }
 
-        const results = [];
-
-        for (const task of pendingTasks) {
-            try {
-                // 更新状态为处理中
-                await db.aICreationTask.update({
-                    where: { id: task.id },
-                    data: { status: 'PROCESSING' }
-                });
-
-                const project = task.project!;
-                const aiService = await getAIService();
-                const userId = project.authorId;
-
-                // --- STEP 1: 核心创作 ---
-                logger.info(`[Automation] Processing Task ${task.id}: Initial Writing`);
-
-                const lengthMap: Record<string, string> = {
-                    short: '800字左右',
-                    medium: '1500字左右',
-                    long: '3000字以上'
-
-                };
-                const lengthText = lengthMap[project.preferredLength] || '1500字左右';
-
-
-                const fullPrompt = project.strategy.prompt
-                    .replace(/{topic}/g, task.topic)
-                    .replace(/{keywords}/g, task.keywords || '')
-                    .replace(/{length}/g, lengthText)
-                    .replace(/{{length}}/g, lengthText);
-
-
-                const writeResult = await aiService.generateArticle({
-                    topic: task.topic,
-                    keywords: task.keywords || undefined,
-                    length: project.preferredLength as any,
-                    customPrompt: fullPrompt
-                });
-
-                let currentContent = writeResult.content;
-
-                // --- STEP 2: GEO 深度优化 ---
-                if (project.enableGeo) {
-                    logger.info(`[Automation] Task ${task.id}: GEO Optimization starting...`);
+        const encoder = new TextEncoder();
+        const stream = new ReadableStream({
+            async start(controller) {
+                const heartbeat = setInterval(() => {
                     try {
-                        currentContent = await ContentPipelineService.optimizeGeo(task.topic, currentContent, task.keywords);
-                        logger.info(`[Automation] Task ${task.id}: GEO Optimization completed.`);
-                    } catch (err) {
-                        logger.error(`[Automation] GEO Optimization failed for task ${task.id}`, err);
+                        controller.enqueue(encoder.encode(' '));
+                    } catch (e) {
+                        clearInterval(heartbeat);
                     }
-                }
+                }, 4000);
 
-                // --- STEP 3: 智能插图 ---
-                if (project.enableIllustrate) {
-                    logger.info(`[Automation] Task ${task.id}: Smart Illustration starting...`);
-                    try {
-                        currentContent = await ContentPipelineService.illustrate(task.topic, currentContent, userId);
-                        logger.info(`[Automation] Task ${task.id}: Smart Illustration completed.`);
-                    } catch (err) {
-                        logger.error(`[Automation] Illustration failed for task ${task.id}`, err);
-                    }
-                }
+                try {
+                    // 立即发送一个空格建立连接
+                    controller.enqueue(encoder.encode(' '));
 
-                // --- STEP 4: 封面图生成 ---
-                let coverImage = null;
-                if (project.enableCover) {
-                    console.log(`[Automation] Task ${task.id}: Cover Generation`);
-                    try {
-                        const coverStrategy = await db.aIStrategy.findFirst({
-                            where: { targetType: 'IMAGE_COVER' }
-                        });
+                    const results = [];
+                    for (const task of pendingTasks) {
+                        try {
+                            // 更新状态为处理中
+                            await db.aICreationTask.update({
+                                where: { id: task.id },
+                                data: { status: 'PROCESSING' }
+                            });
 
-                        if (coverStrategy) {
-                            const imageService = await getAIServiceForUseCase('IMAGE');
-                            const storage = await getActiveStorageProvider();
-                            const strictPrompt = `Cover for: ${task.topic}. Theme: ${project.name}. High quality, cinematic.`;
-                            const genResult = await imageService.generateImage(strictPrompt);
+                            const project = task.project as any;
+                            if (!project) continue;
+                            const aiService = await getAIService();
+                            const userId = project.authorId;
 
-                            if (genResult.url) {
-                                const imgRes = await fetch(genResult.url);
-                                const buffer = Buffer.from(await imgRes.arrayBuffer());
-                                const filename = `cover-${Date.now()}.png`;
-                                const key = generateFileKey(filename, 'covers');
-                                const upload = await storage.upload(buffer, key, 'image/png');
+                            // --- STEP 1: 核心创作 ---
+                            logger.info(`[Automation] Processing Task ${task.id}: Initial Writing`);
 
-                                await db.file.create({
-                                    data: {
-                                        filename, storageKey: upload.key, mimeType: 'image/png',
-                                        size: buffer.length, url: upload.url, category: 'image',
-                                        uploadedById: userId, description: `Cover for: ${task.topic}`
+                            const lengthMap: Record<string, string> = {
+                                short: '800字左右',
+                                medium: '1500字左右',
+                                long: '3000字以上'
+                            };
+                            const preferredLength = project.preferredLength || 'medium';
+                            const lengthText = lengthMap[preferredLength] || '1500字左右';
+
+                            const fullPrompt = project.strategy.prompt
+                                .replace(/{topic}/g, task.topic)
+                                .replace(/{keywords}/g, task.keywords || '')
+                                .replace(/{length}/g, lengthText)
+                                .replace(/{{length}}/g, lengthText);
+
+                            const writeResult = await aiService.generateArticle({
+                                topic: task.topic,
+                                keywords: task.keywords || undefined,
+                                length: preferredLength as any,
+                                customPrompt: fullPrompt
+                            });
+
+                            let currentContent = writeResult.content;
+
+                            // --- STEP 2: GEO 深度优化 ---
+                            if (project.enableGeo) {
+                                logger.info(`[Automation] Task ${task.id}: GEO Optimization starting...`);
+                                try {
+                                    currentContent = await ContentPipelineService.optimizeGeo(task.topic, currentContent, task.keywords);
+                                    logger.info(`[Automation] Task ${task.id}: GEO Optimization completed.`);
+                                } catch (err) {
+                                    logger.error(`[Automation] GEO Optimization failed for task ${task.id}`, err);
+                                }
+                            }
+
+                            // --- STEP 3: 智能插图 ---
+                            if (project.enableIllustrate) {
+                                logger.info(`[Automation] Task ${task.id}: Smart Illustration starting...`);
+                                try {
+                                    currentContent = await ContentPipelineService.illustrate(task.topic, currentContent, userId);
+                                    logger.info(`[Automation] Task ${task.id}: Smart Illustration completed.`);
+                                } catch (err) {
+                                    logger.error(`[Automation] Illustration failed for task ${task.id}`, err);
+                                }
+                            }
+
+                            // --- STEP 4: 封面图生成 ---
+                            let coverImage = null;
+                            if (project.enableCover) {
+                                console.log(`[Automation] Task ${task.id}: Cover Generation`);
+                                try {
+                                    const coverStrategy = await db.aIStrategy.findFirst({
+                                        where: { targetType: 'IMAGE_COVER' }
+                                    });
+
+                                    if (coverStrategy) {
+                                        const imageService = await getAIServiceForUseCase('IMAGE');
+                                        const imageRes = await imageService.generateImage(
+                                            coverStrategy.prompt.replace(/{topic}/g, task.topic)
+                                        );
+
+                                        if (imageRes.url) {
+                                            const response = await fetch(imageRes.url);
+                                            const buffer = Buffer.from(await response.arrayBuffer());
+
+                                            const storage = await getActiveStorageProvider();
+                                            const filename = `cover-${task.id}.png`;
+                                            const upload = await storage.upload(buffer, generateFileKey('covers', filename), 'image/png');
+
+                                            if (upload.url) {
+                                                await db.file.create({
+                                                    data: {
+                                                        filename, storageKey: upload.key, mimeType: 'image/png',
+                                                        size: buffer.length, url: upload.url, category: 'image',
+                                                        uploadedById: userId, description: `Cover for: ${task.topic}`
+                                                    }
+                                                });
+                                                coverImage = upload.url;
+                                            }
+                                        }
                                     }
+                                } catch (err) {
+                                    console.error('[Automation] Cover Generation failed:', err);
+                                }
+                            }
+
+                            // --- STEP 4.5: 元数据生成 (SEO, 实体, 引用) ---
+                            // 修正：在 GEO 优化后的最终内容上提取元数据
+                            logger.info(`[Automation] Task ${task.id}: Generating Metadata (SEO, Entities, Citations)`);
+                            const [seoData, entities, citations] = await Promise.all([
+                                project.enableSEO ? ContentPipelineService.generateSEO(task.topic, currentContent) : Promise.resolve(null),
+                                project.enableEntities ? ContentPipelineService.extractEntities(currentContent) : Promise.resolve(null),
+                                project.enableCitations ? ContentPipelineService.generateCitations(task.topic, currentContent) : Promise.resolve(null)
+                            ]);
+
+                            // --- STEP 5: 创建文章记录 ---
+                            logger.info(`[Automation] Task ${task.id}: Finalizing Article`);
+                            const articleTitle = seoData?.title || task.topic.split(': ')[1] || task.topic;
+                            const baseSlug = seoData?.slug || `${project.name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}-${task.id.slice(0, 4)}`;
+                            const articleLang = 'zh'; // 默认语言
+
+                            // 唯一性检查与处理
+                            let finalSlug = baseSlug;
+                            const existingSlug = await db.article.findFirst({
+                                where: { slug: finalSlug, lang: articleLang }
+                            });
+
+                            if (existingSlug) {
+                                finalSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 6)}`;
+                                logger.warn(`[Automation] Slug collision detected: ${baseSlug}. New slug: ${finalSlug}`);
+                            }
+
+                            const article = await db.article.create({
+                                data: {
+                                    title: articleTitle,
+                                    slug: finalSlug,
+                                    content: currentContent,
+                                    summary: seoData?.description || currentContent.slice(0, 300).replace(/<[^>]*>/g, ''),
+                                    coverImage: coverImage,
+                                    status: 'PUBLISHED',
+                                    authorId: userId,
+                                    categoryId: project.categoryId,
+                                    aiGenerated: true,
+                                    automationProjectId: project.id,
+                                    citations: citations ?? undefined,
+                                    entities: entities ?? undefined,
+                                    seo: seoData ? {
+                                        create: {
+                                            title: seoData.title,
+                                            description: seoData.description,
+                                            keywords: seoData.keywords
+                                        }
+                                    } : undefined
+                                }
+                            });
+
+                            // --- STEP 6: 自动内链 ---
+                            if (project.enableAutoLink) {
+                                console.log(`[Automation] Task ${task.id}: Auto Linking`);
+                                try {
+                                    const linkedContent = await ContentPipelineService.autoLink(article.title, currentContent, article.id);
+                                    await db.article.update({
+                                        where: { id: article.id },
+                                        data: { content: linkedContent }
+                                    });
+                                } catch (err) {
+                                    console.error('[Automation] Auto Linking failed:', err);
+                                }
+                            }
+
+                            // --- STEP 7: 自动推送 SEO (放在最后，确保推送的是最终完善的内容) ---
+                            if (article.status === 'PUBLISHED') {
+                                logger.info(`[Automation] Task ${task.id}: Triggering SEO Auto-push`);
+                                autoPushToSEO(article.slug, article.lang || 'zh').catch(err => {
+                                    logger.error(`[Automation] SEO Auto-push failed for task ${task.id}`, err);
                                 });
-                                coverImage = upload.url;
                             }
+
+                            // 完成任务
+                            await db.aICreationTask.update({
+                                where: { id: task.id },
+                                data: {
+                                    status: 'COMPLETED',
+                                    articleId: article.id,
+                                    completedAt: new Date()
+                                }
+                            });
+
+                            results.push({ id: task.id, status: 'SUCCESS', articleId: article.id });
+
+                            // --- STEP 8: 呼吸时间 (延迟 3 秒) ---
+                            await new Promise(resolve => setTimeout(resolve, 3000));
+
+                        } catch (err: any) {
+                            console.error(`[Automation] Task ${task.id} Failed:`, err);
+                            await db.aICreationTask.update({
+                                where: { id: task.id },
+                                data: {
+                                    status: 'FAILED',
+                                    error: err.message || 'Internal logic error'
+                                }
+                            });
+                            results.push({ id: task.id, status: 'FAILED', error: err.message });
                         }
-                    } catch (err) {
-                        console.error('[Automation] Cover Generation failed:', err);
                     }
-                }
 
-                // --- STEP 4.5: 元数据生成 (SEO, 实体, 引用) ---
-                logger.info(`[Automation] Task ${task.id}: Generating Metadata (SEO, Entities, Citations)`);
-                const [seoData, entities, citations] = await Promise.all([
-                    project.enableSEO ? ContentPipelineService.generateSEO(task.topic, currentContent) : Promise.resolve(null),
-                    project.enableEntities ? ContentPipelineService.extractEntities(currentContent) : Promise.resolve(null),
-                    project.enableCitations ? ContentPipelineService.generateCitations(task.topic, currentContent) : Promise.resolve(null)
-                ]);
+                    // 检查项目是否全部完成
+                    const projectIdsToCheck = new Set(pendingTasks.map((t: any) => t.projectId));
 
-                // --- STEP 5: 创建文章记录 ---
-                logger.info(`[Automation] Task ${task.id}: Finalizing Article`);
-                const articleTitle = seoData?.title || task.topic.split(': ')[1] || task.topic;
-                const baseSlug = seoData?.slug || `${project.name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}-${task.id.slice(0, 4)}`;
-                const articleLang = 'zh'; // 默认语言
-
-                // 唯一性检查与处理
-                let finalSlug = baseSlug;
-                const existingSlug = await db.article.findFirst({
-                    where: { slug: finalSlug, lang: articleLang }
-                });
-
-                if (existingSlug) {
-                    finalSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 6)}`;
-                    logger.warn(`[Automation] Slug collision detected: ${baseSlug}. New slug: ${finalSlug}`);
-                }
-
-                const article = await db.article.create({
-                    data: {
-                        title: articleTitle,
-                        slug: finalSlug,
-                        content: currentContent,
-                        summary: seoData?.description || currentContent.slice(0, 300).replace(/<[^>]*>/g, ''),
-                        coverImage: coverImage,
-                        status: 'PUBLISHED',
-                        authorId: userId,
-                        categoryId: project.categoryId,
-                        aiGenerated: true,
-                        automationProjectId: project.id,
-                        citations: citations ?? undefined,
-                        entities: entities ?? undefined,
-                        seo: seoData ? {
-                            create: {
-                                title: seoData.title,
-                                description: seoData.description,
-                                keywords: seoData.keywords
+                    for (const projectId of projectIdsToCheck) {
+                        if (!projectId) continue;
+                        const remainingTasks = await db.aICreationTask.count({
+                            where: {
+                                projectId: projectId as string,
+                                status: { in: ['PENDING', 'PROCESSING'] }
                             }
-                        } : undefined
-                    }
-                });
-
-                // --- STEP 6: 自动内链 ---
-                if (project.enableAutoLink) {
-                    console.log(`[Automation] Task ${task.id}: Auto Linking`);
-                    try {
-                        const linkedContent = await ContentPipelineService.autoLink(article.title, currentContent, article.id);
-                        await db.article.update({
-                            where: { id: article.id },
-                            data: { content: linkedContent }
                         });
-                    } catch (err) {
-                        console.error('[Automation] Auto Linking failed:', err);
+
+                        if (remainingTasks === 0) {
+                            await db.articleAutomationProject.update({
+                                where: { id: projectId as string },
+                                data: { status: 'COMPLETED' }
+                            });
+                            console.log(`[Automation] Project ${projectId} marked as COMPLETED.`);
+                        }
                     }
+
+                    clearInterval(heartbeat);
+                    controller.enqueue(encoder.encode(JSON.stringify({ processed: results.length, results })));
+                    controller.close();
+
+                } catch (error: any) {
+                    clearInterval(heartbeat);
+                    console.error('Automation processor stream error:', error);
+                    controller.enqueue(encoder.encode(JSON.stringify({ error: error.message || 'Internal Server Error' })));
+                    controller.close();
                 }
-
-                // --- STEP 7: 自动推送 SEO (放在最后，确保推送的是最终完善的内容) ---
-                if (article.status === 'PUBLISHED') {
-                    logger.info(`[Automation] Task ${task.id}: Triggering SEO Auto-push`);
-                    // 使用非阻塞方式调用
-                    autoPushToSEO(article.slug, article.lang || 'zh').catch(err => {
-                        logger.error(`[Automation] SEO Auto-push failed for task ${task.id}`, err);
-                    });
-                }
-
-                // 完成任务
-                await db.aICreationTask.update({
-                    where: { id: task.id },
-                    data: {
-                        status: 'COMPLETED',
-                        articleId: article.id,
-                        completedAt: new Date()
-                    }
-                });
-
-                results.push({ id: task.id, status: 'SUCCESS', articleId: article.id });
-
-                // --- STEP 8: 呼吸时间 (延迟 3 秒) ---
-                // 缓解 AI 接口频率限制建议，并降低数据库并发压力
-                await new Promise(resolve => setTimeout(resolve, 3000));
-
-            } catch (err: any) {
-                console.error(`[Automation] Task ${task.id} Failed:`, err);
-                await db.aICreationTask.update({
-                    where: { id: task.id },
-                    data: {
-                        status: 'FAILED',
-                        error: err.message || 'Internal logic error'
-                    }
-                });
-                results.push({ id: task.id, status: 'FAILED', error: err.message });
             }
-        }
+        });
 
-        // @ts-ignore
-        const projectIdsToCheck = new Set(pendingTasks.map((t: any) => t.projectId));
-
-        for (const projectId of projectIdsToCheck) {
-            if (!projectId) continue;
-            // @ts-ignore
-            const remainingTasks = await db.aICreationTask.count({
-                where: {
-                    // @ts-ignore
-                    projectId: projectId,
-                    status: { in: ['PENDING', 'PROCESSING'] }
-                }
-            });
-
-            if (remainingTasks === 0) {
-                // @ts-ignore
-                await db.articleAutomationProject.update({
-                    where: { id: projectId },
-                    data: { status: 'COMPLETED' }
-                });
-                console.log(`[Automation] Project ${projectId} marked as COMPLETED.`);
+        return new Response(stream, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Cache-Control': 'no-cache, no-transform',
+                'Connection': 'keep-alive',
+                'X-Accel-Buffering': 'no',
             }
-        }
+        });
 
-        return NextResponse.json({ processed: results.length, results });
-
-    } catch (error) {
-        console.error('Automation processor error:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    } catch (error: any) {
+        console.error('Automation processor initialization error:', error);
+        return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
     }
 }

@@ -289,10 +289,14 @@ Please return in JSON format:
         const aiService = await getAIServiceForUseCase('WRITING');
         const isEn = lang === 'en';
 
+        // 去除 HTML 标签以获得更纯净的实体提取环境
+        const plainText = content.replace(/<[^>]*>/g, ' ').substring(0, 8000);
+
         const prompt = isEn ? `
 Please analyze the following text and extract key entities (Person, Organization, Place, Product, Concept).
+Focus on entities that are central to the topic.
 
-Text content: ${content.substring(0, 2000)}...
+Text content: ${plainText}...
 
 Please return in JSON format:
 [
@@ -300,8 +304,9 @@ Please return in JSON format:
 ]
 ` : `
 请分析以下文本，提取其中的关键实体（人物、组织、地点、产品、概念）。
+重点提取与主题高度相关的核心实体。
 
-文本内容：${content.substring(0, 2000)}...
+文本内容：${plainText}...
 
 请返回 JSON 格式：
 [
@@ -335,11 +340,15 @@ Please return in JSON format:
         const aiService = await getAIServiceForUseCase('WRITING');
         const isEn = lang === 'en';
 
+        // 提取主要内容并限制在 8000 字符内，确保能覆盖长文章
+        const plainText = content.replace(/<[^>]*>/g, ' ').substring(0, 8000);
+
         const prompt = isEn ? `
 Please generate 3-5 relevant references or citations for this article (books, authoritative websites, papers, or logically inferred sources).
+If the text mentions specific reports, organizations, or data, prioritize those as sources.
 
 Article Title: ${title}
-Article Content: ${content.substring(0, 1000)}...
+Article Content Summary: ${plainText}...
 
 Please return in JSON format:
 [
@@ -347,9 +356,10 @@ Please return in JSON format:
 ]
 ` : `
 请为这篇文章生成 3-5 个相关的参考文献或引用来源（可以是真实存在的书籍、权威网站、论文，或者是根据内容合理推断的来源）。
+如果文中提到了具体的报告、机构或数据，请优先将其列为来源。
 
 文章标题：${title}
-文章内容：${content.substring(0, 1000)}...
+文章内容摘要：${plainText}...
 
 请返回 JSON 格式：
 [

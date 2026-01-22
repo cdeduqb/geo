@@ -3,7 +3,7 @@ import { db as prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth';
 
 // AI 评分提示词模板
-const SCORING_PROMPT = `你是一个专业的内容质量评估专家，精通 GEO (生成式引擎优化)，特别熟悉 DeepSeek、豆包 (ByteDance)、ChatGPT 及 Perplexity 的引证逻辑。
+const SCORING_PROMPT = `你是一个专业的内容质量评估专家，精通 GEO (生成式引擎优化)，特别熟悉 DeepSeek、豆包 (ByteDance)、Gemini、ChatGPT 及 Perplexity 的引证逻辑。
 
 请从以下 5 个维度评估这篇文章的“全网 AI 引用潜力”，每个维度 0-100 分：
 
@@ -41,6 +41,9 @@ const SCORING_PROMPT = `你是一个专业的内容质量评估专家，精通 G
     "在关键论证部分增加『因为...所以...』的逻辑推导过程，以满足推理模型 (如 DeepSeek) 的抓取偏好",
     "将核心对比数据整理为 HTML 表格，国内 AI 爬虫对表格数据的提取成功率更高",
     "尝试引用知乎、行业标准或官方统计数据作为背书，提升信源在全球 AI 知识库中的权重"
+    "增加更多具体的数据支撑，提高事实密度",
+    "补充更多命名实体的详细介绍，增强实体丰富度",
+    "优化标题层次，使用H2、H3等标签明确内容结构"
   ]
 }
 \`\`\``;

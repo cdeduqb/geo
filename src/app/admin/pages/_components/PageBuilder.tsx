@@ -41,6 +41,7 @@ import ColorPicker from '@/components/ui/ColorPicker';
 import MenuEditor from '@/components/ui/MenuEditor';
 import LinkEditor from '@/components/ui/LinkEditor';
 import PartnerEditor from '@/components/ui/PartnerEditor';
+import ListEditor from '@/components/ui/ListEditor';
 import dynamic from 'next/dynamic';
 
 const RichTextEditor = dynamic(() => import('@/components/ui/RichTextEditor'), { ssr: false });
@@ -660,6 +661,18 @@ export default function PageBuilder({ pageId, initialSections, pageType, moduleT
                         />
                     );
                 }
+
+                // Use generic ListEditor if itemSchema is provided
+                if (config.itemSchema) {
+                    return (
+                        <ListEditor
+                            value={value || []}
+                            itemSchema={config.itemSchema}
+                            onChange={(items) => updateSection(selectedSection.id, field, key, items)}
+                        />
+                    );
+                }
+
                 // Default to JsonEditor for other lists
                 return (
                     <JsonEditor

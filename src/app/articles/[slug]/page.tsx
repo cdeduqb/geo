@@ -387,6 +387,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                                     <span className="w-1 h-6 bg-blue-500 rounded-full"></span>
                                     {t(locale, 'article.citations')}
+                                    <span className="text-xs font-normal text-gray-400 ml-1">({locale === 'en' ? 'This article may refer to the following materials' : '本文可能会参考以下资料'})</span>
                                 </h3>
                                 <ol className="list-decimal list-outside ml-5 space-y-3 text-sm text-gray-600">
                                     {article.citations.map((citation: any, index: number) => (

@@ -171,7 +171,7 @@ export async function POST(request: NextRequest) {
 
         let project;
         try {
-            project = await db.articleAutomationProject.create({
+            project = await (db.articleAutomationProject as any).create({
                 data: {
                     name,
                     mode,

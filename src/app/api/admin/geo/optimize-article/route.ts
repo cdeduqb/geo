@@ -209,7 +209,7 @@ export async function POST(request: NextRequest) {
                     } catch (e) {
                         clearInterval(heartbeat);
                     }
-                }, 5000);
+                }, 4000);
 
                 try {
                     // 1. 立即发送一个空格建立连接
@@ -265,6 +265,7 @@ export async function POST(request: NextRequest) {
                 'Content-Type': 'application/json',
                 'Cache-Control': 'no-cache, no-transform',
                 'Connection': 'keep-alive',
+                'X-Accel-Buffering': 'no',
             }
         });
 
