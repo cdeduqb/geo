@@ -13,7 +13,9 @@ export const Hero32Section: React.FC<SectionProps> = ({ data, style = {} }) => {
     const {
         overlayOpacity = 0.5,
         textColor = '#ffffff',
-        accentColor = '#e11d48'
+        accentColor = '#e11d48',
+        titleFontSize = '',
+        titleFontSizeMobile = ''
     } = style;
 
     const TitleTag = isMainTitle ? 'h1' : 'h2';
@@ -103,9 +105,14 @@ export const Hero32Section: React.FC<SectionProps> = ({ data, style = {} }) => {
                     <div className="absolute inset-0 flex items-center px-8 md:px-20">
                         <div className="max-w-4xl">
                             <TitleTag
-                                className={`text-5xl md:text-8xl font-black uppercase tracking-tighter mb-6 transform transition-all duration-1000 delay-300 ${currentSlide === index ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
-                                    }`}
-                                style={{ color: textColor }}
+                                className={`font-black uppercase tracking-tighter mb-6 transform transition-all duration-1000 delay-300 ${currentSlide === index ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
+                                    } ${!titleFontSize ? 'md:text-8xl' : ''} ${!titleFontSizeMobile ? 'text-5xl' : ''}`}
+                                style={{
+                                    color: textColor,
+                                    fontSize: (typeof window !== 'undefined' && window.innerWidth < 768)
+                                        ? titleFontSizeMobile || titleFontSize || undefined
+                                        : titleFontSize || undefined
+                                }}
                             >
                                 {slide.title}
                             </TitleTag>
@@ -217,7 +224,9 @@ registerSection({
         style: {
             overlayOpacity: { type: 'number', label: '视频蒙层透明度 (0-1)' },
             textColor: { type: 'color', label: '文字颜色' },
-            accentColor: { type: 'color', label: '强调色 (指示器/按钮)' }
+            accentColor: { type: 'color', label: '强调色 (指示器/按钮)' },
+            titleFontSize: { type: 'text', label: '标题字号 (PC端，如 80px)' },
+            titleFontSizeMobile: { type: 'text', label: '标题字号 (移动端，如 40px)' }
         }
     }
 });
