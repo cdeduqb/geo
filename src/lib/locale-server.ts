@@ -2,10 +2,7 @@ import { headers } from 'next/headers';
 import { defaultLocale, Locale } from './i18n';
 
 export async function getLocale(): Promise<Locale> {
-    // 为了支持完全静态生成 (SSG)，我们避免在顶级 Layout 中调用 headers()
-    // 在生产环境下，Middleware 会处理语言重定向和路径。
-    // 这里我们返回默认语言作为静态基准。
-    return defaultLocale;
+    return await getRequestLocale();
 }
 
 /**
