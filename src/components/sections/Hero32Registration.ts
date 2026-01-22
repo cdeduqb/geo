@@ -25,6 +25,7 @@ registerSection({
     },
     schema: {
         data: {
+            isMainTitle: { type: 'boolean', label: '设为主标题 (H1)' },
             slides: {
                 type: 'list',
                 label: '轮播项列表',
@@ -42,7 +43,9 @@ registerSection({
         style: {
             overlayOpacity: { type: 'number', label: '遮罩透明度 (0-1)' } as any,
             textColor: { type: 'color', label: '文字颜色' },
-            accentColor: { type: 'color', label: '按钮/高亮色' }
+            accentColor: { type: 'color', label: '按钮/高亮色' },
+            titleFontSize: { type: 'text', label: '标题字号 (PC端，如 80px)' },
+            titleFontSizeMobile: { type: 'text', label: '标题字号 (移动端，如 40px)' }
         }
     }
 });
