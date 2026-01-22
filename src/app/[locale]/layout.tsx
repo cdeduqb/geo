@@ -1,5 +1,5 @@
 import BaseLayout from '@/components/layout/BaseLayout';
-import { locales, Locale } from '@/lib/i18n';
+import { locales, Locale, defaultLocale } from '@/lib/i18n';
 import { notFound } from 'next/navigation';
 import { LocaleSync } from '@/components/layout/LocaleSync';
 
@@ -14,17 +14,16 @@ export default async function LocaleLayout({
     children: React.ReactNode;
     params: Promise<{ locale: string }>;
 }) {
-    const { locale } = await params;
+    const { locale: localeParam } = await params;
 
-    // 验证语言是否支持
-    if (!locales.includes(locale as any)) {
-        notFound();
-    }
+    // 检测路径中的语言标识符。如果不是支持的语言，则作为 slug 路径处理，布局回退到默认语言。
+    const isSupported = locales.includes(localeParam as any);
+    const locale = isSupported ? (localeParam as Locale) : defaultLocale;
 
     return (
         <>
-            <LocaleSync locale={locale as Locale} />
-            <BaseLayout locale={locale as Locale}>{children}</BaseLayout>
+            <LocaleSync locale={locale} />
+            <BaseLayout locale={locale}>{children}</BaseLayout>
         </>
     );
 }
