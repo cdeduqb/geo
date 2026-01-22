@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Copyright from '@/components/license/Copyright';
 
 export const Footer11Section: React.FC<SectionProps> = ({ data = {}, style = {}, systemSettings }) => {
-    const { t } = useTranslation();
+    const { t, getLocalePath } = useTranslation();
     const { logo, logoText = systemSettings?.siteName || '全域魔力',
         contactTitle = t('common.contactUs'), contactSubtitle = '我们随时为您服务',
         phone = '400-888-8888', email = 'contact@quanyuml.com', address = '北京市朝阳区建国路88号',
@@ -50,10 +50,10 @@ export const Footer11Section: React.FC<SectionProps> = ({ data = {}, style = {},
                 </div>
                 <div className="border-t border-white/10 pt-12">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-                        <Link href="/">{logo ? <img src={logo} alt={logoText} className="h-10 w-auto" /> : <span className="text-xl font-bold">{logoText}</span>}</Link>
+                        <Link href={getLocalePath('/')}>{logo ? <img src={logo} alt={logoText} className="h-10 w-auto" /> : <span className="text-xl font-bold">{logoText}</span>}</Link>
                         {navLinks && navLinks.length > 0 && (
                             <div className="flex flex-wrap gap-6">
-                                {navLinks.map((item: any, i: number) => <Link key={i} href={item.link || '#'} className="text-sm opacity-70 hover:opacity-100">{item.label}</Link>)}
+                                {navLinks.map((item: any, i: number) => <Link key={i} href={getLocalePath(item.link || '#')} className="text-sm opacity-70 hover:opacity-100">{item.label}</Link>)}
                             </div>
                         )}
                         {socialLinks && socialLinks.length > 0 && (
@@ -67,7 +67,7 @@ export const Footer11Section: React.FC<SectionProps> = ({ data = {}, style = {},
                         )}
                     </div>
                     <div className="mt-8 text-center text-sm">
-                        <Copyright className=""  systemCopyright={systemSettings?.copyright} />
+                        <Copyright className="" systemCopyright={systemSettings?.copyright} />
                         {systemSettings?.icp_number && <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" className="ml-4 hover:underline">{systemSettings?.icp_number}</a>}
                     </div>
                 </div>

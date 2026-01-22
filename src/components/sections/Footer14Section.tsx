@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Copyright from '@/components/license/Copyright';
 
 export const Footer14Section: React.FC<SectionProps> = ({ data = {}, style = {}, systemSettings }) => {
-    const { t } = useTranslation();
+    const { t, getLocalePath } = useTranslation();
     const { logo, logoText = systemSettings?.siteName || '全域魔力',
         col1Title = t('common.products'), col1Links = [], col2Title = t('footer.solutions'), col2Links = [],
         col3Title = t('footer.resources'), col3Links = [], col4Title = t('footer.support'), col4Links = [],
@@ -19,7 +19,7 @@ export const Footer14Section: React.FC<SectionProps> = ({ data = {}, style = {},
         <footer className="w-full py-16" style={{ background: backgroundColor, color: textColor }}>
             <div className="container mx-auto px-4">
                 <div className="mb-12">
-                    <Link href="/">{logo ? <img src={logo} alt={logoText} className="h-12 w-auto mb-8" /> : <span className="text-3xl font-bold block mb-8">{logoText}</span>}</Link>
+                    <Link href={getLocalePath('/')}>{logo ? <img src={logo} alt={logoText} className="h-12 w-auto mb-8" /> : <span className="text-3xl font-bold block mb-8">{logoText}</span>}</Link>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
                     {[
@@ -32,13 +32,13 @@ export const Footer14Section: React.FC<SectionProps> = ({ data = {}, style = {},
                         <div key={idx}>
                             <h4 className="font-bold text-sm mb-4 uppercase tracking-wider opacity-50">{col.title}</h4>
                             <ul className="space-y-2">
-                                {col.links && col.links.map((item: any, i: number) => <li key={i}><Link href={item.link || '#'} className="text-sm opacity-70 hover:opacity-100 transition-opacity">{item.label}</Link></li>)}
+                                {col.links && col.links.map((item: any, i: number) => <li key={i}><Link href={getLocalePath(item.link || '#')} className="text-sm opacity-70 hover:opacity-100 transition-opacity">{item.label}</Link></li>)}
                             </ul>
                         </div>
                     ))}
                 </div>
                 <div className="pt-8 border-t border-current/10 opacity-60 text-sm text-center">
-                    <Copyright className=""  systemCopyright={systemSettings?.copyright} />
+                    <Copyright className="" systemCopyright={systemSettings?.copyright} />
                     {systemSettings?.icp_number && (
                         <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" className="ml-4 hover:underline">
                             {systemSettings?.icp_number}

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Copyright from '@/components/license/Copyright';
 
 export const Footer08Section: React.FC<SectionProps> = ({ data = {}, style = {}, systemSettings }) => {
-    const { t } = useTranslation();
+    const { t, getLocalePath } = useTranslation();
     const { logo, logoText = systemSettings?.siteName || '全域魔力', companyInfo = '专业的全域内容管理与分发平台',
         contactTitle = t('common.contactUs'), contactPhone = '400-888-8888', contactEmail = 'contact@quanyuml.com', contactAddress = '北京市朝阳区建国路88号',
         navTitle = t('common.quickLinks'), navLinks = [],
@@ -20,7 +20,7 @@ export const Footer08Section: React.FC<SectionProps> = ({ data = {}, style = {},
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                     <div className="md:col-span-2">
-                        <Link href="/">{logo ? <img src={logo} alt={logoText} className="h-10 w-auto mb-4" /> : <span className="text-2xl font-bold block mb-4">{logoText}</span>}</Link>
+                        <Link href={getLocalePath('/')}>{logo ? <img src={logo} alt={logoText} className="h-10 w-auto mb-4" /> : <span className="text-2xl font-bold block mb-4">{logoText}</span>}</Link>
                         <p className="text-sm opacity-70 mb-6">{companyInfo}</p>
                     </div>
                     <div>
@@ -34,7 +34,7 @@ export const Footer08Section: React.FC<SectionProps> = ({ data = {}, style = {},
                             <div className="mt-6">
                                 <h4 className="font-bold mb-2">{navTitle}</h4>
                                 <ul className="space-y-1">
-                                    {navLinks.map((item: any, i: number) => <li key={i}><Link href={item.link || '#'} className="text-sm opacity-70 hover:opacity-100">{item.label}</Link></li>)}
+                                    {navLinks.map((item: any, i: number) => <li key={i}><Link href={getLocalePath(item.link || '#')} className="text-sm opacity-70 hover:opacity-100">{item.label}</Link></li>)}
                                 </ul>
                             </div>
                         )}
@@ -49,7 +49,7 @@ export const Footer08Section: React.FC<SectionProps> = ({ data = {}, style = {},
                     </div>
                 </div>
                 <div className="pt-8 border-t border-current/10 opacity-60 text-center text-sm">
-                    <Copyright className=""  systemCopyright={systemSettings?.copyright} />
+                    <Copyright className="" systemCopyright={systemSettings?.copyright} />
                     {systemSettings?.icp_number && <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" className="ml-4 hover:underline">{systemSettings?.icp_number}</a>}
                 </div>
             </div>

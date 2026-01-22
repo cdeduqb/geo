@@ -756,3 +756,27 @@
 [2026-01-22T03:32:55.613Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
 [2026-01-22T03:33:20.125Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
 [2026-01-22T03:33:20.128Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-22T05:55:09.596Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-22T05:55:09.688Z] INFO: [Pipeline] GEO optimizing for: 品牌AI搜索可见度策略：全域魔力GEO框架解析 (zh)
+[2026-01-22T05:55:09.688Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-22T05:56:31.235Z] INFO: [Pipeline] GEO optimization received length: 4790
+[2026-01-22T05:59:58.648Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-22T05:59:58.726Z] INFO: [Pipeline] GEO optimizing for: 品牌AI搜索可见度策略：全域魔力GEO框架解析 (zh)
+[2026-01-22T05:59:58.726Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-22T06:00:15.212Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-22T06:00:15.213Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-22T06:00:33.158Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-22T06:00:33.159Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-22T06:01:05.541Z] INFO: [Pipeline] GEO optimization received length: 4109
+[2026-01-22T06:06:19.483Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-22T06:06:19.569Z] INFO: [Pipeline] GEO optimizing for: 多模态搜索发展趋势与内容呈现要求 (zh)
+[2026-01-22T06:06:19.570Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-22T06:07:42.069Z] INFO: [Pipeline] GEO optimization received length: 5684
+[2026-01-22T06:09:15.008Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-22T06:09:15.009Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-22T06:09:21.146Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-22T06:09:21.147Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-22T07:31:34.304Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-22T07:31:34.305Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-22T07:31:59.611Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-22T07:31:59.612Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent

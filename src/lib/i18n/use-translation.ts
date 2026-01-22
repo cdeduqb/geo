@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { t, Locale, locales, defaultLocale, getLocalePath as getLocalePathBase } from './index';
+import { t, Locale, locales, defaultLocale, getLocalePath as getLocalePathBase, getLocaleFromPath } from './index';
 
 /**
  * 客户端翻译 hook
@@ -10,8 +10,8 @@ import { t, Locale, locales, defaultLocale, getLocalePath as getLocalePathBase }
 export function useTranslation() {
     const pathname = usePathname();
 
-    // 从 pathname 检测语言
-    const locale: Locale = pathname.startsWith('/en') ? 'en' : 'zh';
+    // 从 pathname 提取当前语言
+    const locale = getLocaleFromPath(pathname);
 
     // 返回翻译函数和工具
     return {
@@ -27,5 +27,6 @@ export function useTranslation() {
  */
 export function useLocalePrefix() {
     const pathname = usePathname();
-    return pathname.startsWith('/en') ? '/en' : '';
+    const locale = getLocaleFromPath(pathname);
+    return locale === defaultLocale ? '' : `/${locale}`;
 }

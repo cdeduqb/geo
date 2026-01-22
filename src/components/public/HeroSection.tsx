@@ -43,7 +43,7 @@ export default function HeroSection({ locale = 'zh' }: HeroSectionProps) {
                             <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                         </Link>
                         <Link
-                            href="/login"
+                            href={getLocalePath('/login', locale)}
                             className="inline-flex items-center gap-2 rounded-lg border-2 border-gray-300 bg-white px-8 py-4 text-lg font-semibold text-gray-700 transition-all hover:border-gray-400 hover:bg-gray-50    :border-gray-600 :bg-gray-700"
                         >
                             {t(locale, 'home.heroAdminButton')}

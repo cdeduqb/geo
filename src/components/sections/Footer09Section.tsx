@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Copyright from '@/components/license/Copyright';
 
 export const Footer09Section: React.FC<SectionProps> = ({ data = {}, style = {}, systemSettings }) => {
-    const { t } = useTranslation();
+    const { t, getLocalePath } = useTranslation();
     const { logo, logoText = systemSettings?.siteName || '全域魔力',
         appTitle = '立即下载全域魔力APP', appDescription = '随时随地管理你的内容',
         iosLink = '#', androidLink = '#',
@@ -21,7 +21,7 @@ export const Footer09Section: React.FC<SectionProps> = ({ data = {}, style = {},
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
                     <div>
-                        <Link href="/">{logo ? <img src={logo} alt={logoText} className="h-10 w-auto mb-6" /> : <span className="text-2xl font-bold block mb-6">{logoText}</span>}</Link>
+                        <Link href={getLocalePath('/')}>{logo ? <img src={logo} alt={logoText} className="h-10 w-auto mb-6" /> : <span className="text-2xl font-bold block mb-6">{logoText}</span>}</Link>
                         <h3 className="text-2xl font-bold mb-4">{appTitle}</h3>
                         <p className="text-lg opacity-70 mb-6">{appDescription}</p>
                         <div className="flex gap-4">
@@ -52,11 +52,11 @@ export const Footer09Section: React.FC<SectionProps> = ({ data = {}, style = {},
                 </div>
                 {navLinks && navLinks.length > 0 && (
                     <nav className="flex flex-wrap justify-center gap-6 mb-8">
-                        {navLinks.map((item: any, i: number) => <Link key={i} href={item.link || '#'} className="text-sm opacity-70 hover:opacity-100">{item.label}</Link>)}
+                        {navLinks.map((item: any, i: number) => <Link key={i} href={getLocalePath(item.link || '#')} className="text-sm opacity-70 hover:opacity-100">{item.label}</Link>)}
                     </nav>
                 )}
                 <div className="pt-8 border-t border-current/10 opacity-60 text-center text-sm">
-                    <Copyright className=""  systemCopyright={systemSettings?.copyright} />
+                    <Copyright className="" systemCopyright={systemSettings?.copyright} />
                     {systemSettings?.icp_number && <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" className="ml-4 hover:underline">{systemSettings?.icp_number}</a>}
                 </div>
             </div>

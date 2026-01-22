@@ -1,6 +1,9 @@
 import { registerSection, SectionProps } from '@/lib/sections/registry';
+import { useTranslation } from '@/lib/i18n/use-translation';
+import Link from 'next/link';
 
 export const HeroSection: React.FC<SectionProps> = ({ data, style = {} }) => {
+    const { getLocalePath } = useTranslation();
     const { title, subtitle, primaryButtonText, primaryButtonLink, primaryButtonTarget, secondaryButtonText, secondaryButtonLink, secondaryButtonTarget, backgroundImage, isMainTitle = true } = data;
     const { backgroundColor = 'bg-white', textColor = 'text-gray-900', padding = 'py-20', textAlign = 'text-center' } = style;
 
@@ -22,17 +25,17 @@ export const HeroSection: React.FC<SectionProps> = ({ data, style = {} }) => {
                 </p>
                 <div className={`flex gap-4 ${textAlign === 'text-center' ? 'justify-center' : ''}`}>
                     {primaryButtonText && (
-                        <a
-                            href={primaryButtonLink || '#'}
+                        <Link
+                            href={getLocalePath(primaryButtonLink || '#')}
                             target={primaryButtonTarget || '_self'}
                             className="px-8 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
                         >
                             {primaryButtonText}
-                        </a>
+                        </Link>
                     )}
                     {secondaryButtonText && (
-                        <a
-                            href={secondaryButtonLink || '#'}
+                        <Link
+                            href={getLocalePath(secondaryButtonLink || '#')}
                             target={secondaryButtonTarget || '_self'}
                             className={`px-8 py-3 rounded-lg font-medium transition-colors ${backgroundImage
                                 ? 'bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm'
@@ -40,7 +43,7 @@ export const HeroSection: React.FC<SectionProps> = ({ data, style = {} }) => {
                                 }`}
                         >
                             {secondaryButtonText}
-                        </a>
+                        </Link>
                     )}
                 </div>
             </div>

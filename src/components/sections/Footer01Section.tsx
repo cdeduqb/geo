@@ -19,7 +19,7 @@ interface Footer01Style {
 }
 
 export const Footer01Section: React.FC<SectionProps> = ({ data = {}, style = {}, systemSettings }) => {
-    const { t } = useTranslation();
+    const { t, getLocalePath } = useTranslation();
     const {
         logo, logoText = systemSettings?.siteName || '全域魔力',
         description = '专业的全域内容管理与分发平台', navItems = [], socialLinks = [],
@@ -32,13 +32,13 @@ export const Footer01Section: React.FC<SectionProps> = ({ data = {}, style = {},
         <footer className="w-full py-12 md:py-16" style={{ background: backgroundColor, color: textColor }}>
             <div className="container mx-auto px-4">
                 <div className="flex flex-col items-center text-center space-y-8">
-                    <Link href="/" className="inline-flex items-center gap-2">
+                    <Link href={getLocalePath('/')} className="inline-flex items-center gap-2">
                         {logo ? <img src={logo} alt={logoText} className="h-10 w-auto" /> : <span className="text-2xl font-bold">{logoText}</span>}
                     </Link>
                     {description && <p className="text-base opacity-70 max-w-md">{description}</p>}
                     {navItems && navItems.length > 0 && (
                         <nav className="flex flex-wrap justify-center gap-6">
-                            {navItems.map((item, i) => <Link key={i} href={item.link || '#'} className="text-sm font-medium opacity-70 hover:opacity-100 transition-opacity">{item.label}</Link>)}
+                            {navItems.map((item, i) => <Link key={i} href={getLocalePath(item.link || '#')} className="text-sm font-medium opacity-70 hover:opacity-100 transition-opacity">{item.label}</Link>)}
                         </nav>
                     )}
                     {socialLinks && socialLinks.length > 0 && (

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Copyright from '@/components/license/Copyright';
 
 export const Footer03Section: React.FC<SectionProps> = ({ data = {}, style = {}, systemSettings }) => {
-    const { t } = useTranslation();
+    const { t, getLocalePath } = useTranslation();
     const {
         logo, logoText = systemSettings?.siteName || '全域魔力',
         brandDescription = '助力企业实现全渠道内容管理与精准分发',
@@ -23,36 +23,36 @@ export const Footer03Section: React.FC<SectionProps> = ({ data = {}, style = {},
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-12">
                     <div>
-                        <Link href="/">{logo ? <img src={logo} alt={logoText} className="h-10 w-auto mb-4" /> : <span className="text-2xl font-bold block mb-4">{logoText}</span>}</Link>
+                        <Link href={getLocalePath('/')}>{logo ? <img src={logo} alt={logoText} className="h-10 w-auto mb-4" /> : <span className="text-2xl font-bold block mb-4">{logoText}</span>}</Link>
                         <p className="text-sm opacity-70">{brandDescription}</p>
                     </div>
                     <div>
                         <h4 className="font-bold text-sm mb-4">{col1Title}</h4>
                         <ul className="space-y-2">
-                            {col1Links && col1Links.map((item: any, i: number) => <li key={i}><Link href={item.link || '#'} className="text-sm opacity-70 hover:opacity-100">{item.label}</Link></li>)}
+                            {col1Links && col1Links.map((item: any, i: number) => <li key={i}><Link href={getLocalePath(item.link || '#')} className="text-sm opacity-70 hover:opacity-100">{item.label}</Link></li>)}
                         </ul>
                     </div>
                     <div>
                         <h4 className="font-bold text-sm mb-4">{col2Title}</h4>
                         <ul className="space-y-2">
-                            {col2Links && col2Links.map((item: any, i: number) => <li key={i}><Link href={item.link || '#'} className="text-sm opacity-70 hover:opacity-100">{item.label}</Link></li>)}
+                            {col2Links && col2Links.map((item: any, i: number) => <li key={i}><Link href={getLocalePath(item.link || '#')} className="text-sm opacity-70 hover:opacity-100">{item.label}</Link></li>)}
                         </ul>
                     </div>
                     <div>
                         <h4 className="font-bold text-sm mb-4">{col3Title}</h4>
                         <ul className="space-y-2">
-                            {col3Links && col3Links.map((item: any, i: number) => <li key={i}><Link href={item.link || '#'} className="text-sm opacity-70 hover:opacity-100">{item.label}</Link></li>)}
+                            {col3Links && col3Links.map((item: any, i: number) => <li key={i}><Link href={getLocalePath(item.link || '#')} className="text-sm opacity-70 hover:opacity-100">{item.label}</Link></li>)}
                         </ul>
                     </div>
                     <div>
                         <h4 className="font-bold text-sm mb-4">{col4Title}</h4>
                         <ul className="space-y-2">
-                            {col4Links && col4Links.map((item: any, i: number) => <li key={i}><Link href={item.link || '#'} className="text-sm opacity-70 hover:opacity-100">{item.label}</Link></li>)}
+                            {col4Links && col4Links.map((item: any, i: number) => <li key={i}><Link href={getLocalePath(item.link || '#')} className="text-sm opacity-70 hover:opacity-100">{item.label}</Link></li>)}
                         </ul>
                     </div>
                 </div>
                 <div className="pt-8 border-t border-current/10 opacity-60 text-center text-sm">
-                    <Copyright className=""  systemCopyright={systemSettings?.copyright} />
+                    <Copyright className="" systemCopyright={systemSettings?.copyright} />
                     {systemSettings?.icp_number && <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" className="ml-4 hover:underline">{systemSettings?.icp_number}</a>}
                 </div>
             </div>

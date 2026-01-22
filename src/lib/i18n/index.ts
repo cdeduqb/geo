@@ -77,12 +77,31 @@ export function getLocaleFromPath(pathname: string): Locale {
  * 获取带语言前缀的路径
  */
 export function getLocalePath(path: string, locale: Locale): string {
-    // 默认语言不加前缀
-    if (locale === defaultLocale) {
+    // 处理空路径、外部链接、锚点和 javascript 链接
+    if (!path || path.startsWith('http') || path.startsWith('#') || path.startsWith('javascript:')) {
         return path;
     }
+
+    // 提取路径中已有的语言标识（如果有）
+    const pathSegments = path.split('/').filter(Boolean);
+    let cleanPath = path;
+    if (pathSegments.length > 0 && locales.includes(pathSegments[0] as Locale)) {
+        // 移除已有的语言前缀
+        const existingLocale = pathSegments[0];
+        if (path === `/${existingLocale}`) {
+            cleanPath = '/';
+        } else {
+            cleanPath = path.replace(`/${existingLocale}/`, '/');
+        }
+    }
+
+    // 默认语言不加前缀
+    if (locale === defaultLocale) {
+        return cleanPath;
+    }
+
     // 避免双斜杠
-    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    const normalizedPath = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
     return `/${locale}${normalizedPath === '/' ? '' : normalizedPath}`;
 }
 

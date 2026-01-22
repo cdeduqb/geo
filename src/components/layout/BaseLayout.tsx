@@ -15,6 +15,10 @@ interface BaseLayoutProps {
     locale: Locale;
 }
 
+/**
+ * 基础布局组件 (内容部分)
+ * 不包含 <html> 和 <body> 标签，避免嵌套冲突
+ */
 export default async function BaseLayout({
     children,
     locale,
@@ -25,41 +29,38 @@ export default async function BaseLayout({
     const primaryColor = siteSettings?.primaryColor || '#2563eb';
 
     return (
-        <html lang={locale} suppressHydrationWarning>
-            {/* <head> 由 Next.js 自动管理 */}
-            <body className={`${inter.className} bg-gray-50 text-gray-900 antialiased`} suppressHydrationWarning>
-                {/* 客户端动态注入 SEO 脚本 */}
-                <SEOScripts />
-                {/* 授权信息上报 */}
-                <LicensePing />
-                {geo.enableStructuredData && (
-                    <>
-                        <WebSiteStructuredData
-                            name={seo.siteName}
-                            url={seo.siteUrl}
-                            description={seo.siteDescription}
-                        />
-                        <OrganizationStructuredData
-                            name={seo.siteName}
-                            url={seo.siteUrl}
-                            logo={seo.siteLogo || undefined}
-                            sameAs={geo.entityInfo?.sameAs}
-                        />
-                    </>
-                )}
-                <style dangerouslySetInnerHTML={{
-                    __html: `
-                    :root {
-                        --primary-color: ${primaryColor};
-                        --primary-color-rgb: ${hexToRgb(primaryColor)};
-                    }
-                    .text-primary { color: var(--primary-color); }
-                    .bg-primary { background-color: var(--primary-color); }
-                    .border-primary { border-color: var(--primary-color); }
-                `}} />
-                {children}
-            </body>
-        </html>
+        <>
+            {/* 客户端动态注入 SEO 脚本 */}
+            <SEOScripts />
+            {/* 授权信息上报 */}
+            <LicensePing />
+            {geo.enableStructuredData && (
+                <>
+                    <WebSiteStructuredData
+                        name={seo.siteName}
+                        url={seo.siteUrl}
+                        description={seo.siteDescription}
+                    />
+                    <OrganizationStructuredData
+                        name={seo.siteName}
+                        url={seo.siteUrl}
+                        logo={seo.siteLogo || undefined}
+                        sameAs={geo.entityInfo?.sameAs}
+                    />
+                </>
+            )}
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                :root {
+                    --primary-color: ${primaryColor};
+                    --primary-color-rgb: ${hexToRgb(primaryColor)};
+                }
+                .text-primary { color: var(--primary-color); }
+                .bg-primary { background-color: var(--primary-color); }
+                .border-primary { border-color: var(--primary-color); }
+            `}} />
+            {children}
+        </>
     );
 }
 

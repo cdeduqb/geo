@@ -7,7 +7,7 @@ import Link from 'next/link';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export const HeaderSection: React.FC<SectionProps> = ({ data, style = {}, isEditing }) => {
-    const { t } = useTranslation();
+    const { t, getLocalePath } = useTranslation();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const {
         logo,
@@ -65,7 +65,7 @@ export const HeaderSection: React.FC<SectionProps> = ({ data, style = {}, isEdit
 
     // 渲染Logo组件
     const renderLogo = () => (
-        <Link href="/" className="flex items-center gap-2">
+        <Link href={getLocalePath('/')} className="flex items-center gap-2">
             {logo ? (
                 <img src={logo} alt={logoText} className="h-8 w-auto" />
             ) : (
@@ -80,7 +80,7 @@ export const HeaderSection: React.FC<SectionProps> = ({ data, style = {}, isEdit
             {defaultNavItems.map((item: any, index: number) => (
                 <Link
                     key={index}
-                    href={item.link || '#'}
+                    href={getLocalePath(item.link || '#')}
                     className={typeof textStyle === 'string' ? `${textStyle} hover:text-blue-600 transition-colors font-medium text-sm` : 'hover:text-blue-600 transition-colors font-medium text-sm'}
                     style={typeof textStyle === 'object' ? textStyle : undefined}
                 >
@@ -93,7 +93,7 @@ export const HeaderSection: React.FC<SectionProps> = ({ data, style = {}, isEdit
     // 渲染CTA按钮
     const renderCTA = () => ctaButtonText && (
         <Link
-            href={ctaButtonLink || '#'}
+            href={getLocalePath(ctaButtonLink || '#')}
             className={`${typeof ctaButtonStyle === 'string' ? ctaButtonStyle : 'bg-blue-600'} ${typeof ctaTextStyle === 'string' ? ctaTextStyle : 'text-white'} px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity text-sm whitespace-nowrap`}
             style={{
                 ...(typeof ctaButtonStyle === 'object' ? ctaButtonStyle : {}),
@@ -178,14 +178,18 @@ export const HeaderSection: React.FC<SectionProps> = ({ data, style = {}, isEdit
                         <div className="flex justify-center">
                             <div className="text-center">
                                 {logo ? (
-                                    <img src={logo} alt={logoText} className="h-12 w-auto mx-auto mb-2" />
+                                    <Link href={getLocalePath('/')}>
+                                        <img src={logo} alt={logoText} className="h-12 w-auto mx-auto mb-2" />
+                                    </Link>
                                 ) : (
-                                    <span
-                                        className={typeof textStyle === 'string' ? `text-xl font-bold ${textStyle}` : 'text-xl font-bold'}
-                                        style={typeof textStyle === 'object' ? textStyle : undefined}
-                                    >
-                                        {logoText}
-                                    </span>
+                                    <Link href={getLocalePath('/')}>
+                                        <span
+                                            className={typeof textStyle === 'string' ? `text-xl font-bold ${textStyle}` : 'text-xl font-bold'}
+                                            style={typeof textStyle === 'object' ? textStyle : undefined}
+                                        >
+                                            {logoText}
+                                        </span>
+                                    </Link>
                                 )}
                                 {slogan && <p className={`text-sm ${textColor} opacity-70 mt-1`}>{slogan}</p>}
                             </div>
@@ -285,7 +289,7 @@ export const HeaderSection: React.FC<SectionProps> = ({ data, style = {}, isEdit
                             {defaultNavItems.map((item: any, index: number) => (
                                 <Link
                                     key={index}
-                                    href={item.link || '#'}
+                                    href={getLocalePath(item.link || '#')}
                                     className="block py-3 text-lg font-medium text-gray-900 border-b border-gray-100"
                                     onClick={() => setMobileMenuOpen(false)}
                                 >
@@ -297,7 +301,7 @@ export const HeaderSection: React.FC<SectionProps> = ({ data, style = {}, isEdit
                             <LanguageSwitcher />
                             {ctaButtonText && (
                                 <Link
-                                    href={ctaButtonLink || '#'}
+                                    href={getLocalePath(ctaButtonLink || '#')}
                                     className="block w-full text-center py-3 px-4 rounded-lg font-medium text-white"
                                     style={{ background: ctaButtonColor }}
                                     onClick={() => setMobileMenuOpen(false)}

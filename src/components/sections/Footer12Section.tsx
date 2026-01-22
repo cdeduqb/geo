@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Copyright from '@/components/license/Copyright';
 
 export const Footer12Section: React.FC<SectionProps> = ({ data = {}, style = {}, systemSettings }) => {
-    const { t } = useTranslation();
+    const { t, getLocalePath } = useTranslation();
     const { logoText = systemSettings?.siteName || '全域魔力', navItems = []
     } = data as any;
     const { backgroundColor = '#ffffff', textColor = '#111827' } = style as any;
@@ -19,11 +19,11 @@ export const Footer12Section: React.FC<SectionProps> = ({ data = {}, style = {},
                     <span className="text-sm font-bold">{logoText}</span>
                     {navItems && navItems.length > 0 && (
                         <nav className="flex flex-wrap justify-center gap-6">
-                            {navItems.map((item: any, i: number) => <Link key={i} href={item.link || '#'} className="text-xs opacity-70 hover:opacity-100">{item.label}</Link>)}
+                            {navItems.map((item: any, i: number) => <Link key={i} href={getLocalePath(item.link || '#')} className="text-xs opacity-70 hover:opacity-100">{item.label}</Link>)}
                         </nav>
                     )}
                     <span className="text-xs">
-                        <Copyright className=""  systemCopyright={systemSettings?.copyright} />
+                        <Copyright className="" systemCopyright={systemSettings?.copyright} />
                         {systemSettings?.icp_number && (
                             <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" className="ml-4 hover:underline">
                                 {systemSettings?.icp_number}
