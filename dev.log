@@ -130,3 +130,17 @@ Timed out fetching a new connection from the connection pool. More info: http://
 [Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
  ✓ Compiled in 538ms (825 modules)
  ✓ Compiled in 328ms (825 modules)
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Factory pipeline processed 2 tasks
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+ ✓ Compiled in 354ms (78 modules)
+ ✓ Compiled in 95ms (78 modules)
+ ✓ Compiled in 435ms (825 modules)
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process

@@ -3,15 +3,37 @@ import type { NextRequest } from 'next/server';
 import { locales, defaultLocale } from './lib/i18n';
 
 // AI 爬虫特征字符串（小写，用于 User-Agent 匹配）
-const AI_CRAWLER_KEYWORDS = [
-    // 国际主流
-    'gptbot', 'chatgpt-user', 'oai-searchbot', 'claudebot', 'claude-web', 'anthropic-ai',
-    'google-extended', 'googlebot', 'perplexitybot', 'meta-externalagent', 'facebookexternalhit',
-    'applebot', 'bingbot', 'amazonbot', 'ccbot',
-    // 国内主流
-    'bytespider', 'baiduspider', 'deepseekbot', 'moonshotbot', 'qwenbot', 'tongyibot',
-    'tencentbot', 'zhipubot', '360spider', 'sogou-spider', 'yisouspider',
-    'baichuanbot', 'minimaxbot', 'petalbot'
+// AI 爬虫映射表：关键字 (UA中包含的字符串) -> 规范化 ID (与后台管理设置一致)
+const AI_CRAWLER_MAP = [
+    { keyword: 'gptbot', id: 'GPTBot' },
+    { keyword: 'chatgpt-user', id: 'ChatGPT-User' },
+    { keyword: 'oai-searchbot', id: 'OAI-SearchBot' },
+    { keyword: 'claudebot', id: 'ClaudeBot' },
+    { keyword: 'claude-web', id: 'ClaudeBot' },
+    { keyword: 'anthropic-ai', id: 'ClaudeBot' },
+    { keyword: 'google-extended', id: 'Google-Extended' },
+    { keyword: 'googlebot', id: 'Googlebot' },
+    { keyword: 'perplexitybot', id: 'PerplexityBot' },
+    { keyword: 'meta-externalagent', id: 'Meta-ExternalAgent' },
+    { keyword: 'facebookexternalhit', id: 'Meta-ExternalAgent' },
+    { keyword: 'applebot', id: 'Applebot' },
+    { keyword: 'bingbot', id: 'Bingbot' },
+    { keyword: 'amazonbot', id: 'Amazonbot' },
+    { keyword: 'ccbot', id: 'CCBot' },
+    { keyword: 'bytespider', id: 'Bytespider' },
+    { keyword: 'baiduspider', id: 'Baiduspider' },
+    { keyword: 'deepseekbot', id: 'DeepSeekBot' },
+    { keyword: 'moonshotbot', id: 'MoonshotBot' },
+    { keyword: 'qwenbot', id: 'QwenBot' },
+    { keyword: 'tongyibot', id: 'QwenBot' },
+    { keyword: 'tencentbot', id: 'TencentBot' },
+    { keyword: 'zhipubot', id: 'ZhipuBot' },
+    { keyword: '360spider', id: '360Spider' },
+    { keyword: 'sogou-spider', id: 'Sogou-spider' },
+    { keyword: 'yisouspider', id: 'YisouSpider' },
+    { keyword: 'baichuanbot', id: 'BaiChuanBot' },
+    { keyword: 'minimaxbot', id: 'MiniMaxBot' },
+    { keyword: 'petalbot', id: 'PetalBot' }
 ];
 
 
@@ -61,9 +83,10 @@ export async function middleware(request: NextRequest) {
         !pathname.match(/\.(jpg|jpeg|png|gif|svg|css|js)$/)) {
 
         const lowerUA = userAgent.toLowerCase();
-        const matchedCrawler = AI_CRAWLER_KEYWORDS.find(keyword => lowerUA.includes(keyword));
+        const matchedItem = AI_CRAWLER_MAP.find(item => lowerUA.includes(item.keyword));
 
-        if (matchedCrawler) {
+        if (matchedItem) {
+            const matchedCrawler = matchedItem.id;
             // 异步记录日志 - 发送请求到内部 API 以避免阻塞
             // 注意：在 Next.js Edge Middleware 中也可以直接调 DB，但为了性能通常建议通过 API
             // 这里我们使用 fetch 并在背景执行（不 await）

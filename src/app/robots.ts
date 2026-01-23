@@ -5,29 +5,13 @@ import { db } from '@/lib/db';
 // AI 爬虫列表
 const AI_CRAWLERS = [
     // 国际 AI 平台
-    'GPTBot',
-    'OAI-SearchBot',
-    'Google-Extended',
-    'anthropic-ai',
-    'PerplexityBot',
-    'CCBot',
-    'Amazonbot',
-    'FacebookBot',
-    'Bingbot',
-    'Applebot-Extended',
+    'GPTBot', 'ChatGPT-User', 'OAI-SearchBot', 'ClaudeBot', 'Google-Extended',
+    'Googlebot', 'PerplexityBot', 'Meta-ExternalAgent', 'Applebot', 'Bingbot',
+    'Amazonbot', 'CCBot',
     // 中国 AI 平台
-    'Bytespider',       // 豆包
-    'Baiduspider',      // 百度文心一言
-    'Sogou-spider',     // 搜狗
-    '360Spider',        // 360
-    'YisouSpider',      // 神马
-    'Alibaba-Agent',    // 通义千问
-    'TencentBot',       // 腾讯元宝
-    'Moonshot-Bot',     // Kimi
-    'DeepSeek-Bot',     // DeepSeek
-    'Zhipu-Bot',        // 智谱 AI
-    'BaiChuan-Bot',     // 百川
-    'MiniMax-Bot',      // MiniMax
+    'Bytespider', 'Baiduspider', 'DeepSeekBot', 'MoonshotBot', 'QwenBot',
+    'TencentBot', 'ZhipuBot', '360Spider', 'Sogou-spider', 'YisouSpider',
+    'BaiChuanBot', 'MiniMaxBot', 'PetalBot'
 ];
 
 interface GEOSettings {
