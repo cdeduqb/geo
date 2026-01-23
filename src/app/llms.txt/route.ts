@@ -36,7 +36,7 @@ export async function GET() {
             where: { status: 'PUBLISHED' },
             select: { title: true, slug: true, lang: true, summary: true },
             orderBy: { createdAt: 'desc' },
-            take: 10
+            take: 50
         });
 
         if (articles.length > 0) {
@@ -52,7 +52,7 @@ export async function GET() {
             where: { status: 'PUBLISHED' },
             select: { name: true, slug: true, lang: true, description: true },
             orderBy: { createdAt: 'desc' },
-            take: 10
+            take: 50
         });
 
         if (products.length > 0) {
