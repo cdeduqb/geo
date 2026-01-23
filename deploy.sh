@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ============================================
-# GeoCMS 一键部署脚本（适用于宝塔面板）
+# Molicms 一键部署脚本（适用于宝塔面板）
 # ============================================
 
 # 颜色定义
@@ -11,10 +11,10 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # 项目路径
-PROJECT_DIR="/www/wwwroot/geocms"
+PROJECT_DIR="/www/wwwroot/molicms"
 
 echo -e "${GREEN}========================================${NC}"
-echo -e "${GREEN}   GeoCMS 部署脚本 v1.0${NC}"
+echo -e "${GREEN}   Molicms 部署脚本 v1.0${NC}"
 echo -e "${GREEN}========================================${NC}"
 
 # 检查是否在项目目录
@@ -63,7 +63,7 @@ case $choice in
         
         # 启动 PM2
         echo -e "${GREEN}[6/6] 启动服务...${NC}"
-        pm2 delete geocms 2>/dev/null
+        pm2 delete molicms 2>/dev/null
         pm2 start ecosystem.config.js
         pm2 save
         
@@ -95,7 +95,7 @@ case $choice in
         
         # 重启 PM2
         echo -e "${GREEN}[5/5] 重启服务...${NC}"
-        pm2 restart geocms
+        pm2 restart molicms
         
         echo -e "\n${GREEN}✅ 更新部署完成!${NC}"
         pm2 status
@@ -103,14 +103,14 @@ case $choice in
     
     3)
         echo -e "\n${YELLOW}重启服务...${NC}"
-        pm2 restart geocms
+        pm2 restart molicms
         echo -e "${GREEN}✅ 服务已重启${NC}"
         pm2 status
         ;;
     
     4)
         echo -e "\n${YELLOW}显示日志（按 Ctrl+C 退出）...${NC}\n"
-        pm2 logs geocms
+        pm2 logs molicms
         ;;
     
     5)

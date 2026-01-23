@@ -2,7 +2,7 @@ services:
   # MySQL数据库
   mysql:
     image: docker.m.daocloud.io/library/mysql:8.0
-    container_name: geocms-mysql
+    container_name: molicms-mysql
     restart: always
     env_file: .env
     environment:
@@ -18,7 +18,7 @@ services:
     ports:
       - "3306:3306"
     networks:
-      - geocms-network
+      - molicms-network
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 5s
@@ -26,12 +26,12 @@ services:
       retries: 20
       start_period: 10s
 
-  # GeoCMS应用
+  # Molicms应用
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: geocms-app
+    container_name: molicms-app
     restart: always
     env_file: .env
     environment:
@@ -43,12 +43,12 @@ services:
       mysql:
         condition: service_healthy
     networks:
-      - geocms-network
+      - molicms-network
 
 volumes:
   mysql_data:
 
 
 networks:
-  geocms-network:
+  molicms-network:
     driver: bridge

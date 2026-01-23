@@ -40,7 +40,7 @@ async function main() {
             isActive: true,
             content: `<header class="header-classic">
     <div class="container">
-        <div class="logo">GeoCMS</div>
+        <div class="logo">Molicms</div>
         <nav class="nav-links">
             <a href="/">首页</a>
             <a href="/articles">文章</a>
@@ -70,7 +70,7 @@ async function main() {
             isActive: false,
             content: `<header class="header-light">
     <div class="container">
-        <div class="logo">GeoCMS</div>
+        <div class="logo">Molicms</div>
         <nav class="nav-links">
             <a href="/">首页</a>
             <a href="/articles">文章</a>
@@ -102,7 +102,7 @@ async function main() {
     <div class="container">
         <div class="footer-col">
             <h4>关于我们</h4>
-            <p>GeoCMS 是一款企业级内容管理系统，提供强大的功能和灵活的扩展性。</p>
+            <p>Molicms 是一款企业级内容管理系统，提供强大的功能和灵活的扩展性。</p>
         </div>
         <div class="footer-col">
             <h4>快速链接</h4>
@@ -119,7 +119,7 @@ async function main() {
         </div>
     </div>
     <div class="copyright">
-        © 2024 GeoCMS. All rights reserved.
+        © 2024 Molicms. All rights reserved.
     </div>
 </footer>`,
             style: `.footer-classic { background: #1f2937; color: white; padding: 3rem 0 1rem; }
@@ -150,7 +150,7 @@ async function main() {
     <div class="container">
         <div class="brand">
             <span class="logo-icon">🚀</span>
-            <span class="brand-name">GeoCMS</span>
+            <span class="brand-name">Molicms</span>
         </div>
         <nav class="nav-menu">
             <a href="/">首页</a>
@@ -188,7 +188,7 @@ async function main() {
             content: `<footer class="footer-minimal">
     <div class="container">
         <div class="footer-content">
-            <div class="brand">GeoCMS</div>
+            <div class="brand">Molicms</div>
             <nav class="footer-nav">
                 <a href="/about">关于我们</a>
                 <a href="/privacy">隐私政策</a>
@@ -202,7 +202,7 @@ async function main() {
             </div>
         </div>
         <div class="copyright">
-            © 2024 GeoCMS. 版权所有 | ICP备案号：京ICP备12345678号
+            © 2024 Molicms. 版权所有 | ICP备案号：京ICP备12345678号
         </div>
     </div>
 </footer>`,
@@ -234,7 +234,7 @@ async function main() {
     <div class="container">
         <div class="footer-main">
             <div class="about-section">
-                <h3>GeoCMS</h3>
+                <h3>Molicms</h3>
                 <p>企业级内容管理系统，提供强大的功能和灵活的扩展性。</p>
             </div>
             <div class="social-section">
@@ -260,7 +260,7 @@ async function main() {
             </div>
         </div>
         <div class="footer-bottom">
-            © 2024 GeoCMS. All rights reserved.
+            © 2024 Molicms. All rights reserved.
         </div>
     </div>
 </footer>`,

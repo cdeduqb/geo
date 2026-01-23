@@ -21,7 +21,7 @@ export class AESCrypto {
      */
     static getAppKey(): string {
         // 使用固定的默认密钥以确保缓存可以正确解密
-        const baseKey = process.env.LICENSE_ENCRYPTION_KEY || 'geocms-license-default-encryption-key-2024';
+        const baseKey = process.env.LICENSE_ENCRYPTION_KEY || 'molicms-license-default-encryption-key-2024';
         // 绑定到运行目录，防止缓存文件被直接拷贝到其他未授权站点目录使用
         return `${baseKey}@${process.cwd()}`;
     }

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * GeoCMS XSS 漏洞自动修复脚本
+ * Molicms XSS 漏洞自动修复脚本
  * 
  * 使用方法：
  * node scripts/fix-xss-batch.js
@@ -59,7 +59,7 @@ const filesToFix = [
 ];
 
 console.log('==============================================');
-console.log('GeoCMS XSS 漏洞批量修复脚本');
+console.log('Molicms XSS 漏洞批量修复脚本');
 console.log('==============================================\n');
 
 console.log('⚠️  注意: 由于文件复杂度较高，部分文件需要手动修复');

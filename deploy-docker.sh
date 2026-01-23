@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 开始部署GeoCMS (Docker方式)..."
+echo "🚀 开始部署Molicms (Docker方式)..."
 echo ""
 
 # 检查Docker
@@ -121,4 +121,4 @@ echo "   查看状态: docker-compose ps"
 echo "   查看日志: docker-compose logs -f app"
 echo "   重启服务: docker-compose restart"
 echo ""
-echo "🎉 开始使用GeoCMS吧！"
+echo "🎉 开始使用Molicms吧！"

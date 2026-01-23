@@ -304,7 +304,7 @@ export default function AdminLayoutClient({
                         )}
                         <div className="flex flex-col">
                             <h1 className="font-bold text-[15px] leading-tight text-gray-900 tracking-tight">
-                                {siteName || 'moli企业官网'}
+                                {siteName || 'molicms企业官网'}
                             </h1>
                             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">管理后台</p>
                         </div>

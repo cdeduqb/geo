@@ -1,10 +1,8 @@
 #!/bin/bash
 
 # ============================================================
-# GeoCMS Nginx 配置自动修复脚本 (完全自动化版本)
-# 功能：自动检测并添加 /uploads/ 静态资源配置
-# 用法：sudo bash scripts/fix-nginx.sh [域名]
-# 自动化：从 .env 读取 SITE_DOMAIN 配置，无需交互
+# Molicms Nginx 配置自动修复脚本 (完全自动化版本)
+# 功能：自动将 Molicms 的静态文件和代理配置添加到 Nginx 配置中
 # ============================================================
 
 # 颜色定义
@@ -20,7 +18,7 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
 echo ""
 echo "============================================"
-echo -e "${BLUE}🔧 GeoCMS Nginx 配置修复工具 v4.0${NC}"
+echo -e "${BLUE}🔧 Molicms Nginx 配置修复工具 v4.0${NC}"
 echo "    (完全自动化版本)"
 echo "============================================"
 
@@ -198,7 +196,7 @@ TEMP_UPLOADS=$(mktemp)
 if [ "$NEED_UPLOADS" = true ]; then
     cat > "$TEMP_UPLOADS" << EOF
 
-    # >>> GeoCMS 静态文件配置 (自动添加于 $(date +%Y-%m-%d)) <<<
+    # >>> Molicms 静态文件配置 (自动添加于 $(date +%Y-%m-%d)) <<<
     location /uploads/ {
         alias ${UPLOADS_PATH}/;
         expires 30d;
@@ -206,7 +204,7 @@ if [ "$NEED_UPLOADS" = true ]; then
         add_header Access-Control-Allow-Origin *;
         autoindex off;
     }
-    # <<< GeoCMS 静态文件配置结束 <<<
+    # <<< Molicms 静态文件配置结束 <<<
 
 EOF
 fi
@@ -216,7 +214,7 @@ TEMP_PROXY=$(mktemp)
 if [ "$NEED_PROXY_TIMEOUT" = true ]; then
     cat > "$TEMP_PROXY" << 'EOF'
 
-    # >>> GeoCMS 代理超时配置 (防止 AI 操作 504 超时) <<<
+    # >>> Molicms 代理超时配置 (防止 AI 操作 504 超时) <<<
     proxy_connect_timeout 600;
     proxy_send_timeout 600;
     proxy_read_timeout 600;
@@ -224,7 +222,7 @@ if [ "$NEED_PROXY_TIMEOUT" = true ]; then
     proxy_buffer_size 128k;
     proxy_buffers 4 256k;
     proxy_busy_buffers_size 256k;
-    # <<< GeoCMS 代理超时配置结束 <<<
+    # <<< Molicms 代理超时配置结束 <<<
 
 EOF
 fi

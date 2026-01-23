@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🔧 GeoCMS 开发环境快速设置"
+echo "🔧 Molicms 开发环境快速设置"
 echo ""
 
 # 检查是否有node_modules

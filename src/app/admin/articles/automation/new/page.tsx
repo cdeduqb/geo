@@ -238,7 +238,7 @@ export default function NewAutomationProject() {
                                             value={formData.keywords}
                                             onChange={e => setFormData(prev => ({ ...prev, keywords: e.target.value }))}
                                             className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none"
-                                            placeholder="例如:全域魔力GEOCMS系统"
+                                            placeholder="例如:全域魔力Molicms系统"
                                         />
                                     </div>
                                 </div>

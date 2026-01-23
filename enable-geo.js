@@ -9,8 +9,8 @@ async function main() {
         enableEntityExtraction: true,
         defaultSchemaOrg: true,
         entityInfo: {
-            alternateName: 'GeoAI Test',
-            sameAs: ['https://twitter.com/geocms']
+            alternateName: 'MoliAI Test',
+            sameAs: ['https://twitter.com/molicms']
         }
     };
 

@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# GeoCMS 系统健康监控脚本
+# Molicms 系统健康监控脚本
 # 用途：定时检查系统健康状态
 
-LOG_FILE="/tmp/geocms-health.log"
+LOG_FILE="/tmp/molicms-health.log"
 
-echo "=== GeoCMS Health Check - $(date) ===" >> $LOG_FILE
+echo "=== Molicms Health Check - $(date) ===" >> $LOG_FILE
 
 # 检查进程
 if pm2 list 2>/dev/null | grep -q "online"; then

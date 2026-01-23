@@ -544,7 +544,7 @@ export default function GEOSettingsPage() {
                                                 entityInfo: { ...p.entityInfo, sameAs: e.target.value.split('\n').filter(Boolean) }
                                             }))}
                                             className="w-full rounded-2xl border border-gray-300 bg-gray-50/50 px-6 py-4 text-sm font-bold text-gray-900 focus:border-blue-600 focus:bg-white transition-all outline-none placeholder:text-gray-300 resize-none leading-relaxed"
-                                            placeholder="https://weibo.com/geocms&#10;https://twitter.com/geocms"
+                                            placeholder="https://weibo.com/molicms&#10;https://twitter.com/molicms"
                                             rows={3}
                                         />
                                         <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest ml-1">每行一个 URL，用于建立品牌关联</p>

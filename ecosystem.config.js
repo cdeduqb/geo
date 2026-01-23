@@ -6,9 +6,9 @@
  * 2. 构建项目: npm run build
  * 3. 启动: pm2 start ecosystem.config.js
  * 4. 查看状态: pm2 status
- * 5. 查看日志: pm2 logs geocms
- * 6. 重启: pm2 restart geocms
- * 7. 停止: pm2 stop geocms
+ * 5. 查看日志: pm2 logs molicms
+ * 6. 重启: pm2 restart molicms
+ * 7. 停止: pm2 stop molicms
  * 8. 保存进程列表: pm2 save
  * 9. 设置开机自启: pm2 startup
  */
@@ -16,7 +16,7 @@
 module.exports = {
     apps: [
         {
-            name: 'geocms',
+            name: 'molicms',
             // 标准生产模式启动
             script: 'npm',
             args: 'start',
@@ -41,9 +41,9 @@ module.exports = {
                 NODE_OPTIONS: '--max-old-space-size=384',
             },
             // 错误日志
-            error_file: '/www/wwwlogs/geocms-error.log',
+            error_file: '/www/wwwlogs/molicms-error.log',
             // 输出日志
-            out_file: '/www/wwwlogs/geocms-out.log',
+            out_file: '/www/wwwlogs/molicms-out.log',
             // 日志时间格式
             time: true,
             // 合并日志

@@ -25,7 +25,7 @@ async function fetchWebContent(url: string): Promise<{
 
         const response = await fetch(fullUrl, {
             headers: {
-                'User-Agent': 'Mozilla/5.0 (compatible; GeoCMS/1.0; +https://geocms.io)',
+                'User-Agent': 'Mozilla/5.0 (compatible; Molicms/1.0; +https://molicms.com)',
                 'Accept': 'text/html,application/xhtml+xml',
                 'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
             },

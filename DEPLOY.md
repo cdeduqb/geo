@@ -1,4 +1,4 @@
-# GeoCMS 宝塔面板部署指南（低内存服务器优化版）
+# Molicms 宝塔面板部署指南（低内存服务器优化版）
 
 ## 服务器要求
 
@@ -71,13 +71,13 @@ sudo sysctl -p
 方法二：使用 Git 克隆
 ```bash
 cd /www/wwwroot
-git clone <你的仓库地址> geocms
+git clone <你的仓库地址> molicms
 ```
 
 ### 2.2 安装依赖
 
 ```bash
-cd /www/wwwroot/geocms
+cd /www/wwwroot/molicms
 
 # 安装依赖
 npm install --production=false
@@ -91,13 +91,13 @@ npx prisma generate
 创建 `.env` 文件：
 
 ```bash
-nano /www/wwwroot/geocms/.env
+nano /www/wwwroot/molicms/.env
 ```
 
 内容示例：
 ```env
 # 数据库配置
-DATABASE_URL="mysql://用户名:密码@localhost:3306/geocms"
+DATABASE_URL="mysql://用户名:密码@localhost:3306/molicms"
 
 # 站点 URL（必须配置正确）
 NEXT_PUBLIC_SITE_URL="https://your-domain.com"
@@ -115,7 +115,7 @@ NODE_ENV="production"
 ### 2.4 初始化数据库
 
 ```bash
-cd /www/wwwroot/geocms
+cd /www/wwwroot/molicms
 
 # 推送数据库结构
 npx prisma db push
@@ -127,7 +127,7 @@ npx prisma db seed
 ### 2.5 构建项目（重要）
 
 ```bash
-cd /www/wwwroot/geocms
+cd /www/wwwroot/molicms
 
 # 构建生产版本
 npm run build
@@ -160,7 +160,7 @@ npm install -g pm2
 ### 3.2 使用配置文件启动
 
 ```bash
-cd /www/wwwroot/geocms
+cd /www/wwwroot/molicms
 
 # 启动服务
 pm2 start ecosystem.config.js
@@ -169,7 +169,7 @@ pm2 start ecosystem.config.js
 pm2 status
 
 # 查看日志
-pm2 logs geocms
+pm2 logs molicms
 
 # 保存进程列表（开机自启）
 pm2 save
@@ -183,16 +183,16 @@ pm2 startup
 pm2 status
 
 # 查看日志
-pm2 logs geocms
+pm2 logs molicms
 
 # 重启服务
-pm2 restart geocms
+pm2 restart molicms
 
 # 停止服务
-pm2 stop geocms
+pm2 stop molicms
 
 # 删除服务
-pm2 delete geocms
+pm2 delete molicms
 
 # 监控资源
 pm2 monit
@@ -245,14 +245,14 @@ server {
     
     # 静态文件缓存
     location /_next/static {
-        alias /www/wwwroot/geocms/.next/static;
+        alias /www/wwwroot/molicms/.next/static;
         expires 365d;
         add_header Cache-Control "public, max-age=31536000, immutable";
         access_log off;
     }
     
     location /public {
-        alias /www/wwwroot/geocms/public;
+        alias /www/wwwroot/molicms/public;
         expires 30d;
         add_header Cache-Control "public, max-age=2592000";
         access_log off;
@@ -346,7 +346,7 @@ events {
 
 **检查方法**:
 ```bash
-pm2 logs geocms
+pm2 logs molicms
 ```
 
 常见原因：
@@ -373,7 +373,7 @@ pm2 logs geocms
 ## 七、更新部署
 
 ```bash
-cd /www/wwwroot/geocms
+cd /www/wwwroot/molicms
 
 # 拉取最新代码（如果使用 Git）
 git pull
@@ -389,7 +389,7 @@ cp -r public .next/standalone/
 cp -r .next/static .next/standalone/.next/
 
 # 重启服务
-pm2 restart geocms
+pm2 restart molicms
 ```
 
 ---
