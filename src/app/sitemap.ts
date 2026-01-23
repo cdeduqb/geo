@@ -2,30 +2,21 @@ import { MetadataRoute } from 'next';
 import { db } from '@/lib/db';
 import { getSiteUrl } from '@/lib/system-settings';
 
+// 强制动态渲染，确保站点地图始终反映最新的数据库状态
+export const dynamic = 'force-dynamic';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     try {
         const baseUrl = await getSiteUrl();
 
-        // 1. 静态基础页面
+        // 1. 静态基础页面 (仅保留首页)
         const staticPages: MetadataRoute.Sitemap = [
             {
                 url: baseUrl,
                 lastModified: new Date(),
                 changeFrequency: 'daily',
                 priority: 1.0,
-            },
-            {
-                url: `${baseUrl}/about`,
-                lastModified: new Date(),
-                changeFrequency: 'monthly',
-                priority: 0.5,
-            },
-            {
-                url: `${baseUrl}/contact`,
-                lastModified: new Date(),
-                changeFrequency: 'monthly',
-                priority: 0.5,
-            },
+            }
         ];
 
         // 2. 获取所有已发布的页面 (CMS 动态页面)
