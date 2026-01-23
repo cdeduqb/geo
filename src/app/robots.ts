@@ -64,6 +64,6 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
 
     return {
         rules,
-        sitemap: sitemapUrl,
+        sitemap: [sitemapUrl, `${baseUrl}/llms.txt`],
     };
 }

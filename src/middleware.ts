@@ -43,7 +43,7 @@ export async function middleware(request: NextRequest) {
 
     // 0. 站点验证文件拦截 (Site Verification)
     // 拦截 .html 和特定 .txt (IndexNow/搜索引擎验证) 结尾的请求
-    const isStaticTxt = ['/robots.txt', '/ads.txt', '/humans.txt', '/sitemap.txt'].includes(pathname);
+    const isStaticTxt = ['/robots.txt', '/ads.txt', '/humans.txt', '/sitemap.txt', '/llms.txt'].includes(pathname);
     if ((pathname.endsWith('.html') || (pathname.endsWith('.txt') && !isStaticTxt)) &&
         !pathname.startsWith('/admin') &&
         !pathname.startsWith('/api')) {
