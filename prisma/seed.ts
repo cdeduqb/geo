@@ -114,7 +114,7 @@ async function main() {
         </div>
         <div class="footer-col">
             <h4>联系方式</h4>
-            <p>邮箱: info@geocms.com</p>
+            <p>邮箱: info@molicms.com</p>
             <p>电话: 400-123-4567</p>
         </div>
     </div>

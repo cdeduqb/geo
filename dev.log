@@ -625,3 +625,43 @@ TypeError: Cannot read properties of null (reading 'useContext')
  ✓ Compiled /api/admin/messages in 190ms (1301 modules)
  GET /api/admin/messages?page=1&limit=20 200 in 501ms
  GET /api/admin/messages?page=1&limit=20 200 in 139ms
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+ GET /api/admin/geo/settings 200 in 337ms
+ GET /api/admin/settings 200 in 386ms
+ GET /api/admin/geo/settings 200 in 97ms
+ GET /api/admin/settings 200 in 98ms
+ GET /api/admin/geo/crawler-stats 200 in 566ms
+ GET /api/admin/geo/crawler-stats 200 in 221ms
+ ○ Compiling /api/admin/geo/crawler-logs ...
+ ✓ Compiled /api/admin/geo/crawler-logs in 552ms (700 modules)
+ GET /api/admin/geo/crawler-logs?limit=100&page=1 200 in 903ms
+ ✓ Compiled /admin/templates in 283ms (775 modules)
+ ✓ Compiled /admin/pages in 302ms (811 modules)
+ ✓ Compiled /admin/templates/edit/[id] in 302ms (814 modules)
+ ✓ Compiled /admin/templates/edit-visual/[id] in 218ms (820 modules)
+ ✓ Compiled /api/admin/templates/[id] in 100ms (822 modules)
+ GET /api/admin/templates/be76bb1e-84a8-4514-a8f5-569761b15b46 200 in 207ms
+ ✓ Compiled /api/admin/pages in 102ms (824 modules)
+ GET /api/admin/templates/be76bb1e-84a8-4514-a8f5-569761b15b46 200 in 262ms
+ POST /api/admin/pages 200 in 549ms
+ POST /api/admin/pages 200 in 298ms
+ ○ Compiling /api/admin/pages/[id] ...
+ ✓ Compiled /api/admin/pages/[id] in 506ms (1242 modules)
+ ✓ Compiled (1244 modules)
+ GET /template-builder/c18d0523-96dd-42fd-a96f-0584b46113ab?hideToolbar=true&moduleType=CONTACT_PAGE 200 in 1051ms
+ DELETE /api/admin/pages/385af608-7593-412f-b128-798c4791a9d9 200 in 1187ms
+ ✓ Compiled /api/seo/scripts in 119ms (1246 modules)
+ GET /api/seo/scripts 200 in 232ms
+ GET /api/seo/scripts 200 in 42ms
+ DELETE /api/admin/pages/c18d0523-96dd-42fd-a96f-0584b46113ab 200 in 226ms
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+[Cron] Factory pipeline processed 1 tasks
+[Cron] Starting batch task processing...
+[Cron] Calling automation API: https://moli123.com/api/admin/articles/automation/process
+ ✓ Compiled in 864ms (1843 modules)
