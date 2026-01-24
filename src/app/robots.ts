@@ -3,16 +3,21 @@ import { getSiteUrl, getI18nSettings } from '@/lib/system-settings';
 import { locales, defaultLocale } from '@/lib/i18n';
 import { db } from '@/lib/db';
 
-// AI 爬虫列表
+// 强制动态渲染，确保机器人规则实时反映后台配置
+export const dynamic = 'force-dynamic';
+
+// AI 爬虫列表 (核心内置列表)
 const AI_CRAWLERS = [
     // 国际 AI 平台
-    'GPTBot', 'ChatGPT-User', 'OAI-SearchBot', 'ClaudeBot', 'Google-Extended',
-    'Googlebot', 'PerplexityBot', 'Meta-ExternalAgent', 'Applebot', 'Bingbot',
-    'Amazonbot', 'CCBot',
+    'GPTBot', 'ChatGPT-User', 'OAI-SearchBot', 'ClaudeBot', 'anthropic-ai',
+    'Google-Extended', 'Googlebot', 'PerplexityBot', 'Meta-ExternalAgent',
+    'FacebookBot', 'Applebot', 'Applebot-Extended', 'Bingbot', 'Amazonbot',
+    'CCBot',
     // 中国 AI 平台
-    'Bytespider', 'Baiduspider', 'DeepSeekBot', 'MoonshotBot', 'QwenBot',
-    'TencentBot', 'ZhipuBot', '360Spider', 'Sogou-spider', 'YisouSpider',
-    'BaiChuanBot', 'MiniMaxBot', 'PetalBot'
+    'Bytespider', 'Baiduspider', 'DeepSeekBot', 'DeepSeek-Bot', 'MoonshotBot',
+    'Moonshot-Bot', 'QwenBot', 'TencentBot', 'ZhipuBot', 'Zhipu-Bot',
+    '360Spider', 'Sogou-spider', 'YisouSpider', 'BaiChuanBot', 'BaiChuan-Bot',
+    'MiniMaxBot', 'MiniMax-Bot', 'PetalBot', 'Alibaba-Agent'
 ];
 
 interface GEOSettings {
@@ -56,21 +61,35 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
         }
     ];
 
-    // 为每个配置的 AI 爬虫显式添加规则
-    AI_CRAWLERS.forEach(crawler => {
+    // 已经处理过的爬虫（去重）
+    const processedCrawlers = new Set<string>();
+
+    /**
+     * 合并逻辑：
+     * 1. 优先处理内置列表中的爬虫
+     * 2. 然后处理数据库配置中存在但内置列表没有的爬虫
+     */
+
+    // 获取配置中的所有爬虫 ID
+    const configCrawlerIds = geoSettings.crawlerConfig ? Object.keys(geoSettings.crawlerConfig) : [];
+    const allCrawlerIds = Array.from(new Set([...AI_CRAWLERS, ...configCrawlerIds]));
+
+    allCrawlerIds.forEach(crawler => {
         const config = geoSettings.crawlerConfig?.[crawler];
+        if (!config) return; // 如果既不在列表也不在配置中，跳过
+
         if (config === 'disallow') {
             rules.push({
                 userAgent: crawler,
                 disallow: '/'
             });
         } else if (config === 'allow') {
-            // 显式允许，有些 AI 爬虫在有通用 Disallow 时需要显式 Allow
             rules.push({
                 userAgent: crawler,
                 allow: '/'
             });
         }
+        processedCrawlers.add(crawler);
     });
 
     // 获取网站域名
