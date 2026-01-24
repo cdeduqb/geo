@@ -66,19 +66,42 @@ export async function POST(request: NextRequest) {
                 console.warn(`[AI Security API] ⚠️ Malicious content detected in task ${taskId}`);
             }
 
-            // Create article
-            const article = await db.article.create({
-                data: {
-                    title: task.topic,
-                    slug: generateSlug(task.topic),
-                    content: cleanContent,  // ✅ 已清理
-                    summary: cleanSummary,  // ✅ 已清理
-                    status: 'DRAFT',  // 🔒 草稿状态
-                    authorId: user.id,
-                    aiGenerated: true,
-                    aiPrompt: prompt,
-                },
-            });
+            // Create article (With collision handling)
+            let article = null;
+            const baseSlug = generateSlug(task.topic);
+            let finalSlug = baseSlug;
+            let retryCount = 0;
+            const maxRetries = 3;
+
+            while (retryCount < maxRetries) {
+                try {
+                    article = await db.article.create({
+                        data: {
+                            title: task.topic,
+                            slug: finalSlug,
+                            content: cleanContent,  // ✅ 已清理
+                            summary: cleanSummary,  // ✅ 已清理
+                            status: 'DRAFT',  // 🔒 草稿状态
+                            authorId: user.id,
+                            aiGenerated: true,
+                            aiPrompt: prompt,
+                        },
+                    });
+                    break;
+                } catch (err: any) {
+                    if (err.code === 'P2002') {
+                        retryCount++;
+                        finalSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 6)}`;
+                        console.warn(`[API] Slug collision. Retry ${retryCount}/${maxRetries}: ${finalSlug}`);
+                    } else {
+                        throw err;
+                    }
+                }
+            }
+
+            if (!article) {
+                throw new Error(`Failed to create article after ${maxRetries} retries due to slug collisions.`);
+            }
 
             // 📋 安全审核日志
             console.log(`[AI Security API] ✅ Article ${article.id} created, sanitized: ${contentWasCleaned}`);

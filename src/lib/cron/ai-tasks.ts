@@ -52,21 +52,44 @@ async function processTask(task: any, adminUserId: string) {
             console.warn(`[AI Security] Original length: ${result.content.length}, Cleaned length: ${cleanContent.length}`);
         }
 
-        // Create article
-        const article = await db.article.create({
-            data: {
-                title: task.topic,
-                slug: generateSlug(task.topic),
-                content: cleanContent,  // ✅ 已清理
-                summary: cleanSummary,  // ✅ 已清理
-                status: 'DRAFT',  // 🔒 改为草稿，需要人工审核后发布
-                authorId: adminUserId,
-                categoryId: task.project?.categoryId || task.categoryId || null,
-                aiGenerated: true,
-                aiPrompt: prompt,
-                automationProjectId: task.projectId || null,
-            },
-        });
+        // Create article (With collision handling)
+        let article = null;
+        const baseSlug = generateSlug(task.topic);
+        let finalSlug = baseSlug;
+        let retryCount = 0;
+        const maxRetries = 3;
+
+        while (retryCount < maxRetries) {
+            try {
+                article = await db.article.create({
+                    data: {
+                        title: task.topic,
+                        slug: finalSlug,
+                        content: cleanContent,  // ✅ 已清理
+                        summary: cleanSummary,  // ✅ 已清理
+                        status: 'DRAFT',  // 🔒 改为草稿，需要人工审核后发布
+                        authorId: adminUserId,
+                        categoryId: task.project?.categoryId || task.categoryId || null,
+                        aiGenerated: true,
+                        aiPrompt: prompt,
+                        automationProjectId: task.projectId || null,
+                    },
+                });
+                break;
+            } catch (err: any) {
+                if (err.code === 'P2002') {
+                    retryCount++;
+                    finalSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 6)}`;
+                    console.warn(`[Cron] Slug collision for article. Retry ${retryCount}/${maxRetries}: ${finalSlug}`);
+                } else {
+                    throw err;
+                }
+            }
+        }
+
+        if (!article) {
+            throw new Error(`Failed to create article after ${maxRetries} retries due to slug collisions.`);
+        }
 
         // 📋 安全审核日志
         console.log(`[AI Security] ✅ Article ${article.id} created from AI task ${task.id}`);

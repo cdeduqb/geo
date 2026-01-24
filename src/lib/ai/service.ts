@@ -177,6 +177,8 @@ export class OpenAIService implements AIService {
 
     async generateArticle(request: AICompletionRequest): Promise<AICompletionResponse> {
         const prompt = request.customPrompt || this.buildPrompt(request);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 300000); // 300s timeout
 
         try {
             logger.info(`[AIService] Calling ${this.model} at ${this.baseUrl} for generateArticle`);
@@ -200,7 +202,10 @@ export class OpenAIService implements AIService {
                     ],
                     temperature: 0.7,
                 }),
+                signal: controller.signal,
             });
+
+            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
@@ -218,7 +223,11 @@ export class OpenAIService implements AIService {
 
             return { content, usage };
         } catch (error) {
+            clearTimeout(timeoutId);
             console.error('AI Service Error:', error);
+            if (error instanceof Error && error.name === 'AbortError') {
+                throw new Error('AI request timed out after 300s');
+            }
             throw error;
         }
     }
@@ -347,6 +356,9 @@ export class GeminiService implements AIService {
     }
 
     async generateArticle(request: AICompletionRequest): Promise<AICompletionResponse> {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 300000); // 300s timeout
+
         try {
             const prompt = request.customPrompt || this.buildPrompt(request);
 
@@ -364,8 +376,11 @@ export class GeminiService implements AIService {
                     generationConfig: {
                         temperature: 0.7,
                     }
-                })
+                }),
+                signal: controller.signal
             });
+
+            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
@@ -379,7 +394,11 @@ export class GeminiService implements AIService {
             // For now, we'll omit usage or estimate it
             return { content };
         } catch (error) {
+            clearTimeout(timeoutId);
             console.error('Gemini Service Error:', error);
+            if (error instanceof Error && error.name === 'AbortError') {
+                throw new Error('Gemini request timed out after 300s');
+            }
             throw error;
         }
     }
@@ -454,6 +473,9 @@ export class BaiduAIService implements AIService {
     }
 
     async generateArticle(request: AICompletionRequest): Promise<AICompletionResponse> {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 300000); // 300s timeout
+
         try {
             const token = await this.getAccessToken();
             // Baidu API URL depends on the model, but for now we use a generic one or map it
@@ -486,8 +508,11 @@ export class BaiduAIService implements AIService {
                     messages: [{ role: 'user', content: prompt }],
                     temperature: 0.7,
                     stream: false
-                })
+                }),
+                signal: controller.signal
             });
+
+            clearTimeout(timeoutId);
 
             const data = await response.json();
 
@@ -505,7 +530,11 @@ export class BaiduAIService implements AIService {
             };
 
         } catch (error) {
+            clearTimeout(timeoutId);
             console.error('Baidu Service Error:', error);
+            if (error instanceof Error && error.name === 'AbortError') {
+                throw new Error('Baidu request timed out after 300s');
+            }
             throw error;
         }
     }

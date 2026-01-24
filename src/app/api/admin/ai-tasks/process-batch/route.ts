@@ -106,27 +106,50 @@ ${content}
                     entities = JSON.parse(entityRes).entities || [];
                 } catch (e) { console.error('Failed to parse entities', e); }
 
-                // Create article
-                const article = await db.article.create({
-                    data: {
-                        title: task.topic,
-                        slug: generateSlug(task.topic),
-                        content: content,
-                        summary: extractSummary(content),
-                        status: 'DRAFT',
-                        authorId: user.id,
-                        aiGenerated: true,
-                        aiPrompt: prompt,
-                        citations: citations as any,
-                        entities: entities as any,
-                        seo: {
-                            create: {
+                // Create article (With collision handling)
+                let article = null;
+                const baseSlug = generateSlug(task.topic);
+                let finalSlug = baseSlug;
+                let retryCount = 0;
+                const maxRetries = 3;
+
+                while (retryCount < maxRetries) {
+                    try {
+                        article = await db.article.create({
+                            data: {
                                 title: task.topic,
-                                description: extractSummary(content),
-                            }
+                                slug: finalSlug,
+                                content: content,
+                                summary: extractSummary(content),
+                                status: 'DRAFT',
+                                authorId: user.id,
+                                aiGenerated: true,
+                                aiPrompt: prompt,
+                                citations: citations as any,
+                                entities: entities as any,
+                                seo: {
+                                    create: {
+                                        title: task.topic,
+                                        description: extractSummary(content),
+                                    }
+                                }
+                            },
+                        });
+                        break;
+                    } catch (err: any) {
+                        if (err.code === 'P2002') {
+                            retryCount++;
+                            finalSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 6)}`;
+                            console.warn(`[BatchAI] Slug collision. Retry ${retryCount}/${maxRetries}: ${finalSlug}`);
+                        } else {
+                            throw err;
                         }
-                    },
-                });
+                    }
+                }
+
+                if (!article) {
+                    throw new Error(`Failed to create article after ${maxRetries} retries due to slug collisions.`);
+                }
 
                 // Update task status
                 await db.aICreationTask.update({

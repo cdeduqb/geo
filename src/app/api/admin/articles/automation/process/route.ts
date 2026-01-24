@@ -164,40 +164,53 @@ export async function POST(request: NextRequest) {
                             const baseSlug = seoData?.slug || `${project.name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}-${task.id.slice(0, 4)}`;
                             const articleLang = 'zh'; // 默认语言
 
-                            // 唯一性检查与处理
+                            // 唯一性检查与处理 (改为多次尝试模式)
                             let finalSlug = baseSlug;
-                            const existingSlug = await db.article.findFirst({
-                                where: { slug: finalSlug, lang: articleLang }
-                            });
+                            let article = null;
+                            let retryCount = 0;
+                            const maxRetries = 3;
 
-                            if (existingSlug) {
-                                finalSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 6)}`;
-                                logger.warn(`[Automation] Slug collision detected: ${baseSlug}. New slug: ${finalSlug}`);
+                            while (retryCount < maxRetries) {
+                                try {
+                                    article = await db.article.create({
+                                        data: {
+                                            title: articleTitle,
+                                            slug: finalSlug,
+                                            content: currentContent,
+                                            summary: seoData?.description || currentContent.slice(0, 300).replace(/<[^>]*>/g, ''),
+                                            coverImage: coverImage,
+                                            status: 'PUBLISHED',
+                                            authorId: userId,
+                                            categoryId: project.categoryId,
+                                            aiGenerated: true,
+                                            automationProjectId: project.id,
+                                            citations: citations ?? undefined,
+                                            entities: entities ?? undefined,
+                                            seo: seoData ? {
+                                                create: {
+                                                    title: seoData.title,
+                                                    description: seoData.description,
+                                                    keywords: seoData.keywords
+                                                }
+                                            } : undefined
+                                        }
+                                    });
+                                    break; // 成功创建，跳出循环
+                                } catch (createErr: any) {
+                                    // 检查是否为唯一约束冲突 (Prisma P2002)
+                                    if (createErr.code === 'P2002' && (createErr.meta?.target?.includes('slug') || createErr.message?.includes('Unique constraint'))) {
+                                        retryCount++;
+                                        finalSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 6)}`;
+                                        logger.warn(`[Automation] Slug collision on create. Retry ${retryCount}/${maxRetries}. New slug: ${finalSlug}`);
+                                    } else {
+                                        throw createErr; // 其他错误继续抛出
+                                    }
+                                }
                             }
 
-                            const article = await db.article.create({
-                                data: {
-                                    title: articleTitle,
-                                    slug: finalSlug,
-                                    content: currentContent,
-                                    summary: seoData?.description || currentContent.slice(0, 300).replace(/<[^>]*>/g, ''),
-                                    coverImage: coverImage,
-                                    status: 'PUBLISHED',
-                                    authorId: userId,
-                                    categoryId: project.categoryId,
-                                    aiGenerated: true,
-                                    automationProjectId: project.id,
-                                    citations: citations ?? undefined,
-                                    entities: entities ?? undefined,
-                                    seo: seoData ? {
-                                        create: {
-                                            title: seoData.title,
-                                            description: seoData.description,
-                                            keywords: seoData.keywords
-                                        }
-                                    } : undefined
-                                }
-                            });
+                            if (!article) {
+                                throw new Error(`Failed to create article after ${maxRetries} retries due to slug collisions.`);
+                            }
 
                             // --- STEP 6: 自动内链 ---
                             if (project.enableAutoLink) {
