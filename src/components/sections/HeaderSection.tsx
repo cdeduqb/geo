@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { registerSection, SectionProps } from '@/lib/sections/registry';
 import { useTranslation } from '@/lib/i18n/use-translation';
 import Link from 'next/link';
@@ -9,6 +9,18 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 export const HeaderSection: React.FC<SectionProps> = ({ data, style = {}, isEditing }) => {
     const { t, getLocalePath } = useTranslation();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    // 锁定背景滚动
+    useEffect(() => {
+        if (mobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [mobileMenuOpen]);
     const {
         logo,
         logoText = '企业官网',
@@ -267,14 +279,14 @@ export const HeaderSection: React.FC<SectionProps> = ({ data, style = {}, isEdit
 
     return (
         <header
-            className={`${editModeClass} ${typeof bgStyle === 'string' ? bgStyle : ''} border-b border-gray-200`}
+            className={`${editModeClass} ${typeof bgStyle === 'string' ? bgStyle : ''} border-b border-gray-200 ${mobileMenuOpen ? 'z-[100]' : ''}`}
             style={typeof bgStyle === 'object' ? bgStyle : undefined}
         >
             <div className="container mx-auto px-4">
                 {renderLayout()}
                 {/* Mobile Menu Button */}
                 <button
-                    className="md:hidden absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 z-50"
+                    className="md:hidden absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 z-[101]"
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                     aria-label="Toggle menu"
                 >
@@ -292,7 +304,7 @@ export const HeaderSection: React.FC<SectionProps> = ({ data, style = {}, isEdit
 
             {/* Mobile Menu Panel */}
             {mobileMenuOpen && (
-                <div className="md:hidden fixed inset-0 z-40 bg-white">
+                <div className="md:hidden fixed inset-0 z-[100] bg-white">
                     <div className="pt-20 pb-6 px-6 h-full overflow-y-auto">
                         <nav className="space-y-4">
                             {defaultNavItems.map((item: any, index: number) => (
