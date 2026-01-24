@@ -335,6 +335,7 @@ export default function SiteSettingsClient({ initialData }: SiteSettingsClientPr
                                         {currentSections.length > 0 ? (
                                             <PageRenderer
                                                 sections={currentSections}
+                                                isEditing={true}
                                                 systemSettings={{
                                                     siteName: brandSettings.site_name,
                                                     phone: contactSettings.contact_phone,

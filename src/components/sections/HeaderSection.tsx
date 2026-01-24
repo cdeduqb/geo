@@ -35,8 +35,17 @@ export const HeaderSection: React.FC<SectionProps> = ({ data, style = {}, isEdit
         { label: '联系', link: '/contact' },
     ];
 
-    // 编辑模式下禁用sticky定位，降低z-index以避免覆盖控制按钮
-    const editModeClass = isEditing ? 'relative z-0' : `${sticky} z-10`;
+    // 编辑模式/预览模式下禁用 fixed 定位，改为 relative 或 sticky，以确保组件留在预览框内
+    let editModeClass = `${sticky} z-10`;
+    if (isEditing) {
+        // 如果包含 fixed，强制改为 relative 以防止跳出预览框
+        if (sticky.includes('fixed')) {
+            editModeClass = 'relative z-0';
+        } else {
+            // sticky top-0 在 relative 容器中仍能工作，但为安全起见确保 z-index 不会遮挡编辑器
+            editModeClass = `${sticky} z-0`;
+        }
+    }
 
     // 处理背景颜色（支持Tailwind类名、十六进制、rgba、渐变等）
     const bgStyle = backgroundColor?.startsWith('bg-')
