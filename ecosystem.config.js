@@ -41,9 +41,9 @@ module.exports = {
                 NODE_OPTIONS: '--max-old-space-size=384',
             },
             // 错误日志
-            error_file: '/www/wwwlogs/molicms-error.log',
+            error_file: './logs/error.log',
             // 输出日志
-            out_file: '/www/wwwlogs/molicms-out.log',
+            out_file: './logs/out.log',
             // 日志时间格式
             time: true,
             // 合并日志

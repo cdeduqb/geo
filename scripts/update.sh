@@ -80,8 +80,16 @@ fi
 
 # 5. Reload Service (平滑重载)
 echo "[5/5] Reloading service..."
-# 尝试重载，如果不存在则启动
-pm2 reload ecosystem.config.js --update-env || pm2 start ecosystem.config.js --update-env
+
+# 授权处理：如果存在旧的 geocms 进程，先将其停止以释放资源
+if pm2 list | grep -q "geocms"; then
+    echo "Found old process 'geocms', stopping it..."
+    pm2 stop geocms 2>/dev/null
+    pm2 delete geocms 2>/dev/null
+fi
+
+# 尝试重启 molicms，如果不存在则从配置文件启动
+pm2 reload molicms --update-env || pm2 start ecosystem.config.js --update-env
 pm2 save
 
 # 6. 自动检查并修复 Nginx 配置（需要 root 权限）

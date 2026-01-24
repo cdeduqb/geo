@@ -11,7 +11,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # 项目路径
-PROJECT_DIR="/www/wwwroot/molicms"
+PROJECT_DIR="/www/wwwroot/moligeocms"
 
 echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}   Molicms 部署脚本 v1.0${NC}"
