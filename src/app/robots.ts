@@ -75,15 +75,17 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
     const allCrawlerIds = Array.from(new Set([...AI_CRAWLERS, ...configCrawlerIds]));
 
     allCrawlerIds.forEach(crawler => {
-        const config = geoSettings.crawlerConfig?.[crawler];
-        if (!config) return; // 如果既不在列表也不在配置中，跳过
+        // 关键修复：如果没有显式配置，则默认取 'allow' (一键允许所有)
+        // 这解决了不同服务器因为数据库历史状态不同导致 robots.txt 展现列表不一致的问题
+        const config = geoSettings.crawlerConfig?.[crawler] || 'allow';
 
         if (config === 'disallow') {
             rules.push({
                 userAgent: crawler,
                 disallow: '/'
             });
-        } else if (config === 'allow') {
+        } else {
+            // 只要不是明确 Disallow，一律显式 Allow，确保列表完整性
             rules.push({
                 userAgent: crawler,
                 allow: '/'
