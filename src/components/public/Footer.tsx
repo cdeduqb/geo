@@ -8,7 +8,7 @@ export default async function Footer() {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="border-t border-gray-200 bg-gray-50  ">
+        <footer className="bg-gray-50  ">
             <div className="container mx-auto px-4 py-12 md:px-6">
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
                     <div className="space-y-4">
@@ -70,7 +70,7 @@ export default async function Footer() {
                         </ul>
                     </div>
                 </div>
-                <div className="mt-12 border-t border-gray-200 pt-8 text-center text-sm text-gray-500  ">
+                <div className="mt-12 pt-8 text-center text-sm text-gray-500  ">
                     {t(locale, 'footer.copyright', { year: currentYear.toString() })}
                 </div>
             </div>

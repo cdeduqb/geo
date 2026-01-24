@@ -36,7 +36,7 @@ export const Footer15Section: React.FC<SectionProps> = ({ data = {}, style = {},
                         ))}
                     </div>
                 )}
-                <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-current opacity-10">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6 pt-8">
                     {navLinks && navLinks.length > 0 && (
                         <div className="flex flex-wrap gap-6">
                             {navLinks.map((item: any, i: number) => <Link key={i} href={getLocalePath(item.link || '#')} className="text-sm opacity-70 hover:opacity-100">{item.label}</Link>)}

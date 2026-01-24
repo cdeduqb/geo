@@ -43,7 +43,7 @@ export const Footer10Section: React.FC<SectionProps> = ({ data = {}, style = {},
                             </div>
                         )}
                     </div>
-                    <div className="pt-8 border-t border-current/10 opacity-60 text-center text-sm">
+                    <div className="pt-8 opacity-60 text-center text-sm">
                         <Copyright className="" systemCopyright={systemSettings?.copyright} />
                         {systemSettings?.icp_number && (
                             <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" className="ml-4 hover:underline">

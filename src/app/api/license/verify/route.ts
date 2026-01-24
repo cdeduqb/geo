@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
 import { LicenseCache } from '@/lib/license/core/cache';
 import { LicenseVerifier } from '@/lib/license/core/verifier';
 

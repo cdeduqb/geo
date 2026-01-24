@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
-import { getSiteUrl } from '@/lib/system-settings';
+import { getSiteUrl, getI18nSettings } from '@/lib/system-settings';
+import { locales, defaultLocale } from '@/lib/i18n';
 import { db } from '@/lib/db';
 
 // AI 爬虫列表
@@ -33,11 +34,25 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
     }
 
     // 基础规则
+    const i18nSettings = await getI18nSettings();
+    const enableMultiLanguage = i18nSettings?.enableMultiLanguage;
+
+    const disallowPaths = ['/admin/', '/api/'];
+
+    // 如果禁用多语言，将所有非默认语言路径加入禁止访问列表
+    if (!enableMultiLanguage) {
+        locales.forEach(locale => {
+            if (locale !== defaultLocale) {
+                disallowPaths.push(`/${locale}/`);
+            }
+        });
+    }
+
     const rules: MetadataRoute.Robots['rules'] = [
         {
             userAgent: '*',
             allow: '/',
-            disallow: ['/admin/', '/api/']
+            disallow: disallowPaths
         }
     ];
 

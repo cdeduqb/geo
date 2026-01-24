@@ -33,7 +33,11 @@ export async function GET() {
 
         // 获取主要页面
         const pages = await db.page.findMany({
-            where: { status: 'PUBLISHED' },
+            where: {
+                status: 'PUBLISHED',
+                // 如果禁用多语言，只获取默认语言的内容
+                ...(enableMultiLanguage ? {} : { lang: defaultLocale })
+            },
             select: { title: true, slug: true, lang: true },
             orderBy: [{ isDefault: 'desc' }, { updatedAt: 'desc' }],
             take: 20
@@ -46,7 +50,11 @@ export async function GET() {
 
         // 最新文章
         const articles = await db.article.findMany({
-            where: { status: 'PUBLISHED' },
+            where: {
+                status: 'PUBLISHED',
+                // 如果禁用多语言，只获取默认语言的内容
+                ...(enableMultiLanguage ? {} : { lang: defaultLocale })
+            },
             select: { title: true, slug: true, lang: true, summary: true },
             orderBy: { createdAt: 'desc' },
             take: 50
@@ -62,7 +70,11 @@ export async function GET() {
 
         // 最新产品
         const products = await db.product.findMany({
-            where: { status: 'PUBLISHED' },
+            where: {
+                status: 'PUBLISHED',
+                // 如果禁用多语言，只获取默认语言的内容
+                ...(enableMultiLanguage ? {} : { lang: defaultLocale })
+            },
             select: { name: true, slug: true, lang: true, description: true },
             orderBy: { createdAt: 'desc' },
             take: 50

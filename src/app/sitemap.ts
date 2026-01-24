@@ -38,7 +38,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
         // 2. 获取所有已发布的页面 (CMS 动态页面)
         const pages = await db.page.findMany({
-            where: { status: 'PUBLISHED' },
+            where: {
+                status: 'PUBLISHED',
+                // 如果禁用多语言，只获取默认语言的内容
+                ...(enableMultiLanguage ? {} : { lang: defaultLocale })
+            },
             select: { slug: true, updatedAt: true, lang: true },
         });
 
@@ -51,7 +55,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
         // 3. 获取所有已发布的文章
         const articles = await db.article.findMany({
-            where: { status: 'PUBLISHED' },
+            where: {
+                status: 'PUBLISHED',
+                // 如果禁用多语言，只获取默认语言的内容
+                ...(enableMultiLanguage ? {} : { lang: defaultLocale })
+            },
             select: { slug: true, updatedAt: true, lang: true },
         });
 
@@ -64,7 +72,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
         // 4. 获取所有已发布的产品
         const products = await db.product.findMany({
-            where: { status: 'PUBLISHED' },
+            where: {
+                status: 'PUBLISHED',
+                // 如果禁用多语言，只获取默认语言的内容
+                ...(enableMultiLanguage ? {} : { lang: defaultLocale })
+            },
             select: { slug: true, updatedAt: true, lang: true },
         });
 

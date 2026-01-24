@@ -13,7 +13,7 @@ export const Footer12Section: React.FC<SectionProps> = ({ data = {}, style = {},
 
 
     return (
-        <footer className="w-full py-6 border-t" style={{ backgroundColor, color: textColor, borderColor: `${textColor}20` }}>
+        <footer className="w-full py-6" style={{ backgroundColor, color: textColor }}>
             <div className="container mx-auto px-4">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                     <span className="text-sm font-bold">{logoText}</span>

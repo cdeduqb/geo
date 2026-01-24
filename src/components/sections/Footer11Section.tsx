@@ -48,7 +48,7 @@ export const Footer11Section: React.FC<SectionProps> = ({ data = {}, style = {},
                     </div>
                     {workingHours && <p className="mt-8 text-sm opacity-50">⏰ {workingHours}</p>}
                 </div>
-                <div className="border-t border-white/10 pt-12">
+                <div className="pt-12">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                         <Link href={getLocalePath('/')}>{logo ? <img src={logo} alt={logoText} className="h-10 w-auto" /> : <span className="text-xl font-bold">{logoText}</span>}</Link>
                         {navLinks && navLinks.length > 0 && (

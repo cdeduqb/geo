@@ -39,7 +39,7 @@ export const Footer06Section: React.FC<SectionProps> = ({ data = {}, style = {},
                         {navLinks.map((item: any, i: number) => <Link key={i} href={getLocalePath(item.link || '#')} className="text-sm opacity-70 hover:opacity-100">{item.label}</Link>)}
                     </nav>
                 )}
-                <div className="pt-8 border-t border-current/10 opacity-60 text-center text-sm">
+                <div className="pt-8 opacity-60 text-center text-sm">
                     <Copyright className="" systemCopyright={systemSettings?.copyright} />
                     {systemSettings?.icp_number && <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" className="ml-4 hover:underline">{systemSettings?.icp_number}</a>}
                 </div>
