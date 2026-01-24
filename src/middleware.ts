@@ -16,24 +16,27 @@ const AI_CRAWLER_MAP = [
     { keyword: 'perplexitybot', id: 'PerplexityBot' },
     { keyword: 'meta-externalagent', id: 'Meta-ExternalAgent' },
     { keyword: 'facebookexternalhit', id: 'Meta-ExternalAgent' },
+    { keyword: 'facebookbot', id: 'FacebookBot' },
     { keyword: 'applebot', id: 'Applebot' },
+    { keyword: 'applebot-extended', id: 'Applebot-Extended' },
     { keyword: 'bingbot', id: 'Bingbot' },
     { keyword: 'amazonbot', id: 'Amazonbot' },
     { keyword: 'ccbot', id: 'CCBot' },
     { keyword: 'bytespider', id: 'Bytespider' },
     { keyword: 'baiduspider', id: 'Baiduspider' },
-    { keyword: 'deepseekbot', id: 'DeepSeekBot' },
-    { keyword: 'moonshotbot', id: 'MoonshotBot' },
-    { keyword: 'qwenbot', id: 'QwenBot' },
-    { keyword: 'tongyibot', id: 'QwenBot' },
+    { keyword: 'deepseek', id: 'DeepSeekBot' }, // 拓宽关键字，包含 deepseek-bot 等变体
+    { keyword: 'moonshot', id: 'MoonshotBot' }, // 拓宽关键字，包含 kimi 等
+    { keyword: 'qwen', id: 'QwenBot' },
+    { keyword: 'tongyi', id: 'QwenBot' },
     { keyword: 'tencentbot', id: 'TencentBot' },
-    { keyword: 'zhipubot', id: 'ZhipuBot' },
+    { keyword: 'zhipu', id: 'ZhipuBot' },
     { keyword: '360spider', id: '360Spider' },
     { keyword: 'sogou-spider', id: 'Sogou-spider' },
     { keyword: 'yisouspider', id: 'YisouSpider' },
-    { keyword: 'baichuanbot', id: 'BaiChuanBot' },
-    { keyword: 'minimaxbot', id: 'MiniMaxBot' },
-    { keyword: 'petalbot', id: 'PetalBot' }
+    { keyword: 'baichuan', id: 'BaiChuanBot' },
+    { keyword: 'minimax', id: 'MiniMaxBot' },
+    { keyword: 'petalbot', id: 'PetalBot' },
+    { keyword: 'alibaba-agent', id: 'Alibaba-Agent' }
 ];
 
 
