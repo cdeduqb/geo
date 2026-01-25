@@ -48,7 +48,7 @@ export const HeaderSection: React.FC<SectionProps> = ({ data, style = {}, isEdit
     ];
 
     // 编辑模式/预览模式下禁用 fixed 定位，改为 relative 或 sticky，以确保组件留在预览框内
-    let editModeClass = `${sticky} z-10`;
+    let editModeClass = `${sticky} z-[100]`;
     if (isEditing) {
         // 如果包含 fixed，强制改为 relative 以防止跳出预览框
         if (sticky.includes('fixed')) {
@@ -279,7 +279,7 @@ export const HeaderSection: React.FC<SectionProps> = ({ data, style = {}, isEdit
 
     return (
         <header
-            className={`${editModeClass} ${typeof bgStyle === 'string' ? bgStyle : ''} border-b border-gray-200 ${mobileMenuOpen ? 'z-[100]' : ''}`}
+            className={`${editModeClass} ${typeof bgStyle === 'string' ? bgStyle : ''} border-b border-gray-200`}
             style={typeof bgStyle === 'object' ? bgStyle : undefined}
         >
             <div className="container mx-auto px-4">
