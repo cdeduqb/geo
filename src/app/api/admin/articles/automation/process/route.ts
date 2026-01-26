@@ -50,14 +50,27 @@ export async function POST(request: NextRequest) {
                     const results = [];
                     for (const task of pendingTasks) {
                         try {
-                            // 更新状态为处理中
-                            await db.aICreationTask.update({
-                                where: { id: task.id },
-                                data: { status: 'PROCESSING' }
-                            });
-
                             const project = task.project as any;
                             if (!project) continue;
+
+                            // --- ATOMIC CLAIM ---
+                            // 使用 updateMany 配合 status 检查来原子性地“认领”任务
+                            // 这可以防止多个并发进程（或重复点击）同时处理同一个任务
+                            const claimResult = await db.aICreationTask.updateMany({
+                                where: {
+                                    id: task.id,
+                                    status: 'PENDING'
+                                },
+                                data: {
+                                    status: 'PROCESSING'
+                                }
+                            });
+
+                            if (claimResult.count === 0) {
+                                logger.warn(`[Automation] Task ${task.id} already claimed or processed. Skipping.`);
+                                continue;
+                            }
+
                             const aiService = await getAIService();
                             const userId = project.authorId;
 

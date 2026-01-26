@@ -825,3 +825,21 @@
 [2026-01-26T02:27:19.270Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
 [2026-01-26T02:28:02.652Z] INFO: [Pipeline] Auto-linking completed, length: 2845
 [2026-01-26T02:28:03.058Z] INFO: [Automation] Task c37569ba-a2d9-411e-9f13-549fce3ac900: Triggering SEO Auto-push
+[2026-01-26T02:32:56.065Z] INFO: [AIService] Initialized fallback chain: deepseek(P1) -> qwen(P0) -> kimi(P0)
+[2026-01-26T02:32:56.065Z] INFO: [Automation] Processing Task 0a310f02-47c8-4d4e-bc95-41b264fadd59: Initial Writing
+[2026-01-26T02:32:56.066Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-26T02:32:56.066Z] INFO: [AIService] Trying deepseek for generateArticle
+[2026-01-26T02:32:56.066Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateArticle
+[2026-01-26T02:33:41.682Z] INFO: [Automation] Task 0a310f02-47c8-4d4e-bc95-41b264fadd59: Generating Metadata (SEO, Entities, Citations)
+[2026-01-26T02:33:42.018Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-26T02:33:42.019Z] INFO: [Pipeline] Extracting entities
+[2026-01-26T02:33:42.020Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-26T02:33:42.122Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-26T02:33:42.123Z] INFO: [Pipeline] Generating SEO for: 成都geo优化公司
+[2026-01-26T02:33:42.123Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-26T02:33:59.744Z] INFO: [Automation] Task 0a310f02-47c8-4d4e-bc95-41b264fadd59: Finalizing Article
+[2026-01-26T02:34:00.533Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-26T02:34:00.534Z] INFO: [Pipeline] Auto-linking for: 成都geo优化公司 with 50 candidates
+[2026-01-26T02:34:00.534Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-26T02:34:46.056Z] INFO: [Pipeline] Auto-linking completed, length: 3006
+[2026-01-26T02:34:46.447Z] INFO: [Automation] Task 0a310f02-47c8-4d4e-bc95-41b264fadd59: Triggering SEO Auto-push

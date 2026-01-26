@@ -203,17 +203,26 @@ export async function POST(request: NextRequest) {
 
         // 2. 生成初始任务 (AICreationTask)
         const tasksData = [];
+        const now = new Date();
+
         for (let i = 0; i < actualTotalCount; i++) {
             // 计算发布日期
             const dayOffset = Math.floor(i / actualDailyLimit);
-            let scheduledAt = new Date();
+            let scheduledAt = new Date(now.getTime());
             scheduledAt.setDate(scheduledAt.getDate() + dayOffset);
+
             if (i === 0) {
                 // 第一篇在 10 分钟后发布，给系统留出处理缓冲
-                scheduledAt = new Date(Date.now() + 10 * 60 * 1000);
+                scheduledAt = new Date(now.getTime() + 10 * 60 * 1000);
             } else {
                 // 其他任务随机设置当天的具体小时 (9:00 - 17:00)
-                scheduledAt.setHours(9 + Math.floor(Math.random() * 8), Math.floor(Math.random() * 60));
+                scheduledAt.setHours(9 + Math.floor(Math.random() * 8), Math.floor(Math.random() * 60), 0, 0);
+
+                // 安全防范：如果是今天 (dayOffset 为 0) 且随机到的时间已经在过去
+                // 则强制推迟到当前时间之后，避免任务堆积瞬间爆发
+                if (dayOffset === 0 && scheduledAt.getTime() <= now.getTime()) {
+                    scheduledAt = new Date(now.getTime() + (i * 10 + 10) * 60 * 1000);
+                }
             }
 
             // 根据模式决定任务的 topic
