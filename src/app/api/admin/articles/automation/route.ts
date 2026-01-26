@@ -191,6 +191,7 @@ export async function POST(request: NextRequest) {
                     enableSEO: !!features?.seo,
                     enableCitations: !!features?.citations,
                     enableEntities: !!features?.entities,
+                    optimizeTitle: features?.optimizeTitle !== undefined ? !!features.optimizeTitle : true,
                     status: 'ACTIVE'
                 }
             });

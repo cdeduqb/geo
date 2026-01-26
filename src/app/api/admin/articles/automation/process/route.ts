@@ -160,7 +160,10 @@ export async function POST(request: NextRequest) {
 
                             // --- STEP 5: 创建文章记录 ---
                             logger.info(`[Automation] Task ${task.id}: Finalizing Article`);
-                            const articleTitle = seoData?.title || task.topic.split(': ')[1] || task.topic;
+                            // 如果关闭了优化标题，则严格使用任务原始主题 (task.topic)
+                            const articleTitle = project.optimizeTitle === false
+                                ? task.topic
+                                : (seoData?.title || task.topic.split(': ')[1] || task.topic);
                             const baseSlug = seoData?.slug || `${project.name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}-${task.id.slice(0, 4)}`;
                             const articleLang = 'zh'; // 默认语言
 
@@ -188,7 +191,7 @@ export async function POST(request: NextRequest) {
                                             entities: entities ?? undefined,
                                             seo: seoData ? {
                                                 create: {
-                                                    title: seoData.title,
+                                                    title: project.optimizeTitle === false ? articleTitle : seoData.title,
                                                     description: seoData.description,
                                                     keywords: seoData.keywords
                                                 }

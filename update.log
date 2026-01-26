@@ -1,0 +1,104 @@
+============================================
+Update started at 2026年 1月26日 星期一 09时58分58秒 CST
+============================================
+[1/5] Fetching latest code...
+HEAD is now at 9f77cf4 fix: 修复文章详情页向下滑动时内容覆盖页眉的问题 (v0.1.64)
+[2/5] Installing dependencies...
+
+added 8 packages, removed 18 packages, and changed 12 packages in 3s
+
+286 packages are looking for funding
+  run `npm fund` for details
+
+up to date in 994ms
+
+286 packages are looking for funding
+  run `npm fund` for details
+
+> molicms@0.1.64 postinstall
+> prisma generate
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+
+✔ Generated Prisma Client (v5.17.0) to ./node_modules/@prisma/client in 219ms
+
+Start by importing your Prisma Client (See: http://pris.ly/d/importing-client)
+
+Tip: Easily identify and fix slow SQL queries in your app. Optimize helps you enhance your visibility: https://pris.ly/--optimize
+
+
+up to date in 2s
+
+286 packages are looking for funding
+  run `npm fund` for details
+
+up to date in 699ms
+
+286 packages are looking for funding
+  run `npm fund` for details
+[3/5] Updating database schema...
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+
+✔ Generated Prisma Client (v5.17.0) to ./node_modules/@prisma/client in 187ms
+
+Start by importing your Prisma Client (See: http://pris.ly/d/importing-client)
+
+Tip: Easily identify and fix slow SQL queries in your app. Optimize helps you enhance your visibility: https://pris.ly/--optimize
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": MySQL database "moli123" at "152.136.127.71:3306"
+
+🚀  Your database is now in sync with your Prisma schema. Done in 1.05s
+
+Running generate... (Use --skip-generate to skip the generators)
+[2K[1A[2K[GRunning generate... - Prisma Client
+[2K[1A[2K[G✔ Generated Prisma Client (v5.17.0) to ./node_modules/@prisma/client in 168ms
+
+Clearing Next.js cache...
+[4/5] Building application...
+
+> molicms@0.1.64 build
+> next build
+
+ ⚠ You are using a non-standard "NODE_ENV" value in your environment. This creates inconsistencies in the project and is strongly advised against. Read more: https://nextjs.org/docs/messages/non-standard-node-env
+  ▲ Next.js 14.2.5
+  - Environments: .env
+  - Experiments (use with caution):
+    · instrumentationHook
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+PageNotFoundError: Cannot find module for page: /api/admin/ai-configs
+    at getPagePath (/Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/node_modules/next/dist/server/require.js:94:15)
+    at requirePage (/Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/node_modules/next/dist/server/require.js:99:22)
+    at /Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/node_modules/next/dist/server/load-components.js:98:84
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async loadComponentsImpl (/Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/node_modules/next/dist/server/load-components.js:98:26)
+    at async /Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/node_modules/next/dist/build/utils.js:1116:32
+    at async Span.traceAsyncFn (/Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/node_modules/next/dist/trace/trace.js:154:20) {
+  code: 'ENOENT'
+}
+PageNotFoundError: Cannot find module for page: /api/admin/ai-tasks/process
+    at getPagePath (/Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/node_modules/next/dist/server/require.js:94:15)
+    at requirePage (/Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/node_modules/next/dist/server/require.js:99:22)
+    at /Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/node_modules/next/dist/server/load-components.js:98:84
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async loadComponentsImpl (/Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/node_modules/next/dist/server/load-components.js:98:26)
+    at async /Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/node_modules/next/dist/build/utils.js:1116:32
+    at async Span.traceAsyncFn (/Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/node_modules/next/dist/trace/trace.js:154:20) {
+  code: 'ENOENT'
+}
+
+> Build error occurred
+Error: Failed to collect page data for /api/admin/ai-configs
+    at /Users/yang/Downloads/企业官网12.29版本/1.10/ai/geocms/node_modules/next/dist/build/utils.js:1268:15
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  type: 'Error'
+}
+Error: Build failed! Service was NOT stopped, so site is still online.

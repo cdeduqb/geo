@@ -304,6 +304,7 @@ model ArticleAutomationProject {
   enableSEO        Boolean          @default(true)
   enableCitations  Boolean          @default(true)
   enableEntities   Boolean          @default(true)
+  optimizeTitle    Boolean          @default(true)
   categoryId       String?
   authorId         String
   strategyId       String

@@ -255,7 +255,7 @@ Please return in JSON format:
     "title": "SEO Optimized Title (within 60 characters)",
     "description": "Meta Description (within 150 characters)",
     "keywords": "5-8 keywords, comma separated",
-    "slug": "url-friendly-slug-lowercase"
+    "slug": "Minimal URL slug (3-5 core keywords, lowercase, no stop words like a/the/and, max 50 chars)"
 }
 ` : `
 作为 SEO 专家，请为这篇文章生成 SEO 元数据。
@@ -268,7 +268,7 @@ Please return in JSON format:
     "title": "SEO 优化标题 (60字符以内)",
     "description": "Meta Description (150字符以内)",
     "keywords": "5-8个关键词, 逗号分隔",
-    "slug": "url-friendly-english-slug-lowercase"
+    "slug": "极简 URL 路径 (仅包含 3-5 个核心英文关键词，全小写横杠连接，移除 a/the/of 等虚词，50 字符以内)"
 }
 `;
         logger.info(`[Pipeline] Generating SEO for: ${title}`);

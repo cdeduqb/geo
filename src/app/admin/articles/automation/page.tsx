@@ -251,6 +251,7 @@ export default function AutomationProjectsListPage() {
                                     {project.enableIllustrate && <span className="bg-blue-50 text-blue-600 text-[10px] font-bold px-2 py-0.5 rounded-md border border-blue-100">AI配图</span>}
                                     {project.enableCover && <span className="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-0.5 rounded-md border border-indigo-100">封面</span>}
                                     {project.enableAutoLink && <span className="bg-green-50 text-green-600 text-[10px] font-bold px-2 py-0.5 rounded-md border border-green-100">内链</span>}
+                                    {project.optimizeTitle === false && <span className="bg-amber-50 text-amber-600 text-[10px] font-bold px-2 py-0.5 rounded-md border border-amber-100">固定标题</span>}
                                 </div>
 
                                 {/* Footer */}

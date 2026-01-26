@@ -30,7 +30,8 @@ export default function NewAutomationProject() {
             cover: true,
             seo: true,
             citations: true,
-            entities: true
+            entities: true,
+            optimizeTitle: true
         },
         executionMode: 'auto' as 'manual' | 'auto'
     });
@@ -331,6 +332,7 @@ export default function NewAutomationProject() {
                                 { id: 'seo', label: 'SEO 自动配置', desc: '自动生成 TDK 和 URL Slug' },
                                 { id: 'citations', label: '权威引用生成', desc: '自动检索并添加参考资料' },
                                 { id: 'entities', label: '实体识别与画像', desc: '自动提取人物、组织、地点' },
+                                { id: 'optimizeTitle', label: '优化文章标题', desc: 'AI 自动重写标题。不勾选则保留您的原始标题' },
                             ].map((f) => (
                                 <div
                                     key={f.id}

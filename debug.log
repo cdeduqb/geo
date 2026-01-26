@@ -780,3 +780,48 @@
 [2026-01-22T07:31:34.305Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
 [2026-01-22T07:31:59.611Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
 [2026-01-22T07:31:59.612Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-26T02:09:51.823Z] INFO: [AIService] Initialized fallback chain: deepseek(P1) -> qwen(P0) -> kimi(P0)
+[2026-01-26T02:09:51.824Z] INFO: [Automation] Processing Task 9bb2768e-4453-407a-9126-73760c6fa261: Initial Writing
+[2026-01-26T02:09:51.825Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-26T02:09:51.825Z] INFO: [AIService] Trying deepseek for generateArticle
+[2026-01-26T02:09:51.826Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateArticle
+[2026-01-26T02:10:59.810Z] INFO: [Automation] Task 9bb2768e-4453-407a-9126-73760c6fa261: GEO Optimization starting...
+[2026-01-26T02:11:00.306Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-26T02:11:00.388Z] INFO: [Pipeline] GEO optimizing for: 成都geo优化公司 (zh)
+[2026-01-26T02:11:00.389Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-26T02:12:22.950Z] INFO: [Pipeline] GEO optimization received length: 4555
+[2026-01-26T02:12:22.951Z] INFO: [Automation] Task 9bb2768e-4453-407a-9126-73760c6fa261: GEO Optimization completed.
+[2026-01-26T02:12:22.952Z] INFO: [Automation] Task 9bb2768e-4453-407a-9126-73760c6fa261: Generating Metadata (SEO, Entities, Citations)
+[2026-01-26T02:12:23.314Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-26T02:12:23.315Z] INFO: [Pipeline] Generating citations
+[2026-01-26T02:12:23.315Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-26T02:12:23.324Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-26T02:12:23.324Z] INFO: [Pipeline] Extracting entities
+[2026-01-26T02:12:23.324Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-26T02:12:23.381Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-26T02:12:23.382Z] INFO: [Pipeline] Generating SEO for: 成都geo优化公司
+[2026-01-26T02:12:23.382Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-26T02:12:51.631Z] INFO: [Automation] Task 9bb2768e-4453-407a-9126-73760c6fa261: Finalizing Article
+[2026-01-26T02:12:52.492Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-26T02:12:52.493Z] INFO: [Pipeline] Auto-linking for: 成都geo优化公司 with 50 candidates
+[2026-01-26T02:12:52.493Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-26T02:14:13.550Z] INFO: [Pipeline] Auto-linking completed, length: 5142
+[2026-01-26T02:14:13.869Z] INFO: [Automation] Task 9bb2768e-4453-407a-9126-73760c6fa261: Triggering SEO Auto-push
+[2026-01-26T02:26:13.005Z] INFO: [AIService] Initialized fallback chain: deepseek(P1) -> qwen(P0) -> kimi(P0)
+[2026-01-26T02:26:13.005Z] INFO: [Automation] Processing Task c37569ba-a2d9-411e-9f13-549fce3ac900: Initial Writing
+[2026-01-26T02:26:13.005Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-26T02:26:13.005Z] INFO: [AIService] Trying deepseek for generateArticle
+[2026-01-26T02:26:13.006Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateArticle
+[2026-01-26T02:26:58.572Z] INFO: [Automation] Task c37569ba-a2d9-411e-9f13-549fce3ac900: Generating Metadata (SEO, Entities, Citations)
+[2026-01-26T02:26:59.073Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-26T02:26:59.074Z] INFO: [Pipeline] Generating SEO for: 成都AI优化公司
+[2026-01-26T02:26:59.076Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-26T02:26:59.087Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-26T02:26:59.088Z] INFO: [Pipeline] Extracting entities
+[2026-01-26T02:26:59.088Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-26T02:27:18.439Z] INFO: [Automation] Task c37569ba-a2d9-411e-9f13-549fce3ac900: Finalizing Article
+[2026-01-26T02:27:19.269Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-01-26T02:27:19.270Z] INFO: [Pipeline] Auto-linking for: 成都AI优化公司 with 50 candidates
+[2026-01-26T02:27:19.270Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-01-26T02:28:02.652Z] INFO: [Pipeline] Auto-linking completed, length: 2845
+[2026-01-26T02:28:03.058Z] INFO: [Automation] Task c37569ba-a2d9-411e-9f13-549fce3ac900: Triggering SEO Auto-push

@@ -273,6 +273,7 @@ export default function AutomationProjectDetailPage({ params }: { params: { id: 
                                 { on: project.enableAutoLink, label: '自动内链' },
                                 { on: project.enableCover, label: '封面生成' },
                                 { on: project.enableSEO, label: 'SEO 设置' },
+                                { on: project.optimizeTitle, label: '优化标题' },
                             ].map((feat, i) => (
                                 <div key={i} className="flex items-center justify-between text-xs">
                                     <span className="text-gray-400 font-medium">{feat.label}</span>
