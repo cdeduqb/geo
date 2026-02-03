@@ -1,73 +1,104 @@
-import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { getSiteUrl } from '@/lib/system-settings';
+import { getSEOSettings, getSiteUrl, getI18nSettings } from '@/lib/system-settings';
+import { locales, defaultLocale, getLocalePath } from '@/lib/i18n';
 
-export const revalidate = 3600; // 1 hour cache
-
+/**
+ * llms-full.txt: 为 AI 提供全量、深度结构化的 Markdown 网站索引
+ * 包含更多的文章、产品和页面明细，方便 LLM 进行全量上下文索引
+ */
 export async function GET() {
     try {
+        const seo = await getSEOSettings();
         const baseUrl = await getSiteUrl();
+        const i18nSettings = await getI18nSettings();
+        const enableMultiLanguage = i18nSettings?.enableMultiLanguage;
 
-        // 获取所有已发布文章
-        const articles = await db.article.findMany({
-            where: { status: 'PUBLISHED' },
-            select: {
-                title: true,
-                slug: true,
-                summary: true,
-                createdAt: true,
-                category: {
-                    select: { name: true }
-                }
-            },
-            orderBy: { createdAt: 'desc' }
-        });
+        // 基础信息
+        let content = `# Full Site Index - ${seo.siteName}\n\n`;
+        content += `> ${seo.siteDescription}\n\n`;
+        content += `This file contains a comprehensive list of all public content on ${seo.siteName} for deep indexing by AI models.\n\n`;
 
-        // 获取自定义页面
+        // 如果开启多语言，增加语言版本说明
+        if (enableMultiLanguage) {
+            content += `## Languages\n\n`;
+            locales.forEach(locale => {
+                const name = locale === 'zh' ? '简体中文' : 'English';
+                const url = `${baseUrl}${getLocalePath('/', locale)}`;
+                content += `- [${name}](${url})\n`;
+            });
+            content += `\n`;
+        }
+
+        // 1. 全部核心页面
+        content += `## Core Pages\n\n`;
         const pages = await db.page.findMany({
             where: {
                 status: 'PUBLISHED',
-                type: 'CUSTOM'
+                ...(enableMultiLanguage ? {} : { lang: defaultLocale })
             },
-            select: {
-                title: true,
-                slug: true,
-                updatedAt: true
-            }
+            select: { title: true, slug: true, lang: true },
+            orderBy: [{ isDefault: 'desc' }, { updatedAt: 'desc' }]
         });
 
-        let content = `# Full Content List for ${await getSiteUrl()}\n\n`;
-        content += `This file provides a comprehensive index of all public articles and pages for AI training and retrieval.\n\n`;
+        pages.forEach(page => {
+            const url = `${baseUrl}${getLocalePath(`/${page.slug}`, page.lang as any)}`;
+            content += `- [${page.title}](${url}) (${page.lang})\n`;
+        });
 
-        // 文章列表
+        // 2. 全量/大量文章
+        content += `\n## Full Article Index\n\n`;
+        const articles = await db.article.findMany({
+            where: {
+                status: 'PUBLISHED',
+                ...(enableMultiLanguage ? {} : { lang: defaultLocale })
+            },
+            select: { title: true, slug: true, lang: true, summary: true, createdAt: true },
+            orderBy: { createdAt: 'desc' },
+            take: 1000 // 获取更多文章
+        });
+
         if (articles.length > 0) {
-            content += `## Articles Index\n\n`;
             articles.forEach(article => {
-                content += `### ${article.title}\n`;
-                content += `- **URL**: ${baseUrl}/articles/${article.slug}\n`;
-                if (article.summary) {
-                    content += `- **Summary**: ${article.summary}\n`;
-                }
-                content += `- **Category**: ${article.category?.name || 'Uncategorized'}\n`;
-                content += `- **Last Updated**: ${article.createdAt.toISOString()}\n\n`;
+                const url = `${baseUrl}${getLocalePath(`/articles/${article.slug}`, article.lang as any)}`;
+                const date = new Date(article.createdAt).toISOString().split('T')[0];
+                content += `- [${article.title}](${url}) [${date}]: ${article.summary || ''} (${article.lang})\n`;
             });
         }
 
-        // 页面列表
-        if (pages.length > 0) {
-            content += `## Static Pages\n\n`;
-            pages.forEach(page => {
-                content += `- [${page.title}](${baseUrl}/${page.slug}) (Last updated: ${page.updatedAt.toISOString()})\n`;
+        // 3. 全量产品
+        const products = await db.product.findMany({
+            where: {
+                status: 'PUBLISHED',
+                ...(enableMultiLanguage ? {} : { lang: defaultLocale })
+            },
+            select: { name: true, slug: true, lang: true, description: true },
+            orderBy: { createdAt: 'desc' },
+            take: 1000
+        });
+
+        if (products.length > 0) {
+            content += `\n## Full Product Index\n\n`;
+            products.forEach(product => {
+                const url = `${baseUrl}${getLocalePath(`/product/${product.slug}`, product.lang as any)}`;
+                content += `- [${product.name}](${url}): ${product.description || ''} (${product.lang})\n`;
             });
         }
 
-        return new NextResponse(content, {
+        // 4. 其他资源
+        content += `\n## Other Resources\n\n`;
+        content += `- [Summary Index](${baseUrl}/llms.txt): A concise summary of the site.\n`;
+        content += `- [XML Sitemap](${baseUrl}/sitemap.xml): Machine-readable URL list.\n`;
+
+        content += `\n---\n*Generated by Molicms for AI Interoperability. Full dynamic index. Last updated: ${new Date().toISOString().split('T')[0]}.*`;
+
+        return new Response(content, {
             headers: {
                 'Content-Type': 'text/plain; charset=utf-8',
+                'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=600',
             },
         });
     } catch (error) {
         console.error('Error generating llms-full.txt:', error);
-        return new NextResponse('Internal Server Error', { status: 500 });
+        return new Response('Error generating llms-full.txt', { status: 500 });
     }
 }
