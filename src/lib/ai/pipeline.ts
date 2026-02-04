@@ -2,6 +2,7 @@ import { getAIServiceForUseCase } from './service';
 import { db } from '../db';
 import { getActiveStorageProvider, generateFileKey } from '../storage/factory';
 import { logger } from '../logger';
+import { getLocalePath, Locale } from '../i18n';
 
 /**
  * AI 内容增强流水线服务
@@ -201,7 +202,10 @@ Article Content: ${content.substring(0, 4000)}
 
         const aiService = await getAIServiceForUseCase('WRITING');
         const isEn = lang === 'en';
-        const contextArticles = otherArticles.map(a => `{"title": "${a.title}", "url": "/article/${a.slug}"}`).join('\n');
+        const contextArticles = otherArticles.map(a => {
+            const url = getLocalePath(`/articles/${a.slug}`, lang as Locale);
+            return `{"title": "${a.title}", "url": "${url}"}`;
+        }).join('\n');
 
         const prompt = isEn ? `
 You are a professional SEO optimization assistant. Your task is to automatically add internal links to the following article.
@@ -214,7 +218,7 @@ Content to process:
 ${content}
 
 Requirements:
-1. Identify phrases in the content relevant to the "Available Internal Articles List" and insert <a href="/article/slug">key phrase</a>.
+1. Identify phrases in the content relevant to the "Available Internal Articles List" and insert <a href="/articles/slug">key phrase</a>.
 2. Suggest 2-4 internal links for the entire article. Only output the processed complete HTML.
 ` : `
 你是一个专业的 SEO 优化助手。你的任务是为以下文章内容自动添加站内内链。
@@ -227,7 +231,7 @@ ${contextArticles}
 ${content}
 
 要求：
-1. 识别中与“可选文章列表”相关的词汇，插入 <a href="/article/slug">关键内容</a>。
+1. 识别中与“可选文章列表”相关的词汇，插入 <a href="/articles/slug">关键内容</a>。
 2. 每篇文章建议 2-4 个内链。仅输出处理后的完整 HTML。
 `;
 
