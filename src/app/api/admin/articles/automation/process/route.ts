@@ -21,7 +21,10 @@ export async function POST(request: NextRequest) {
             include: {
                 project: {
                     include: {
-                        strategy: true
+                        strategy: true,
+                        category: {
+                            select: { lang: true }
+                        }
                     }
                 }
             },
@@ -100,11 +103,13 @@ export async function POST(request: NextRequest) {
 
                             let currentContent = writeResult.content;
 
+                            const articleLang = (project as any).category?.lang || 'zh';
+
                             // --- STEP 2: GEO 深度优化 ---
                             if (project.enableGeo) {
                                 logger.info(`[Automation] Task ${task.id}: GEO Optimization starting...`);
                                 try {
-                                    currentContent = await ContentPipelineService.optimizeGeo(task.topic, currentContent, task.keywords);
+                                    currentContent = await ContentPipelineService.optimizeGeo(task.topic, currentContent, task.keywords, articleLang);
                                     logger.info(`[Automation] Task ${task.id}: GEO Optimization completed.`);
                                 } catch (err) {
                                     logger.error(`[Automation] GEO Optimization failed for task ${task.id}`, err);
@@ -115,7 +120,7 @@ export async function POST(request: NextRequest) {
                             if (project.enableIllustrate) {
                                 logger.info(`[Automation] Task ${task.id}: Smart Illustration starting...`);
                                 try {
-                                    currentContent = await ContentPipelineService.illustrate(task.topic, currentContent, userId);
+                                    currentContent = await ContentPipelineService.illustrate(task.topic, currentContent, userId, articleLang);
                                     logger.info(`[Automation] Task ${task.id}: Smart Illustration completed.`);
                                 } catch (err) {
                                     logger.error(`[Automation] Illustration failed for task ${task.id}`, err);
@@ -166,9 +171,9 @@ export async function POST(request: NextRequest) {
                             // 修正：在 GEO 优化后的最终内容上提取元数据
                             logger.info(`[Automation] Task ${task.id}: Generating Metadata (SEO, Entities, Citations)`);
                             const [seoData, entities, citations] = await Promise.all([
-                                project.enableSEO ? ContentPipelineService.generateSEO(task.topic, currentContent) : Promise.resolve(null),
-                                project.enableEntities ? ContentPipelineService.extractEntities(currentContent) : Promise.resolve(null),
-                                project.enableCitations ? ContentPipelineService.generateCitations(task.topic, currentContent) : Promise.resolve(null)
+                                project.enableSEO ? ContentPipelineService.generateSEO(task.topic, currentContent, articleLang) : Promise.resolve(null),
+                                project.enableEntities ? ContentPipelineService.extractEntities(currentContent, articleLang) : Promise.resolve(null),
+                                project.enableCitations ? ContentPipelineService.generateCitations(task.topic, currentContent, articleLang) : Promise.resolve(null)
                             ]);
 
                             // --- STEP 5: 创建文章记录 ---
@@ -178,7 +183,7 @@ export async function POST(request: NextRequest) {
                                 ? task.topic
                                 : (seoData?.title || task.topic.split(': ')[1] || task.topic);
                             const baseSlug = seoData?.slug || `${project.name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}-${task.id.slice(0, 4)}`;
-                            const articleLang = 'zh'; // 默认语言
+
 
                             // 唯一性检查与处理 (改为多次尝试模式)
                             let finalSlug = baseSlug;
@@ -198,6 +203,7 @@ export async function POST(request: NextRequest) {
                                             status: 'PUBLISHED',
                                             authorId: userId,
                                             categoryId: project.categoryId,
+                                            lang: articleLang,
                                             aiGenerated: true,
                                             automationProjectId: project.id,
                                             citations: citations ?? undefined,
@@ -232,7 +238,7 @@ export async function POST(request: NextRequest) {
                             if (project.enableAutoLink) {
                                 console.log(`[Automation] Task ${task.id}: Auto Linking`);
                                 try {
-                                    const linkedContent = await ContentPipelineService.autoLink(article.title, currentContent, article.id);
+                                    const linkedContent = await ContentPipelineService.autoLink(article.title, currentContent, article.id, articleLang);
                                     await db.article.update({
                                         where: { id: article.id },
                                         data: { content: linkedContent }

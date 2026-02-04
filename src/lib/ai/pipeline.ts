@@ -204,35 +204,39 @@ Article Content: ${content.substring(0, 4000)}
         const isEn = lang === 'en';
         const contextArticles = otherArticles.map(a => {
             const url = getLocalePath(`/articles/${a.slug}`, lang as Locale);
-            return `{"title": "${a.title}", "url": "${url}"}`;
+            return `- Title: "${a.title}", URL: "${url}"`;
         }).join('\n');
 
         const prompt = isEn ? `
-You are a professional SEO optimization assistant. Your task is to automatically add internal links to the following article.
+You are a professional SEO expert. Your task is to insert internal links into the following article content.
 
-Current Article Title: ${title}
-Available Internal Articles List:
+Available Internal Articles List (Title and its EXACT URL):
 ${contextArticles}
 
-Content to process:
+Article Content to process:
 ${content}
 
 Requirements:
-1. Identify phrases in the content relevant to the "Available Internal Articles List" and insert <a href="/articles/slug">key phrase</a>.
-2. Suggest 2-4 internal links for the entire article. Only output the processed complete HTML.
+1. Identify key phrases in the content that match or are highly relevant to the "Titles" in the list above.
+2. For each match, wrap the phrase in an anchor tag using the EXACT URL associated with that title: <a href="URL">phrase</a>.
+3. Suggest 2-4 internal links for the entire article. 
+4. DO NOT hallucinate URLs. ONLY use URLs provided in the list above.
+5. Return the COMPLETE article content with the links inserted.
 ` : `
 你是一个专业的 SEO 优化助手。你的任务是为以下文章内容自动添加站内内链。
 
-当前文章标题：${title}
-站内可选文章列表：
+站内可选文章列表（标题及对应的精确 URL）：
 ${contextArticles}
 
-待处理内容：
+待处理文章内容：
 ${content}
 
 要求：
-1. 识别中与“可选文章列表”相关的词汇，插入 <a href="/articles/slug">关键内容</a>。
-2. 每篇文章建议 2-4 个内链。仅输出处理后的完整 HTML。
+1. 识别文章内容中与“可选文章列表”中的标题匹配或高度相关的词汇。
+2. 为匹配到的词汇添加超链接，必须使用列表中提供的【精确 URL】：<a href="URL">关键内容</a>。
+3. 每篇文章建议添加 2-4 个内链。
+4. 严禁自行推测或生成 URL，必须执行使用上方列表中提供的链接。
+5. 请输出处理后的完整文章内容。
 `;
 
         logger.info(`[Pipeline] Auto-linking for: ${title} with ${otherArticles.length} candidates`);
