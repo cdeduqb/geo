@@ -8,9 +8,10 @@ import { Metadata } from 'next';
 import { Calendar, User, Tag, MapPin, Building2, Package, Lightbulb } from 'lucide-react';
 import Link from 'next/link';
 import AuthorCard from '@/components/articles/AuthorCard';
-import { ArticleStructuredData, BreadcrumbStructuredData } from '@/components/geo/StructuredData';
+import { ArticleStructuredData, BreadcrumbStructuredData, FAQStructuredData, DatasetStructuredData } from '@/components/geo/StructuredData';
 import { getSiteSettings } from '@/lib/site-settings';
 import { RichTextContent } from '@/components/security/SafeHTML';
+import { extractFAQFromHTML, extractDatasetsFromHTML } from '@/lib/geo/parser';
 
 export const revalidate = 3600; // 每小时重新生成静态页面
 
@@ -251,8 +252,30 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                         name: c.title,
                         url: c.url
                     })) : undefined}
+                    speakable={{
+                        cssSelector: ['#article-title', '#article-summary']
+                    }}
                 />
             )}
+            {geo.enableStructuredData && (() => {
+                const faqs = extractFAQFromHTML(article.content);
+                if (faqs.length > 0) {
+                    return <FAQStructuredData questions={faqs} />;
+                }
+                return null;
+            })()}
+            {geo.enableStructuredData && (() => {
+                const datasets = extractDatasetsFromHTML(article.content);
+                return datasets.map((ds, i) => (
+                    <DatasetStructuredData
+                        key={i}
+                        name={ds.name}
+                        description={ds.description}
+                        url={getLocalePath(`/articles/${article.slug}`, locale as any)}
+                        creator={{ name: (article as any).author?.name || 'Admin' }}
+                    />
+                ));
+            })()}
             {(article as any).category && (
                 <BreadcrumbStructuredData
                     items={[
@@ -280,7 +303,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                                 {article.category.name}
                             </Link>
                         )}
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900  leading-tight mb-8 tracking-tight">
+                        <h1 id="article-title" className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900  leading-tight mb-8 tracking-tight">
                             {article.title}
                         </h1>
 
@@ -336,7 +359,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
                     {/* 摘要 */}
                     {article.summary && (
-                        <div className="mb-10 p-8 bg-blue-50/50 border-l-4 border-blue-500 rounded-r-xl">
+                        <div id="article-summary" className="mb-10 p-8 bg-blue-50/50 border-l-4 border-blue-500 rounded-r-xl">
                             <p className="text-xl leading-relaxed text-gray-700 font-serif italic">
                                 {article.summary}
                             </p>

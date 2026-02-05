@@ -348,30 +348,57 @@ Please return in JSON format:
         const aiService = await getAIServiceForUseCase('WRITING');
         const isEn = lang === 'en';
 
-        // 提取主要内容并限制在 8000 字符内，确保能覆盖长文章
+        // 获取真实的权威来源库
+        const sources = await (db as any).gEOAuthoritySource.findMany({
+            where: { isActive: true },
+            orderBy: { trustLevel: 'desc' },
+            take: 30
+        });
+
+        const sourceLinks = sources.map((s: any) => `- ${s.name}: ${s.domain ? `http://www.${s.domain}` : 'N/A'}`).join('\n');
+
+        // 提取主要内容并限制在 8000 字符内
         const plainText = content.replace(/<[^>]*>/g, ' ').substring(0, 8000);
 
         const prompt = isEn ? `
-Please generate 3-5 relevant references or citations for this article (books, authoritative websites, papers, or logically inferred sources).
-If the text mentions specific reports, organizations, or data, prioritize those as sources.
+Your task is to provide 3-5 REAL and VALID references for the following article.
+
+Available Authoritative Sources (Title and Domain):
+${sourceLinks}
 
 Article Title: ${title}
-Article Content Summary: ${plainText}...
+Article Content: ${plainText.substring(0, 3000)}...
 
-Please return in JSON format:
+Requirements:
+1. **NO HALLUCINATION**: You must ONLY use sources from the "Available Authoritative Sources" list provided above.
+2. If a source from the list is relevant to the content, use its name and provided URL.
+3. If you must mention a world-class authority NOT in the list (e.g., WHO, McKinsey, Gartner), search your knowledge for their ACTUAL homepage URL.
+4. **DO NOT** generate fake deep links (e.g., do not create URLs like /report/2024/xyz.pdf).
+5. Prefer using the root domain or official "About" or "Data" pages that you are 100% sure exist.
+
+Return JSON format:
 [
-    { "title": "Source Title", "url": "URL (if website)", "author": "Author/Organization", "year": "Year" }
+    { "title": "Source Name", "url": "VALID URL", "author": "Organization", "year": "2024" }
 ]
 ` : `
-请为这篇文章生成 3-5 个相关的参考文献或引用来源（可以是真实存在的书籍、权威网站、论文，或者是根据内容合理推断的来源）。
-如果文中提到了具体的报告、机构或数据，请优先将其列为来源。
+你的任务是为以下文章提供 3-5 个真实、有效的参考文献或引证来源。
+
+可选权威来源库（名称及主域名）：
+${sourceLinks}
 
 文章标题：${title}
-文章内容摘要：${plainText}...
+文章内容摘要：${plainText.substring(0, 3000)}...
+
+要求：
+1. **严禁幻想 URL**：你必须优先从上方提供的“可选权威来源库”中选择相关的机构。
+2. **URL 真实性**：对于选中的来源，必须使用其提供的主域名。严禁自行拼接不存在的深层路径（例如：严禁生成类似 /files/report2024.pdf 这种无法打开的链接）。
+3. **外部补充**：如果文中提到了极其重要的机构且不在列表中（如：WHO、新华社、哈佛商业评论），请使用你知识库中确定的【官网首页】URL。
+4. 如果不确定某个具体页面的 URL，请直接使用该机构的【官网首页】地址。
+5. 数量：3-5 个。
 
 请返回 JSON 格式：
 [
-    { "title": "来源标题", "url": "URL(如果是网站)", "author": "作者/机构", "year": "年份" }
+    { "title": "来源名称", "url": "真实有效的官网 URL", "author": "作者/机构", "year": "年份" }
 ]
 `;
         logger.info(`[Pipeline] Generating citations`);

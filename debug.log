@@ -843,3 +843,77 @@
 [2026-01-26T02:34:00.534Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
 [2026-01-26T02:34:46.056Z] INFO: [Pipeline] Auto-linking completed, length: 3006
 [2026-01-26T02:34:46.447Z] INFO: [Automation] Task 0a310f02-47c8-4d4e-bc95-41b264fadd59: Triggering SEO Auto-push
+[2026-01-27T08:22:14.253Z] INFO: [AIService] Initialized fallback chain: volcengine(P2) -> deepseek(P1) -> qwen(P0) -> kimi(P0)
+[2026-01-27T08:22:14.256Z] INFO: [Automation] Processing Task 88b1f4a1-abb4-4f19-bb87-8f4be0348203: Initial Writing
+[2026-01-27T08:22:14.257Z] INFO: [AIService] Trying volcengine for generateArticle
+[2026-01-27T08:22:14.259Z] INFO: [AIService] Calling ep-20260126114913-f2xkw at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2026-01-27T08:27:35.092Z] ERROR: [AIService] volcengine failed: AI request timed out after 300s
+[2026-01-27T08:27:36.197Z] INFO: [AIService] Initialized fallback chain: volcengine(P2) -> deepseek(P1) -> qwen(P0) -> kimi(P0)
+[2026-01-27T08:27:36.197Z] INFO: [Automation] Processing Task 9f25cdf4-8c52-4fc8-b060-c50067b61176: Initial Writing
+[2026-01-27T08:27:36.197Z] INFO: [AIService] Trying volcengine for generateArticle
+[2026-01-27T08:27:36.197Z] INFO: [AIService] Calling ep-20260126114913-f2xkw at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2026-01-27T08:30:57.095Z] INFO: [Automation] Task 9f25cdf4-8c52-4fc8-b060-c50067b61176: GEO Optimization starting...
+[2026-01-27T08:30:57.743Z] INFO: [Pipeline] GEO optimizing for: 沈阳GEO优化公司 (zh)
+[2026-01-27T08:30:57.745Z] INFO: [AIService] Calling ep-20260126114913-f2xkw at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-27T08:39:07.371Z] ERROR: [Automation] GEO Optimization failed for task 9f25cdf4-8c52-4fc8-b060-c50067b61176 - AI request timed out after 300s
+[2026-01-27T08:39:07.418Z] INFO: [Automation] Task 9f25cdf4-8c52-4fc8-b060-c50067b61176: Generating Metadata (SEO, Entities, Citations)
+[2026-01-27T08:39:37.886Z] INFO: [Pipeline] Extracting entities
+[2026-01-27T08:39:37.888Z] INFO: [AIService] Calling ep-20260126114913-f2xkw at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-27T08:39:39.692Z] INFO: [Pipeline] Generating citations
+[2026-01-27T08:39:39.693Z] INFO: [AIService] Calling ep-20260126114913-f2xkw at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-27T08:39:42.050Z] INFO: [Pipeline] Generating SEO for: 沈阳GEO优化公司
+[2026-01-27T08:39:42.051Z] INFO: [AIService] Calling ep-20260126114913-f2xkw at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-27T08:46:11.310Z] WARN: [Automation] Task fa8dd78d-3ea0-4554-a898-eb8d1ac15636 already claimed or processed. Skipping.
+[2026-01-28T16:56:12.209Z] INFO: [AIService] Initialized fallback chain: volcengine(P2) -> deepseek(P1) -> qwen(P0) -> kimi(P0)
+[2026-01-28T16:56:12.210Z] INFO: [Automation] Processing Task 1c260a3f-b1a3-48a0-9a6b-6e3c6f33eb10: Initial Writing
+[2026-01-28T16:56:12.211Z] INFO: [AIService] Trying volcengine for generateArticle
+[2026-01-28T16:56:12.212Z] INFO: [AIService] Calling ep-20260126114913-f2xkw at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2026-01-28T16:58:05.234Z] INFO: [Automation] Task 1c260a3f-b1a3-48a0-9a6b-6e3c6f33eb10: GEO Optimization starting...
+[2026-01-28T16:58:05.757Z] INFO: [Pipeline] GEO optimizing for: 成都AI搜索优化 (zh)
+[2026-01-28T16:58:05.758Z] INFO: [AIService] Calling ep-20260126114913-f2xkw at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-28T16:58:12.643Z] INFO: [AIService] Initialized fallback chain: volcengine(P2) -> deepseek(P1) -> qwen(P0) -> kimi(P0)
+[2026-01-28T16:58:12.643Z] INFO: [Automation] Processing Task b21f5780-d9fe-42b1-929a-2a76afcf4713: Initial Writing
+[2026-01-28T16:58:12.644Z] INFO: [AIService] Trying volcengine for generateArticle
+[2026-01-28T16:58:12.644Z] INFO: [AIService] Calling ep-20260126114913-f2xkw at https://ark.cn-beijing.volces.com/api/v3 for generateArticle
+[2026-01-28T16:59:23.086Z] INFO: [Pipeline] GEO optimization received length: 5207
+[2026-01-28T16:59:23.090Z] INFO: [Automation] Task 1c260a3f-b1a3-48a0-9a6b-6e3c6f33eb10: GEO Optimization completed.
+[2026-01-28T16:59:23.090Z] INFO: [Automation] Task 1c260a3f-b1a3-48a0-9a6b-6e3c6f33eb10: Generating Metadata (SEO, Entities, Citations)
+[2026-01-28T16:59:23.327Z] INFO: [Pipeline] Extracting entities
+[2026-01-28T16:59:23.328Z] INFO: [AIService] Calling ep-20260126114913-f2xkw at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-28T16:59:23.406Z] INFO: [Pipeline] Generating citations
+[2026-01-28T16:59:23.407Z] INFO: [AIService] Calling ep-20260126114913-f2xkw at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-28T16:59:23.480Z] INFO: [Pipeline] Generating SEO for: 成都AI搜索优化
+[2026-01-28T16:59:23.481Z] INFO: [AIService] Calling ep-20260126114913-f2xkw at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-28T16:59:30.599Z] INFO: [Automation] Task b21f5780-d9fe-42b1-929a-2a76afcf4713: Generating Metadata (SEO, Entities, Citations)
+[2026-01-28T16:59:30.812Z] INFO: [Pipeline] Extracting entities
+[2026-01-28T16:59:30.813Z] INFO: [AIService] Calling ep-20260126114913-f2xkw at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-28T16:59:30.849Z] INFO: [Pipeline] Generating SEO for: 成都AI搜索优化
+[2026-01-28T16:59:30.850Z] INFO: [AIService] Calling ep-20260126114913-f2xkw at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-28T17:00:26.487Z] INFO: [Automation] Task 1c260a3f-b1a3-48a0-9a6b-6e3c6f33eb10: Finalizing Article
+[2026-01-28T17:01:03.805Z] INFO: [Automation] Task b21f5780-d9fe-42b1-929a-2a76afcf4713: Finalizing Article
+[2026-01-28T17:01:04.538Z] INFO: [Pipeline] Auto-linking for: 成都AI搜索优化 | 本地企业精准获客新玩法 with 50 candidates
+[2026-01-28T17:01:04.538Z] INFO: [AIService] Calling ep-20260126114913-f2xkw at https://ark.cn-beijing.volces.com/api/v3 for generateContent
+[2026-01-28T17:02:51.685Z] INFO: [Pipeline] Auto-linking completed, length: 4211
+[2026-01-28T17:02:52.071Z] INFO: [Automation] Task b21f5780-d9fe-42b1-929a-2a76afcf4713: Triggering SEO Auto-push
+[2026-02-04T01:38:04.941Z] INFO: [AIService] Initialized fallback chain: deepseek(P1) -> volcengine(P1) -> qwen(P0) -> kimi(P0)
+[2026-02-04T01:38:04.942Z] INFO: [Automation] Processing Task 54662107-924f-4110-b4be-1c562c7ddeb5: Initial Writing
+[2026-02-04T01:38:04.943Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-02-04T01:38:04.943Z] INFO: [AIService] Trying deepseek for generateArticle
+[2026-02-04T01:38:04.943Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateArticle
+[2026-02-04T01:38:52.777Z] INFO: [Automation] Task 54662107-924f-4110-b4be-1c562c7ddeb5: Generating Metadata (SEO, Entities, Citations)
+[2026-02-04T01:38:53.132Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-02-04T01:38:53.133Z] INFO: [Pipeline] Generating SEO for: 武汉GEO优化公司
+[2026-02-04T01:38:53.133Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-02-04T01:38:53.184Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-02-04T01:38:53.185Z] INFO: [Pipeline] Generating citations
+[2026-02-04T01:38:53.186Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-02-04T01:38:53.213Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-02-04T01:38:53.214Z] INFO: [Pipeline] Extracting entities
+[2026-02-04T01:38:53.214Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-02-04T01:39:07.392Z] INFO: [Automation] Task 54662107-924f-4110-b4be-1c562c7ddeb5: Finalizing Article
+[2026-02-04T01:39:08.205Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-02-04T01:39:08.207Z] INFO: [Pipeline] Auto-linking for: 武汉GEO优化公司：AI驱动全域SEO智能解决方案 with 50 candidates
+[2026-02-04T01:39:08.207Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-02-04T01:39:55.803Z] INFO: [Pipeline] Auto-linking completed, length: 3067
+[2026-02-04T01:39:56.097Z] INFO: [Automation] Task 54662107-924f-4110-b4be-1c562c7ddeb5: Triggering SEO Auto-push
+[2026-02-04T01:39:59.612Z] WARN: [Automation] Task 979f3115-7643-495b-b3ea-b65bf19e8823 already claimed or processed. Skipping.

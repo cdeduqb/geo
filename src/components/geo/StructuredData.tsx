@@ -31,6 +31,10 @@ export interface ArticleSchemaProps {
         url?: string;
         name: string;
     }>;
+    speakable?: {
+        cssSelector?: string[];
+        xpath?: string[];
+    };
 }
 
 export interface FAQSchemaProps {
@@ -179,7 +183,12 @@ function generateArticleSchema(props: ArticleSchemaProps): object {
             '@type': 'CreativeWork',
             name: c.name,
             url: c.url
-        }))
+        })),
+        speakable: props.speakable ? {
+            '@type': 'SpeakableSpecification',
+            cssSelector: props.speakable.cssSelector,
+            xpath: props.speakable.xpath
+        } : undefined
     };
 }
 
