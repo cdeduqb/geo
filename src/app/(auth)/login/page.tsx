@@ -13,6 +13,18 @@ export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [copyright, setCopyright] = useState('');
 
+    // 检查是否需要初始化
+    useEffect(() => {
+        fetch('/api/auth/setup/status')
+            .then(res => res.json())
+            .then(data => {
+                if (data.setupRequired) {
+                    window.location.href = '/setup';
+                }
+            })
+            .catch(err => console.error('Check setup status failed', err));
+    }, []);
+
     // 获取版权信息
     useEffect(() => {
         fetch('/api/public/copyright')
