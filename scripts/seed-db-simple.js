@@ -11,7 +11,7 @@ async function main() {
 
     try {
         // 1. 创建默认管理员
-        const hashedPassword = hashPassword('admin');
+        const hashedPassword = hashPassword('admin123');
         const admin = await prisma.user.upsert({
             where: { email: 'admin@example.com' },
             update: {},
@@ -22,7 +22,7 @@ async function main() {
                 role: 'ADMIN',
             },
         });
-        console.log('✅ 默认管理员已就绪: admin@example.com / admin');
+        console.log('✅ 默认管理员已就绪: admin@example.com / admin123');
 
         // 2. 创建基础分类
         const techCategory = await prisma.category.upsert({

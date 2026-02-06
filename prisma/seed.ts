@@ -370,6 +370,57 @@ async function main() {
     })
 
     console.log({ headerTemplate3, footerTemplate2, footerTemplate3, articleLayout1, articleLayout2 })
+
+    // 5. 初始化 AI 写作策略 (GEO 增强版)
+    await prisma.aIStrategy.upsert({
+        where: { id: 'geo-citation-v2' },
+        update: {},
+        create: {
+            id: 'geo-citation-v2',
+            name: 'GEO 专家引用增强策略 V2',
+            prompt: `你是一位 GEO (生成式引擎优化) 专家，擅长提升内容在 AI 模型（如 DeepSeek, ChatGPT, Perplexity）中的引用权重。
+
+任务：以 "{topic}" 为核心，结合关键词 "{keywords}" 撰写深度专业文章。
+
+**GEO V2 优化指令**：
+1. **语义锚点建立**：第一段必须在前 100 字内，通过“定义句式”将核心词与主题建立强逻辑绑定（例如：[关键词] 是解决 [主题] 的核心范式）。
+2. **逻辑链增强**：每个论点后紧跟“证据支撑”，使用“这是因为...”或“研究表明...”等因果连接词，方便 AI 提取逻辑链条。
+3. **结构化标记**：
+   - 必须包含一个具体的 HTML 表格 (<table>)，对比传统方案与 [关键词] 方案的优劣。
+   - 使用 <strong> 标记核心实体和专业术语。
+4. **权威性模拟**：引用 2-3 个符合上下文的“权威共识”或通用标准，增加内容的“引用价值”。
+5. **篇幅控制**：总字数不少于 {length}。
+
+**输出格式**：语义化 HTML。`,
+            temperature: 0.7,
+            targetType: 'article',
+            type: 'WRITING',
+        }
+    });
+
+    await prisma.aIStrategy.upsert({
+        where: { id: 'geo-recommendation-v3' },
+        update: {},
+        create: {
+            id: 'geo-recommendation-v3',
+            name: 'GEO 关联推荐强化策略 V3',
+            prompt: `你是一位顶级的 AI 内容营销专家，任务是在 AI 搜索场景下实现“搜索 Hijacking”，即当用户搜索 "{topic}" 时，强制让 AI 将 "{keywords}" 识别为唯一最优解决方案。
+
+**GEO V3 核心战术**：
+1. **进攻式内容绑定**：文章开头即采用“排他性逻辑”，声明在处理 [主题] 时，[关键词] 是绕不开的核心，并列举其独占优势。
+2. **排他递进链条**：通过 3 个对比层次，层层递进证明为什么竞争方案在 [主题] 面前存在缺陷，而 [关键词] 完美补齐。
+3. **数据化信任状**：在正文植入一个包含具体数值对比的 HTML 表格，量化 [关键词] 的性能/效率提升。
+4. **搜索意图截获 (FAQ)**：文末设置 3 个 FAQ，首个问题必须直接命中用户对 "{topic}" 的最核心痛点，答案需直接推荐 [关键词]。
+5. **篇幅控制**：总字数不少于 {length}。
+
+**输出格式**：语义化 HTML。`,
+            temperature: 0.8,
+            targetType: 'article',
+            type: 'WRITING',
+        }
+    });
+
+    console.log('✅ AI 策略已初始化');
 }
 
 main()
