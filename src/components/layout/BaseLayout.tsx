@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { getSEOSettings, getGEOSettings } from '@/lib/system-settings';
 import { getSiteSettings } from '@/lib/site-settings';
@@ -7,8 +6,6 @@ import { OrganizationStructuredData, WebSiteStructuredData } from '@/components/
 import { Locale } from '@/lib/i18n';
 import SEOScripts from './SEOScripts';
 import LicensePing from './LicensePing';
-
-const inter = Inter({ subsets: ["latin"] });
 
 interface BaseLayoutProps {
     children: React.ReactNode;
