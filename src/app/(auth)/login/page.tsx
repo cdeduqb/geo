@@ -5,8 +5,8 @@ import { Eye, EyeOff, Loader2, Sparkles, Zap, Shield, BarChart3 } from 'lucide-r
 
 export default function LoginPage() {
     const [formData, setFormData] = useState({
-        identifier: '',
-        password: '',
+        identifier: 'admin',
+        password: 'admin123',
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);

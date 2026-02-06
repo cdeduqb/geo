@@ -10,7 +10,7 @@ function hashPassword(password: string): string {
 
 async function main() {
     const email = 'admin@example.com';
-    const password = 'admin';
+    const password = 'admin123';
     const hashedPassword = hashPassword(password);
 
     console.log(`Resetting password for ${email}...`);

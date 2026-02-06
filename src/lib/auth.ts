@@ -128,6 +128,25 @@ function generateSessionToken(userId: string): string {
 // 登录 (支持邮箱或账号名)
 export async function login(identifier: string, password: string): Promise<User | null> {
     try {
+        // 首次安装自动初始化：如果数据库中没有任何用户，允许使用 admin/admin123 登录并自动创建
+        const usersCount = await (db.user as any).count();
+        if (usersCount === 0) {
+            if ((identifier === 'admin' || identifier === 'admin@example.com') && password === 'admin123') {
+                console.info('[Auth] 检测到数据库用户为空，正在自动初始化默认管理员。');
+                // 创建初始用户
+                const user = await register('admin@example.com', 'admin123', '管理员');
+                // 提升为管理员并设置固定用户名
+                await (db.user as any).update({
+                    where: { id: user.id },
+                    data: {
+                        role: 'ADMIN',
+                        username: 'admin'
+                    }
+                });
+                return { ...user, role: 'ADMIN', username: 'admin' } as User;
+            }
+        }
+
         const user = await (db.user as any).findFirst({
             where: {
                 OR: [

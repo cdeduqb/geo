@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { getSEOSettings, getGEOSettings } from '@/lib/system-settings';
 import BaseLayout from '@/components/layout/BaseLayout';
 import { defaultLocale } from '@/lib/i18n';
-
-const inter = Inter({ subsets: ["latin"] });
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
@@ -53,7 +50,7 @@ export default async function RootLayout({
   // 根布局使用默认语言
   return (
     <html lang={defaultLocale} suppressHydrationWarning>
-      <body className={`${inter.className} bg-gray-50 text-gray-900 antialiased`} suppressHydrationWarning>
+      <body className="bg-gray-50 text-gray-900 antialiased" suppressHydrationWarning>
         <BaseLayout locale={defaultLocale}>{children}</BaseLayout>
       </body>
     </html>
