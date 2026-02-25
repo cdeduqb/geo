@@ -21,6 +21,17 @@ export async function generateMetadata(): Promise<Metadata> {
         apple: seo.siteIcon || '/favicon.ico',
       },
       metadataBase: new URL(seo.siteUrl),
+      robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          'max-video-preview': -1,
+          'max-image-preview': 'large',
+          'max-snippet': -1,
+        },
+      },
       verification: {
         google: geo.googleOptimization?.verificationId,
       },
