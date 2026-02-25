@@ -10,7 +10,7 @@ import { ProductStructuredData, BreadcrumbStructuredData } from '@/components/ge
 import { getSiteSettings } from '@/lib/site-settings';
 import { RichTextContent } from '@/components/security/SafeHTML';
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 import { getLocale } from '@/lib/locale-server';
 import { getLocalePath, t } from '@/lib/i18n';

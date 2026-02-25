@@ -9,8 +9,8 @@ import { getLocale } from '@/lib/locale-server';
 import { getLocalePath } from '@/lib/i18n';
 import { CustomHTML } from '@/components/security/SafeHTML';
 
-// 强制缓存一小时，启用ISR
-export const revalidate = 3600;
+// 强制动态渲染，确保每次请求都能获取最新数据
+export const dynamic = 'force-dynamic';
 
 interface PageProps {
     params: Promise<{ slug: string, locale?: string }>;

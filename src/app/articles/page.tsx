@@ -6,7 +6,7 @@ import { getSiteSettings } from '@/lib/site-settings';
 import { Metadata } from 'next';
 import { t } from '@/lib/i18n';
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {
     const locale = await getLocale();
