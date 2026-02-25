@@ -35,6 +35,8 @@ export interface ArticleSchemaProps {
         cssSelector?: string[];
         xpath?: string[];
     };
+    wordCount?: number;
+    articleSection?: string;
 }
 
 export interface FAQSchemaProps {
@@ -161,6 +163,8 @@ function generateArticleSchema(props: ArticleSchemaProps): object {
         datePublished: props.datePublished,
         dateModified: props.dateModified || props.datePublished,
         image: props.image,
+        wordCount: props.wordCount,
+        articleSection: props.articleSection,
         mainEntityOfPage: {
             '@type': 'WebPage',
             '@id': props.url

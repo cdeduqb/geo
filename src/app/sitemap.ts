@@ -12,6 +12,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         const i18nSettings = await getI18nSettings();
         const enableMultiLanguage = i18nSettings?.enableMultiLanguage;
 
+        const homeAlternates = enableMultiLanguage ? {
+            languages: locales.reduce((acc, locale) => {
+                const langCode = locale === 'zh' ? 'zh-CN' : locale === 'en' ? 'en-US' : locale;
+                acc[langCode] = `${baseUrl}${getLocalePath('/', locale)}`;
+                return acc;
+            }, {} as Record<string, string>)
+        } : undefined;
+
         // 1. 静态基础页面 (仅保留首页)
         const staticPages: MetadataRoute.Sitemap = [
             {
@@ -19,6 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                 lastModified: new Date(),
                 changeFrequency: 'daily',
                 priority: 1.0,
+                alternates: homeAlternates
             }
         ];
 
@@ -31,19 +40,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                         lastModified: new Date(),
                         changeFrequency: 'daily',
                         priority: 1.0,
+                        alternates: homeAlternates
                     });
                 }
             });
         }
 
+        const getAlternates = (items: any[], item: any, basePath: string) => {
+            if (!enableMultiLanguage) return undefined;
+            const siblings = items.filter(sibling => 
+                (item.translationGroupId && sibling.translationGroupId === item.translationGroupId) ||
+                (!item.translationGroupId && sibling.slug === item.slug)
+            );
+            if (siblings.length <= 1) return undefined;
+            const languages: Record<string, string> = {};
+            siblings.forEach(sibling => {
+                const langCode = sibling.lang === 'zh' ? 'zh-CN' : sibling.lang === 'en' ? 'en-US' : sibling.lang;
+                languages[langCode] = `${baseUrl}${getLocalePath(`${basePath}${sibling.slug}`, sibling.lang as Locale)}`;
+            });
+            return { languages };
+        };
+
         // 2. 获取所有已发布的页面 (CMS 动态页面)
         const pages = await db.page.findMany({
             where: {
                 status: 'PUBLISHED',
-                // 如果禁用多语言，只获取默认语言的内容
                 ...(enableMultiLanguage ? {} : { lang: defaultLocale })
             },
-            select: { slug: true, updatedAt: true, lang: true },
+            select: { slug: true, updatedAt: true, lang: true, translationGroupId: true },
         });
 
         const dynamicPages: MetadataRoute.Sitemap = pages.map((page) => ({
@@ -51,6 +75,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             lastModified: page.updatedAt,
             changeFrequency: 'weekly',
             priority: 0.7,
+            alternates: getAlternates(pages, page, '/')
         }));
 
         // 3. 获取所有已发布的文章
@@ -60,7 +85,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                 // 如果禁用多语言，只获取默认语言的内容
                 ...(enableMultiLanguage ? {} : { lang: defaultLocale })
             },
-            select: { slug: true, updatedAt: true, lang: true },
+            select: { slug: true, updatedAt: true, lang: true, translationGroupId: true },
         });
 
         const articlePages: MetadataRoute.Sitemap = articles.map((article) => ({
@@ -68,6 +93,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             lastModified: article.updatedAt,
             changeFrequency: 'weekly',
             priority: 0.8,
+            alternates: getAlternates(articles, article, '/articles/')
         }));
 
         // 4. 获取所有已发布的产品
@@ -77,7 +103,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                 // 如果禁用多语言，只获取默认语言的内容
                 ...(enableMultiLanguage ? {} : { lang: defaultLocale })
             },
-            select: { slug: true, updatedAt: true, lang: true },
+            select: { slug: true, updatedAt: true, lang: true, translationGroupId: true },
         });
 
         const productPages: MetadataRoute.Sitemap = products.map((product) => ({
@@ -85,6 +111,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             lastModified: product.updatedAt,
             changeFrequency: 'weekly',
             priority: 0.8,
+            alternates: getAlternates(products, product, '/product/')
         }));
 
         // 5. 获取作者页面 (仅展示公开作者)
@@ -112,4 +139,3 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         return [];
     }
 }
-

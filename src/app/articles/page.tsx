@@ -10,10 +10,23 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {
     const locale = await getLocale();
+    const { getSiteUrl } = await import('@/lib/system-settings');
+    const { locales, getLocalePath } = await import('@/lib/i18n');
+    const baseUrl = await getSiteUrl();
+
+    const languages: Record<string, string> = {};
+    locales.forEach(l => {
+        const langCode = l === 'zh' ? 'zh-CN' : l === 'en' ? 'en-US' : l;
+        languages[langCode] = `${baseUrl}${getLocalePath('/articles', l as any)}`;
+    });
 
     return {
         title: `${t(locale, 'article.list')} | 企业官网`,
         description: t(locale, 'article.stayUpdated'),
+        alternates: {
+            canonical: `${baseUrl}${getLocalePath('/articles', locale as any)}`,
+            languages: Object.keys(languages).length > 1 ? languages : undefined,
+        }
     };
 }
 

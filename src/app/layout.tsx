@@ -58,7 +58,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // 根布局使用默认语言
+  // 根布局使用默认语言，子布局通过 LocaleSync 在客户端修正，避免破坏 SSG
   return (
     <html lang={defaultLocale} suppressHydrationWarning>
       <body className="bg-gray-50 text-gray-900 antialiased" suppressHydrationWarning>

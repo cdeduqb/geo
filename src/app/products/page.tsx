@@ -19,22 +19,37 @@ export async function generateMetadata({
     const { category } = await searchParams;
     const locale = paramLocale || await getLocale();
 
+    let titleText = t(locale, 'product.list');
+    let descriptionText = locale === 'en' ? 'Browse our high-quality products' : '浏览我们的所有优质产品';
+
     if (category) {
         const cat = await db.productCategory.findFirst({
             where: { slug: category, lang: locale },
             select: { name: true }
         });
         if (cat) {
-            return {
-                title: `${cat.name} - ${t(locale, 'product.list')}`,
-                description: locale === 'en' ? `Browse all products in ${cat.name}` : `浏览 ${cat.name} 分类下的所有产品`,
-            };
+            titleText = `${cat.name} - ${t(locale, 'product.list')}`;
+            descriptionText = locale === 'en' ? `Browse all products in ${cat.name}` : `浏览 ${cat.name} 分类下的所有产品`;
         }
     }
 
+    const { getSiteUrl } = await import('@/lib/system-settings');
+    const { locales, getLocalePath } = await import('@/lib/i18n');
+    const baseUrl = await getSiteUrl();
+
+    const languages: Record<string, string> = {};
+    locales.forEach(l => {
+        const langCode = l === 'zh' ? 'zh-CN' : l === 'en' ? 'en-US' : l;
+        languages[langCode] = `${baseUrl}${getLocalePath('/products', l as any)}${category ? `?category=${category}` : ''}`;
+    });
+
     return {
-        title: t(locale, 'product.list'),
-        description: locale === 'en' ? 'Browse our high-quality products' : '浏览我们的所有优质产品',
+        title: titleText,
+        description: descriptionText,
+        alternates: {
+            canonical: `${baseUrl}${getLocalePath('/products', locale as any)}${category ? `?category=${category}` : ''}`,
+            languages: Object.keys(languages).length > 1 ? languages : undefined,
+        }
     };
 }
 

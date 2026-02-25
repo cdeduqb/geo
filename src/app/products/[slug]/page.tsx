@@ -37,12 +37,32 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
         return { title: 'Product Not Found' };
     }
 
+    const { getSiteUrl } = await import('@/lib/system-settings');
+    const { getLocalePath } = await import('@/lib/i18n');
+    const baseUrl = await getSiteUrl();
+
+    let siblings = [];
+    if (product.translationGroupId) {
+        siblings = await db.product.findMany({
+            where: { translationGroupId: product.translationGroupId, status: 'PUBLISHED' },
+            select: { lang: true, slug: true }
+        });
+    } else {
+        siblings = await db.product.findMany({
+            where: { slug: product.slug, status: 'PUBLISHED' },
+            select: { lang: true, slug: true }
+        });
+    }
+
+    const languages: Record<string, string> = {};
+    siblings.forEach((s: any) => {
+        const langCode = s.lang === 'zh' ? 'zh-CN' : s.lang === 'en' ? 'en-US' : s.lang;
+        languages[langCode] = `${baseUrl}${getLocalePath(`/product/${s.slug}`, s.lang as any)}`;
+    });
+
     const alternates: any = {
-        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || ''}/product/${product.slug}`,
-        languages: {
-            'zh-CN': `${process.env.NEXT_PUBLIC_SITE_URL || ''}/product/${product.slug}`,
-            'en-US': `${process.env.NEXT_PUBLIC_SITE_URL || ''}/en/product/${product.slug}`,
-        },
+        canonical: `${baseUrl}${getLocalePath(`/product/${product.slug}`, locale as any)}`,
+        languages: Object.keys(languages).length > 1 ? languages : undefined,
     };
 
     return {

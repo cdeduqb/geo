@@ -85,10 +85,11 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
                 disallow: '/'
             });
         } else {
-            // 只要不是明确 Disallow，一律显式 Allow，确保列表完整性
+            // 只要不是明确 Disallow，一律显式 Allow，同时确保 admin 和 api 依旧被 Disallow
             rules.push({
                 userAgent: crawler,
-                allow: '/'
+                allow: '/',
+                disallow: disallowPaths
             });
         }
         processedCrawlers.add(crawler);

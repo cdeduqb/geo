@@ -36,12 +36,32 @@ export async function generateDynamicMetadata({ params }: PageProps): Promise<Me
         return { title: 'Page Not Found' };
     }
 
+    const { getSiteUrl } = await import('@/lib/system-settings');
+    const { getLocalePath } = await import('@/lib/i18n');
+    const baseUrl = await getSiteUrl();
+
+    let siblings = [];
+    if (page.translationGroupId) {
+        siblings = await (db.page as any).findMany({
+            where: { translationGroupId: page.translationGroupId, status: 'PUBLISHED' },
+            select: { lang: true, slug: true }
+        });
+    } else {
+        siblings = await (db.page as any).findMany({
+            where: { slug: page.slug, status: 'PUBLISHED' },
+            select: { lang: true, slug: true }
+        });
+    }
+
+    const languages: Record<string, string> = {};
+    siblings.forEach((s: any) => {
+        const langCode = s.lang === 'zh' ? 'zh-CN' : s.lang === 'en' ? 'en-US' : s.lang;
+        languages[langCode] = `${baseUrl}${getLocalePath(`/${s.slug === 'home' ? '' : s.slug}`, s.lang as any)}`;
+    });
+
     const alternates: any = {
-        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || ''}${getLocalePath(`/${page.slug}`, 'zh')}`,
-        languages: {
-            'zh-CN': `${process.env.NEXT_PUBLIC_SITE_URL || ''}${getLocalePath(`/${page.slug}`, 'zh')}`,
-            'en-US': `${process.env.NEXT_PUBLIC_SITE_URL || ''}${getLocalePath(`/${page.slug}`, 'en')}`,
-        },
+        canonical: `${baseUrl}${getLocalePath(`/${page.slug === 'home' ? '' : page.slug}`, locale as any)}`,
+        languages: Object.keys(languages).length > 1 ? languages : undefined,
     };
 
     return {

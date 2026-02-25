@@ -88,12 +88,32 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
         return { title: 'Article Not Found' };
     }
 
+    const { getSiteUrl } = await import('@/lib/system-settings');
+    const { getLocalePath } = await import('@/lib/i18n');
+    const baseUrl = await getSiteUrl();
+
+    let siblings = [];
+    if (article.translationGroupId) {
+        siblings = await (db.article as any).findMany({
+            where: { translationGroupId: article.translationGroupId, status: 'PUBLISHED' },
+            select: { lang: true, slug: true }
+        });
+    } else {
+        siblings = await (db.article as any).findMany({
+            where: { slug: article.slug, status: 'PUBLISHED' },
+            select: { lang: true, slug: true }
+        });
+    }
+
+    const languages: Record<string, string> = {};
+    siblings.forEach((s: any) => {
+        const langCode = s.lang === 'zh' ? 'zh-CN' : s.lang === 'en' ? 'en-US' : s.lang;
+        languages[langCode] = `${baseUrl}${getLocalePath(`/articles/${s.slug}`, s.lang as any)}`;
+    });
+
     const alternates: any = {
-        canonical: `${process.env.NEXT_PUBLIC_SITE_URL || ''}/articles/${article.slug}`,
-        languages: {
-            'zh-CN': `${process.env.NEXT_PUBLIC_SITE_URL || ''}/articles/${article.slug}`,
-            'en-US': `${process.env.NEXT_PUBLIC_SITE_URL || ''}/en/articles/${article.slug}`,
-        },
+        canonical: `${baseUrl}${getLocalePath(`/articles/${article.slug}`, locale as any)}`,
+        languages: Object.keys(languages).length > 1 ? languages : undefined,
     };
 
     return {
@@ -219,8 +239,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     // 浏览量现在由客户端组件 ViewCounter 处理，以支持静态页面
     // 增加浏览量的逻辑已移出服务端渲染过程
 
-    // 处理文章内容
+    const seoSettings = await import('@/lib/system-settings').then(m => m.getSEOSettings());
     const processedContent = article.content;
+    const wordCount = processedContent ? processedContent.replace(/<[^>]*>?/gm, '').length : 0;
 
     return (
         <PageLayout
@@ -243,6 +264,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                     dateModified={article.updatedAt.toISOString()}
                     image={article.coverImage || undefined}
                     url={getLocalePath(`/articles/${article.slug}`, locale as any)}
+                    publisher={seoSettings ? {
+                        name: seoSettings.siteName || 'Website',
+                        logo: (siteSettings as any)?.logo || undefined
+                    } : undefined}
+                    wordCount={wordCount}
+                    articleSection={(article as any).category?.name}
                     mentions={Array.isArray(article.entities) ? (article.entities as any[]).map(e => ({
                         name: e.text,
                         description: e.description,
