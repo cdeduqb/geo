@@ -12,8 +12,8 @@ import { t } from '@/lib/i18n';
 
 import { cache } from 'react';
 
-// 强制动态渲染，确保每次请求都能获取最新数据
-export const dynamic = 'force-dynamic';
+// 强制缓存一小时，启用ISR
+export const revalidate = 3600;
 
 // 使用 React Cache 复用数据库查询请求
 // 这确保了 generateMetadata 和 HomePage 组件即便调用同样的逻辑，在一个请求周期内也只查一次数据库

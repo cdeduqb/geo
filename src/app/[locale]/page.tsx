@@ -5,7 +5,7 @@ import { DynamicPageContent, generateDynamicMetadata } from '@/app/DynamicPageHa
 import { Metadata } from 'next';
 
 // 强制动态渲染
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 interface ParamsProps {
     params: Promise<{ locale: string }>;
