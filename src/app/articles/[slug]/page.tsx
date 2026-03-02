@@ -13,7 +13,7 @@ import { getSiteSettings } from '@/lib/site-settings';
 import { RichTextContent } from '@/components/security/SafeHTML';
 import { extractFAQFromHTML, extractDatasetsFromHTML } from '@/lib/geo/parser';
 
-export const revalidate = 3600; // 每小时重新生成静态页面
+export const revalidate = 300; // 每5分钟重新生成静态页面，迎合爬虫抓取频率
 
 export async function generateStaticParams() {
     try {

@@ -2,6 +2,11 @@ import { db } from '@/lib/db';
 import { getSEOSettings, getSiteUrl, getI18nSettings } from '@/lib/system-settings';
 import { locales, defaultLocale, getLocalePath } from '@/lib/i18n';
 
+function stripHtml(html: string | null | undefined): string {
+    if (!html) return '';
+    return html.replace(/<[^>]*>?/gm, '').trim();
+}
+
 /**
  * llms-full.txt: 为 AI 提供全量、深度结构化的 Markdown 网站索引
  * 包含更多的文章、产品和页面明细，方便 LLM 进行全量上下文索引
@@ -61,7 +66,7 @@ export async function GET() {
             articles.forEach(article => {
                 const url = `${baseUrl}${getLocalePath(`/articles/${article.slug}`, article.lang as any)}`;
                 const date = new Date(article.createdAt).toISOString().split('T')[0];
-                content += `- [${article.title}](${url}) [${date}]: ${article.summary || ''} (${article.lang})\n`;
+                content += `- [${article.title}](${url}) [${date}]: ${stripHtml(article.summary)} (${article.lang})\n`;
             });
         }
 
@@ -80,7 +85,7 @@ export async function GET() {
             content += `\n## Full Product Index\n\n`;
             products.forEach(product => {
                 const url = `${baseUrl}${getLocalePath(`/product/${product.slug}`, product.lang as any)}`;
-                content += `- [${product.name}](${url}): ${product.description || ''} (${product.lang})\n`;
+                content += `- [${product.name}](${url}): ${stripHtml(product.description)} (${product.lang})\n`;
             });
         }
 
@@ -94,7 +99,7 @@ export async function GET() {
         return new Response(content, {
             headers: {
                 'Content-Type': 'text/plain; charset=utf-8',
-                'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=600',
+                'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=60',
             },
         });
     } catch (error) {

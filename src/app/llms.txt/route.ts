@@ -2,6 +2,11 @@ import { db } from '@/lib/db';
 import { getSEOSettings, getSiteUrl, getI18nSettings } from '@/lib/system-settings';
 import { locales, Locale, defaultLocale, getLocalePath } from '@/lib/i18n';
 
+function stripHtml(html: string | null | undefined): string {
+    if (!html) return '';
+    return html.replace(/<[^>]*>?/gm, '').trim();
+}
+
 /**
  * llms.txt: 为 AI 爬虫和 LLM 提供结构化的 Markdown 网站概览
  * 遵循 https://llmstxt.org/ 规范
@@ -64,7 +69,7 @@ export async function GET() {
             content += `\n## Recent Articles\n\n`;
             articles.forEach(article => {
                 const url = `${baseUrl}${getLocalePath(`/articles/${article.slug}`, article.lang as any)}`;
-                content += `- [${article.title}](${url}): ${article.summary || ''} (${article.lang})\n`;
+                content += `- [${article.title}](${url}): ${stripHtml(article.summary)} (${article.lang})\n`;
             });
         }
 
@@ -84,7 +89,7 @@ export async function GET() {
             content += `\n## Products\n\n`;
             products.forEach(product => {
                 const url = `${baseUrl}${getLocalePath(`/product/${product.slug}`, product.lang as any)}`;
-                content += `- [${product.name}](${url}): ${product.description || ''} (${product.lang})\n`;
+                content += `- [${product.name}](${url}): ${stripHtml(product.description)} (${product.lang})\n`;
             });
         }
 
@@ -98,7 +103,7 @@ export async function GET() {
         return new Response(content, {
             headers: {
                 'Content-Type': 'text/plain; charset=utf-8',
-                'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=600',
+                'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=60',
             },
         });
     } catch (error) {
