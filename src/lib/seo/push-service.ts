@@ -289,21 +289,43 @@ export class IndexNowPushService extends SEOPushService {
             }
         }
 
-        return this.pushWithRetry(
-            () => fetch(this.apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8',
-                },
-                body: JSON.stringify({
-                    host: host,
-                    key: this.token,
-                    keyLocation: `${keyLocationBase}/${this.token}.txt`,
-                    urlList: urls,
-                }),
-            }),
-            urls
-        );
+        const payload = JSON.stringify({
+            host: host,
+            key: this.token,
+            keyLocation: `${keyLocationBase}/${this.token}.txt`,
+            urlList: urls,
+        });
+
+        // 核心：在 push 到 IndexNow 全网 API 的同时，专门向 Bing 和 Yandex 原生端点猛推一次，提升收录速度
+        const endpoints = [
+            this.apiUrl,
+            'https://www.bing.com/indexnow',
+            'https://yandex.com/indexnow'
+        ];
+
+        // 仅返回主要 API 的结果
+        let mainResult: PushResult | null = null;
+
+        for (const endpoint of endpoints) {
+            if (endpoint === this.apiUrl) {
+                mainResult = await this.pushWithRetry(
+                    () => fetch(endpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                        body: payload,
+                    }),
+                    urls
+                );
+            } else {
+                fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                    body: payload,
+                }).catch(() => { }); // 忽略辅端点的失败
+            }
+        }
+
+        return mainResult || { success: false, message: '未执行推送' };
     }
 
     protected async parseSuccessResponse(response: Response, urlCount: number): Promise<PushResult> {

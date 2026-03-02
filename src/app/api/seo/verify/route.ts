@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
             return new NextResponse(file.content, {
                 headers: {
                     'Content-Type': filename.endsWith('.txt') ? 'text/plain; charset=utf-8' : 'text/html; charset=utf-8',
-                    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
+                    'Cache-Control': 'public, max-age=86400, stale-while-revalidate=86400'
                 }
             });
         }
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
                 return new NextResponse(token, {
                     headers: {
                         'Content-Type': 'text/plain; charset=utf-8',
-                        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
+                        'Cache-Control': 'public, max-age=86400, stale-while-revalidate=86400'
                     }
                 });
             }

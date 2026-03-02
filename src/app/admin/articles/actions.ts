@@ -35,12 +35,12 @@ export async function autoPushToSEO(articleSlug: string, lang: string = 'zh') {
             console.warn('[SEO Push] 检测到 Base URL 为 localhost，搜索引擎可能会拒绝推送:', baseUrl);
         }
 
-        // 构建多版本 URL（默认语言和多语言路径）
-        const urls: string[] = [];
-        if (lang === 'zh') {
-            urls.push(`${baseUrl}/articles/${articleSlug}`);
-        }
-        urls.push(`${baseUrl}/${lang}/articles/${articleSlug}`);
+        const { getLocalePath } = await import('@/lib/i18n');
+
+        // 构建唯一且规范（Canonical）的链接
+        // 避免向 IndexNow/百度 等推送产生 URL 重定向或具有 canonical 指向的别名地址
+        const slugPath = getLocalePath(`/articles/${articleSlug}`, lang as any);
+        const urls: string[] = [`${baseUrl}${slugPath}`];
 
         const configs = await db.sEOPushConfig.findMany({
             where: { isActive: true },
