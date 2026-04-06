@@ -21,6 +21,15 @@ export async function generateMetadata(): Promise<Metadata> {
         apple: seo.siteIcon || '/favicon.ico',
       },
       metadataBase: new URL(seo.siteUrl),
+      keywords: seo.siteKeywords || undefined,
+      openGraph: {
+        title: seo.siteName,
+        description: seo.siteDescription,
+        url: seo.siteUrl,
+        siteName: seo.siteName,
+        locale: defaultLocale,
+        type: 'website',
+      },
       robots: {
         index: true,
         follow: true,
@@ -34,6 +43,9 @@ export async function generateMetadata(): Promise<Metadata> {
       },
       verification: {
         google: geo.googleOptimization?.verificationId,
+        other: {
+          ...(geo.baiduOptimization?.verificationCode ? { 'baidu-site-verification': geo.baiduOptimization.verificationCode } : {}),
+        }
       },
       formatDetection: {
         email: false,
@@ -59,10 +71,42 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // 根布局使用默认语言，子布局通过 LocaleSync 在客户端修正，避免破坏 SSG
+  const seo = await getSEOSettings();
   return (
     <html lang={defaultLocale} suppressHydrationWarning>
       <body className="bg-gray-50 text-gray-900 antialiased" suppressHydrationWarning>
         <BaseLayout locale={defaultLocale}>{children}</BaseLayout>
+        {/* 全局 JSON-LD 注入 (提升国内大模型及百度对站点的整体认知) */}
+        {seo && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@graph": [
+                  {
+                    "@type": "WebSite",
+                    "@id": `${seo.siteUrl}#website`,
+                    "url": seo.siteUrl,
+                    "name": seo.siteName,
+                    "description": seo.siteDescription,
+                    "inLanguage": defaultLocale
+                  },
+                  {
+                    "@type": "Organization",
+                    "@id": `${seo.siteUrl}#organization`,
+                    "name": seo.siteName,
+                    "url": seo.siteUrl,
+                    "logo": seo.siteLogo ? {
+                        "@type": "ImageObject",
+                        "url": seo.siteLogo
+                    } : undefined
+                  }
+                ]
+              })
+            }}
+          />
+        )}
       </body>
     </html>
   );

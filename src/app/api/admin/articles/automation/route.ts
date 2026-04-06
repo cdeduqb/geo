@@ -138,6 +138,7 @@ export async function POST(request: NextRequest) {
             preferredLength = 'medium',
             categoryId,
             strategyId,
+            knowledgeBaseId,
             features
         } = body;
 
@@ -181,9 +182,9 @@ export async function POST(request: NextRequest) {
                     dailyLimit: actualDailyLimit,
                     preferredLength: preferredLength,
                     categoryId: categoryId || null,
-
                     authorId: user.id,
                     strategyId,
+                    knowledgeBaseId: knowledgeBaseId || null,
                     enableGeo: !!features?.geo,
                     enableIllustrate: !!features?.illustrate,
                     enableAutoLink: !!features?.autoLink,

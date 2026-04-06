@@ -22,6 +22,7 @@ export async function POST(request: NextRequest) {
                 project: {
                     include: {
                         strategy: true,
+                        knowledgeBase: true,
                         category: {
                             select: { lang: true }
                         }
@@ -88,11 +89,25 @@ export async function POST(request: NextRequest) {
                             const preferredLength = project.preferredLength || 'medium';
                             const lengthText = lengthMap[preferredLength] || '1500字左右';
 
+                            let kbXml = '';
+                            if (project.knowledgeBase && project.knowledgeBase.isActive) {
+                                const kb = project.knowledgeBase;
+                                kbXml = `\n\n<enterprise_knowledge>\n`;
+                                if (kb.productServices) kbXml += `  <product_services>${kb.productServices}</product_services>\n`;
+                                if (kb.productFeatures) kbXml += `  <product_features>${kb.productFeatures}</product_features>\n`;
+                                if (kb.brandStory) kbXml += `  <brand_story>${kb.brandStory}</brand_story>\n`;
+                                if (kb.userPainPoints) kbXml += `  <user_pain_points>${kb.userPainPoints}</user_pain_points>\n`;
+                                if (kb.trustEndorsement) kbXml += `  <trust_endorsement>${kb.trustEndorsement}</trust_endorsement>\n`;
+                                if (kb.customerCases) kbXml += `  <customer_cases>${kb.customerCases}</customer_cases>\n`;
+                                if (kb.otherInfo) kbXml += `  <other_info>${kb.otherInfo}</other_info>\n`;
+                                kbXml += `</enterprise_knowledge>\n\n【核心约束】上面的 <enterprise_knowledge> 是企业专属系统提供的核心事实知识库。如果在输出本文的相关段落时涉及相关维度场景，请严格参考映射节点内的素材，严禁发生大模型幻觉编造现象。`;
+                            }
+
                             const fullPrompt = project.strategy.prompt
                                 .replace(/{topic}/g, task.topic)
                                 .replace(/{keywords}/g, task.keywords || '')
                                 .replace(/{length}/g, lengthText)
-                                .replace(/{{length}}/g, lengthText);
+                                .replace(/{{length}}/g, lengthText) + kbXml;
 
                             const writeResult = await aiService.generateArticle({
                                 topic: task.topic,

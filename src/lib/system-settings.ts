@@ -54,6 +54,7 @@ export async function getSEOSettings() {
             siteName: settings.site_name || '企业官网',
             siteDescription: settings.site_description || '企业官网内容管理系统',
             siteUrl: settings.site_url || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+            siteKeywords: settings.site_keywords || '',
             siteLogo: settings.site_logo || null,
             siteIcon: settings.site_icon || '/favicon.ico',
             enableMultiLanguage: settings.enable_multi_language === 'true',
@@ -63,6 +64,7 @@ export async function getSEOSettings() {
             siteName: '企业官网',
             siteDescription: '企业官网内容管理系统',
             siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+            siteKeywords: '',
             siteLogo: null,
             siteIcon: '/favicon.ico',
             enableMultiLanguage: false,
@@ -81,6 +83,10 @@ export interface GEOSettings {
     googleOptimization?: {
         enabled?: boolean;
         verificationId?: string; // google-site-verification
+    };
+    baiduOptimization?: {
+        enabled?: boolean;
+        verificationCode?: string; // baidu-site-verification
     };
     amazonOptimization?: {
         enabled?: boolean;
@@ -101,6 +107,9 @@ export async function getGEOSettings(): Promise<GEOSettings> {
             sameAs: []
         },
         googleOptimization: {
+            enabled: true,
+        },
+        baiduOptimization: {
             enabled: true,
         },
         amazonOptimization: {

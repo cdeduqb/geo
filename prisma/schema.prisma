@@ -312,15 +312,38 @@ model ArticleAutomationProject {
   updatedAt        DateTime         @updatedAt
   mode             String           @default("topic")
   preferredLength  String           @default("medium")
+  knowledgeBaseId  String?
   tasks            AICreationTask[]
   articles         Article[]
   author           User             @relation(fields: [authorId], references: [id])
   category         Category?        @relation(fields: [categoryId], references: [id])
   strategy         AIStrategy       @relation(fields: [strategyId], references: [id])
+  knowledgeBase    KnowledgeBase?   @relation(fields: [knowledgeBaseId], references: [id])
 
   @@index([authorId], map: "ArticleAutomationProject_authorId_fkey")
   @@index([categoryId], map: "ArticleAutomationProject_categoryId_fkey")
   @@index([strategyId], map: "ArticleAutomationProject_strategyId_fkey")
+  @@index([knowledgeBaseId], map: "ArticleAutomationProject_knowledgeBaseId_fkey")
+}
+
+model KnowledgeBase {
+  id               String                     @id @default(uuid())
+  name             String
+  productServices  String?                    @db.LongText
+  productFeatures  String?                    @db.LongText
+  brandStory       String?                    @db.LongText
+  userPainPoints   String?                    @db.LongText
+  trustEndorsement String?                    @db.LongText
+  customerCases    String?                    @db.LongText
+  otherInfo        String?                    @db.LongText
+  lang             String                     @default("zh")
+  isActive         Boolean                    @default(true)
+  createdAt        DateTime                   @default(now())
+  updatedAt        DateTime                   @updatedAt
+  projects         ArticleAutomationProject[]
+
+  @@index([lang])
+  @@index([isActive])
 }
 
 model StorageConfig {

@@ -10,6 +10,7 @@ export default function NewAutomationProject() {
     const [isLoading, setIsLoading] = useState(false);
     const [categories, setCategories] = useState<any[]>([]);
     const [strategies, setStrategies] = useState<any[]>([]);
+    const [knowledgeBases, setKnowledgeBases] = useState<any[]>([]);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -21,6 +22,7 @@ export default function NewAutomationProject() {
         dailyLimit: 2,
         preferredLength: 'medium' as 'short' | 'medium' | 'long',
         categoryId: '',
+        knowledgeBaseId: '',
 
         strategyId: '',
         features: {
@@ -51,14 +53,20 @@ export default function NewAutomationProject() {
         // Fetch categories and strategies
         const fetchData = async () => {
             try {
-                const [catsRes, stratsRes] = await Promise.all([
+                const [catsRes, stratsRes, kbsRes] = await Promise.all([
                     fetch('/api/admin/categories'),
-                    fetch('/api/admin/ai-strategies?targetType=article&type=WRITING')
+                    fetch('/api/admin/ai-strategies?targetType=article&type=WRITING'),
+                    fetch('/api/admin/knowledge-base')
                 ]);
 
                 if (catsRes.ok) {
                     const cats = await catsRes.json();
                     if (Array.isArray(cats)) setCategories(cats);
+                }
+
+                if (kbsRes.ok) {
+                    const kbs = await kbsRes.json();
+                    if (Array.isArray(kbs)) setKnowledgeBases(kbs);
                 }
 
                 if (stratsRes.ok) {
@@ -432,6 +440,19 @@ export default function NewAutomationProject() {
                                     ) : (
                                         <option value="">请先创建 AI 创作策略</option>
                                     )}
+                                </select>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-gray-700">引用的企业知识包 (RAG)</label>
+                                <select
+                                    value={formData.knowledgeBaseId}
+                                    onChange={e => setFormData(prev => ({ ...prev, knowledgeBaseId: e.target.value }))}
+                                    className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none cursor-pointer"
+                                >
+                                    <option value="">不使用知识库 (全局开放式生成)</option>
+                                    {knowledgeBases.filter(k => k.isActive).map((k) => (
+                                        <option key={k.id} value={k.id}>{k.name}</option>
+                                    ))}
                                 </select>
                             </div>
                         </div>

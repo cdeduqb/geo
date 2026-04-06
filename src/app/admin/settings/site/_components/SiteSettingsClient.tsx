@@ -74,6 +74,7 @@ export default function SiteSettingsClient({ initialData }: SiteSettingsClientPr
         show_author_card: initialData.systemSettings.show_author_card === 'true',
         show_citations: initialData.systemSettings.show_citations !== 'false', // 默认显示
         show_entities: initialData.systemSettings.show_entities !== 'false', // 默认显示
+        article_layout_style: initialData.systemSettings.article_layout_style || 'blog',
     });
 
     const [contactSettings, setContactSettings] = useState({
@@ -160,6 +161,7 @@ export default function SiteSettingsClient({ initialData }: SiteSettingsClientPr
                     show_author_card: brandSettings.show_author_card ? 'true' : 'false',
                     show_citations: brandSettings.show_citations ? 'true' : 'false',
                     show_entities: brandSettings.show_entities ? 'true' : 'false',
+                    article_layout_style: brandSettings.article_layout_style,
                     i18n_settings: JSON.stringify({
                         enableMultiLanguage: brandSettings.enable_multi_language,
                         defaultLocale: 'zh',
@@ -684,6 +686,44 @@ export default function SiteSettingsClient({ initialData }: SiteSettingsClientPr
                                 </div>
 
                                 <div className="space-y-3">
+                                    <div className="flex flex-col gap-4 p-4 bg-indigo-50/30 rounded-2xl border border-indigo-100/50 mb-6">
+                                        <div>
+                                            <span className="text-sm font-bold text-gray-900 block">文章整体布局风格</span>
+                                            <span className="text-xs text-gray-500 font-medium pb-2 block border-b border-indigo-100/30">切换前台文章页面的渲染视觉与左右排版</span>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4 mt-2">
+                                            <label className={`cursor-pointer rounded-2xl border-2 p-3 transition-all ${brandSettings.article_layout_style === 'blog' ? 'border-indigo-600 bg-white shadow-md ring-2 ring-indigo-600/20' : 'border-gray-200 bg-gray-50/50 hover:border-indigo-300'}`}>
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <input 
+                                                        type="radio" 
+                                                        name="article_layout_style" 
+                                                        value="blog" 
+                                                        checked={brandSettings.article_layout_style === 'blog'} 
+                                                        onChange={(e) => setBrandSettings(s => ({ ...s, article_layout_style: e.target.value }))}
+                                                        className="w-4 h-4 text-indigo-600 focus:ring-indigo-600"
+                                                    />
+                                                    <span className="font-bold text-gray-900 text-[13px]">博客悬浮版 (推荐)</span>
+                                                </div>
+                                                <p className="text-[11px] text-gray-400 pl-6 leading-relaxed">双栏排版带跟随式提取TOC自动目录</p>
+                                            </label>
+
+                                            <label className={`cursor-pointer rounded-2xl border-2 p-3 transition-all ${brandSettings.article_layout_style === 'traditional' ? 'border-indigo-600 bg-white shadow-md ring-2 ring-indigo-600/20' : 'border-gray-200 bg-gray-50/50 hover:border-indigo-300'}`}>
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <input 
+                                                        type="radio" 
+                                                        name="article_layout_style" 
+                                                        value="traditional" 
+                                                        checked={brandSettings.article_layout_style === 'traditional'} 
+                                                        onChange={(e) => setBrandSettings(s => ({ ...s, article_layout_style: e.target.value }))}
+                                                        className="w-4 h-4 text-indigo-600 focus:ring-indigo-600"
+                                                    />
+                                                    <span className="font-bold text-gray-900 text-[13px]">传统单列版</span>
+                                                </div>
+                                                <p className="text-[11px] text-gray-400 pl-6 leading-relaxed">严肃的内容排版与居中结构呈现</p>
+                                            </label>
+                                        </div>
+                                    </div>
+
                                     <div className="flex items-center justify-between p-4 bg-gray-50/50 rounded-2xl border border-gray-200/50 hover:bg-white hover:border-gray-200 transition-all duration-300">
                                         <div>
                                             <span className="text-sm font-bold text-gray-900 block">显示作者卡片</span>

@@ -73,6 +73,7 @@ const MENU_ITEMS: MenuItem[] = [
         label: 'AI 创作',
         icon: Sparkles,
         children: [
+            { label: '企业知识库', href: '/admin/knowledge-base' },
             { label: '创作策略', href: '/admin/ai/strategies' },
             { label: '创作工厂', href: '/admin/articles/automation' },
             { label: '批量任务', href: '/admin/ai/tasks' }

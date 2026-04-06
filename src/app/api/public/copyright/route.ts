@@ -29,10 +29,16 @@ export async function GET() {
             }
         }
 
+        // 尝试获取网站名称作为后备
+        const siteNameSetting = await db.systemSetting.findUnique({
+            where: { key: 'site_name' }
+        });
+        const siteName = siteNameSetting?.value || '企业官网';
+
         // 返回默认版权信息
         const currentYear = new Date().getFullYear();
         return NextResponse.json({
-            copyright: `© ${currentYear} 企业官网. All rights reserved.`
+            copyright: `© ${currentYear} ${siteName}. All rights reserved.`
         });
     } catch (error) {
         console.error('Error fetching copyright:', error);

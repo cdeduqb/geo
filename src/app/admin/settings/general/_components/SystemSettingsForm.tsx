@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Save, Loader2, Globe, Shield, Phone, Mail, MapPin } from 'lucide-react';
+import { Save, Loader2, Globe, Shield, Phone, Mail, MapPin, Sparkles, LayoutTemplate } from 'lucide-react';
 import ImageUpload from '@/components/ui/ImageUpload';
 
 interface SystemSettingsFormProps {
@@ -159,9 +159,12 @@ export default function SystemSettingsForm({ initialSettings }: SystemSettingsFo
                                         />
                                     ) : (
                                         <div className="relative group">
-                                            {field.subIcon && (
+                                            {(field as any).subIcon && (
                                                 <div className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none group-focus-within:text-blue-500 transition-colors">
-                                                    <field.subIcon className="w-4.5 h-4.5" />
+                                                    {(() => {
+                                                        const SubItem = (field as any).subIcon;
+                                                        return <SubItem className="w-4.5 h-4.5" />;
+                                                    })()}
                                                 </div>
                                             )}
                                             <input
@@ -169,7 +172,7 @@ export default function SystemSettingsForm({ initialSettings }: SystemSettingsFo
                                                 value={settings[field.key] || ''}
                                                 onChange={e => handleChange(field.key, e.target.value)}
                                                 placeholder={field.placeholder}
-                                                className={`${inputClass} ${field.subIcon ? 'pl-12' : ''}`}
+                                                className={`${inputClass} ${(field as any).subIcon ? 'pl-12' : ''}`}
                                             />
                                         </div>
                                     )}
@@ -220,6 +223,57 @@ export default function SystemSettingsForm({ initialSettings }: SystemSettingsFo
                                 </p>
                             </div>
                         )}
+                    </div>
+                </div>
+
+                {/* 前台排版与布局配置 */}
+                <div className={cardClass}>
+                    <div className="flex items-center gap-4 mb-10">
+                        <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 shadow-inner">
+                            <LayoutTemplate className="w-7 h-7" />
+                        </div>
+                        <div>
+                            <h3 className="text-xl font-black text-gray-900 tracking-tight">内容排版风格</h3>
+                            <p className="text-[13px] text-gray-500 mt-1 font-medium">切换前台文章页面的渲染视觉</p>
+                        </div>
+                    </div>
+
+                    <div className="space-y-8">
+                        <div className="flex flex-col gap-4">
+                            <label className={labelClass}>文章详情页布局 (Article Layout)</label>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                                <label className={`cursor-pointer rounded-2xl border-2 p-4 transition-all ${(!settings.article_layout_style || settings.article_layout_style === 'blog') ? 'border-indigo-600 bg-indigo-50/50 ring-2 ring-indigo-600/20' : 'border-gray-200 hover:border-indigo-300'}`}>
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <input 
+                                            type="radio" 
+                                            name="article_layout_style" 
+                                            value="blog" 
+                                            checked={!settings.article_layout_style || settings.article_layout_style === 'blog'} 
+                                            onChange={(e) => handleChange('article_layout_style', e.target.value)}
+                                            className="w-4 h-4 text-indigo-600 focus:ring-indigo-600"
+                                        />
+                                        <span className="font-bold text-gray-900 text-sm">博客悬浮版 (推荐)</span>
+                                    </div>
+                                    <p className="text-xs text-gray-500 leading-relaxed pl-7">双栏排版，带悬浮作者名片与自动抽取 H2/H3 生成的跟随式页面目录 (TOC)。极致的阅读护眼宽度体验且增加内链点击。</p>
+                                </label>
+
+                                <label className={`cursor-pointer rounded-2xl border-2 p-4 transition-all ${settings.article_layout_style === 'traditional' ? 'border-indigo-600 bg-indigo-50/50 ring-2 ring-indigo-600/20' : 'border-gray-200 hover:border-indigo-300'}`}>
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <input 
+                                            type="radio" 
+                                            name="article_layout_style" 
+                                            value="traditional" 
+                                            checked={settings.article_layout_style === 'traditional'} 
+                                            onChange={(e) => handleChange('article_layout_style', e.target.value)}
+                                            className="w-4 h-4 text-indigo-600 focus:ring-indigo-600"
+                                        />
+                                        <span className="font-bold text-gray-900 text-sm">传统单列版</span>
+                                    </div>
+                                    <p className="text-xs text-gray-500 leading-relaxed pl-7">传统的居中长图文结构，适合严肃类企业新闻稿件，视觉比较居中，底部承载相关信息。</p>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

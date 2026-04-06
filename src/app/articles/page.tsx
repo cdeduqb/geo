@@ -10,9 +10,10 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {
     const locale = await getLocale();
-    const { getSiteUrl } = await import('@/lib/system-settings');
+    const { getSiteUrl, getSEOSettings } = await import('@/lib/system-settings');
     const { locales, getLocalePath } = await import('@/lib/i18n');
     const baseUrl = await getSiteUrl();
+    const seo = await getSEOSettings();
 
     const languages: Record<string, string> = {};
     locales.forEach(l => {
@@ -21,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
     });
 
     return {
-        title: `${t(locale, 'article.list')} | 企业官网`,
+        title: `${t(locale, 'article.list')} | ${seo.siteName}`,
         description: t(locale, 'article.stayUpdated'),
         alternates: {
             canonical: `${baseUrl}${getLocalePath('/articles', locale as any)}`,

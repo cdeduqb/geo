@@ -127,12 +127,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.4,
         }));
 
+        // 6. 获取所有分类 (Categories)
+        const categories = await db.category.findMany({
+            where: {
+                // 如果禁用多语言，只获取默认语言的内容
+                ...(enableMultiLanguage ? {} : { lang: defaultLocale })
+            },
+            select: { slug: true, lang: true, translationGroupId: true },
+        });
+
+        const categoryPages: MetadataRoute.Sitemap = categories.map((cat) => ({
+            url: `${baseUrl}${getLocalePath(`/category/${cat.slug}`, cat.lang as Locale)}`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.6,
+            alternates: getAlternates(categories as any, cat, '/category/')
+        }));
+
+        // 7. 获取所有标签 (Tags)
+        const tags = await db.tag.findMany({
+            select: { name: true },
+        });
+
+        const tagPages: MetadataRoute.Sitemap = tags.map((tag) => ({
+            url: `${baseUrl}/tag/${encodeURIComponent(tag.name)}`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.5,
+        }));
+
         return [
             ...staticPages,
             ...dynamicPages,
             ...articlePages,
             ...productPages,
-            ...authorPages
+            ...authorPages,
+            ...categoryPages,
+            ...tagPages
         ];
     } catch (error) {
         console.warn('Database unavailable during sitemap generation. Returning empty sitemap.');
