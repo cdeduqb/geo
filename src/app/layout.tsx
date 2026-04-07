@@ -93,14 +93,28 @@ export default async function RootLayout({
                     "inLanguage": defaultLocale
                   },
                   {
-                    "@type": "Organization",
+                    "@type": (seo.latitude && seo.longitude) ? "LocalBusiness" : "Organization",
                     "@id": `${seo.siteUrl}#organization`,
                     "name": seo.siteName,
                     "url": seo.siteUrl,
                     "logo": seo.siteLogo ? {
                         "@type": "ImageObject",
                         "url": seo.siteLogo
-                    } : undefined
+                    } : undefined,
+                    "address": seo.address ? {
+                        "@type": "PostalAddress",
+                        "streetAddress": seo.address
+                    } : undefined,
+                    "telephone": seo.phone || undefined,
+                    "email": seo.email || undefined,
+                    ...(seo.latitude && seo.longitude ? {
+                        "geo": {
+                            "@type": "GeoCoordinates",
+                            "latitude": seo.latitude,
+                            "longitude": seo.longitude
+                        },
+                        "openingHours": seo.openingHours || "Mo-Fr 09:00-18:00"
+                    } : {})
                   }
                 ]
               })

@@ -1,9 +1,9 @@
 'use client';
 
 import { Category, Article } from '@prisma/client';
-import { Save, Loader2, Sparkles, Languages, ChevronRight, ArrowLeft, FileText, Info, Globe, Layout, Image, Settings, History, Box, Layers, MousePointer2 } from 'lucide-react';
+import { Save, Loader2, Sparkles, Languages, ChevronRight, ArrowLeft, FileText, Info, Globe, Layout, Image, Settings, History, Box, Layers, MousePointer2, AlertCircle } from 'lucide-react';
 import { useFormStatus } from 'react-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import RichTextEditor from '@/components/ui/RichTextEditor';
@@ -61,6 +61,9 @@ export default function ArticleForm({ categories, article, action, enableMultiLa
     const [targetLang, setTargetLang] = useState('en');
     const [lang, setLang] = useState(article?.lang || 'zh');
     const [selectedGroupId, setSelectedGroupId] = useState(article?.translationGroupId || '');
+    
+    const [cannibalizationConflicts, setCannibalizationConflicts] = useState<any[]>([]);
+    const cannibalizationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const [slugConfirmModal, setSlugConfirmModal] = useState<{ open: boolean; currentSlug: string; newSlug: string }>({ open: false, currentSlug: '', newSlug: '' });
     const [optimizeConfirmModal, setOptimizeConfirmModal] = useState(false);
@@ -305,6 +308,28 @@ export default function ArticleForm({ categories, article, action, enableMultiLa
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* 左侧主要内容 */}
                     <div className="lg:col-span-2 space-y-6">
+                        {article?.aiDetectorScore >= 80 && (
+                            <div className="bg-red-50 border border-red-200 rounded-[24px] p-6 flex gap-4 animate-in slide-in-from-top-2 shadow-sm relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-bl-[100px] pointer-events-none" />
+                                <div className="p-3 bg-red-100 rounded-2xl text-red-600 shadow-sm shrink-0 h-fit">
+                                    <AlertCircle className="w-6 h-6" />
+                                </div>
+                                <div className="flex-1 relative z-10">
+                                    <h3 className="text-[15px] font-black text-red-900 tracking-tight flex items-center gap-2">
+                                        高机械度警告 (AI 味检测)
+                                        <span className="px-2 py-0.5 bg-red-600 text-white text-[11px] rounded-md font-bold shadow-sm">{article.aiDetectorScore} / 100 分</span>
+                                    </h3>
+                                    <p className="text-[13px] font-medium text-red-700/80 mt-1.5 mb-3 leading-relaxed">
+                                        系统质检发现本文存在较重的 AI 生成痕迹。为避免触发搜索引擎抗 AI 算法折叠，已标记为草稿状态。请人工根据下方指引对文本进行增润、重构逻辑或添加真实背书。
+                                    </p>
+                                    {article.aiDetectorResult && (
+                                        <div className="bg-white/70 p-4 rounded-xl border border-red-200/50 text-[13px] font-medium text-slate-700 whitespace-pre-wrap leading-relaxed shadow-inner">
+                                            {article.aiDetectorResult}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                         {/* 基本信息卡片 */}
                         <div className={cardClass}>
                             <div className="flex items-center gap-3 mb-8">
@@ -394,7 +419,7 @@ export default function ArticleForm({ categories, article, action, enableMultiLa
                                     />
                                 </div>
 
-                                <div className="space-y-3">
+                                <div className="space-y-3 relative">
                                     <label htmlFor="seoKeywords" className={labelClass}>
                                         关键词
                                     </label>
@@ -403,9 +428,51 @@ export default function ArticleForm({ categories, article, action, enableMultiLa
                                         id="seoKeywords"
                                         name="seoKeywords"
                                         defaultValue={article?.seo?.keywords}
+                                        onChange={(e) => {
+                                            if (cannibalizationTimeoutRef.current) clearTimeout(cannibalizationTimeoutRef.current);
+                                            cannibalizationTimeoutRef.current = setTimeout(async () => {
+                                                const keywords = e.target.value.trim();
+                                                if (!keywords) {
+                                                    setCannibalizationConflicts([]);
+                                                    return;
+                                                }
+                                                try {
+                                                    const res = await fetch('/api/admin/seo/cannibalization', {
+                                                        method: 'POST',
+                                                        headers: { 'Content-Type': 'application/json' },
+                                                        body: JSON.stringify({ keywords, excludeArticleId: article?.id }),
+                                                    });
+                                                    const data = await res.json();
+                                                    setCannibalizationConflicts(data.conflicts || []);
+                                                } catch(err) {}
+                                            }, 800);
+                                        }}
                                         className={inputClass}
                                         placeholder="关键词1, 关键词2"
                                     />
+                                    {cannibalizationConflicts && cannibalizationConflicts.length > 0 && (
+                                        <div className="absolute top-full left-0 z-10 mt-1 w-full p-4 bg-red-50 border border-red-200 rounded-2xl shadow-xl animate-in fade-in slide-in-from-top-2">
+                                            <div className="flex items-start gap-3">
+                                                <div className="p-1.5 bg-red-100 rounded-lg text-red-600 mt-0.5">
+                                                    <AlertCircle className="w-4 h-4" />
+                                                </div>
+                                                <div className="flex-1">
+                                                    <h4 className="text-[13px] font-black text-red-900 mb-1">内部竞争警告 (Keyword Cannibalization)</h4>
+                                                    <p className="text-[12px] text-red-700 font-medium leading-relaxed mb-2">
+                                                        当前关键词与存量文章高度重合（重合度 &ge; 75%），建议避开或修改侧重点，以防搜索引擎内耗折叠：
+                                                    </p>
+                                                    <ul className="space-y-1 mt-2">
+                                                        {cannibalizationConflicts.map((c: any, i: number) => (
+                                                            <li key={i} className="text-[11px] text-red-800 bg-red-100/50 px-2 py-1.5 rounded-lg flex items-center justify-between">
+                                                                <span className="truncate max-w-[200px] font-bold">{c.article?.title}</span>
+                                                                <span className="font-bold opacity-60">重合度: {Math.round(c.overlapScore * 100)}%</span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="space-y-3 md:col-span-2">

@@ -55,6 +55,7 @@ const AI_CRAWLERS = [
 interface GEOSettings {
     crawlerConfig: { [key: string]: 'allow' | 'disallow' };
     enableStructuredData: boolean;
+    enableAiDetector?: boolean;
     enableEntityExtraction: boolean;
     defaultSchemaOrg: boolean;
     entityInfo: {
@@ -100,6 +101,7 @@ interface CrawlerLog {
 const defaultSettings: GEOSettings = {
     crawlerConfig: AI_CRAWLERS.reduce((acc, c) => ({ ...acc, [c.id]: 'allow' }), {}),
     enableStructuredData: true,
+    enableAiDetector: true,
     enableEntityExtraction: true,
     defaultSchemaOrg: true,
     entityInfo: {
@@ -351,13 +353,13 @@ export default function GEOSettingsPage() {
                                 <Bot className="w-4 h-4" />
                                 行为分析
                             </TabsTrigger>
-                            <TabsTrigger
+                            {/* <TabsTrigger
                                 value="competitors"
                                 className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
                             >
                                 <Sparkles className="w-4 h-4" />
                                 竞品分析
-                            </TabsTrigger>
+                            </TabsTrigger> */}
                             <TabsTrigger
                                 value="optimization"
                                 className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
@@ -365,20 +367,20 @@ export default function GEOSettingsPage() {
                                 <Database className="w-4 h-4" />
                                 内容优化
                             </TabsTrigger>
-                            <TabsTrigger
+                            {/* <TabsTrigger
                                 value="simulation"
                                 className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
                             >
                                 <Eye className="w-4 h-4" />
                                 视角模拟
-                            </TabsTrigger>
-                            <TabsTrigger
+                            </TabsTrigger> */}
+                            {/* <TabsTrigger
                                 value="citations"
                                 className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
                             >
                                 <List className="w-4 h-4" />
                                 引用追踪
-                            </TabsTrigger>
+                            </TabsTrigger> */}
                             <TabsTrigger
                                 value="quality"
                                 className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
@@ -386,13 +388,13 @@ export default function GEOSettingsPage() {
                                 <Sparkles className="w-4 h-4" />
                                 质量评分
                             </TabsTrigger>
-                            <TabsTrigger
+                            {/* <TabsTrigger
                                 value="ranking"
                                 className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
                             >
                                 <TrendingUp className="w-4 h-4" />
                                 排名追踪
-                            </TabsTrigger>
+                            </TabsTrigger> */}
                             <TabsTrigger
                                 value="logs"
                                 className="flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-100 text-gray-500 hover:text-gray-900 hover:bg-gray-50 border border-transparent data-[state=active]:border-blue-600"
@@ -434,9 +436,9 @@ export default function GEOSettingsPage() {
                 </TabsContent>
 
                 {/* 引用追踪面板 */}
-                <TabsContent value="citations">
+                {/* <TabsContent value="citations">
                     <CitationTracker />
-                </TabsContent>
+                </TabsContent> */}
 
                 {/* 质量评分面板 */}
                 <TabsContent value="quality">
@@ -446,9 +448,9 @@ export default function GEOSettingsPage() {
 
 
                 {/* 排名追踪面板 */}
-                <TabsContent value="ranking">
+                {/* <TabsContent value="ranking">
                     <RankingTracker />
-                </TabsContent>
+                </TabsContent> */}
 
                 {/* 权威信源图谱面板 */}
                 <TabsContent value="authority-graph">
@@ -464,14 +466,14 @@ export default function GEOSettingsPage() {
                 </TabsContent>
 
                 {/* 竞品对比面板 */}
-                <TabsContent value="competitors">
+                {/* <TabsContent value="competitors">
                     <CompetitorAnalysis />
-                </TabsContent>
+                </TabsContent> */}
 
                 {/* 视角模拟面板 */}
-                <TabsContent value="simulation">
+                {/* <TabsContent value="simulation">
                     <AISimulator />
-                </TabsContent>
+                </TabsContent> */}
 
                 {/* 内容优化面板 */}
                 <TabsContent value="optimization" className="space-y-6">
@@ -499,6 +501,23 @@ export default function GEOSettingsPage() {
                                         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings.enableStructuredData ? 'bg-blue-600' : 'bg-gray-200'}`}
                                     >
                                         <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition duration-200 ${settings.enableStructuredData ? 'translate-x-6' : 'translate-x-1'}`} />
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div>
+                                    <h4 className="font-medium text-gray-900">质量优化：开启防 AI 痕迹拦截 (降权防火墙)</h4>
+                                    <p className="text-sm text-gray-500 mt-1">
+                                        开启后，自动化生产的内容会经过 AI 痕迹鉴定，机械味道太重的文章将自动沉入草稿箱拦截。
+                                    </p>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => setSettings(p => ({ ...p, enableAiDetector: p.enableAiDetector !== false ? false : true }))}
+                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings.enableAiDetector !== false ? 'bg-blue-600' : 'bg-gray-200'}`}
+                                    >
+                                        <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition duration-200 ${settings.enableAiDetector !== false ? 'translate-x-6' : 'translate-x-1'}`} />
                                     </button>
                                 </div>
                             </div>

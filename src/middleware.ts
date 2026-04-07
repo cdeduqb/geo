@@ -44,7 +44,32 @@ const AI_CRAWLER_MAP = [
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // 0. 站点验证文件拦截 (Site Verification)
+    // 0.1 301/302 重定向拦截 (301 Redirect Hub)
+    // 仅针对普通的前台视图请求进行拦截，避开核心静态资源和API
+    if (!pathname.startsWith('/admin') &&
+        !pathname.startsWith('/api') &&
+        !pathname.startsWith('/_next') &&
+        !pathname.match(/\.(jpg|jpeg|png|gif|svg|css|js|ico|txt|xml)$/)) {
+        try {
+            // 使用 ISR (Edge Cache) 保障极速响应，最多1分钟才去数据库透传查一次活跃重定向组
+            const res = await fetch(`${request.nextUrl.origin}/api/internal/redirects`, {
+                next: { revalidate: 60 }
+            });
+            if (res.ok) {
+                const redirectMap = await res.json();
+                if (redirectMap[pathname]) {
+                    const rule = redirectMap[pathname];
+                    const url = request.nextUrl.clone();
+                    url.pathname = rule.newPath;
+                    return NextResponse.redirect(url, { status: rule.type || 301 });
+                }
+            }
+        } catch (e) {
+            // 失败时做静默处理，不阻塞原本业务流
+        }
+    }
+
+    // 0.2 站点验证文件拦截 (Site Verification)
     // 拦截 .html 和特定 .txt (IndexNow/搜索引擎验证) 结尾的请求
     const isStaticTxt = ['/robots.txt', '/ads.txt', '/humans.txt', '/sitemap.txt', '/llms.txt', '/llms-full.txt'].includes(pathname);
     if ((pathname.endsWith('.html') || (pathname.endsWith('.txt') && !isStaticTxt)) &&

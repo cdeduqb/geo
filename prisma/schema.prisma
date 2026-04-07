@@ -101,6 +101,8 @@ model Article {
   citations           Json?
   entities            Json?
   sortOrder           Int                       @default(0)
+  aiDetectorScore     Float?
+  aiDetectorResult    String?                   @db.Text
   automationProjectId String?
   lang                String                    @default("zh")
   translationGroupId  String?
@@ -225,6 +227,9 @@ model SiteSettings {
   email          String?
   address        String?  @db.Text
   socialLinks    Json?
+  latitude       Float?
+  longitude      Float?
+  openingHours   String?  @default("Mo-Fr 09:00-18:00")
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   copyright      String?
@@ -745,4 +750,20 @@ enum OrderStatus {
   COMPLETED
   CANCELLED
   REFUNDED
+}
+
+// ----------------------------------------
+// GEO SEO Redirect System
+// ----------------------------------------
+
+model RedirectRoute {
+  id        String   @id @default(uuid())
+  oldPath   String   @unique
+  newPath   String
+  type      Int      @default(301) // 301 or 302
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([oldPath])
 }

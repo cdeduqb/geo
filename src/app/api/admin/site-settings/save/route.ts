@@ -26,6 +26,9 @@ export async function POST(request: NextRequest) {
             phone: data.phone,
             email: data.email,
             address: data.address,
+            latitude: data.latitude ? parseFloat(data.latitude) : null,
+            longitude: data.longitude ? parseFloat(data.longitude) : null,
+            openingHours: data.openingHours || null,
             socialLinks: data.socialLinks,
             copyright: data.copyright,
         };

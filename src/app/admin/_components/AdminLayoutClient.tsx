@@ -84,7 +84,8 @@ const MENU_ITEMS: MenuItem[] = [
         icon: Search,
         children: [
             { label: '搜索引擎推送', href: '/admin/seo/configs' },
-            { label: '生成式引擎优化', href: '/admin/geo' }
+            { label: '生成式引擎优化', href: '/admin/geo' },
+            { label: '重定向管理', href: '/admin/seo/redirects' }
         ]
     },
     {

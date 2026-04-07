@@ -240,15 +240,58 @@ export default function NewAutomationProject() {
                                         />
                                     </div>
 
-                                    <div className="space-y-2">
+                                    <div className="space-y-2 relative">
                                         <label className="text-sm font-bold text-gray-700">优化词</label>
                                         <input
                                             type="text"
                                             value={formData.keywords}
-                                            onChange={e => setFormData(prev => ({ ...prev, keywords: e.target.value }))}
+                                            onChange={(e) => {
+                                                const val = e.target.value;
+                                                setFormData(prev => ({ ...prev, keywords: val }));
+                                                
+                                                if ((window as any).cannibalizationTimeout) clearTimeout((window as any).cannibalizationTimeout);
+                                                (window as any).cannibalizationTimeout = setTimeout(async () => {
+                                                    const keywords = val.trim();
+                                                    if (!keywords) {
+                                                        (window as any).cannibalizationConflictsTopic = [];
+                                                        setFormData(prev => ({ ...prev }));
+                                                        return;
+                                                    }
+                                                    try {
+                                                        const res = await fetch('/api/admin/seo/cannibalization', {
+                                                            method: 'POST',
+                                                            headers: { 'Content-Type': 'application/json' },
+                                                            body: JSON.stringify({ keywords }),
+                                                        });
+                                                        const data = await res.json();
+                                                        (window as any).cannibalizationConflictsTopic = data.conflicts || [];
+                                                        setFormData(prev => ({ ...prev })); // force re-render
+                                                    } catch(err) {}
+                                                }, 800);
+                                            }}
                                             className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none"
                                             placeholder="例如:全域魔力Molicms系统"
                                         />
+                                        {(window as any).cannibalizationConflictsTopic && (window as any).cannibalizationConflictsTopic.length > 0 && (
+                                            <div className="absolute top-full left-0 z-10 mt-1 w-full p-4 bg-red-50 border border-red-200 rounded-2xl shadow-xl animate-in fade-in slide-in-from-top-2">
+                                                <div className="flex items-start gap-3">
+                                                    <div className="flex-1">
+                                                        <h4 className="text-[13px] font-black text-red-900 mb-1">内部竞争警告 (Keyword Cannibalization)</h4>
+                                                        <p className="text-[12px] text-red-700 font-medium leading-relaxed mb-2">
+                                                            当前关键词与存量文章高度重合（重合度 &ge; 75%），建议避开以防搜索引擎内耗折叠：
+                                                        </p>
+                                                        <ul className="space-y-1 mt-2">
+                                                            {(window as any).cannibalizationConflictsTopic.map((c: any, i: number) => (
+                                                                <li key={i} className="text-[11px] text-red-800 bg-red-100/50 px-2 py-1.5 rounded-lg flex items-center justify-between">
+                                                                    <span className="truncate max-w-[200px] font-bold">{c.article?.title}</span>
+                                                                    <span className="font-bold opacity-60">重合度: {Math.round(c.overlapScore * 100)}%</span>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             ) : (

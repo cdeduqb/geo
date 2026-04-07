@@ -191,6 +191,12 @@ export default function ArticleListTable({ articles, total, page, limit }: Artic
                                             >
                                                 {article.title}
                                             </Link>
+                                            {article.aiDetectorScore >= 80 && (
+                                                <div className="flex items-center gap-1.5 w-fit mt-1 text-[10px] font-bold text-red-600 bg-red-50 border border-red-100 px-2 py-0.5 rounded-md">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                                                    高机械度 ({article.aiDetectorScore}/100)
+                                                </div>
+                                            )}
                                             <div className="flex items-center gap-2">
                                                 <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-0.5 rounded">路径别名</span>
                                                 <span className="text-[11px] font-medium text-slate-400 font-mono truncate max-w-[200px]">/{article.slug}</span>

@@ -971,3 +971,57 @@
 [2026-04-06T10:32:02.418Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
 [2026-04-06T10:32:36.612Z] INFO: [Pipeline] Auto-linking completed, length: 3454
 [2026-04-06T10:32:36.989Z] INFO: [Automation] Task 7f9461ee-263a-497b-b846-1eecfad9451d: Triggering SEO Auto-push
+[2026-04-07T08:16:55.565Z] INFO: [AIService] Initialized fallback chain: deepseek(P1) -> volcengine(P1) -> qwen(P0) -> kimi(P0)
+[2026-04-07T08:16:55.568Z] INFO: [Automation] Processing Task 3856f82a-cde7-4be7-acb9-82a296564f89: Initial Writing
+[2026-04-07T08:16:55.568Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-04-07T08:16:55.569Z] INFO: [AIService] Trying deepseek for generateArticle
+[2026-04-07T08:16:55.569Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateArticle
+[2026-04-07T08:17:45.709Z] INFO: [Automation] Task 3856f82a-cde7-4be7-acb9-82a296564f89: GEO Optimization starting...
+[2026-04-07T08:17:46.424Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-04-07T08:17:46.515Z] INFO: [Pipeline] GEO optimizing for: GEO优化系统 (zh)
+[2026-04-07T08:17:46.517Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-04-07T08:18:31.917Z] INFO: [Pipeline] GEO optimization received length: 3863
+[2026-04-07T08:18:31.918Z] INFO: [Automation] Task 3856f82a-cde7-4be7-acb9-82a296564f89: GEO Optimization completed.
+[2026-04-07T08:18:31.919Z] INFO: [Automation] Task 3856f82a-cde7-4be7-acb9-82a296564f89: Generating Metadata (SEO, Entities, Citations)
+[2026-04-07T08:18:32.477Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-04-07T08:18:32.520Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-04-07T08:18:32.521Z] INFO: [Pipeline] Generating SEO for: GEO优化系统
+[2026-04-07T08:18:32.522Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-04-07T08:18:32.545Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-04-07T08:18:32.546Z] INFO: [Pipeline] Extracting entities
+[2026-04-07T08:18:32.546Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-04-07T08:18:32.572Z] INFO: [Pipeline] Generating citations
+[2026-04-07T08:18:32.573Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-04-07T08:18:44.063Z] INFO: [Automation] Task 3856f82a-cde7-4be7-acb9-82a296564f89: Finalizing Article
+[2026-04-07T08:18:44.872Z] INFO: [Automation] Task 3856f82a-cde7-4be7-acb9-82a296564f89: Triggering SEO Auto-push
+[2026-04-07T09:38:42.833Z] INFO: [AIService] Initialized fallback chain: deepseek(P1) -> volcengine(P1) -> qwen(P0) -> kimi(P0)
+[2026-04-07T09:38:42.836Z] INFO: [Automation] Processing Task 83062150-a1e3-4f82-bd32-abdbaca35590: Initial Writing
+[2026-04-07T09:38:42.837Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-04-07T09:38:42.837Z] INFO: [AIService] Trying deepseek for generateArticle
+[2026-04-07T09:38:42.838Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateArticle
+[2026-04-07T09:39:40.080Z] INFO: [Automation] Task 83062150-a1e3-4f82-bd32-abdbaca35590: GEO Optimization starting...
+[2026-04-07T09:39:40.573Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-04-07T09:39:40.660Z] INFO: [Pipeline] GEO optimizing for: GEO优化系统 (zh)
+[2026-04-07T09:39:40.661Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-04-07T09:40:24.520Z] INFO: [Pipeline] GEO optimization received length: 3347
+[2026-04-07T09:40:24.522Z] INFO: [Automation] Task 83062150-a1e3-4f82-bd32-abdbaca35590: GEO Optimization completed.
+[2026-04-07T09:40:24.522Z] INFO: [Automation] Task 83062150-a1e3-4f82-bd32-abdbaca35590: Generating Metadata (SEO, Entities, Citations)
+[2026-04-07T09:40:24.953Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-04-07T09:40:24.954Z] INFO: [Pipeline] Extracting entities
+[2026-04-07T09:40:24.955Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-04-07T09:40:25.134Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-04-07T09:40:25.137Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-04-07T09:40:25.137Z] INFO: [Pipeline] Generating SEO for: GEO优化系统
+[2026-04-07T09:40:25.137Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-04-07T09:40:25.224Z] INFO: [Pipeline] Generating citations
+[2026-04-07T09:40:25.224Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-04-07T09:40:38.620Z] INFO: [Automation] Task 83062150-a1e3-4f82-bd32-abdbaca35590: Checking AI Mechanical Score
+[2026-04-07T09:40:38.986Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-04-07T09:40:38.987Z] INFO: [Pipeline] Running AI Mechanical Check
+[2026-04-07T09:40:38.987Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-04-07T09:40:45.016Z] WARN: [Automation] Task 83062150-a1e3-4f82-bd32-abdbaca35590: Article flagged as too robotic (85/100), saving as DRAFT for human review.
+[2026-04-07T09:40:45.016Z] INFO: [Automation] Task 83062150-a1e3-4f82-bd32-abdbaca35590: Finalizing Article
+[2026-04-07T09:40:45.913Z] INFO: [AIService] Created OpenAIService for deepseek (Model: deepseek-chat)
+[2026-04-07T09:40:45.914Z] INFO: [Pipeline] Auto-linking for: GEO优化系统：AI时代品牌认知新策略 with 1 candidates
+[2026-04-07T09:40:45.915Z] INFO: [AIService] Calling deepseek-chat at https://api.deepseek.com for generateContent
+[2026-04-07T09:41:25.311Z] INFO: [Pipeline] Auto-linking completed, length: 3548

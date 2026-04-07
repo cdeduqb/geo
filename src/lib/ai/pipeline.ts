@@ -420,4 +420,63 @@ ${sourceLinks}
             return [];
         }
     }
+
+    /**
+     * AI 机械度审查 (Anti AI-Detector)
+     */
+    static async checkMechanicalScore(content: string, lang: string = 'zh') {
+        const aiService = await getAIServiceForUseCase('WRITING');
+        const isEn = lang === 'en';
+        const plainText = content.replace(/<[^>]*>/g, ' ').substring(0, 4000);
+
+        const prompt = isEn ? `
+You are an expert AI-content detector and editor. Read the following text and analyze its "mechanical" or "robotic" feeling (AI generated footprints, clichés, lack of human warmth, repetitive sentence structures, excessive use of transitional words like "Therefore", "In conclusion").
+Score the content from 0 to 100, where:
+0 = Completely human, natural, engaging.
+100 = Completely robotic, generic AI generated text.
+
+Provide a brief explanation of your score, pointing out any specific AI clichés.
+
+Text to analyze:
+${plainText}
+
+Return in JSON format exactly:
+{
+  "score": 85,
+  "result": "The text uses repetitive paragraph structures..."
+}
+` : `
+你是一个专业的 AI 内容鉴定师（AI-Detector）和资深编辑。请阅读以下文本，评估其“机械度”或“AI 味”（例如：充满套话、缺乏人味、句式重复、车轱辘话、过度使用“首先、其次、总之”等关联词）。
+请为该内容打分，分值范围 0 到 100：
+0 = 完全像人类写的，自然生动，有情感共鸣。
+100 = 极其浓重的 AI 生成痕迹，刻板机械。
+
+请简要说明打分理由，并指出具体的 AI 痕迹。
+
+待评估文本：
+${plainText}
+
+请务必仅返回如下 JSON 格式：
+{
+  "score": 85,
+  "result": "文本大量使用了重复的段落结构..."
+}
+`;
+        logger.info(`[Pipeline] Running AI Mechanical Check`);
+        try {
+            const res = await aiService.generateContent(prompt, { response_format: { type: 'json_object' } });
+            const jsonMatch = res.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+                const obj = JSON.parse(jsonMatch[0]);
+                return {
+                    score: typeof obj.score === 'number' ? obj.score : parseInt(obj.score) || 0,
+                    result: obj.result || ''
+                };
+            }
+        } catch (e) {
+            logger.error('[Pipeline] AI Detector parse failed', e);
+        }
+        
+        return { score: 0, result: '' };
+    }
 }

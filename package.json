@@ -1,6 +1,6 @@
 {
   "name": "molicms",
-  "version": "0.1.79",
+  "version": "0.1.80",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -60,6 +60,7 @@
     "crypto-js": "^4.2.0",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.1.6",
+    "feed": "^5.2.0",
     "framer-motion": "^11.3.19",
     "input-otp": "^1.2.4",
     "isomorphic-dompurify": "2.12.0",

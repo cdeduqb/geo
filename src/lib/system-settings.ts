@@ -50,6 +50,13 @@ export async function getSystemSettings(): Promise<Record<string, string>> {
 export async function getSEOSettings() {
     try {
         const settings = await getSystemSettings();
+        let siteConfig: any = {};
+        try {
+            if (settings.site_settings) {
+                siteConfig = JSON.parse(settings.site_settings);
+            }
+        } catch(e) {}
+
         return {
             siteName: settings.site_name || '企业官网',
             siteDescription: settings.site_description || '企业官网内容管理系统',
@@ -58,6 +65,12 @@ export async function getSEOSettings() {
             siteLogo: settings.site_logo || null,
             siteIcon: settings.site_icon || '/favicon.ico',
             enableMultiLanguage: settings.enable_multi_language === 'true',
+            address: siteConfig.address || settings.contact_address || null,
+            phone: siteConfig.phone || settings.contact_phone || null,
+            email: siteConfig.email || settings.contact_email || null,
+            latitude: siteConfig.latitude || null,
+            longitude: siteConfig.longitude || null,
+            openingHours: siteConfig.openingHours || null,
         };
     } catch (error) {
         return {

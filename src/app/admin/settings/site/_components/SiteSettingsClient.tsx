@@ -81,6 +81,9 @@ export default function SiteSettingsClient({ initialData }: SiteSettingsClientPr
         contact_email: initialData.systemSettings.contact_email || initialData.siteSettings?.email || '',
         contact_phone: initialData.systemSettings.contact_phone || initialData.siteSettings?.phone || '',
         contact_address: initialData.systemSettings.contact_address || initialData.siteSettings?.address || '',
+        contact_latitude: initialData.siteSettings?.latitude?.toString() || '',
+        contact_longitude: initialData.siteSettings?.longitude?.toString() || '',
+        contact_openingHours: initialData.siteSettings?.openingHours || 'Mo-Fr 09:00-18:00',
     });
 
     const [verificationFiles, setVerificationFiles] = useState<any[]>(() => {
@@ -188,6 +191,9 @@ export default function SiteSettingsClient({ initialData }: SiteSettingsClientPr
                     phone: contactSettings.contact_phone,
                     email: contactSettings.contact_email,
                     address: contactSettings.contact_address,
+                    latitude: contactSettings.contact_latitude || null,
+                    longitude: contactSettings.contact_longitude || null,
+                    openingHours: contactSettings.contact_openingHours || null,
                     copyright: brandSettings.copyright,
                 }),
             });
@@ -821,6 +827,44 @@ export default function SiteSettingsClient({ initialData }: SiteSettingsClientPr
                                         value={contactSettings.contact_address}
                                         onChange={e => setContactSettings(s => ({ ...s, contact_address: e.target.value }))}
                                         placeholder="北京市朝阳区科技园 A 座 12 层"
+                                        className="w-full rounded-2xl border border-gray-300 bg-gray-50/50 px-6 py-5 text-base font-bold text-gray-900 focus:border-blue-600 focus:bg-white transition-all outline-none placeholder:text-gray-300"
+                                    />
+                                </div>
+                                <div className="md:col-span-1 space-y-3">
+                                    <label className="text-[13px] font-black text-gray-700 ml-1 flex items-center gap-2 uppercase tracking-wider">
+                                        <MapPin className="w-4 h-4 text-emerald-500" />
+                                        坐标经度 (Longitude)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={contactSettings.contact_longitude}
+                                        onChange={e => setContactSettings(s => ({ ...s, contact_longitude: e.target.value }))}
+                                        placeholder="例如: 116.404"
+                                        className="w-full rounded-2xl border border-gray-300 bg-gray-50/50 px-6 py-5 text-base font-bold text-gray-900 focus:border-blue-600 focus:bg-white transition-all outline-none placeholder:text-gray-300"
+                                    />
+                                </div>
+                                <div className="md:col-span-1 space-y-3">
+                                    <label className="text-[13px] font-black text-gray-700 ml-1 flex items-center gap-2 uppercase tracking-wider">
+                                        <MapPin className="w-4 h-4 text-emerald-500" />
+                                        坐标纬度 (Latitude)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={contactSettings.contact_latitude}
+                                        onChange={e => setContactSettings(s => ({ ...s, contact_latitude: e.target.value }))}
+                                        placeholder="例如: 39.915"
+                                        className="w-full rounded-2xl border border-gray-300 bg-gray-50/50 px-6 py-5 text-base font-bold text-gray-900 focus:border-blue-600 focus:bg-white transition-all outline-none placeholder:text-gray-300"
+                                    />
+                                </div>
+                                <div className="md:col-span-2 space-y-3">
+                                    <label className="text-[13px] font-black text-gray-700 ml-1 flex items-center gap-2 uppercase tracking-wider">
+                                        营业时间 (用于企业地图搜索卡片收录)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={contactSettings.contact_openingHours}
+                                        onChange={e => setContactSettings(s => ({ ...s, contact_openingHours: e.target.value }))}
+                                        placeholder="例如: Mo-Fr 09:00-18:00"
                                         className="w-full rounded-2xl border border-gray-300 bg-gray-50/50 px-6 py-5 text-base font-bold text-gray-900 focus:border-blue-600 focus:bg-white transition-all outline-none placeholder:text-gray-300"
                                     />
                                 </div>

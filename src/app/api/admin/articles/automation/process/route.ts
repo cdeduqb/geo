@@ -36,6 +36,18 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ message: 'No pending tasks to process.' });
         }
 
+        // 获取系统通用设置 (GEO)
+        const geoSettingRecord = await db.systemSetting.findUnique({ where: { key: 'geo_settings' } });
+        let enableAiDetector = true;
+        if (geoSettingRecord) {
+            try {
+                const geoSettings = JSON.parse(geoSettingRecord.value);
+                if (geoSettings.enableAiDetector === false) {
+                    enableAiDetector = false;
+                }
+            } catch {}
+        }
+
         const encoder = new TextEncoder();
         const stream = new ReadableStream({
             async start(controller) {
@@ -191,6 +203,21 @@ export async function POST(request: NextRequest) {
                                 project.enableCitations ? ContentPipelineService.generateCitations(task.topic, currentContent, articleLang) : Promise.resolve(null)
                             ]);
 
+                            // --- STEP 4.8: AI机械度审查 (Anti AI-Detector) ---
+                            let detectorRes = { score: 0, result: '' };
+                            let finalStatus: 'PUBLISHED' | 'DRAFT' = 'PUBLISHED';
+                            
+                            if (enableAiDetector) {
+                                logger.info(`[Automation] Task ${task.id}: Checking AI Mechanical Score`);
+                                detectorRes = await ContentPipelineService.checkMechanicalScore(currentContent, articleLang);
+                                finalStatus = detectorRes.score >= 80 ? 'DRAFT' : 'PUBLISHED';
+                                if (detectorRes.score >= 80) {
+                                    logger.warn(`[Automation] Task ${task.id}: Article flagged as too robotic (${detectorRes.score}/100), saving as DRAFT for human review.`);
+                                }
+                            } else {
+                                logger.info(`[Automation] Task ${task.id}: AI Mechanical Score checking disabled by settings.`);
+                            }
+
                             // --- STEP 5: 创建文章记录 ---
                             logger.info(`[Automation] Task ${task.id}: Finalizing Article`);
                             // 如果关闭了优化标题，则严格使用任务原始主题 (task.topic)
@@ -215,7 +242,7 @@ export async function POST(request: NextRequest) {
                                             content: currentContent,
                                             summary: seoData?.description || currentContent.slice(0, 300).replace(/<[^>]*>/g, ''),
                                             coverImage: coverImage,
-                                            status: 'PUBLISHED',
+                                            status: finalStatus,
                                             authorId: userId,
                                             categoryId: project.categoryId,
                                             lang: articleLang,
@@ -223,6 +250,8 @@ export async function POST(request: NextRequest) {
                                             automationProjectId: project.id,
                                             citations: citations ?? undefined,
                                             entities: entities ?? undefined,
+                                            aiDetectorScore: detectorRes.score,
+                                            aiDetectorResult: detectorRes.result,
                                             seo: seoData ? {
                                                 create: {
                                                     title: project.optimizeTitle === false ? articleTitle : seoData.title,
