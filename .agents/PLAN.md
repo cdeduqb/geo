@@ -1,159 +1,35 @@
-# 增加知识库与文章创作注入 (RAG) 机制架构规划
+# 管理后台 UI 风格与布局扩展计划 (UI & Layout Expansion Plan)
 
-> 目标：在后台增加“知识库”模块，解决 AI 生成文章时“胡编乱造(幻觉)”或偏离企业品牌基调的问题。在进行 AI 创作推流或任务编排时，智能挂载对应知识段落作为参考锚点（RAG）。
+## 背景目标
+在**绝对不影响任何现有功能**的前提下，对目前的管理后台进行界面升级：
+1. 增加新的 UI 风格（如：支持暗色模式、不同的配色主题）。
+2. 增加新的布局选项（如：从当前的左侧边栏布局，切换至顶部导航布局）。
+3. 支持在管理后台界面进行可视化切换，并能够在本地记录用户偏好。
 
-## 最新改进建议 (The "Superpowers" Insight)
-基于最新的大模型 Prompt 工程最佳实践（如 Claude 3.5 和 DeepSeek R1 的偏好），我们在投喂大体量知识库时，最佳的方法是**结构化分块注入 (Structured XML Prompting)**，而不是喂一坨乱七八糟的纯文本。您提议把知识库拆分为【品牌故事】、【用户痛点】等专门的维度，这**极其完美**，它能让大模型在写文章时进行靶向抓取（比如写引言的时候抓品牌故事，写解决方案的时候抓产品特点）。因此数据结构必须支持这些独立维度的存取！
+## 方案架构设计
+通过解耦视口 (View) 和逻辑 (Logic) 实现：
+- **Logic层**：将当前的菜单数据配置、用户信息、退出登录功能、系统更新检查功能从视图层剥离，统一下沉到一个 Context 或自定义 Hook。
+- **Store层面**：利用现有的 `next-themes` 以及自定义的 `LocalStorage` 来记录用户的 `layout` 偏好（如：`classic | modern | top-nav`）。
+- **View层**：创建多套高阶组件（Layout Wrapper）。在 `AdminLayoutClient` 入口处根据用户偏好动态加载不同的布局组件并渲染 `{children}`。
 
----
+## 任务执行清单 (Todo List)
 
-## 阶段一：数据库与数据流链路设计 (Database Schema)
-- [ ] **步骤 1: 扩展 `prisma/schema.prisma`**
-  新增 `KnowledgeBase` (知识库) 模型。基于您的结构化需求，字段设计如下：
-  - `id`, `createdAt`, `updatedAt`
-  - `name` (String): 知识库名称
-  - `category` (String): 知识库分类
-  - `productServices` (LongText): 产品服务
-  - `productFeatures` (LongText): 产品特点
-  - `brandStory` (LongText): 品牌故事
-  - `userPainPoints` (LongText): 用户痛点
-  - `trustEndorsement` (LongText): 信任背书
-  - `customerCases` (LongText): 客户案例
-  - `otherInfo` (LongText): 其他附加要求/信息
-  - `seoInternalLinks` (Json?): 【SEO专属增强】相关的内部链接对照表 (如 `{"产品名": "/product/a"}`)。
-  - `lang` (String): 【多语言支持】当前知识库语种 (默认 zh)。
-  - `isActive` (Boolean): 开启状态
-- [ ] **步骤 2: 关联创作任务外键**
-  在 `ArticleAutomationProject` 中，新增字段 `knowledgeBaseId (String?)`。
-
-## 阶段二：智能组装与注入机制 (Backend & Prompt Engineering)
-- [ ] **步骤 1: 结构化抽取服务 (`src/lib/ai/knowledge-service.ts`)**
-  读取具体的 `KnowledgeBase` 行数据，清理掉为空的字段。
-- [ ] **步骤 2: XML 格式化 Prompt 增强注入**
-  在 `update-strategy.ts` 或 LLM 拼装时，采用大模型最易抓取的 XML 树状结构注入：
-  ```xml
-  <enterprise_knowledge>
-      <product_services>...</product_services>
-      <brand_story>...</brand_story>
-      ...
-  </enterprise_knowledge>
-  请在输出文章时，严格映射 <enterprise_knowledge> 节点内的素材事实，不可捏造。
-  ```
-
-## 阶段三：管理后台视图与组件开发 (Admin UI)
-- [ ] **步骤 1: 知识库维护面板 (`KnowledgeForm` / `KnowledgeTable`)**
-  在后台增加 "🏢 知识库管理"。新增知识库使用高级表单，包含分块的 Textarea (文本域)，并加入分类下拉选框。
-- [ ] **步骤 2: “创作工厂-自动化项目”表单升级**
-  在 `ProjectForm` 中增加一个 `<Select>`：选择**要挂载的参考知识库**。只有选择了的知识库才会被送去 `XML注入`。
-
-## 阶段四：联调闭环与测试验证 (REPL loop)
-- [x] **步骤 1: `test-rag.ts` 沙盒测试驱动**
-  通过集成测试或本地化 Server 开启闭环。
-- [x] **步骤 2: 确认无误，更新至正式部署链路**
+- [x] **步骤0：理解项目依赖与代码结构分析**
+  - 确认依赖：`next-themes`, `tailwindcss`, `lucide-react`。
+  - 确认待改动文件：`src/app/admin/_components/AdminLayoutClient.tsx`。
+- [x] **步骤1：解耦 `AdminLayoutClient` 提取共享逻辑与上下文 (Context)**
+  - 创建 `src/app/admin/_components/layout/AdminConfigContext.tsx` 或类似目录。
+  - 将 `MENU_ITEMS`、`updateInfo` 机制、登出、`user` 状态移交进去统一管理。
+- [x] **步骤2：抽象与封装当前的默认布局为 `ClassicLayout`**
+  - 把重构前纯碎的“代码视觉骨架”（即右边Header，左边Sidebar）拆分到 `ClassicLayout.tsx`，确保任何功能不倒退。
+- [x] **步骤3：开发新布局 `ModernTopNavLayout` (或其他风格，例如紧凑黑客风、玻璃悬浮风)**
+  - 编写全新的一套包裹组件，内部无缝接入 `{children}` 与上一步提取的 `Context`。
+- [x] **步骤4：引入布局切换器 (Theme / Layout Switcher Component)**
+  - 在右上角的 Header 内新增一个“主题设置”按钮，点击后弹出 `Drawer` 或 `Dialog` 进行切换。
+  - 改变偏好时，动态渲染指定的 Layout 包裹组件，支持跟随全局色值变化。
+- [ ] **步骤5：验证测试 (Validation)**
+  - 随意点开几个后台页面，包含表单页面、数据展示表格，确保 `children` 渲染宽度、高度和交互一切正常。
 
 ---
-
-# 文章详情页「博客化」重构规划 (Blog-Style Layout Refactoring)
-> 目标：将当前前台的文章详情页 (`src/app/articles/[slug]/page.tsx`) 彻底改造为一个高度关注阅读体验的现代博客样式，具备清晰的视觉阅读层级、侧边栏导航和极致的 SEO 支持。
-
-## 阶段五：页面骨架与现代视觉重构
-- [x] **步骤 1: 全局布局拆分 (两栏/三栏架构)**
-  - 核心阅读区：使用最大限制宽度 (如 `max-w-3xl`) 保证每行文字的视觉瞳孔扫描不过劳。
-  - 右侧栏 (Optional)：将作者信息、最近文章或者目录 (Table of Contents) 悬浮在此。
-- [x] **步骤 2: Typography 深度强化**
-  - 使用 `@tailwindcss/typography` 强化 `RichTextContent` 的文章渲染。
-  - 加大一级/二级标题边距，调整首字下沉或引用块 (Blockquote) 的样式。
-  - 使用衬线或等宽等更优雅的字体搭配（对英文更佳，或者中文对齐）。
-
-## 阶段六：SEO 与组件增强能力 (SEO-Audit & GEO)
-- [x] **步骤 1: 极致的语义化与可访问性 (GEO 基础)**
-  - 严格遵守 HTML5 语义：主体包裹 `<article>`，侧边栏 `<aside>`，目录 `<nav>`。
-  - 为所有图片配置完整的 `alt` 属性，强制使用 `next/image` 提升 Core Web Vitals 评分。
-- [x] **步骤 2: 文章目录 (TOC) 生成器 (SEO Sitelinks 优化)**
-  - 利用正则提取正文的 `<h2>`/`<h3>`，生成右侧浮动锚点导航。
-  - 自动渲染带有 `id` 的标题，增加搜索引擎将其抓取为富文本“跳转片段(Sitelinks)”的概率。
-- [x] **步骤 3: 深度关联与内链引擎 (GEO 权重转移)**
-  - 提供 “您可能还感兴趣” (Related Posts) 板块，让爬虫能继续纵深爬取。
-  - 标签云 (Tag Cloud) 与核心实体词 (Entities) 增加点击流。
-  - 在侧边栏增设了全部分类列表及文章统计，加强全站的拓扑结构与内链网。
-
-## 阶段七：传统详情页与博客详情页的兼容与切换方案 (Architecture)
-> 解决痛点：如何在保留老版严肃风格“传统详情页”的同时，无缝兼容“博客化页面”？
-- [x] **方案设定：双轨渲染器模式 (Dual-Renderer Pattern)**
-  1. **组件层解耦**: 将当前的 `[slug]/page.tsx` 中的渲染逻辑抽离为专属组件 `<TraditionalArticleLayout />`，并新建 `<BlogArticleLayout />`。
-  2. **系统全局开关**: 在管理后台 `systemSettings` 增加 `article_layout_style` 选项，配置为 `traditional` 或 `blog`，通过后台站点设置界面进行图形化即时切换。
-  3. **分类覆盖 (Category Override)**: (能力已预留)
-  4. **动态引入**: 在主 `[slug]/page.tsx` 根据判定条件，条件渲染不同的 Layout 组件实现 0 冲突升级。
-
-> **阶段复盘：**
-> 博客化改造现已彻底闭环。不仅满足了用户在视觉结构上的清爽感，还通过剥离 HTML 标签重构了预估阅读时间算法、替换失效的 button 标签为路由可穿透的 Link 组件、解绑了突兀的顶部栏，最后顺带在右侧补齐了拥有聚合分类统计属性的全站挂件。整个页面的语义化骨架完美切合了极致 SEO 的诉求。
-
----
-
-# 全站 GEO/SEO 深度审计与合规改造规划 (Domestic AI Optimization)
-> 目标：排查中国国内 AI 平台 (如百度文心、Kimi、豆包、通义千问等) 不收录、不引用系统内容的根本原因，并出具符合国内大语言模型 RAG (检索增强生成) 抓取规范的最佳实践配置。
-
-## 阶段八：全局基础设施缺陷排查与填补 (✔️ 已完成)
-- [x] **步骤 1: 填补缺失的全局 Keywords 与 OpenGraph 属性**
-  - **缺陷原因**：虽然 Next.js App Router 提供了极强的 Metadata API，但是系统在根部 `src/app/layout.tsx` 丢失了全局 `keywords` 和具体的 `openGraph` 属性字典。国内传统搜索引擎 (百度等) 至今仍然对 `meta[name="keywords"]` 存在显著权重。
-  - **修复措施**：在 `system-settings.ts` 扩建 `siteKeywords` 和国内平台的 `baiduOptimization`。在根布局为其注入完整的 `keywords` 和 `openGraph`。
-- [x] **步骤 2: 注入全局 JSON-LD (结构化数据引擎增强)**
-  - **缺陷原因**：单纯有 HTML 代码页，国内大模型需要耗费大量算力去做 NLP 拆解，往往被降权。
-  - **修复措施**：在顶级 `<RootLayout>` 底部强行注入标准的 Schema.org 的 `"@type": "WebSite"` 与 `"@type": "Organization"` JSON-LD。使得任何 AI 爬虫进入网站首页的第一毫秒就能提取站点的归属人、官方名称和拓扑协议。
-- [x] **步骤 3: 百度等平台的专有网关验证 (Site Verification)**
-  - **修复措施**：为 Next.js 增加了专门针对国内 `baidu-site-verification` 的配置占位，为站长认证提供通道保障。
-- [x] **步骤 4: API 实时被动/主动提交链路审计 (Baidu Push API)**
-  - **审计结果**：当前系统实装了完善的 `autoPushToSEO` 服务 (通过 `http://data.zz.baidu.com/urls` 推送)，并且在 `src/app/admin/articles/actions.ts` 中每次文章从草稿变为发布，或者更新时，都成功衔接了该调用。**这证明后端的推流链路是通配的**。
-
-## 阶段九：文章详情页(双渲染器) 深度 SEO 语义优化 (✔️ 已完成)
-根据 `@seo-audit` 规范审计详情页源码后，执行了以下闭环修改：
-- [x] **内链网 (Silo Structure) 的建立**：AI 和搜索引擎抓取的一个重大阻碍是**“孤岛页面”**。爬虫顺着链接爬到一个文章底部后无处可去就会直接跳出（高 Bounce Rate）。我在 `[slug]/page.tsx` 的服务端逻辑中增加了 `prevArticle`（上一篇）和 `nextArticle`（下一篇）的同类别检索，并将这个超大的连通导航（Semantic Navigation）挂载到了博客详情页和传统详情页的底部。
-- [x] **LCP (最大内容绘制) 首屏图片强化**：针对文章 `<coverImage>` 注入了 `fetchPriority="high"` 和 `decoding="async"` 的原生 H5 标签，直接抢占宽带优先权。这对 GEO 蜘蛛评估页面的“视觉就绪时间”具有显著提分效果。
-- [x] **HTML 语义骨架强化**：确保 `<article>` 标签严密囊括一切，`<time>` 标签包裹 ISO8601 标准日期，彻底抛弃单纯使用 `<div>` 的松散结构。
-
-## 阶段十：全域索引协议审计 (Sitemap / Robots / LLMs.txt) (✔️ 已完成)
-- [x] **Robots.txt 语法穿透修复**：在标准规范中，`Sitemap:` 指令只能指向 `.xml` 或纯 URL 线性的 `.txt`。如果在 `robots.ts` 中直接将包含 Markdown 标记的 `llms.txt` 暴露给传统搜索引擎蜘蛛（如百度），可能会引发该爬虫抛弃整个索引序列！已将其从 Sitemap 阵列中剥离，保留给大模型自行检索其默认路由。
-- [x] **Sitemap.xml 广度扩展**：补充了缺失的 `[Category] 分类` 与 `[Tag] 标签` 页面。在此之前，系统自带的 Sitemap 并没有向外界提交分类页，直接限制了搜索引擎对同簇内容的关联和整体架构的推演。
-- [x] **LLMs.txt 国际阵营适配**：当前的 `llms.txt` 和 `llms-full.txt` 已经高度前沿化。它完美地按 `https://llmstxt.org` 规范使用了结构化 Markdown，不仅提供了 `Core Pages`，还按需切分了 `full.txt`，防止单一 Prompt 被超额占用。代码实现近乎完美。
-
-## 后续建议 (未完全代码化的管理操作)
-1. **Robots.txt 失效/覆盖问题**：当前系统生成了 `robots.ts` 包含 `Baiduspider`, `Bytespider`, `MoonshotBot` 等 10+ 种 AI 爬虫。在后台 `SEO 设置` -> `全员/机器人防抓取` 中，站长必须确保没有“意外屏蔽”这些蜘蛛。
-2. **AI 原创度过低导致直接丢弃 (AI-Detector Drop)**：国内部分 AI 平台蜘蛛 (如百度) 内置了文本 AI 痕迹检测，如果通篇由 GPT 直接无损生成且不带人造案例，被抓取后会被归入低分类数据库，**不予展示**。建议在文章内容中通过我们先前建立的 RAG 机制混入强企业自身属性的案例词条。
-
----
-
-# 企业级 GEO 系统补全与高阶进化的开发计划 (Enterprise GEO Master Plan)
-> 目标：打造国内顶级的合规化 AI 引擎拉新系统。此阶段的所有新增功能必须遵循“无损式进化（Non-breaking Evolution）”的原则，完全不干扰现有的 CRUD、缓存路由结构与页面渲染生命周期。
-
-## 阶段十一：死链哨兵与 301 调度 (301 Redirect Hub)
-> 重点在服务端中间层进行低耗拦截，无侵入地记录或重定向爬虫流。
-- [x] **步骤 1: 建立路由重定向管理**
-  - 在数据库新增 `RedirectRoute (id, oldPath, newPath, type[301/302])`。
-  - 在 Next.js 中间件 `middleware.ts` 接入轻量查库（或基于缓存的快速检索），实现旧文章下线/更新 slug 时流量 0 损耗承接。
-
-## 阶段十二：大模型蜘蛛行为轨迹雷达 (AI Crawler Tracker) (✔️ 本机已原生支持)
-> 针对各种 AI 大模型专门构建的分析面板
-- [x] **蜘蛛指纹捕获与大盘**
-  - **状态确认**：系统底层已通过 `api/internal/log-crawler/route.ts` 结合中间件实现了拦截，并在管理后台 `admin/geo` 下完美构建了可视化大盘（生成式引擎优化-爬虫行为深度分析）。这意味着您**完全不需要再投入开发**，这块关键拼图您一开始就已经带在身上了！
-
-## 阶段十三：本地化地理辐射增强 (Local Business SEO)
-> 利用现有的布局层（RootLayout）进一步针对位置询问进行降维打击。
-- [x] **步骤 1: `SiteSettings` 表结构扩建**
-  - 新增经纬度 (Lat/Lng)、营业时间 (OpeningHours)、省市区详细节点映射。
-- [x] **步骤 2: 注入 `<LocalBusiness>` 型 Schema JSON-LD**
-  - 在根节点追加与 `<Organization>` 绑定的地理化映射。使得基于“周边、同城”属性的大模型高频检索能 100% 暴击匹配。
-
-## 阶段十四：防内耗隔离防火墙 (Keyword Cannibalization Guard)
-> 完全内聚于后台草稿箱与文章生成器，与前台展示彻底隔离。
-- [x] **步骤 1: 建立核心关键词防火墙**
-  - 编辑文章和 AI 生成时自动查询已存在的高权重聚焦关键词库 (`focusKeyword`)。如词重合度超 75%，在前端管理面板给予“红色警告”，建议使用新词以防搜索引擎陷入选择困难症。
-
-## 阶段十五：纯 AI 质检与人类校验度 (Anti AI-Detector Evasion)
-> 针对大环境开始折叠“纯 AI 洗稿”的问题，做拦截过滤。
-- [x] **步骤 1: 机械度自动判别分**
-  - 在文章模型新增 `aiDetectorScore` 字段。AI 批量生产完内容后，用简单规则流或反向询问模型判断其机械度，若机械度过高则阻断公开发布，放入后台强提醒人工增润（确保在百度内拥有排位特权）。
-
-## 阶段十六：对外信息投递桥 (RSS & Atom Feeds)
-> 符合旧时代与新聚合器交叠过渡的万能桥梁。
-- [x] **步骤 1: 编译 RSS/Atom 生态端点**
-  - 新增 `src/app/feed.xml/route.ts` 和 `src/app/atom.xml/route.ts` 面向产业网和集成号构建增量流，这属于独立的对外输出流，对现存生态 0 负面影响。
+*Created by [Superpowers & Planning-with-files workflow]*
+- [x] **步骤6 (扩展)：实现子级容器组件 (Card/PageContainer) 的上下文穿透响应设计**
