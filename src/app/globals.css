@@ -204,3 +204,42 @@
 [contenteditable]:focus {
   outline: none;
 }
+
+/* =========================================
+   Admin Layout System: Macos Glass Global Overrides
+   ========================================= */
+body[data-admin-layout="macos-glass"] .bg-white {
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(20px); /* 让内层组件（如下拉菜单、卡片内部结构）也继承玻璃质感 */
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+/* 剥夺底色死板的表格 */
+body[data-admin-layout="macos-glass"] table th {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+  color: #1e293b !important;
+}
+body[data-admin-layout="macos-glass"] table td {
+  background-color: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+body[data-admin-layout="macos-glass"] table tr:hover td {
+  background-color: rgba(255, 255, 255, 0.4) !important;
+}
+body[data-admin-layout="macos-glass"] table tr:nth-child(even) td {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+}
+/* 强行透化所有表单控件 */
+body[data-admin-layout="macos-glass"] input,
+body[data-admin-layout="macos-glass"] textarea,
+body[data-admin-layout="macos-glass"] select {
+  background-color: rgba(255, 255, 255, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.03) !important;
+  transition: all 0.3s ease;
+}
+body[data-admin-layout="macos-glass"] input:focus,
+body[data-admin-layout="macos-glass"] textarea:focus {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  border-color: rgba(99, 102, 241, 0.4) !important; /* Primary focus soft glow */
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1) !important;
+}

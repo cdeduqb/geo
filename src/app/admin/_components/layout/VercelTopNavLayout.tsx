@@ -2,8 +2,11 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Bot, Home, Bell, Settings, LogOut } from 'lucide-react';
+import { Bot, Home, Bell, Settings, LogOut, Sparkles } from 'lucide-react';
 import { useAdminLayout } from './AdminLayoutContext';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 export default function VercelTopNavLayout({ children }: { children: React.ReactNode }) {
@@ -15,7 +18,10 @@ export default function VercelTopNavLayout({ children }: { children: React.React
         isActive,
         filteredMenuItems,
         updateInfo,
+        isUpdating,
+        showUpdateModal,
         setShowUpdateModal,
+        handleUpdate,
         setIsSettingDrawerOpen
     } = useAdminLayout();
 
@@ -57,7 +63,7 @@ export default function VercelTopNavLayout({ children }: { children: React.React
                         </button>
 
                         <button
-                            onClick={() => updateInfo?.hasUpdate ? setShowUpdateModal(true) : {}}
+                            onClick={() => setShowUpdateModal(true)}
                             className="relative text-gray-500 hover:text-black hover:bg-gray-100 p-1.5 rounded-md transition-all"
                         >
                             <Bell className="w-[18px] h-[18px]" />
@@ -149,6 +155,74 @@ export default function VercelTopNavLayout({ children }: { children: React.React
                     {children}
                 </div>
             </main>
+            
+            <UpdateModal 
+                show={showUpdateModal} 
+                setShow={setShowUpdateModal} 
+                isUpdating={isUpdating} 
+                updateInfo={updateInfo} 
+                handleUpdate={handleUpdate} 
+            />
         </div>
+    );
+}
+
+// 统一 Vercel 极简通知面板
+function UpdateModal({ show, setShow, isUpdating, updateInfo, handleUpdate }: any) {
+    const hasUpdate = updateInfo?.hasUpdate;
+    const localVersion = updateInfo?.localVersion || '0.1.82';
+
+    return (
+        <Dialog open={show} onOpenChange={(open: boolean) => !isUpdating && setShow(open)}>
+            <DialogContent className="sm:max-w-[480px] flex flex-col overflow-hidden bg-white shadow-2xl rounded-2xl border border-gray-100">
+                <DialogHeader className="pt-2">
+                    <DialogTitle className="flex items-center gap-2 text-lg text-black font-semibold">
+                        <Sparkles className={`w-5 h-5 ${hasUpdate ? 'text-black' : 'text-emerald-500'}`} />
+                        {hasUpdate ? 'New Update Available' : 'System Status'}
+                    </DialogTitle>
+                    <DialogDescription className="text-gray-500">
+                        {hasUpdate 
+                            ? 'A new version has been released. The update process will restart your services automatically.' 
+                            : 'All systems are operational. You are currently running the latest stable build.'}
+                    </DialogDescription>
+                </DialogHeader>
+                
+                <div className="flex-1 py-4">
+                    <div className="flex items-center justify-between p-4 rounded-xl border border-gray-100">
+                        <div className="flex flex-col gap-1">
+                            <span className="text-xs text-gray-400 font-medium">Current Build</span>
+                            <span className="font-mono font-bold text-gray-800">{localVersion}</span>
+                        </div>
+                        {hasUpdate && (
+                            <>
+                                <div className="h-8 w-px bg-gray-100"></div>
+                                <div className="flex flex-col gap-1 text-right">
+                                    <span className="text-xs text-black font-medium">Latest Build</span>
+                                    <span className="font-mono font-bold text-black flex items-center gap-2 justify-end">
+                                        {updateInfo.remoteVersion}
+                                        <Badge className="bg-black text-white hover:bg-neutral-800 rounded-md">New</Badge>
+                                    </span>
+                                </div>
+                            </>
+                        )}
+                        {!hasUpdate && (
+                            <div className="flex flex-col gap-1 text-right">
+                                <span className="text-xs text-emerald-600 font-medium tracking-wide">Status</span>
+                                <Badge variant="outline" className="text-emerald-600 border-emerald-200 bg-emerald-50 shadow-none font-semibold">Up to date</Badge>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <DialogFooter className="gap-2 sm:gap-2 mt-2 pt-2 border-t border-gray-100/50">
+                    <Button variant="outline" onClick={() => setShow(false)} disabled={isUpdating} className="rounded-lg shadow-sm border-gray-200">Close</Button>
+                    {hasUpdate && (
+                        <Button onClick={handleUpdate} disabled={isUpdating} className="bg-black text-white hover:bg-neutral-800 rounded-lg shadow-sm">
+                            {isUpdating ? 'Deploying...' : 'Deploy Update'}
+                        </Button>
+                    )}
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 }

@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { AdminLayoutProvider, useAdminLayout } from './layout/AdminLayoutContext';
 import ClassicLayout from './layout/ClassicLayout';
 import AntDesignDarkLayout from './layout/AntDesignDarkLayout';
@@ -26,6 +27,19 @@ interface AdminLayoutClientProps {
 // 代理组件，负责从 Context 中读取当前 layout 模式并切换
 function LayoutSwitcher({ children }: { children: React.ReactNode }) {
     const { layoutType } = useAdminLayout();
+    const pathname = usePathname();
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            document.body.setAttribute('data-admin-layout', layoutType);
+        }
+    }, [layoutType]);
+
+    // 如果处于模板或页面等“可视化编辑器(Builder)”专有路线下，直接拦截渲染
+    // 强制跳脱所有的系统外壳(Header / Sidebar)，让内容完全铺满全屏！
+    if (pathname && (pathname.includes('/builder') || pathname.includes('/edit-visual'))) {
+        return <>{children}</>;
+    }
 
     return (
         <>

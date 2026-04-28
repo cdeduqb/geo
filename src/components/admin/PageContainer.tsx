@@ -25,7 +25,7 @@ export default function PageContainer({
         'classic': 'mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4',
         'ant-dark': 'mb-5 pb-4 border-b border-[#f0f0f0] flex flex-col sm:flex-row sm:items-center justify-between gap-4',
         'vercel-top': 'mb-8 flex flex-col sm:flex-row sm:items-start justify-between gap-4',
-        'macos-glass': 'mb-6 pb-4 border-b border-white/40 flex flex-col sm:flex-row sm:items-center justify-between gap-4',
+        'macos-glass': 'mb-10 pb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-6 relative before:absolute before:inset-x-0 before:bottom-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-slate-300/40 before:to-transparent',
         'cyber-dark': 'mb-6 pb-4 border-b border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4'
     };
 
@@ -33,7 +33,7 @@ export default function PageContainer({
         'classic': 'text-2xl font-bold text-gray-900 tracking-tight',
         'ant-dark': 'text-[20px] font-semibold text-[#000000e0]',
         'vercel-top': 'text-3xl font-bold text-black tracking-tighter',
-        'macos-glass': 'text-[22px] font-bold text-gray-800 drop-shadow-sm',
+        'macos-glass': 'text-[36px] md:text-[42px] font-extrabold text-slate-900 tracking-tighter drop-shadow-lg leading-none',
         'cyber-dark': 'text-[22px] font-semibold text-neutral-200 tracking-wide'
     };
 
@@ -41,7 +41,7 @@ export default function PageContainer({
         'classic': 'mt-1 text-sm text-gray-500 font-medium',
         'ant-dark': 'mt-2 text-[14px] text-gray-500',
         'vercel-top': 'mt-2 text-[15px] text-gray-500 tracking-tight',
-        'macos-glass': 'mt-1 text-[13px] text-gray-600 font-medium drop-shadow-sm',
+        'macos-glass': 'mt-3 text-[15px] font-medium text-slate-600 drop-shadow-sm max-w-2xl tracking-wide',
         'cyber-dark': 'mt-1 text-[13px] text-neutral-500'
     };
 
