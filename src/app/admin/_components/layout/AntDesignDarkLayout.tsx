@@ -205,7 +205,7 @@ export default function AntDesignDarkLayout({ children }: { children: React.Reac
 // 统一风格更新反馈窗口（含无更新状态防静默反馈）
 function UpdateModal({ show, setShow, isUpdating, updateInfo, handleUpdate }: any) {
     const hasUpdate = updateInfo?.hasUpdate;
-    const localVersion = updateInfo?.localVersion || '0.1.83';
+    const localVersion = updateInfo?.localVersion || '0.1.84';
 
     return (
         <Dialog open={show} onOpenChange={(open: boolean) => !isUpdating && setShow(open)}>

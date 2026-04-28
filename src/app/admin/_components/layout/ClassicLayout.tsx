@@ -179,7 +179,7 @@ export default function ClassicLayout({ children }: { children: React.ReactNode 
                                 <Settings className="w-5 h-5" />
                             </button>
                             <button
-                                onClick={() => updateInfo?.hasUpdate ? setShowUpdateModal(true) : {}}
+                                onClick={() => setShowUpdateModal(true)}
                                 className={`relative p-2 rounded-xl transition-all duration-300 group ${updateInfo?.hasUpdate ? 'text-indigo-600 bg-indigo-50 hover:bg-indigo-100' : 'text-gray-400 hover:text-indigo-600 hover:bg-indigo-50/50'}`}
                             >
                                 <Bell className={`w-5 h-5 ${updateInfo?.hasUpdate ? 'animate-pulse' : 'group-hover:rotate-12'} transition-transform`} />
@@ -208,34 +208,49 @@ export default function ClassicLayout({ children }: { children: React.ReactNode 
     );
 }
 
+// 统一风格更新反馈窗口（含无更新状态防静默反馈）
 function UpdateModal({ show, setShow, isUpdating, updateInfo, handleUpdate }: any) {
-    if (!updateInfo) return null;
+    const hasUpdate = updateInfo?.hasUpdate;
+    const localVersion = updateInfo?.localVersion || '0.1.84';
+
     return (
         <Dialog open={show} onOpenChange={(open: boolean) => !isUpdating && setShow(open)}>
             <DialogContent className="sm:max-w-[600px] max-h-[80vh] flex flex-col overflow-hidden">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2 text-xl">
-                        <Sparkles className="w-5 h-5 text-indigo-600" />
-                        发现新版本
+                        <Sparkles className={`w-5 h-5 ${hasUpdate ? 'text-indigo-600' : 'text-emerald-500'}`} />
+                        {hasUpdate ? '发现新版本' : '系统消息'}
                     </DialogTitle>
-                    <DialogDescription>系统将自动获取最新代码并重启服务。更新过程可能需要几分钟。</DialogDescription>
+                    <DialogDescription>
+                        {hasUpdate ? '系统将自动获取最新代码并重启服务。更新过程可能需要几分钟。' : '目前这里没有新的系统消息。您当前的系统由于已经稳定在前沿版本，所以十分健康。'}
+                    </DialogDescription>
                 </DialogHeader>
                 <div className="flex-1 overflow-y-auto py-4 pr-2 -mr-2">
                     <div className="flex items-center justify-between bg-gray-50 p-4 rounded-xl mb-6">
                         <div className="flex flex-col gap-1">
                             <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">当前版本</span>
-                            <span className="font-mono font-bold text-gray-700">{updateInfo.localVersion}</span>
+                            <span className="font-mono font-bold text-gray-700">{localVersion}</span>
                         </div>
-                        <div className="h-8 w-px bg-gray-200"></div>
-                        <div className="flex flex-col gap-1 text-right">
-                            <span className="text-xs text-indigo-500 font-medium uppercase tracking-wider">最新版本</span>
-                            <span className="font-mono font-bold text-indigo-600 flex items-center gap-2 justify-end">
-                                {updateInfo.remoteVersion}
-                                <Badge className="bg-indigo-100 text-indigo-600 hover:bg-indigo-200 border-0">New</Badge>
-                            </span>
-                        </div>
+                        {hasUpdate && (
+                            <>
+                                <div className="h-8 w-px bg-gray-200"></div>
+                                <div className="flex flex-col gap-1 text-right">
+                                    <span className="text-xs text-indigo-500 font-medium uppercase tracking-wider">最新版本</span>
+                                    <span className="font-mono font-bold text-indigo-600 flex items-center gap-2 justify-end">
+                                        {updateInfo.remoteVersion}
+                                        <Badge className="bg-indigo-100 text-indigo-600 hover:bg-indigo-200 border-0">New</Badge>
+                                    </span>
+                                </div>
+                            </>
+                        )}
+                        {!hasUpdate && (
+                            <div className="flex flex-col gap-1 text-right">
+                                <span className="text-xs text-emerald-500 font-medium uppercase tracking-wider">状态</span>
+                                <Badge className="bg-emerald-100 text-emerald-600 border-0 shadow-sm">已是最新</Badge>
+                            </div>
+                        )}
                     </div>
-                    {updateInfo.updateLogs?.length > 0 && (
+                    {hasUpdate && updateInfo?.updateLogs?.length > 0 && (
                         <div className="space-y-3">
                             <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
                                 <GitCommit className="w-4 h-4 text-gray-500" /> 更新内容
@@ -254,10 +269,12 @@ function UpdateModal({ show, setShow, isUpdating, updateInfo, handleUpdate }: an
                     )}
                 </div>
                 <DialogFooter className="gap-2 sm:gap-0 mt-2 border-t pt-4">
-                    <Button variant="ghost" onClick={() => setShow(false)} disabled={isUpdating}>暂不更新</Button>
-                    <Button onClick={handleUpdate} disabled={isUpdating} className="bg-indigo-600 hover:bg-indigo-700 pl-3">
-                        {isUpdating ? '正在更新...' : '立即更新'}
-                    </Button>
+                    <Button variant="ghost" onClick={() => setShow(false)} disabled={isUpdating}>关闭</Button>
+                    {hasUpdate && (
+                        <Button onClick={handleUpdate} disabled={isUpdating} className="bg-indigo-600 hover:bg-indigo-700 pl-3">
+                            {isUpdating ? '正在更新...' : '立即更新系统'}
+                        </Button>
+                    )}
                 </DialogFooter>
             </DialogContent>
         </Dialog>
