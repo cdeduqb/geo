@@ -170,7 +170,7 @@ export default function VercelTopNavLayout({ children }: { children: React.React
 // 统一 Vercel 极简通知面板
 function UpdateModal({ show, setShow, isUpdating, updateInfo, handleUpdate }: any) {
     const hasUpdate = updateInfo?.hasUpdate;
-    const localVersion = updateInfo?.localVersion || '0.1.82';
+    const localVersion = updateInfo?.localVersion || '0.1.83';
 
     return (
         <Dialog open={show} onOpenChange={(open: boolean) => !isUpdating && setShow(open)}>

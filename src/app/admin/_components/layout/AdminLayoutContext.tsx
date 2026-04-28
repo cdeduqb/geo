@@ -25,7 +25,7 @@ import {
 // 如果您只想强制系统使用并锁定任何一种风格，请在数组里仅保留那个名称（如：['ant-dark']）。
 // 所有可选 ID 有：'classic', 'ant-dark', 'vercel-top', 'macos-glass'
 // ================================================================
-export const ENABLED_LAYOUTS: LayoutType[] = ['ant-dark'];
+export const ENABLED_LAYOUTS: LayoutType[] = ['classic'];
 
 export type LayoutType = 'classic' | 'ant-dark' | 'vercel-top' | 'macos-glass';
 
