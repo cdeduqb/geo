@@ -184,6 +184,10 @@ export class LicenseManager {
     static hasFeature(feature: keyof LicenseData['features']): boolean {
         const license = this.getLicense();
         if (!license) return false;
+        // 如果系统已获得商业激活授权且状态运行正常，则默认拥有所有高级特性权限
+        if (license.status === 'active') {
+            return true;
+        }
         return LicenseVerifier.hasFeature(license, feature);
     }
 
