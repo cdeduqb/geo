@@ -44,3 +44,6 @@ next-env.d.ts
 
 # License cache
 .license-cache/
+
+# Agents metadata
+.agents/
