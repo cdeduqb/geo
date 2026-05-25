@@ -173,7 +173,7 @@ function UpdateModal({ show, setShow, isUpdating, updateInfo, handleUpdate }: an
     const localVersion = updateInfo?.localVersion || '0.1.84';
 
     return (
-        <Dialog open={show} onOpenChange={(open: boolean) => !isUpdating && setShow(open)}>
+        <Dialog open={show} onOpenChange={(open: boolean) => setShow(open)}>
             <DialogContent className="sm:max-w-[480px] flex flex-col overflow-hidden bg-white shadow-2xl rounded-2xl border border-gray-100">
                 <DialogHeader className="pt-2">
                     <DialogTitle className="flex items-center gap-2 text-lg text-black font-semibold">
@@ -215,7 +215,7 @@ function UpdateModal({ show, setShow, isUpdating, updateInfo, handleUpdate }: an
                 </div>
 
                 <DialogFooter className="gap-2 sm:gap-2 mt-2 pt-2 border-t border-gray-100/50">
-                    <Button variant="outline" onClick={() => setShow(false)} disabled={isUpdating} className="rounded-lg shadow-sm border-gray-200">Close</Button>
+                    <Button variant="outline" onClick={() => setShow(false)} className="rounded-lg shadow-sm border-gray-200">Close</Button>
                     {hasUpdate && (
                         <Button onClick={handleUpdate} disabled={isUpdating} className="bg-black text-white hover:bg-neutral-800 rounded-lg shadow-sm">
                             {isUpdating ? 'Deploying...' : 'Deploy Update'}

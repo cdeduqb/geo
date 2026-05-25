@@ -186,7 +186,7 @@ function UpdateModal({ show, setShow, isUpdating, updateInfo, handleUpdate }: an
     const localVersion = updateInfo?.localVersion || '0.1.81';
 
     return (
-        <Dialog open={show} onOpenChange={(open: boolean) => !isUpdating && setShow(open)}>
+        <Dialog open={show} onOpenChange={(open: boolean) => setShow(open)}>
             <DialogContent className="sm:max-w-[600px] max-h-[80vh] flex flex-col overflow-hidden bg-white/70 backdrop-blur-3xl border border-white/60 rounded-[32px] p-8 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] ring-1 ring-white/50 ring-inset">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2 text-2xl font-black text-gray-900 tracking-tight">
@@ -244,7 +244,7 @@ function UpdateModal({ show, setShow, isUpdating, updateInfo, handleUpdate }: an
                 </div>
 
                 <DialogFooter className="gap-3 sm:gap-0 mt-6 border-t border-gray-200/50 pt-6">
-                    <Button variant="ghost" onClick={() => setShow(false)} disabled={isUpdating} className="rounded-full hover:bg-gray-100 font-bold text-gray-600">
+                    <Button variant="ghost" onClick={() => setShow(false)} className="rounded-full hover:bg-gray-100 font-bold text-gray-600">
                         关闭
                     </Button>
                     {hasUpdate && (
