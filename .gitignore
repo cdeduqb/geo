@@ -66,3 +66,6 @@ update.log
 .vscode/
 .idea/
 .DS_Store
+
+# Keys and secrets
+.keys/
