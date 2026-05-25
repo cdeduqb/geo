@@ -60,7 +60,14 @@ export async function GET() {
                 // 如果禁用多语言，只获取默认语言的内容
                 ...(enableMultiLanguage ? {} : { lang: defaultLocale })
             },
-            select: { title: true, slug: true, lang: true, summary: true },
+            select: { 
+                title: true, 
+                slug: true, 
+                lang: true, 
+                summary: true,
+                entities: true,
+                citations: true
+            },
             orderBy: { createdAt: 'desc' },
             take: 50
         });
@@ -70,6 +77,44 @@ export async function GET() {
             articles.forEach(article => {
                 const url = `${baseUrl}${getLocalePath(`/articles/${article.slug}`, article.lang as any)}`;
                 content += `- [${article.title}](${url}): ${stripHtml(article.summary)} (${article.lang})\n`;
+
+                // 实体 sameAs (最核心 3 个)
+                if (article.entities) {
+                    try {
+                        const entityList = typeof article.entities === 'string'
+                            ? JSON.parse(article.entities)
+                            : (article.entities as any);
+                        if (Array.isArray(entityList) && entityList.length > 0) {
+                            const entityLinks = entityList
+                                .filter(e => e && e.name && e.url)
+                                .slice(0, 3)
+                                .map(e => `[${e.name}](${e.url})`)
+                                .join(', ');
+                            if (entityLinks) {
+                                content += `  - **Entities sameAs**: ${entityLinks}\n`;
+                            }
+                        }
+                    } catch {}
+                }
+
+                // 权威引用 (最核心 2 个)
+                if (article.citations) {
+                    try {
+                        const citationList = typeof article.citations === 'string'
+                            ? JSON.parse(article.citations)
+                            : (article.citations as any);
+                        if (Array.isArray(citationList) && citationList.length > 0) {
+                            const citationLinks = citationList
+                                .filter(c => c && c.title && c.url)
+                                .slice(0, 2)
+                                .map(c => `[${c.title}](${c.url})`)
+                                .join(', ');
+                            if (citationLinks) {
+                                content += `  - **Citations**: ${citationLinks}\n`;
+                            }
+                        }
+                    } catch {}
+                }
             });
         }
 

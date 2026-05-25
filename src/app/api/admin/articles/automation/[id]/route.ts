@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
+import { LicenseManager } from '@/lib/license';
 
 // GET /api/admin/articles/automation/[id] - 获取特定自动化项目及其任务
 export async function GET(
@@ -12,6 +13,10 @@ export async function GET(
         const user = await getCurrentUser();
         if (!user || user.role !== 'ADMIN') {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        if (!LicenseManager.hasFeature('ai')) {
+            return NextResponse.json({ error: 'Forbidden', message: '需要购买AI商业授权才能使用此功能。' }, { status: 403 });
         }
 
         const project = await db.articleAutomationProject.findUnique({
@@ -58,6 +63,10 @@ export async function PATCH(
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
+        if (!LicenseManager.hasFeature('ai')) {
+            return NextResponse.json({ error: 'Forbidden', message: '需要购买AI商业授权才能使用此功能。' }, { status: 403 });
+        }
+
         const body = await request.json();
         const { status } = body;
 
@@ -83,6 +92,10 @@ export async function DELETE(
         const user = await getCurrentUser();
         if (!user || user.role !== 'ADMIN') {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        if (!LicenseManager.hasFeature('ai')) {
+            return NextResponse.json({ error: 'Forbidden', message: '需要购买AI商业授权才能使用此功能。' }, { status: 403 });
         }
 
         await db.articleAutomationProject.delete({

@@ -47,79 +47,55 @@ export default function DashboardUI({ stats, recent }: DashboardUIProps) {
     else if (hours < 18) greeting = '下午好';
     else greeting = '晚上好';
 
-    // === 根据不同布局动态生成卡片骨架的基础类 ===
+    // === 根据不同布局动态生成卡片骨架的基础类 (仅保留 classic 和 vercel-top) ===
     
     // 欢迎大卡的风格
-    const welcomeCardStyleMap: any = {
+    const welcomeCardStyleMap: Record<string, string> = {
         'classic': 'bg-[#0F172A] rounded-[32px] shadow-2xl shadow-gray-200/50',
-        'ant-dark': 'bg-[#001529] rounded-md shadow-sm border border-[#00000010]',
         'vercel-top': 'bg-black rounded-xl border border-gray-800',
-        'macos-glass': 'bg-white/40 backdrop-blur-2xl rounded-3xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.05)] text-gray-800',
-        'cyber-dark': 'bg-gradient-to-br from-neutral-900 to-black rounded-lg border border-neutral-800 shadow-[0_4px_30px_rgba(0,0,0,0.3)] relative before:absolute before:inset-0 before:bg-[url("https://www.transparenttextures.com/patterns/carbon-fibre.png")] before:opacity-10'
     };
 
-    const welcomeTitleStyleMap: any = {
+    const welcomeTitleStyleMap: Record<string, string> = {
         'classic': 'text-3xl font-black text-white tracking-tight',
-        'ant-dark': 'text-[24px] font-semibold text-white tracking-normal',
         'vercel-top': 'text-3xl font-bold text-white tracking-tighter',
-        'macos-glass': 'text-3xl font-bold text-gray-800 tracking-tight drop-shadow-sm',
-        'cyber-dark': 'text-2xl font-bold text-green-400 tracking-widest drop-shadow-[0_0_15px_rgba(74,222,128,0.5)]'
     };
 
     // 数据小卡片的风格
-    const statCardStyleMap: any = {
+    const statCardStyleMap: Record<string, string> = {
         'classic': 'bg-white rounded-[28px] border border-gray-100 shadow-sm shadow-gray-100/50 hover:shadow-xl hover:-translate-y-1',
-        'ant-dark': 'bg-white rounded-sm border-b border-[#f0f0f0] shadow-[0_1px_2px_0_rgba(0,0,0,0.03)] hover:shadow-md transition-shadow',
         'vercel-top': 'bg-white rounded-xl border border-gray-200 shadow-sm transition-shadow hover:shadow-md',
-        'macos-glass': 'bg-white/40 backdrop-blur-xl rounded-[24px] border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.04)] hover:-translate-y-1 transition-all',
-        'cyber-dark': 'bg-neutral-900 rounded border border-neutral-800 shadow-[0_4px_24px_rgba(0,0,0,0.2)] hover:border-neutral-700 transition-colors'
     };
     
-    const statIconWrapperMap: any = {
+    const statIconWrapperMap: Record<string, string> = {
         'classic': 'w-14 h-14 rounded-2xl',
-        'ant-dark': 'w-12 h-12 rounded-full',
         'vercel-top': 'w-12 h-12 rounded-lg border',
-        'macos-glass': 'w-12 h-12 rounded-2xl bg-white/60 backdrop-blur-sm shadow-sm border border-white/50 text-gray-700',
-        'cyber-dark': 'w-12 h-12 rounded border border-neutral-800 bg-neutral-950 text-neutral-400'
     };
 
-    const statNumStyleMap: any = {
+    const statNumStyleMap: Record<string, string> = {
         'classic': 'text-3xl font-black text-gray-900 tracking-tight',
-        'ant-dark': 'text-[28px] font-semibold text-[#000000e0]',
         'vercel-top': 'text-3xl font-bold text-black tracking-tighter',
-        'macos-glass': 'text-3xl font-bold text-gray-800 drop-shadow-sm',
-        'cyber-dark': 'text-2xl font-bold text-neutral-200 tracking-widest'
     };
 
     // 模块通用外壳的风格 (比如快捷操作/最近动态的外壳)
-    const blockCardStyleMap: any = {
+    const blockCardStyleMap: Record<string, string> = {
         'classic': 'bg-white rounded-[24px] border border-gray-100 shadow-sm shadow-gray-100/50',
-        'ant-dark': 'bg-white rounded-sm border-b border-[#f0f0f0] shadow-[0_1px_2px_0_rgba(0,0,0,0.03)]',
         'vercel-top': 'bg-white rounded-xl border border-gray-200 shadow-sm',
-        'macos-glass': 'bg-white/40 backdrop-blur-2xl rounded-3xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.04)]',
-        'cyber-dark': 'bg-neutral-900 rounded-lg border border-neutral-800 shadow-[0_4px_24px_rgba(0,0,0,0.2)]'
     };
     
-    const blockTitleStyleMap: any = {
+    const blockTitleStyleMap: Record<string, string> = {
         'classic': 'text-lg font-black text-gray-900 tracking-tight',
-        'ant-dark': 'text-[16px] font-semibold text-[#000000e0]',
         'vercel-top': 'text-[16px] font-medium text-gray-900 tracking-tight',
-        'macos-glass': 'text-[16px] font-bold text-gray-800 drop-shadow-sm',
-        'cyber-dark': 'text-[15px] font-semibold text-neutral-300 tracking-widest'
     };
 
-    const actionItemStyleMap: any = {
+    const actionItemStyleMap: Record<string, string> = {
         'classic': 'rounded-2xl border border-gray-200 bg-gray-50/50 hover:bg-white',
-        'ant-dark': 'rounded-sm border border-[#f0f0f0] hover:border-[#1677ff] hover:shadow-sm bg-white',
         'vercel-top': 'rounded-lg border border-gray-200 hover:border-black transition-colors bg-white',
-        'macos-glass': 'rounded-2xl border border-white/40 bg-white/30 hover:bg-white/60 hover:shadow-sm backdrop-blur-md transition-all',
-        'cyber-dark': 'rounded border border-neutral-800 bg-neutral-950/50 hover:bg-neutral-800 transition-colors text-neutral-300'
     };
 
     return (
         <div className="space-y-6 lg:space-y-8 max-w-7xl mx-auto w-full transition-all duration-300">
             {/* 顶部欢迎区域 */}
-            <div className={`relative overflow-hidden p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 animate-in fade-in slide-in-from-top-4 duration-700 group ${welcomeCardStyleMap[layoutType]}`}>
+            <div className={`relative overflow-hidden p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 animate-in fade-in slide-in-from-top-4 duration-700 group ${welcomeCardStyleMap[layoutType] || welcomeCardStyleMap.classic}`}>
                 {/* 背景装饰 (Classic专属动态背景) */}
                 {layoutType === 'classic' && (
                     <>
@@ -129,29 +105,29 @@ export default function DashboardUI({ stats, recent }: DashboardUIProps) {
                 )}
 
                 <div className="relative z-10 flex items-center gap-6">
-                    {['classic', 'ant-dark', 'macos-glass', 'cyber-dark'].includes(layoutType) && (
-                        <div className={`flex items-center justify-center ${layoutType !== 'cyber-dark' ? 'text-white' : 'text-neutral-900'} ${layoutType === 'ant-dark' ? 'w-12 h-12 bg-[#1677ff] rounded-full' : layoutType === 'macos-glass' ? 'w-16 h-16 bg-white/60 backdrop-blur-md border border-white/60 rounded-2xl shadow-sm text-blue-500' : layoutType === 'cyber-dark' ? 'w-14 h-14 bg-green-400 rounded shadow-[0_0_20px_rgba(74,222,128,0.5)] border border-green-300' : 'w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-500/30'}`}>
-                            <LayoutDashboard className={layoutType === 'ant-dark' ? 'w-6 h-6' : 'w-8 h-8'} />
+                    {layoutType === 'classic' && (
+                        <div className="flex items-center justify-center text-white w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-500/30">
+                            <LayoutDashboard className="w-8 h-8" />
                         </div>
                     )}
                     <div>
-                        <h1 className={`${welcomeTitleStyleMap[layoutType]} flex items-center gap-3 mb-2`}>
-                            {greeting}，{layoutType !== 'ant-dark' ? '管理员' : 'Admin'}
+                        <h1 className={`${welcomeTitleStyleMap[layoutType] || welcomeTitleStyleMap.classic} flex items-center gap-3 mb-2`}>
+                            {greeting}，管理员
                             {layoutType === 'classic' && (
                                 <div className="relative">
                                     <Sparkles className="w-6 h-6 text-yellow-400 animate-pulse" />
                                 </div>
                             )}
                         </h1>
-                        <p className={`text-sm ${(layoutType === 'vercel-top' || layoutType === 'cyber-dark') ? 'text-gray-400' : layoutType === 'macos-glass' ? 'text-gray-600 drop-shadow-sm' : 'text-slate-400'} font-medium`}>
+                        <p className={`text-sm ${layoutType === 'vercel-top' ? 'text-gray-400' : 'text-slate-400'} font-medium`}>
                             欢迎来到您的数字指挥中心，今天又是充满活力的一天
                         </p>
                     </div>
                 </div>
-                <div className={`relative z-10 flex items-center gap-4 text-sm ${layoutType === 'classic' ? 'font-bold bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-slate-300' : layoutType === 'macos-glass' ? 'bg-white/40 border border-white/50 rounded-2xl px-5 py-3 text-gray-700 shadow-sm backdrop-blur-md' : layoutType === 'cyber-dark' ? 'bg-black/50 border border-neutral-800 rounded px-4 py-2 text-green-400 font-mono tracking-widest' : 'bg-white/10 rounded-lg px-4 py-2 border border-white/20 text-slate-300'} transition-colors cursor-default`}>
-                    <Clock className={`w-4 h-4 ${layoutType === 'classic' ? 'text-blue-400' : layoutType === 'macos-glass' ? 'text-gray-600' : layoutType === 'cyber-dark' ? 'text-green-500' : 'text-gray-300'}`} />
+                <div className={`relative z-10 flex items-center gap-4 text-sm ${layoutType === 'classic' ? 'font-bold bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-slate-300' : 'bg-white/10 rounded-lg px-4 py-2 border border-white/20 text-slate-300'} transition-colors cursor-default`}>
+                    <Clock className={`w-4 h-4 ${layoutType === 'classic' ? 'text-blue-400' : 'text-gray-300'}`} />
                     <span>{now.toLocaleDateString('zh-CN')}</span>
-                    <span className={`w-px h-3 ${layoutType === 'macos-glass' ? 'bg-black/10' : layoutType === 'cyber-dark' ? 'bg-neutral-800' : 'bg-white/20'}`} />
+                    <span className="w-px h-3 bg-white/20" />
                     <span>{now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
             </div>
@@ -175,17 +151,17 @@ export default function DashboardUI({ stats, recent }: DashboardUIProps) {
                     const c = colorMap[item.color];
 
                     return (
-                        <div key={index} className={`relative overflow-hidden p-6 transition-all duration-300 group ${statCardStyleMap[layoutType]}`}>
+                        <div key={index} className={`relative overflow-hidden p-6 transition-all duration-300 group ${statCardStyleMap[layoutType] || statCardStyleMap.classic}`}>
                             <div className="relative z-10 flex items-center gap-5">
-                                <div className={`${statIconWrapperMap[layoutType]} flex items-center justify-center ${c.bg} ${c.text} ${c.hoverBg} group-hover:text-white transition-colors duration-300 ${layoutType === 'vercel-top' ? c.border : ''}`}>
-                                    <item.icon className={layoutType === 'ant-dark' ? 'w-6 h-6' : 'w-7 h-7'} />
+                                <div className={`${statIconWrapperMap[layoutType] || statIconWrapperMap.classic} flex items-center justify-center ${c.bg} ${c.text} ${c.hoverBg} group-hover:text-white transition-colors duration-300 ${layoutType === 'vercel-top' ? c.border : ''}`}>
+                                    <item.icon className="w-7 h-7" />
                                 </div>
                                 <div>
                                     <h3 className={`mb-1 transition-colors ${layoutType === 'classic' ? 'text-xs font-black uppercase tracking-widest text-gray-400 group-hover:' + c.text : 'text-[13px] font-medium text-gray-500'}`}>
                                         {item.title}
                                     </h3>
                                     <div className="flex items-baseline gap-1.5">
-                                        <span className={`${statNumStyleMap[layoutType]}`}>{item.count}</span>
+                                        <span className={`${statNumStyleMap[layoutType] || statNumStyleMap.classic}`}>{item.count}</span>
                                         <span className={`font-bold ${layoutType === 'classic' ? 'text-xs text-gray-400' : 'text-sm text-gray-500'}`}>{item.unit}</span>
                                     </div>
                                 </div>
@@ -201,10 +177,10 @@ export default function DashboardUI({ stats, recent }: DashboardUIProps) {
             </div>
 
             {/* 快捷入口 */}
-            <div className={`p-6 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200 fill-mode-backwards ${blockCardStyleMap[layoutType]}`}>
-                <div className={`flex items-center gap-3 mb-6 ${layoutType === 'ant-dark' ? 'border-b border-gray-100 pb-3' : ''}`}>
+            <div className={`p-6 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200 fill-mode-backwards ${blockCardStyleMap[layoutType] || blockCardStyleMap.classic}`}>
+                <div className="flex items-center gap-3 mb-6">
                     {layoutType === 'classic' && <div className="w-1.5 h-6 bg-gradient-to-b from-blue-600 to-purple-600 rounded-full" />}
-                    <h3 className={`${blockTitleStyleMap[layoutType]} flex items-center gap-2`}>
+                    <h3 className={`${blockTitleStyleMap[layoutType] || blockTitleStyleMap.classic} flex items-center gap-2`}>
                         {layoutType === 'classic' && <Zap className="w-5 h-5 text-yellow-500" />}
                         快捷操作
                     </h3>
@@ -219,9 +195,9 @@ export default function DashboardUI({ stats, recent }: DashboardUIProps) {
                         <Link
                             key={index}
                             href={btn.href}
-                            className={`relative overflow-hidden group p-4 sm:p-5 transition-all duration-300 flex items-center gap-4 z-10 ${actionItemStyleMap[layoutType]} ${btn.colorHover}`}
+                            className={`relative overflow-hidden group p-4 sm:p-5 transition-all duration-300 flex items-center gap-4 z-10 ${actionItemStyleMap[layoutType] || actionItemStyleMap.classic} ${btn.colorHover}`}
                         >
-                            <div className={`w-12 h-12 flex items-center justify-center shadow-sm transition-all duration-300 ${layoutType === 'ant-dark' ? 'rounded-full bg-blue-50 text-blue-600' : 'rounded-xl border border-gray-100 bg-white text-gray-600 group-hover:bg-gray-900 group-hover:text-white group-hover:border-gray-900'}`}>
+                            <div className="w-12 h-12 flex items-center justify-center shadow-sm transition-all duration-300 rounded-xl border border-gray-100 bg-white text-gray-600 group-hover:bg-gray-900 group-hover:text-white group-hover:border-gray-900">
                                 <btn.icon className="w-5 h-5 sm:w-6 sm:h-6" />
                             </div>
                             <div className="flex-1 min-w-0">
@@ -237,11 +213,11 @@ export default function DashboardUI({ stats, recent }: DashboardUIProps) {
             {/* 最近动态 */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-10 duration-700 delay-300 fill-mode-backwards">
                 {/* 最新文章 */}
-                <div className={`p-6 flex flex-col ${blockCardStyleMap[layoutType]}`}>
-                    <div className={`flex items-center justify-between mb-6 ${layoutType === 'ant-dark' ? 'border-b border-gray-100 pb-3' : ''}`}>
+                <div className={`p-6 flex flex-col ${blockCardStyleMap[layoutType] || blockCardStyleMap.classic}`}>
+                    <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-3">
                             {layoutType === 'classic' && <div className="w-1.5 h-6 bg-blue-600 rounded-full" />}
-                            <h3 className={`${blockTitleStyleMap[layoutType]}`}>最新文章</h3>
+                            <h3 className={`${blockTitleStyleMap[layoutType] || blockTitleStyleMap.classic}`}>最新文章</h3>
                         </div>
                         <Link href="/admin/articles" className={`flex items-center gap-1 transition-colors ${layoutType === 'classic' ? 'text-sm text-blue-600 font-bold bg-blue-50 px-3 py-1.5 rounded-xl hover:bg-blue-100' : 'text-[13px] text-[#1677ff] hover:text-blue-500'}`}>
                             {layoutType === 'classic' ? '查看全部' : '更多'} <ArrowRight className="w-3.5 h-3.5" />
@@ -283,11 +259,11 @@ export default function DashboardUI({ stats, recent }: DashboardUIProps) {
                 </div>
 
                 {/* 最新产品 */}
-                <div className={`p-6 flex flex-col ${blockCardStyleMap[layoutType]}`}>
-                    <div className={`flex items-center justify-between mb-6 ${layoutType === 'ant-dark' ? 'border-b border-gray-100 pb-3' : ''}`}>
+                <div className={`p-6 flex flex-col ${blockCardStyleMap[layoutType] || blockCardStyleMap.classic}`}>
+                    <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-3">
                             {layoutType === 'classic' && <div className="w-1.5 h-6 bg-purple-600 rounded-full" />}
-                            <h3 className={`${blockTitleStyleMap[layoutType]}`}>最新产品</h3>
+                            <h3 className={`${blockTitleStyleMap[layoutType] || blockTitleStyleMap.classic}`}>最新产品</h3>
                         </div>
                         <Link href="/admin/products" className={`flex items-center gap-1 transition-colors ${layoutType === 'classic' ? 'text-sm text-purple-600 font-bold bg-purple-50 px-3 py-1.5 rounded-xl hover:bg-purple-100' : 'text-[13px] text-[#1677ff] hover:text-blue-500'}`}>
                             {layoutType === 'classic' ? '查看全部' : '更多'} <ArrowRight className="w-3.5 h-3.5" />

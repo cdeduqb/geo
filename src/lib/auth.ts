@@ -217,3 +217,35 @@ export async function register(email: string, password: string, name?: string): 
 
     return user;
 }
+
+/**
+ * 校验当前登录用户是否拥有某项模块权限
+ * @param permission 模块权限标识（例如 'seo', 'articles', 'ai' 等）
+ * @returns boolean
+ */
+export async function hasPermission(permission: string): Promise<boolean> {
+    const user = await getCurrentUser();
+    if (!user) return false;
+    
+    // ADMIN 拥有所有权限
+    if (user.role === 'ADMIN') return true;
+    
+    // 解析用户细粒度权限
+    if (user.permissions) {
+        try {
+            let perms: string[] = [];
+            if (typeof user.permissions === 'string') {
+                perms = JSON.parse(user.permissions);
+            } else if (Array.isArray(user.permissions)) {
+                perms = user.permissions as unknown as string[];
+            }
+            return perms.includes(permission);
+        } catch (e) {
+            console.error('Error parsing user permissions in hasPermission:', e);
+            return false;
+        }
+    }
+    
+    return false;
+}
+

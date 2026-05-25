@@ -25,19 +25,23 @@ import {
 // 如果您只想强制系统使用并锁定任何一种风格，请在数组里仅保留那个名称（如：['ant-dark']）。
 // 所有可选 ID 有：'classic', 'ant-dark', 'vercel-top', 'macos-glass'
 // ================================================================
-export const ENABLED_LAYOUTS: LayoutType[] = ['classic'];
+export const ENABLED_LAYOUTS: LayoutType[] = ['classic', 'vercel-top'];
 
-export type LayoutType = 'classic' | 'ant-dark' | 'vercel-top' | 'macos-glass';
+export type LayoutType = 'classic' | 'vercel-top';
 
 export interface User {
+    id?: string;
     name?: string | null;
     email?: string | null;
+    role?: string;
+    permissions?: any;
 }
 
 export interface MenuItem {
     label: string;
     icon: any;
     href?: string;
+    permission?: string;
     children?: { label: string; href: string }[];
 }
 
@@ -50,6 +54,7 @@ export const MENU_ITEMS: MenuItem[] = [
     {
         label: '内容管理',
         icon: FileText,
+        permission: 'articles',
         children: [
             { label: '文章管理', href: '/admin/articles' },
             { label: '内容分类', href: '/admin/categories' }
@@ -58,6 +63,7 @@ export const MENU_ITEMS: MenuItem[] = [
     {
         label: 'AI 创作',
         icon: Sparkles,
+        permission: 'ai',
         children: [
             { label: '企业知识库', href: '/admin/knowledge-base' },
             { label: '创作策略', href: '/admin/ai/strategies' },
@@ -68,6 +74,7 @@ export const MENU_ITEMS: MenuItem[] = [
     {
         label: 'SEO/GEO',
         icon: Search,
+        permission: 'seo',
         children: [
             { label: '搜索引擎推送', href: '/admin/seo/configs' },
             { label: '生成式引擎优化', href: '/admin/geo' },
@@ -77,6 +84,7 @@ export const MENU_ITEMS: MenuItem[] = [
     {
         label: '装修管理',
         icon: Palette,
+        permission: 'templates',
         children: [
             { label: '模板管理', href: '/admin/templates' },
             { label: '页面管理', href: '/admin/pages' }
@@ -85,6 +93,7 @@ export const MENU_ITEMS: MenuItem[] = [
     {
         label: '产品管理',
         icon: ShoppingBag,
+        permission: 'products',
         children: [
             { label: '产品列表', href: '/admin/products' },
             { label: '产品分类', href: '/admin/products/categories' }
@@ -93,6 +102,7 @@ export const MENU_ITEMS: MenuItem[] = [
     {
         label: '系统设置',
         icon: Settings,
+        permission: 'settings',
         children: [
             { label: '站点设置', href: '/admin/settings/site' },
             { label: '语言中心', href: '/admin/i18n' },
@@ -100,7 +110,8 @@ export const MENU_ITEMS: MenuItem[] = [
             { label: '存储配置', href: '/admin/settings/storage' },
             { label: '文件管理', href: '/admin/files' },
             { label: '清理缓存', href: '/admin/settings/cache' },
-            { label: '留言管理', href: '/admin/messages' }
+            { label: '留言管理', href: '/admin/messages' },
+            { label: '权限管理', href: '/admin/settings/accounts' }
         ]
     }
 ];
@@ -202,18 +213,49 @@ export function AdminLayoutProvider({
         return pathname.startsWith(`${path}/`);
     };
 
-    // 动态过滤未开启的多语言或授权菜单
+    // 动态过滤未开启的多语言或授权菜单，以及模块权限过滤
     const filteredMenuItems = React.useMemo(() => {
-        return MENU_ITEMS.map(item => {
-            if (!enableMultiLanguage && item.label === '系统设置' && item.children) {
-                return { ...item, children: item.children.filter(child => child.label !== '语言中心') };
+        const userRole = user?.role || 'USER';
+        
+        // 解析用户权限列表
+        let userPerms: string[] = [];
+        if (user?.permissions) {
+            try {
+                if (typeof user.permissions === 'string') {
+                    userPerms = JSON.parse(user.permissions);
+                } else if (Array.isArray(user.permissions)) {
+                    userPerms = user.permissions;
+                }
+            } catch (e) {
+                console.error('Error parsing user permissions:', e);
             }
-            if (!isLicensed && item.label === '系统设置' && item.children) {
-                return { ...item, children: item.children.filter(child => child.label !== '语言中心') };
+        }
+
+        return MENU_ITEMS.filter(item => {
+            // 如果不是 ADMIN，且定义了模块权限，且该用户没有此权限，则完全隐藏
+            if (userRole !== 'ADMIN' && item.permission && !userPerms.includes(item.permission)) {
+                return false;
+            }
+            return true;
+        }).map(item => {
+            let children = item.children;
+            if (children) {
+                // 1. 过滤未授权的多语言选项
+                if (!enableMultiLanguage) {
+                    children = children.filter(child => child.label !== '语言中心');
+                }
+                if (!isLicensed) {
+                    children = children.filter(child => child.label !== '语言中心');
+                }
+                // 2. 权限管理功能属于超级管理员，其它角色强制不可见
+                if (userRole !== 'ADMIN') {
+                    children = children.filter(child => child.label !== '权限管理');
+                }
+                return { ...item, children };
             }
             return item;
         });
-    }, [enableMultiLanguage, isLicensed]);
+    }, [user, enableMultiLanguage, isLicensed]);
 
 
     // -- Update Notification --

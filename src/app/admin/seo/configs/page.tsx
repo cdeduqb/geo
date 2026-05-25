@@ -2,12 +2,19 @@ import { db } from '@/lib/db';
 import Link from 'next/link';
 import SEOConfigList from './_components/SEOConfigList';
 import { Search, Send, ChevronRight } from 'lucide-react';
+import { hasPermission } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 
 export const metadata = {
     title: 'SEO 推送配置 - 企业官网 管理后台',
 };
 
 export default async function SEOConfigsPage() {
+    // 权限校验
+    if (!await hasPermission('seo')) {
+        redirect('/admin/dashboard?error=unauthorized_seo');
+    }
+
     const configs = await db.sEOPushConfig.findMany({
         orderBy: { platform: 'asc' },
         include: {

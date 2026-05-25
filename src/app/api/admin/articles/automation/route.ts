@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
+import { LicenseManager } from '@/lib/license';
 
 // 标题变体模板 - 用于生成独特的文章标题
 const titlePrefixes = [
@@ -95,6 +96,10 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
+        if (!LicenseManager.hasFeature('ai')) {
+            return NextResponse.json({ error: 'Forbidden', message: '需要购买AI商业授权才能使用此功能。' }, { status: 403 });
+        }
+
         const projects = await db.articleAutomationProject.findMany({
             orderBy: { createdAt: 'desc' },
             include: {
@@ -124,6 +129,10 @@ export async function POST(request: NextRequest) {
         const user = await getCurrentUser();
         if (!user || user.role !== 'ADMIN') {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        if (!LicenseManager.hasFeature('ai')) {
+            return NextResponse.json({ error: 'Forbidden', message: '需要购买AI商业授权才能使用此功能。' }, { status: 403 });
         }
 
         const body = await request.json();

@@ -27,9 +27,9 @@ export default function NewAutomationProject() {
         strategyId: '',
         features: {
             geo: true,
-            illustrate: true,
+            illustrate: false,
             autoLink: true,
-            cover: true,
+            cover: false,
             seo: true,
             citations: true,
             entities: true,
@@ -248,7 +248,7 @@ export default function NewAutomationProject() {
                                             onChange={(e) => {
                                                 const val = e.target.value;
                                                 setFormData(prev => ({ ...prev, keywords: val }));
-                                                
+
                                                 if ((window as any).cannibalizationTimeout) clearTimeout((window as any).cannibalizationTimeout);
                                                 (window as any).cannibalizationTimeout = setTimeout(async () => {
                                                     const keywords = val.trim();
@@ -266,11 +266,11 @@ export default function NewAutomationProject() {
                                                         const data = await res.json();
                                                         (window as any).cannibalizationConflictsTopic = data.conflicts || [];
                                                         setFormData(prev => ({ ...prev })); // force re-render
-                                                    } catch(err) {}
+                                                    } catch (err) { }
                                                 }, 800);
                                             }}
                                             className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:bg-white focus:border-blue-500 transition-all outline-none"
-                                            placeholder="例如:全域魔力Molicms系统"
+                                            placeholder="例如：xx产品,xx服务,xx解决方案"
                                         />
                                         {(window as any).cannibalizationConflictsTopic && (window as any).cannibalizationConflictsTopic.length > 0 && (
                                             <div className="absolute top-full left-0 z-10 mt-1 w-full p-4 bg-red-50 border border-red-200 rounded-2xl shadow-xl animate-in fade-in slide-in-from-top-2">

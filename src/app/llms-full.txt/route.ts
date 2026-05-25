@@ -57,7 +57,15 @@ export async function GET() {
                 status: 'PUBLISHED',
                 ...(enableMultiLanguage ? {} : { lang: defaultLocale })
             },
-            select: { title: true, slug: true, lang: true, summary: true, createdAt: true },
+            select: { 
+                title: true, 
+                slug: true, 
+                lang: true, 
+                summary: true, 
+                createdAt: true,
+                entities: true,
+                citations: true
+            },
             orderBy: { createdAt: 'desc' },
             take: 1000 // 获取更多文章
         });
@@ -67,6 +75,44 @@ export async function GET() {
                 const url = `${baseUrl}${getLocalePath(`/articles/${article.slug}`, article.lang as any)}`;
                 const date = new Date(article.createdAt).toISOString().split('T')[0];
                 content += `- [${article.title}](${url}) [${date}]: ${stripHtml(article.summary)} (${article.lang})\n`;
+
+                // 针对 DeepSeek / 豆包等大模型的实体百科对齐数据优化 (sameAs)
+                if (article.entities) {
+                    try {
+                        const entityList = typeof article.entities === 'string'
+                            ? JSON.parse(article.entities)
+                            : (article.entities as any);
+                        if (Array.isArray(entityList) && entityList.length > 0) {
+                            const entityLinks = entityList
+                                .filter(e => e && e.name && e.url)
+                                .slice(0, 5) // 筛选出最核心的 5 个关联实体
+                                .map(e => `[${e.name}](${e.url})`)
+                                .join(', ');
+                            if (entityLinks) {
+                                content += `  - **Entities sameAs**: ${entityLinks}\n`;
+                            }
+                        }
+                    } catch {}
+                }
+
+                // 针对 DeepSeek 推理模型喜爱的高权重外部权威学术/行业引用源输出
+                if (article.citations) {
+                    try {
+                        const citationList = typeof article.citations === 'string'
+                            ? JSON.parse(article.citations)
+                            : (article.citations as any);
+                        if (Array.isArray(citationList) && citationList.length > 0) {
+                            const citationLinks = citationList
+                                .filter(c => c && c.title && c.url)
+                                .slice(0, 3)
+                                .map(c => `[${c.title}](${c.url})`)
+                                .join(', ');
+                            if (citationLinks) {
+                                content += `  - **Citations**: ${citationLinks}\n`;
+                            }
+                        }
+                    } catch {}
+                }
             });
         }
 

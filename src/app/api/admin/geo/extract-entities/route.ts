@@ -30,6 +30,7 @@ export async function POST(request: NextRequest) {
         const isEn = lang === 'en';
 
         const prompt = isEn ? `Please analyze the following text and extract key entities.
+For each entity, if it is well-known (like Elon Musk, Steve Jobs, Apple, Beijing, ChatGPT, etc.), please provide its official Wikipedia page URL, Wikidata URL, or official domain URL in the "url" field as a sameAs link. If not well-known or url is not available, leave the "url" field blank. Do NOT fabricate URLs.
 
 Text content:
 ${content.substring(0, 5000)}
@@ -40,7 +41,8 @@ Please return the entity list in JSON format, as follows:
         {
             "text": "Entity Name",
             "type": "Person|Place|Organization|Product|Concept",
-            "description": "Brief description (optional)"
+            "description": "Brief description (optional)",
+            "url": "https://en.wikipedia.org/wiki/Entity_Name"
         }
     ]
 }
@@ -57,6 +59,7 @@ Requirements:
 2. Extract up to 5 most important entities for each type.
 3. Ensure the type field value is one of the five above.
 4. Return ONLY JSON, no other content.` : `请分析以下文本，提取其中的关键实体。
+对于每一个实体，如果是知名人物、知名机构、地名、产品或专有名词概念，请在 "url" 字段中提供其维基百科（Wikipedia）、维基数据（Wikidata）或官方网站的权威 sameAs 链接。如果是普通实体或无法获取真实链接，则 "url" 保持为空。请务必使用真实可访问的链接，严禁胡编。
 
 文本内容：
 ${content.substring(0, 5000)}
@@ -67,7 +70,8 @@ ${content.substring(0, 5000)}
         {
             "text": "实体名称",
             "type": "Person|Place|Organization|Product|Concept",
-            "description": "简短描述（可选）"
+            "description": "简短描述（可选）",
+            "url": "https://zh.wikipedia.org/wiki/实体名"
         }
     ]
 }
@@ -101,13 +105,20 @@ ${content.substring(0, 5000)}
                 // 验证和清理实体数据
                 entities = entities
                     .filter((e: any) => e.text && e.type)
-                    .map((e: any) => ({
-                        text: String(e.text).trim(),
-                        type: ['Person', 'Place', 'Organization', 'Product', 'Concept'].includes(e.type)
-                            ? e.type
-                            : 'Concept',
-                        description: e.description ? String(e.description).trim() : undefined
-                    }));
+                    .map((e: any) => {
+                        let cleanUrl = '';
+                        if (e.url && typeof e.url === 'string' && e.url.startsWith('http')) {
+                            cleanUrl = e.url.trim();
+                        }
+                        return {
+                            text: String(e.text).trim(),
+                            type: ['Person', 'Place', 'Organization', 'Product', 'Concept'].includes(e.type)
+                                ? e.type
+                                : 'Concept',
+                            description: e.description ? String(e.description).trim() : undefined,
+                            url: cleanUrl || undefined
+                        };
+                    });
             }
         } catch (parseError) {
             console.error('Failed to parse AI response:', parseError);

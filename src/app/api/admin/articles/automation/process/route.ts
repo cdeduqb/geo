@@ -5,11 +5,22 @@ import { ContentPipelineService } from '@/lib/ai/pipeline';
 import { getActiveStorageProvider, generateFileKey } from '@/lib/storage/factory';
 import { logger } from '@/lib/logger';
 import { autoPushToSEO } from '@/app/admin/articles/actions';
+import { getCurrentUser } from '@/lib/auth';
+import { LicenseManager } from '@/lib/license';
 
 // 这个 API 用于执行自动化流水线。
 // 它可以被 Cron Job 或者手动触发。
 export async function POST(request: NextRequest) {
     try {
+        const user = await getCurrentUser();
+        if (!user || user.role !== 'ADMIN') {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        if (!LicenseManager.hasFeature('ai')) {
+            return NextResponse.json({ error: 'Forbidden', message: '需要购买AI商业授权才能使用此功能。' }, { status: 403 });
+        }
+
         // 1. 查找所有“到了执行时间”且“尚未开始”的自动化任务
         const now = new Date();
         const pendingTasks = await db.aICreationTask.findMany({

@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
+import { LicenseManager } from '@/lib/license';
 
 export async function GET(request: NextRequest) {
     try {
         const user = await getCurrentUser();
         if (!user || user.role !== 'ADMIN') {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        if (!LicenseManager.hasFeature('ai')) {
+            return NextResponse.json({ error: 'Forbidden', message: '需要购买AI商业授权才能使用此功能。' }, { status: 403 });
         }
 
         const list = await db.knowledgeBase.findMany({
@@ -25,6 +30,10 @@ export async function POST(request: NextRequest) {
         const user = await getCurrentUser();
         if (!user || user.role !== 'ADMIN') {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        if (!LicenseManager.hasFeature('ai')) {
+            return NextResponse.json({ error: 'Forbidden', message: '需要购买AI商业授权才能使用此功能。' }, { status: 403 });
         }
 
         const body = await request.json();

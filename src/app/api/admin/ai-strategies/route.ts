@@ -4,6 +4,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
 import fs from 'fs';
 import path from 'path';
+import { LicenseManager } from '@/lib/license';
 
 function debugLog(message: string, data?: any) {
     const logPath = path.join(process.cwd(), 'ai_strategy_debug.log');
@@ -18,6 +19,10 @@ export async function GET(request: NextRequest) {
         const user = await getCurrentUser();
         if (!user || user.role !== 'ADMIN') {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        if (!LicenseManager.hasFeature('ai')) {
+            return NextResponse.json({ error: 'Forbidden', message: '需要购买AI商业授权才能使用此功能。' }, { status: 403 });
         }
 
         const { searchParams } = new URL(request.url);
@@ -57,6 +62,10 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
+        if (!LicenseManager.hasFeature('ai')) {
+            return NextResponse.json({ error: 'Forbidden', message: '需要购买AI商业授权才能使用此功能。' }, { status: 403 });
+        }
+
         const body = await request.json();
         const { name, prompt, temperature, maxTokens, targetType, type } = body;
 
@@ -93,6 +102,10 @@ export async function PUT(request: NextRequest) {
         const user = await getCurrentUser();
         if (!user || user.role !== 'ADMIN') {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        if (!LicenseManager.hasFeature('ai')) {
+            return NextResponse.json({ error: 'Forbidden', message: '需要购买AI商业授权才能使用此功能。' }, { status: 403 });
         }
 
         const body = await request.json();
@@ -142,6 +155,10 @@ export async function DELETE(request: NextRequest) {
         const user = await getCurrentUser();
         if (!user || user.role !== 'ADMIN') {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        if (!LicenseManager.hasFeature('ai')) {
+            return NextResponse.json({ error: 'Forbidden', message: '需要购买AI商业授权才能使用此功能。' }, { status: 403 });
         }
 
         const { searchParams } = new URL(request.url);

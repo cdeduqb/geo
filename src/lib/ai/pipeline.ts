@@ -39,7 +39,7 @@ Optimization Requirements (Must strictly follow):
 4. **Mandatory Structure**:
    - **Table**: Analyze data or processes and generate an HTML <table>. Domestic AI crawlers (like ByteDance) heavily rely on tables for fact extraction.
    - **List**: Break down long paragraphs into <ul> or <ol> lists.
-   - **FAQ**: At the end, add an "FAQ" section using <h3> with at least 3 Q&A pairs.
+   - **FAQ**: At the end, add an "FAQ" section using exactly '<h3>Frequently Asked Questions (FAQ)</h3>'. Below it, list at least 3 Q&A pairs strictly using the format: '<h4>Q: [Question]</h4>' followed by '<p>A: [Answer]</p>'. Do not wrap them in lists or custom div classes.
 5. **Entities & Semantics**: Bold key entities, products, and technical terms using <strong> for knowledge graph extraction.
 6. **Output Constraints**:
    - **Only Output HTML**: No markdown code blocks.
@@ -57,13 +57,13 @@ ${keywords ? `关键词：${keywords}` : ''}
 ${content}
 
 优化要求（必须严格遵守）：
-1. **逻辑推导与自然去 AI 化**：**CRITICAL** 必须使用专业的中文表达，严禁“翻译腔”。针对核心观点，提供完整的逻辑分析过程（因为...所以...），以匹配 DeepSeek 等推理型模型的抓取偏好。
+1. **逻辑推导与自然去 AI 化**：**CRITICAL** 必须使用专业的中文表达，严禁“翻译腔”。针对核心观点，提供完整的逻辑 analysis 过程（因为...所以...），以匹配 DeepSeek 等推理型模型的抓取偏好。
 2. **客观性与权威背书**：严禁使用最高级词汇。在内容中优先引用或提及以下权威平台的数据或观点作为背书：${sourceList}。
 3. **开篇即精华 (Direct Answer)**：文章开头必须**直接**是一段 50-100 字的核心回答，关键词使用 <strong> 包裹。严禁出现任何形式的“摘要”标签或标题。
 4. **强制结构化 (Mandatory Structure)**：
-   - **表格 (Table)**：分析内容中的数据或要素，**必须**生成一个 HTML <table> 表格。国内爬虫对表格数据的提取成功率和权重极高。
+   - **表格 (Table)**：分析内容中的数据或要素，**必须**生成一个 HTML <table> 表格。国内爬虫对表格数据的提取成功率 and 权重极高。
    - **列表 (List)**：将复杂流程或多项要素拆解为 <ul> 或 <ol> 列表。
-   - **Q&A 模块**：在文章末尾，**必须**使用 <h3> 增加一个“常见问题解答 (FAQ)”章节。
+   - **Q&A 模块**：在文章末尾，**必须**使用 '<h3>常见问题解答 (FAQ)</h3>' 增加常见问题解答章节。在其下方，提供至少 3 个问答对，并且**必须严格遵守**以下格式：使用 '<h4>问：[具体问题]</h4>' 紧跟 '<p>答：[具体详细答案]</p>'。不要将其包裹在列表（ul, ol, li）或自定义 div 容器中。
 5. **实体与语义**：关键词、产品名、人名、专业术语进行 <strong> 加粗强调，便于 AI 知识图谱提取实体指纹。
 6. **输出约束**：仅输出 HTML，不要包含 \`\`\`html 标记，不要在开头输出标题，保持事实准确。
 
@@ -246,6 +246,97 @@ ${content}
     }
 
     /**
+     * 实体提取
+     */
+    static async extractEntities(content: string, lang: string = 'zh') {
+        const aiService = await getAIServiceForUseCase('WRITING');
+        const isEn = lang === 'en';
+
+        // 去除 HTML 标签以获得更纯净的实体提取环境
+        const plainText = content.replace(/<[^>]*>/g, ' ').substring(0, 8000);
+
+        const prompt = isEn ? `
+Please analyze the following text and extract key entities (Person, Organization, Place, Product, Concept) that are central to the topic.
+For each entity, if it is a well-known entity (like Elon Musk, Apple Inc., Beijing, ChatGPT, etc.), please provide its official Wikipedia page URL, Wikidata URL, or official domain URL in the "url" field as a sameAs link. If not well-known or url is not available, leave the "url" field blank. Do NOT fabricate URLs.
+
+Text content: ${plainText}...
+
+Please return in JSON format:
+{
+  "entities": [
+    {
+      "text": "Entity Name",
+      "type": "Person|Organization|Place|Product|Concept",
+      "relevance": 9,
+      "description": "Brief 1-sentence description",
+      "url": "https://en.wikipedia.org/wiki/Entity_Name"
+    }
+  ]
+}
+` : `
+请分析以下文本，提取其中的关键实体（人物、组织、地点、产品、概念）。
+重点提取与主题高度相关的核心实体。
+对于每一个实体，如果是知名人物、知名机构、地名、产品或专有名词概念，请在 "url" 字段中提供其维基百科（Wikipedia）、维基数据（Wikidata）或官方网站的权威 sameAs 链接。如果是普通实体或无法获取真实链接，则 "url" 保持为空。请务必使用真实可访问的链接，严禁胡编。
+
+文本内容：${plainText}...
+
+请以 JSON 格式返回：
+{
+  "entities": [
+    {
+      "text": "实体名",
+      "type": "Person|Organization|Place|Product|Concept",
+      "relevance": 9,
+      "description": "简短的一句话描述",
+      "url": "https://zh.wikipedia.org/wiki/实体名"
+    }
+  ]
+}
+`;
+        logger.info(`[Pipeline] Extracting entities`);
+        const res = await aiService.generateContent(prompt, { response_format: { type: 'json_object' } });
+        try {
+            let entitiesList: any[] = [];
+            const jsonMatch = res.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+                const parsed = JSON.parse(jsonMatch[0]);
+                entitiesList = parsed.entities || parsed.items || [];
+            } else {
+                const arrayMatch = res.match(/\[[\s\S]*\]/);
+                if (arrayMatch) {
+                    entitiesList = JSON.parse(arrayMatch[0]);
+                }
+            }
+
+            if (!Array.isArray(entitiesList)) {
+                entitiesList = [];
+            }
+
+            // 对数据进行清洗和映射
+            return entitiesList
+                .filter((e: any) => e && e.text && e.type)
+                .map((e: any) => {
+                    let cleanUrl = '';
+                    if (e.url && typeof e.url === 'string' && e.url.startsWith('http')) {
+                        cleanUrl = e.url.trim();
+                    }
+                    return {
+                        text: String(e.text).trim(),
+                        type: ['Person', 'Place', 'Organization', 'Product', 'Concept'].includes(e.type)
+                            ? e.type
+                            : 'Concept',
+                        relevance: typeof e.relevance === 'number' ? e.relevance : 5,
+                        description: e.description ? String(e.description).trim() : '',
+                        url: cleanUrl
+                    };
+                });
+        } catch (e) {
+            logger.error('[Pipeline] Entity extraction parse failed', e);
+            return [];
+        }
+    }
+
+    /**
      * 生成 SEO 元数据
      */
     static async generateSEO(title: string, content: string, lang: string = 'zh') {
@@ -293,7 +384,7 @@ Please return in JSON format:
     /**
      * 实体提取
      */
-    static async extractEntities(content: string, lang: string = 'zh') {
+    static async extractEntitiesOld_toDelete(content: string, lang: string = 'zh') {
         const aiService = await getAIServiceForUseCase('WRITING');
         const isEn = lang === 'en';
 

@@ -4,9 +4,7 @@ import React, { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { AdminLayoutProvider, useAdminLayout } from './layout/AdminLayoutContext';
 import ClassicLayout from './layout/ClassicLayout';
-import AntDesignDarkLayout from './layout/AntDesignDarkLayout';
 import VercelTopNavLayout from './layout/VercelTopNavLayout';
-import MacosGlassLayout from './layout/MacosGlassLayout';
 import ThemeSettingDrawer from './layout/ThemeSettingDrawer';
 
 interface User {
@@ -44,9 +42,7 @@ function LayoutSwitcher({ children }: { children: React.ReactNode }) {
     return (
         <>
             {layoutType === 'classic' && <ClassicLayout>{children}</ClassicLayout>}
-            {layoutType === 'ant-dark' && <AntDesignDarkLayout>{children}</AntDesignDarkLayout>}
             {layoutType === 'vercel-top' && <VercelTopNavLayout>{children}</VercelTopNavLayout>}
-            {layoutType === 'macos-glass' && <MacosGlassLayout>{children}</MacosGlassLayout>}
             <ThemeSettingDrawer />
         </>
     );

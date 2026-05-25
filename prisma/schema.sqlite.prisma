@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -14,15 +14,15 @@ model User {
   username           String?                    @unique
   password           String
   name               String?
-  role               Role                       @default(USER)
+  role String                       @default("USER")
   createdAt          DateTime                   @default(now())
   updatedAt          DateTime                   @updatedAt
   avatar             String?
-  bio                String?                    @db.Text
+  bio                String?                    
   expertise          String?
   github             String?
   isPublicAuthor     Boolean                    @default(false)
-  permissions        Json?
+  permissions        String?
   linkedin           String?
   twitter            String?
   website            String?
@@ -35,17 +35,17 @@ model User {
 model Page {
   id                 String        @id @default(uuid())
   slug               String
-  content            String        @db.LongText
-  type               PageType      @default(CUSTOM)
+  content            String        
+  type String      @default("CUSTOM")
   createdAt          DateTime      @default(now())
   updatedAt          DateTime      @updatedAt
-  status             PublishStatus @default(DRAFT)
+  status String @default("DRAFT")
   templateId         String?
   title              String
   footerTemplateId   String?
   headerTemplateId   String?
-  sections           Json?
-  editorMode         EditorMode?
+  sections           String?
+  editorMode String?
   lang               String        @default("zh")
   translationGroupId String?
   isDefault          Boolean       @default(false)
@@ -67,17 +67,17 @@ model PageTemplate {
   id            String     @id @default(uuid())
   name          String
   description   String?
-  content       String     @db.LongText
-  style         String?    @db.LongText
-  type          PageType
+  content       String     
+  style         String?    
+  type String
   isDefault     Boolean    @default(false)
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
   isActive      Boolean    @default(false)
-  moduleType    ModuleType @default(HOME_PAGE)
+  moduleType String @default("HOME_PAGE")
   preview       String?
   version       Int        @default(1)
-  sections      Json?
+  sections      String?
   isAIGenerated Boolean    @default(false)
   pagesFooter   Page[]     @relation("PageFooter")
   pagesHeader   Page[]     @relation("PageHeader")
@@ -88,22 +88,22 @@ model Article {
   id                  String                    @id @default(uuid())
   title               String
   slug                String
-  content             String                    @db.LongText
-  summary             String?                   @db.Text
-  coverImage          String?                   @db.Text
-  status              PublishStatus             @default(DRAFT)
+  content             String                    
+  summary             String?                   
+  coverImage          String?                   
+  status String             @default("DRAFT")
   authorId            String
   categoryId          String?
   aiGenerated         Boolean                   @default(false)
-  aiPrompt            String?                   @db.Text
+  aiPrompt            String?                   
   views               Int                       @default(0)
   createdAt           DateTime                  @default(now())
   updatedAt           DateTime                  @updatedAt
-  citations           Json?
-  entities            Json?
+  citations           String?
+  entities            String?
   sortOrder           Int                       @default(0)
   aiDetectorScore     Float?
-  aiDetectorResult    String?                   @db.Text
+  aiDetectorResult    String?                   
   automationProjectId String?
   lang                String                    @default("zh")
   translationGroupId  String?
@@ -156,7 +156,7 @@ model SEOSetting {
   title       String?
   keywords    String?
   description String?
-  ogImage     String?  @db.Text
+  ogImage     String?  
   canonical   String?
   pageId      String?  @unique
   articleId   String?  @unique
@@ -177,7 +177,7 @@ model AIConfig {
   secretKey         String?
   dailyTokenLimit   Int?
   monthlyTokenLimit Int?
-  useCase           AIUseCase      @default(GENERAL)
+  useCase String      @default("GENERAL")
   usageLogs         AITokenUsage[]
 }
 
@@ -197,13 +197,13 @@ model AITokenUsage {
 model AIStrategy {
   id                 String                     @id @default(uuid())
   name               String
-  prompt             String                     @db.Text
+  prompt             String                     
   temperature        Float                      @default(0.7)
   maxTokens          Int?
   targetType         String
   createdAt          DateTime                   @default(now())
   updatedAt          DateTime                   @updatedAt
-  type               AIUseCase                  @default(WRITING)
+  type String                  @default("WRITING")
   tasks              AICreationTask[]
   automationProjects ArticleAutomationProject[]
 }
@@ -211,14 +211,14 @@ model AIStrategy {
 model SystemSetting {
   id          String  @id @default(uuid())
   key         String  @unique
-  value       String  @db.Text
+  value       String  
   description String?
 }
 
 model SiteSettings {
   id             String   @id @default(uuid())
-  headerSections Json?
-  footerSections Json?
+  headerSections String?
+  footerSections String?
   logo           String?
   favicon        String?
   siteName       String?
@@ -226,8 +226,8 @@ model SiteSettings {
   secondaryColor String?
   phone          String?
   email          String?
-  address        String?  @db.Text
-  socialLinks    Json?
+  address        String?  
+  socialLinks    String?
   latitude       Float?
   longitude      Float?
   openingHours   String?  @default("Mo-Fr 09:00-18:00")
@@ -239,9 +239,9 @@ model SiteSettings {
 model ComponentModule {
   id        String     @id @default(uuid())
   name      String
-  type      ModuleType
-  content   String     @db.LongText
-  style     String?    @db.LongText
+  type String
+  content   String     
+  style     String?    
   isActive  Boolean    @default(false)
   order     Int        @default(0)
   createdAt DateTime   @default(now())
@@ -251,23 +251,23 @@ model ComponentModule {
 model SEOPushConfig {
   id         String       @id @default(uuid())
   platform   String       @unique
-  apiUrl     String?      @db.Text
-  token      String?      @db.Text
+  apiUrl     String?      
+  token      String?      
   siteId     String?
   isActive   Boolean      @default(true)
   lastPushAt DateTime?
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
-  script     String?      @db.Text
+  script     String?      
   pushLogs   SEOPushLog[]
 }
 
 model SEOPushLog {
   id        String        @id @default(uuid())
   configId  String
-  url       String        @db.MediumText
+  url       String        
   status    String
-  response  String?       @db.Text
+  response  String?       
   createdAt DateTime      @default(now())
   config    SEOPushConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
 
@@ -279,9 +279,9 @@ model AICreationTask {
   strategyId  String
   topic       String
   keywords    String?
-  status      TaskStatus                @default(PENDING)
+  status String                @default("PENDING")
   articleId   String?
-  error       String?                   @db.Text
+  error       String?                   
   createdAt   DateTime                  @default(now())
   completedAt DateTime?
   projectId   String?
@@ -298,11 +298,11 @@ model AICreationTask {
 model ArticleAutomationProject {
   id               String           @id @default(uuid())
   name             String
-  topic            String           @db.Text
-  keywords         String?          @db.Text
+  topic            String           
+  keywords         String?          
   totalCount       Int              @default(1)
   dailyLimit       Int              @default(1)
-  status           ProjectStatus    @default(ACTIVE)
+  status String    @default("ACTIVE")
   enableGeo        Boolean          @default(true)
   enableIllustrate Boolean          @default(true)
   enableAutoLink   Boolean          @default(true)
@@ -335,13 +335,13 @@ model ArticleAutomationProject {
 model KnowledgeBase {
   id               String                     @id @default(uuid())
   name             String
-  productServices  String?                    @db.LongText
-  productFeatures  String?                    @db.LongText
-  brandStory       String?                    @db.LongText
-  userPainPoints   String?                    @db.LongText
-  trustEndorsement String?                    @db.LongText
-  customerCases    String?                    @db.LongText
-  otherInfo        String?                    @db.LongText
+  productServices  String?                    
+  productFeatures  String?                    
+  brandStory       String?                    
+  userPainPoints   String?                    
+  trustEndorsement String?                    
+  customerCases    String?                    
+  otherInfo        String?                    
   lang             String                     @default("zh")
   isActive         Boolean                    @default(true)
   createdAt        DateTime                   @default(now())
@@ -358,7 +358,7 @@ model StorageConfig {
   provider  String
   isActive  Boolean  @default(false)
   isDefault Boolean  @default(false)
-  config    Json
+  config    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   files     File[]
@@ -373,7 +373,7 @@ model File {
   storageKey   String
   mimeType     String
   size         Int
-  url          String         @db.Text
+  url          String         
   category     String?
   folder       String?
   width        Int?
@@ -397,7 +397,7 @@ model ProductCategory {
   id                 String            @id @default(uuid())
   name               String
   slug               String
-  description        String?           @db.Text
+  description        String?           
   parentId           String?
   sortOrder          Int               @default(0)
   isActive           Boolean           @default(true)
@@ -420,22 +420,22 @@ model Product {
   id                 String           @id @default(uuid())
   name               String
   slug               String
-  description        String?          @db.Text
-  content            String?          @db.LongText
-  price              Decimal          @db.Decimal(10, 2)
-  comparePrice       Decimal?         @db.Decimal(10, 2)
-  costPrice          Decimal?         @db.Decimal(10, 2)
+  description        String?          
+  content            String?          
+  price              Decimal          
+  comparePrice       Decimal?         
+  costPrice          Decimal?         
   stock              Int              @default(0)
   sku                String?          @unique
-  coverImage         String?          @db.Text
-  images             Json?
+  coverImage         String?          
+  images             String?
   categoryId         String?
-  attributes         Json?
-  specifications     Json?
+  attributes         String?
+  specifications     String?
   metaTitle          String?
   metaDescription    String?
   metaKeywords       String?
-  status             PublishStatus    @default(DRAFT)
+  status String    @default("DRAFT")
   isFeatured         Boolean          @default(false)
   viewCount          Int              @default(0)
   salesCount         Int              @default(0)
@@ -461,13 +461,13 @@ model Order {
   id              String      @id @default(uuid())
   orderNumber     String      @unique
   userId          String?
-  totalAmount     Decimal     @db.Decimal(10, 2)
-  status          OrderStatus @default(PENDING)
+  totalAmount     Decimal     
+  status String @default("PENDING")
   customerName    String?
   customerEmail   String?
   customerPhone   String?
-  shippingAddress String?     @db.Text
-  note            String?     @db.Text
+  shippingAddress String?     
+  note            String?     
   paidAt          DateTime?
   shippedAt       DateTime?
   completedAt     DateTime?
@@ -488,9 +488,9 @@ model OrderItem {
   productId   String?
   productName String
   productSku  String?
-  price       Decimal  @db.Decimal(10, 2)
+  price       Decimal  
   quantity    Int      @default(1)
-  attributes  Json?
+  attributes  String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
@@ -506,7 +506,7 @@ model Message {
   email     String?
   phone     String?
   subject   String?
-  content   String   @db.Text
+  content   String   
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -518,7 +518,7 @@ model Message {
 model CrawlerLog {
   id         String   @id @default(uuid())
   crawler    String
-  userAgent  String   @db.Text
+  userAgent  String   
   path       String
   statusCode Int
   ip         String?
@@ -537,10 +537,10 @@ model AICitation {
   articleId    String
   articleTitle String
   platform     String
-  query        String   @db.Text
+  query        String   
   citedAt      DateTime @default(now())
   position     Int      @default(0)
-  context      String?  @db.Text
+  context      String?  
   sourceUrl    String?
   citationType String   @default("mention")
   article      Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
@@ -558,7 +558,7 @@ model AISearchRanking {
   ranking     Int
   mentionRate Float    @default(0)
   articleId   String?
-  context     String?  @db.Text
+  context     String?  
   checkedAt   DateTime @default(now())
   article     Article? @relation(fields: [articleId], references: [id])
 
@@ -576,7 +576,7 @@ model ContentAIScore {
   citationScore  Float    @default(0)
   entityScore    Float    @default(0)
   semanticScore  Float    @default(0)
-  suggestions    String?  @db.Text
+  suggestions    String?  
   analyzedAt     DateTime @default(now())
   updatedAt      DateTime @updatedAt
   article        Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
@@ -590,7 +590,7 @@ model CrawlerBehavior {
   crawler        String   @unique
   avgVisitHour   Int      @default(0)
   peakHours      String?
-  preferredPaths String?  @db.Text
+  preferredPaths String?  
   avgDepth       Float    @default(0)
   visitFrequency Float    @default(0)
   lastAnalyzed   DateTime @default(now())
@@ -606,7 +606,7 @@ model TrendingTopic {
   trendScore      Float                   @default(0)
   growthRate      Float                   @default(0)
   peakTime        DateTime?
-  relatedTopics   String?                 @db.Text
+  relatedTopics   String?                 
   status          String                  @default("active")
   firstSeenAt     DateTime                @default(now())
   lastSeenAt      DateTime                @updatedAt
@@ -622,11 +622,11 @@ model ContentRecommendation {
   id               String        @id @default(uuid())
   topicId          String
   title            String
-  description      String        @db.Text
+  description      String        
   estimatedTraffic Int           @default(0)
   difficulty       String        @default("medium")
   priority         Int           @default(0)
-  keywords         String?       @db.Text
+  keywords         String?       
   status           String        @default("pending")
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
@@ -641,10 +641,10 @@ model ContentRecommendation {
 model CompetitorAnalysis {
   id             String   @id @default(uuid())
   keyword        String
-  competitors    Json
-  ourStats       Json
-  competitorData Json
-  analysis       Json
+  competitors    String
+  ourStats       String
+  competitorData String
+  analysis       String
   createdAt      DateTime @default(now())
 
   @@index([keyword])
@@ -673,7 +673,7 @@ model GEOIndustryEntity {
   name        String
   keywords    String
   industry    String
-  relatedUrls String?  @db.Text
+  relatedUrls String?  
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -681,77 +681,23 @@ model GEOIndustryEntity {
   @@index([name])
 }
 
-enum Role {
-  USER
-  ADMIN
-  EDITOR
-}
 
-enum EditorMode {
-  VISUAL
-  CODE
-}
 
-enum PageType {
-  HOME
-  ARTICLE_LIST
-  PRODUCT_LIST
-  ABOUT
-  CONTACT
-  CUSTOM
-  HEADER
-  FOOTER
-  GENERAL
-}
 
-enum PublishStatus {
-  DRAFT
-  PUBLISHED
-  ARCHIVED
-  SCHEDULED
-}
 
-enum ModuleType {
-  HEADER
-  FOOTER
-  HOME_PAGE
-  ARTICLE_PAGE
-  ABOUT_PAGE
-  CONTACT_PAGE
-  PRODUCT_PAGE
-  SERVICE_PAGE
-  FAQ_PAGE
-  CUSTOM_PAGE
-}
 
-enum AIUseCase {
-  GENERAL
-  WRITING
-  CODE
-  IMAGE
-}
 
-enum TaskStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
-}
 
-enum ProjectStatus {
-  ACTIVE
-  PAUSED
-  COMPLETED
-}
 
-enum OrderStatus {
-  PENDING
-  PAID
-  SHIPPED
-  COMPLETED
-  CANCELLED
-  REFUNDED
-}
+
+
+
+
+
+
+
+
+
 
 // ----------------------------------------
 // GEO SEO Redirect System
