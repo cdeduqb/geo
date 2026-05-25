@@ -175,6 +175,31 @@ export class LicenseManager {
      * 获取授权信息
      */
     static getLicense(): LicenseData | null {
+        // 开源免授权模式控制，若 DISABLE_LICENSE 环境变量不为 'false' 则默认放行所有用户
+        const isDisableLicense = process.env.DISABLE_LICENSE !== 'false';
+        if (isDisableLicense) {
+            return {
+                licenseId: 'community-edition',
+                licenseCode: 'MOLICMS-FREE-COMMUNITY-EDITION',
+                plan: 'ENTERPRISE',
+                domains: [],
+                features: {
+                    ai: true,
+                    seo: true,
+                    geo: true,
+                    apiAccess: true,
+                    customDomain: true,
+                    customBranding: true
+                },
+                maxActivations: 999999,
+                currentActivations: 1,
+                issuedAt: Date.now(),
+                expiresAt: -1, // 永久有效
+                status: 'active',
+                signature: 'free-oss-signature-bypass',
+                version: '1.0.0'
+            };
+        }
         return LicenseCache.getLicense();
     }
 
