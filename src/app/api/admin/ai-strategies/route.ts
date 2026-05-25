@@ -21,10 +21,6 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        if (!LicenseManager.hasFeature('ai')) {
-            return NextResponse.json({ error: 'Forbidden', message: '需要购买AI商业授权才能使用此功能。' }, { status: 403 });
-        }
-
         const { searchParams } = new URL(request.url);
         const targetType = searchParams.get('targetType');
         const type = searchParams.get('type');
@@ -60,10 +56,6 @@ export async function POST(request: NextRequest) {
         const user = await getCurrentUser();
         if (!user || user.role !== 'ADMIN') {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-
-        if (!LicenseManager.hasFeature('ai')) {
-            return NextResponse.json({ error: 'Forbidden', message: '需要购买AI商业授权才能使用此功能。' }, { status: 403 });
         }
 
         const body = await request.json();
@@ -102,10 +94,6 @@ export async function PUT(request: NextRequest) {
         const user = await getCurrentUser();
         if (!user || user.role !== 'ADMIN') {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-
-        if (!LicenseManager.hasFeature('ai')) {
-            return NextResponse.json({ error: 'Forbidden', message: '需要购买AI商业授权才能使用此功能。' }, { status: 403 });
         }
 
         const body = await request.json();
@@ -155,10 +143,6 @@ export async function DELETE(request: NextRequest) {
         const user = await getCurrentUser();
         if (!user || user.role !== 'ADMIN') {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-
-        if (!LicenseManager.hasFeature('ai')) {
-            return NextResponse.json({ error: 'Forbidden', message: '需要购买AI商业授权才能使用此功能。' }, { status: 403 });
         }
 
         const { searchParams } = new URL(request.url);

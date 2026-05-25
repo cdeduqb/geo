@@ -2,9 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Sparkles, ShieldAlert, ArrowRight, Lock, Home, Loader2 } from 'lucide-react';
 
 export default function AIProtectWall({ children }: { children?: React.ReactNode }) {
+    const pathname = usePathname();
+    const isStrategyPage = pathname === '/admin/ai/strategies' || pathname?.startsWith('/admin/ai/strategies/');
     const [isLoading, setIsLoading] = useState(true);
     const [isLicensed, setIsLicensed] = useState(false);
 
@@ -37,8 +40,8 @@ export default function AIProtectWall({ children }: { children?: React.ReactNode
         );
     }
 
-    // 如果客户端二次校验确认系统已获授权，则直接放行渲染子组件
-    if (isLicensed && children) {
+    // 如果客户端二次校验确认系统已获授权，或者当前是创作策略页面，则直接放行渲染子组件
+    if ((isLicensed || isStrategyPage) && children) {
         return <>{children}</>;
     }
 
