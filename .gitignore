@@ -47,3 +47,22 @@ next-env.d.ts
 
 # Agents metadata
 .agents/
+
+# Backup and temporary files
+*.bak
+*.tmp
+*.temp
+
+# System Logs
+logs/
+*.log
+update.log
+
+# SQLite Database
+*.db
+*.sqlite
+
+# Editors / IDEs
+.vscode/
+.idea/
+.DS_Store
