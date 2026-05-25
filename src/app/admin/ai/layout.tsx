@@ -13,7 +13,7 @@ export default async function AILayout({
     const hasAI = LicenseManager.hasFeature('ai');
 
     if (!hasAI) {
-        return <AIProtectWall />;
+        return <AIProtectWall>{children}</AIProtectWall>;
     }
 
     return <>{children}</>;

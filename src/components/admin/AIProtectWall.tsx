@@ -1,8 +1,47 @@
-import React from 'react';
-import Link from 'next/link';
-import { Sparkles, ShieldAlert, ArrowRight, Lock, Home } from 'lucide-react';
+'use client';
 
-export default function AIProtectWall() {
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Sparkles, ShieldAlert, ArrowRight, Lock, Home, Loader2 } from 'lucide-react';
+
+export default function AIProtectWall({ children }: { children?: React.ReactNode }) {
+    const [isLoading, setIsLoading] = useState(true);
+    const [isLicensed, setIsLicensed] = useState(false);
+
+    useEffect(() => {
+        const checkLicense = async () => {
+            try {
+                const res = await fetch('/api/license/info');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.licensed) {
+                        setIsLicensed(true);
+                    }
+                }
+            } catch (error) {
+                console.error('AIProtectWall 客户端二次授权验证失败:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        checkLicense();
+    }, []);
+
+    // 如果仍在检测中，展示科技感加载状态以防界面突兀闪烁
+    if (isLoading) {
+        return (
+            <div className="min-h-[600px] flex flex-col items-center justify-center p-6 text-slate-400">
+                <Loader2 className="w-8 h-8 animate-spin mb-4 text-indigo-500/50" />
+                <p className="text-[13px] font-black tracking-widest text-slate-500 animate-pulse">正在校验系统安全授权...</p>
+            </div>
+        );
+    }
+
+    // 如果客户端二次校验确认系统已获授权，则直接放行渲染子组件
+    if (isLicensed && children) {
+        return <>{children}</>;
+    }
+
     return (
         <div className="min-h-[600px] flex items-center justify-center p-6">
             <div className="relative max-w-2xl w-full bg-slate-950 rounded-[40px] p-12 overflow-hidden shadow-2xl border border-slate-800 shadow-slate-900/50">
