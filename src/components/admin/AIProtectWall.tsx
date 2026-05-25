@@ -79,8 +79,8 @@ export default function AIProtectWall({ children }: { children?: React.ReactNode
                     <p className="text-slate-400 text-[14px] leading-relaxed max-w-md mb-10 font-medium">
                         AI 创作工厂是专为企业打造的批量文章与知识库自动化生产线。
                         当前系统未检测到有效的 AI 商业授权许可。激活授权后，您可即刻解锁
-                        <span className="text-indigo-400">“批量任务自动生成”</span>、
-                        <span className="text-indigo-400">“全网热点趋势监控”</span>以及
+                        <span className="text-indigo-400">“多模式批量任务自动创作”</span>、
+                        <span className="text-indigo-400">“自动发布”</span>以及
                         <span className="text-indigo-400">“企业自有知识库”</span>等高阶 AI 出海增长能力。
                     </p>
 
